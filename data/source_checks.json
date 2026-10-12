@@ -1,22 +1,35 @@
 {
-  "generated_at": "2026-10-12T22:16:46.273376+00:00",
-  "purpose": "公式情報源への接続確認。新店・閉店情報の抽出は未実装。",
+  "generated_at": "2026-10-12T22:24:46.654094+00:00",
+  "area": "山口市・山口県",
+  "purpose": "公式サイトのリンクから記事候補を抽出",
+  "note": "トップページのリンク名を対象とした初期版です。すべての新店・閉店情報を網羅するものではありません。公開前にリンク先と情報の正確性を確認してください。",
   "sources": [
     {
       "name": "山口県公式サイト",
       "url": "https://www.pref.yamaguchi.lg.jp/",
-      "category": "official",
-      "checked_at": "2026-10-12T22:16:45.414112+00:00",
+      "checked_at": "2026-10-12T22:24:46.654094+00:00",
       "status": "reachable",
-      "note": "HTTP 200"
+      "note": "トップページのリンクを確認"
     },
     {
       "name": "山口市公式サイト",
       "url": "https://www.city.yamaguchi.lg.jp/",
-      "category": "official",
-      "checked_at": "2026-10-12T22:16:45.800636+00:00",
+      "checked_at": "2026-10-12T22:24:46.654094+00:00",
       "status": "reachable",
-      "note": "HTTP 200"
+      "note": "トップページのリンクを確認"
+    }
+  ],
+  "candidates": [
+    {
+      "title": "山口県オープンデータカタログサイト",
+      "url": "https://www.pref.yamaguchi.lg.jp/adv/ba.php?id=93",
+      "source_name": "山口県公式サイト",
+      "source_url": "https://www.pref.yamaguchi.lg.jp/",
+      "matched_keywords": [
+        "オープン"
+      ],
+      "checked_at": "2026-10-12T22:24:46.654094+00:00",
+      "status": "要確認"
     }
   ]
 }
