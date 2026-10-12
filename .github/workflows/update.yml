@@ -1,0 +1,24 @@
+name: Site Update Check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check repository
+        uses: actions/checkout@v4
+
+      - name: Confirm site files
+        run: |
+          test -f index.html
+          test -f new.html
+          test -f closed.html
+          test -f jobs.html
+          echo "Site files are present."
