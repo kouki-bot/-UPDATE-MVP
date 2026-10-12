@@ -1,22 +1,162 @@
-{
-  "generated_at": "2026-10-12T22:02:33.265385+00:00",
-  "purpose": "公式情報源への接続確認。新店・閉店情報の抽出は未実装。",
-  "sources": [
+import json
+import os
+import re
+from datetime import datetime, timezone
+from html.parser import HTMLParser
+from urllib.request import Request, urlopen
+from urllib.error import URLError, HTTPError
+
+SOURCES = [
     {
-      "name": "山口県公式サイト",
-      "url": "https://www.pref.yamaguchi.lg.jp/",
-      "category": "official",
-      "checked_at": "2026-10-12T22:02:32.626045+00:00",
-      "status": "reachable",
-      "note": "HTTP 200"
+        "name": "山口県公式サイト",
+        "url": "https://www.pref.yamaguchi.lg.jp/",
     },
     {
-      "name": "山口市公式サイト",
-      "url": "https://www.city.yamaguchi.lg.jp/",
-      "category": "official",
-      "checked_at": "2026-10-12T22:02:32.860695+00:00",
-      "status": "reachable",
-      "note": "HTTP 200"
+        "name": "山口市公式サイト",
+        "url": "https://www.city.yamaguchi.lg.jp/",
+    },
+]
+
+KEYWORDS = [
+    "開店", "オープン", "新店舗", "出店", "閉店",
+    "移転", "リニューアル", "開業", "求人",
+    "オープニングスタッフ", "商業施設",
+]
+
+class PageParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links = []
+        self.current_link = None
+        self.text_parts = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "a":
+            attrs = dict(attrs)
+            href = attrs.get("href", "")
+            if href:
+                self.current_link = {
+                    "title": "",
+                    "url": href,
+                }
+
+    def handle_data(self, data):
+        text = data.strip()
+        if text:
+            self.text_parts.append(text)
+            if self.current_link is not None:
+                self.current_link["title"] += text
+
+    def handle_endtag(self, tag):
+        if tag == "a" and self.current_link is not None:
+            if self.current_link["title"].strip():
+                self.links.append(self.current_link)
+            self.current_link = None
+
+def fetch_page(url):
+    request = Request(
+        url,
+        headers={
+            "User-Agent": "YamaguchiLocalUpdateBot/1.0"
+        }
+    )
+    with urlopen(request, timeout=20) as response:
+        content_type = response.headers.get("Content-Type", "")
+        if "text/html" not in content_type:
+            return ""
+        raw = response.read(2_000_000)
+        return raw.decode("utf-8", errors="replace")
+
+def absolute_url(base, href):
+    if href.startswith("http://") or href.startswith("https://"):
+        return href
+    if href.startswith("/"):
+        from urllib.parse import urlparse
+        parsed = urlparse(base)
+        return f"{parsed.scheme}://{parsed.netloc}{href}"
+    return ""
+
+def main():
+    os.makedirs("data", exist_ok=True)
+
+    candidates = []
+    source_checks = []
+    checked_at = datetime.now(timezone.utc).isoformat()
+
+    for source in SOURCES:
+        result = {
+            "name": source["name"],
+            "url": source["url"],
+            "checked_at": checked_at,
+            "status": "unknown",
+            "note": "",
+        }
+
+        try:
+            html = fetch_page(source["url"])
+            parser = PageParser()
+            parser.feed(html)
+
+            result["status"] = "reachable"
+            result["note"] = "トップページを取得"
+
+            for link in parser.links:
+                title = re.sub(r"\s+", " ", link["title"]).strip()
+                if not title:
+                    continue
+
+                matched = [
+                    keyword for keyword in KEYWORDS
+                    if keyword in title
+                ]
+
+                if matched:
+                    candidates.append({
+                        "title": title,
+                        "url": absolute_url(
+                            source["url"], link["url"]
+                        ),
+                        "source_name": source["name"],
+                        "source_url": source["url"],
+                        "matched_keywords": matched,
+                        "checked_at": checked_at,
+                        "status": "要確認",
+                    })
+
+        except (URLError, HTTPError, TimeoutError, ValueError) as error:
+            result["status"] = "check_needed"
+            result["note"] = str(error)[:200]
+
+        source_checks.append(result)
+
+    # 同じURLの重複候補を除外
+    unique = {}
+    for item in candidates:
+        if item["url"]:
+            unique[item["url"]] = item
+
+    output = {
+        "generated_at": checked_at,
+        "area": "山口市を優先",
+        "note": (
+            "公式サイトのトップページにあるリンク名を調べる初期版です。"
+            "すべての新店・閉店情報を網羅するものではありません。"
+            "公開前にリンク先と情報の正確性を確認してください。"
+        ),
+        "source_checks": source_checks,
+        "candidates": list(unique.values()),
     }
-  ]
-}
+
+    with open(
+        "data/source_checks.json", "w", encoding="utf-8"
+    ) as file:
+        json.dump(output, file, ensure_ascii=False, indent=2)
+
+    print(f"確認した情報源: {len(source_checks)}")
+    print(f"記事候補: {len(output['candidates'])}")
+
+    for item in output["candidates"]:
+        print(f"- {item['title']} ({item['url']})")
+
+if __name__ == "__main__":
+    main()
