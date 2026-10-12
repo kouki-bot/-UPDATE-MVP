@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-10-12T21:57:16.861478+00:00",
+  "purpose": "公式情報源への接続確認。新店・閉店情報の抽出は未実装。",
+  "sources": [
+    {
+      "name": "山口県公式サイト",
+      "url": "https://www.pref.yamaguchi.lg.jp/",
+      "category": "official",
+      "checked_at": "2026-10-12T21:57:16.120051+00:00",
+      "status": "reachable",
+      "note": "HTTP 200"
+    },
+    {
+      "name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/",
+      "category": "official",
+      "checked_at": "2026-10-12T21:57:16.490387+00:00",
+      "status": "reachable",
+      "note": "HTTP 200"
+    }
+  ]
+}
