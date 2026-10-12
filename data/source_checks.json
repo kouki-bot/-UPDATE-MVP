@@ -1,22 +1,181 @@
 {
-  "generated_at": "2026-10-12T22:24:46.654094+00:00",
+  "generated_at": "2026-10-12T22:30:31.494548+00:00",
   "area": "山口市・山口県",
-  "purpose": "公式サイトのリンクから記事候補を抽出",
-  "note": "トップページのリンク名を対象とした初期版です。すべての新店・閉店情報を網羅するものではありません。公開前にリンク先と情報の正確性を確認してください。",
+  "purpose": "公式サイト内のページとリンクから記事候補を抽出",
+  "note": "初期版の自動収集結果です。すべての新店・閉店情報を網羅するものではありません。公開前にリンク先、発生日、営業状況を確認してください。",
   "sources": [
     {
       "name": "山口県公式サイト",
       "url": "https://www.pref.yamaguchi.lg.jp/",
-      "checked_at": "2026-10-12T22:24:46.654094+00:00",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
       "status": "reachable",
-      "note": "トップページのリンクを確認"
+      "pages_scanned": 1,
+      "note": "同一ドメイン内のページを上限付きで調査"
     },
     {
       "name": "山口市公式サイト",
       "url": "https://www.city.yamaguchi.lg.jp/",
-      "checked_at": "2026-10-12T22:24:46.654094+00:00",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
       "status": "reachable",
-      "note": "トップページのリンクを確認"
+      "pages_scanned": 30,
+      "note": "同一ドメイン内のページを上限付きで調査"
+    }
+  ],
+  "scanned_pages": [
+    {
+      "source_name": "山口県公式サイト",
+      "url": "https://www.pref.yamaguchi.lg.jp/",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/200683.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/200552.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/199330.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/199589.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/198889.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/199067.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list131.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1512.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1477.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1446.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1277.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1069.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/list24-947.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-1491.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-1473.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-1425.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-1174.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-1027.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-899.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-613.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-507.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-474.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-287.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-431.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-432.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
+    },
+    {
+      "source_name": "山口市公式サイト",
+      "url": "https://www.city.yamaguchi.lg.jp/site/koho/list21-433.html",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00"
     }
   ],
   "candidates": [
@@ -24,11 +183,102 @@
       "title": "山口県オープンデータカタログサイト",
       "url": "https://www.pref.yamaguchi.lg.jp/adv/ba.php?id=93",
       "source_name": "山口県公式サイト",
-      "source_url": "https://www.pref.yamaguchi.lg.jp/",
+      "source_page": "https://www.pref.yamaguchi.lg.jp/",
       "matched_keywords": [
         "オープン"
       ],
-      "checked_at": "2026-10-12T22:24:46.654094+00:00",
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
+      "status": "要確認"
+    },
+    {
+      "title": "道の駅「仁保の郷」がグランドオープンしました",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/192592.html",
+      "source_name": "山口市公式サイト",
+      "source_page": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1512.html",
+      "matched_keywords": [
+        "オープン"
+      ],
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
+      "status": "要確認"
+    },
+    {
+      "title": "重源の郷体験交流公園がリニューアルオープンしました",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/176332.html",
+      "source_name": "山口市公式サイト",
+      "source_page": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1477.html",
+      "matched_keywords": [
+        "オープン",
+        "リニューアル"
+      ],
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
+      "status": "要確認"
+    },
+    {
+      "title": "鋳銭司郷土館展示リニューアルオープン式典を行いました",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/175881.html",
+      "source_name": "山口市公式サイト",
+      "source_page": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1477.html",
+      "matched_keywords": [
+        "オープン",
+        "リニューアル"
+      ],
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
+      "status": "要確認"
+    },
+    {
+      "title": "山口市公式ウェブサイトのデザインをリニューアルしました",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/136544.html",
+      "source_name": "山口市公式サイト",
+      "source_page": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1069.html",
+      "matched_keywords": [
+        "リニューアル"
+      ],
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
+      "status": "要確認"
+    },
+    {
+      "title": "道の駅「きらら あじす」がリニューアルオープンしました",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/136569.html",
+      "source_name": "山口市公式サイト",
+      "source_page": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1069.html",
+      "matched_keywords": [
+        "オープン",
+        "リニューアル"
+      ],
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
+      "status": "要確認"
+    },
+    {
+      "title": "地域子育て支援拠点「ほっとさろん西門前てとてと」移転オープニング式典が開催されました",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/119787.html",
+      "source_name": "山口市公式サイト",
+      "source_page": "https://www.city.yamaguchi.lg.jp/site/topics/list24-1069.html",
+      "matched_keywords": [
+        "移転"
+      ],
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
+      "status": "要確認"
+    },
+    {
+      "title": "中心商店街に地域の魅力発信・交流スペース「コトサイト」がオープンしました",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/112505.html",
+      "source_name": "山口市公式サイト",
+      "source_page": "https://www.city.yamaguchi.lg.jp/site/topics/list24-947.html",
+      "matched_keywords": [
+        "オープン"
+      ],
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
+      "status": "要確認"
+    },
+    {
+      "title": "山口市産業交流拠点施設KDDI維新ホールのグランドオープン記念式典を開催しました",
+      "url": "https://www.city.yamaguchi.lg.jp/site/topics/105557.html",
+      "source_name": "山口市公式サイト",
+      "source_page": "https://www.city.yamaguchi.lg.jp/site/topics/list24-947.html",
+      "matched_keywords": [
+        "オープン"
+      ],
+      "checked_at": "2026-10-12T22:30:31.494548+00:00",
       "status": "要確認"
     }
   ]
