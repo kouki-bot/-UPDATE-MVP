@@ -234,15 +234,15 @@ def main():
         try:
             xml_data = fetch_rss(source)
 
-# 取得したデータの冒頭を確認できるようにする
-preview = xml_data[:500].decode(
-    "utf-8", errors="replace"
-)
+            # 取得したデータの冒頭をログに出す
+            preview = xml_data[:500].decode(
+                "utf-8", errors="replace"
+            )
+            print("RSS取得先:", source["url"])
+            print("取得データの冒頭:", repr(preview))
 
-print("RSS取得先:", source["url"])
-print("取得データの冒頭:", repr(preview))
+            root = ElementTree.fromstring(xml_data)
 
-root = ElementTree.fromstring(xml_data)
             items = [
                 element
                 for element in root.iter()
