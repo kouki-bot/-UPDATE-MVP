@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-10-14T22:51:46.502007+00:00",
+  "source_count": 1,
+  "candidate_count": 0,
+  "sources": [
+    {
+      "name": "山口宇部経済新聞",
+      "url": "https://yamaguchi.keizai.biz/rss/",
+      "status": "取得失敗",
+      "items_read": 0,
+      "error": "not well-formed (invalid token): line 31, column 89"
+    }
+  ],
+  "note": "RSSから取得した候補です。分類はキーワードによる仮判定です。公開前に元記事を確認してください。",
+  "candidates": []
+}
