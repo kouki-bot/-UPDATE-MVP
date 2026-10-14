@@ -201,8 +201,19 @@ def fetch_rss(source):
     )
 
     with urlopen(request, timeout=20) as response:
-        return response.read(3_000_000)
+        raw_data = response.read(3_000_000)
 
+    # UTF-8として読み込み、文字コードの問題を確認しやすくする
+    text = raw_data.decode("utf-8-sig", errors="replace")
+
+    # XMLで禁止されている制御文字を除去
+    text = re.sub(
+        r"[\x00-\x08\x0B\x0C\x0E-\x1F]",
+        "",
+        text,
+    )
+
+    return text.encode("utf-8")
 def main():
     os.makedirs("data", exist_ok=True)
 
