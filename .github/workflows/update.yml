@@ -21,8 +21,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Collect news candidates
+      - name: Collect official news candidates
         run: python scripts/collect_news.py
+
+      - name: Collect RSS news candidates
+        run: python scripts/collect_rss.py
 
       - name: Generate article drafts
         run: python scripts/generate_drafts.py
@@ -31,7 +34,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/source_checks.json data/drafts.json
+          git add data/source_checks.json data/rss_candidates.json data/drafts.json
           git diff --cached --quiet && exit 0
           git commit -m "Update news candidates and drafts"
           git pull --rebase origin main
