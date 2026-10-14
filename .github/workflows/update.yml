@@ -21,13 +21,18 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Collect official source checks
+      - name: Collect news candidates
         run: python scripts/collect_news.py
+
+      - name: Generate article drafts
+        run: python scripts/generate_drafts.py
 
       - name: Save results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/source_checks.json
-          git diff --cached --quiet || git commit -m "Update official source checks"
-          git push
+          git add data/source_checks.json data/drafts.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update news candidates and drafts"
+          git pull --rebase origin main
+          git push origin main
