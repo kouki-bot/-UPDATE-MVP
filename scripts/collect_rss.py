@@ -11,7 +11,7 @@ from xml.etree import ElementTree
 RSS_SOURCES = [
     {
         "name": "山口宇部経済新聞",
-        "url": "https://yamaguchi.keizai.biz/rss/",
+        "url": "https://yamaguchi.keizai.biz/rss.xml",
         "area": [
             "山口市",
             "宇部市",
