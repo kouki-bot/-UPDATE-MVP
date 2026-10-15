@@ -197,7 +197,9 @@ def make_candidate(item, source):
     categories = classify_text(
         title + " " + description
     )
-
+    
+    priority = get_priority(categories)
+    
     item_id = hashlib.sha256(
         link.encode("utf-8")
     ).hexdigest()[:16]
