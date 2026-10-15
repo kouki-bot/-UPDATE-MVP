@@ -8,6 +8,11 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 from xml.etree import ElementTree
 
+
+# ==========================================
+# RSS情報源
+# ==========================================
+
 RSS_SOURCES = [
     {
         "name": "山口宇部経済新聞",
@@ -29,8 +34,14 @@ RSS_SOURCES = [
     },
 ]
 
+
 OUTPUT_FILE = "data/rss_candidates.json"
 MAX_ITEMS_PER_SOURCE = 100
+
+
+# ==========================================
+# 分類キーワード
+# ==========================================
 
 KEYWORD_GROUPS = {
     "新店・開店": [
@@ -70,11 +81,17 @@ KEYWORD_GROUPS = {
     ],
 }
 
+
 EXCLUDE_KEYWORDS = [
     "みんなの経済新聞",
     "仙台経済新聞",
     "横浜経済新聞",
 ]
+
+
+# ==========================================
+# 文字列処理
+# ==========================================
 
 def clean_text(value):
     value = re.sub(r"<[^>]+>", " ", str(value or ""))
@@ -82,12 +99,16 @@ def clean_text(value):
     value = re.sub(r"\s+", " ", value)
     return value.strip()
 
+
 def get_text(element, names):
     for child in element:
         tag = child.tag.split("}")[-1].lower()
+
         if tag in names:
             return clean_text("".join(child.itertext()))
+
     return ""
+
 
 def get_link(element):
     for child in element:
@@ -104,6 +125,11 @@ def get_link(element):
                 return child.text.strip()
 
     return ""
+
+
+# ==========================================
+# 日付処理
+# ==========================================
 
 def parse_date(value):
     if not value:
@@ -135,6 +161,11 @@ def parse_date(value):
     except (TypeError, ValueError, OverflowError):
         return ""
 
+
+# ==========================================
+# 記事分類
+# ==========================================
+
 def classify_text(text):
     text = clean_text(text)
     categories = []
@@ -143,10 +174,11 @@ def classify_text(text):
         if any(keyword in text for keyword in keywords):
             categories.append(category)
 
-    # 「オープンデータ」などの誤判定を抑える
+    # オープンデータ関連の記事を開店情報と誤認しない
     if "オープンデータ" in text:
         categories = [
-            category for category in categories
+            category
+            for category in categories
             if category != "新店・開店"
         ]
 
@@ -154,24 +186,40 @@ def classify_text(text):
 
 
 def get_priority(categories):
-    # 数字が小さいほど優先度が高い
-    if "新店・開店" in categories:
+    """
+    数字が小さいほど確認の優先順位が高い。
+    """
+
+    # 新店・閉店を最優先
+    if (
+        "新店・開店" in categories
+        or "閉店" in categories
+    ):
         return 1
 
-    if "閉店" in categories:
-        return 1
-
-    if "移転" in categories or "リニューアル" in categories:
+    # 移転・リニューアル
+    if (
+        "移転" in categories
+        or "リニューアル" in categories
+    ):
         return 2
 
+    # 求人
     if "求人" in categories:
         return 3
 
+    # イベント
     if "イベント" in categories:
         return 4
 
+    # 分類できなかった記事
     return 5
-    
+
+
+# ==========================================
+# RSS記事を候補データに変換
+# ==========================================
+
 def make_candidate(item, source):
     title = get_text(item, {"title"})
     link = get_link(item)
@@ -194,16 +242,19 @@ def make_candidate(item, source):
     if any(word in title for word in EXCLUDE_KEYWORDS):
         return None
 
-    categories = classify_text(
-        title + " " + description
-    )
-    
+    # タイトルと概要から分類
+    combined_text = title + " " + description
+    categories = classify_text(combined_text)
+
+    # 優先順位を計算
     priority = get_priority(categories)
-    
+
+    # 記事URLからIDを生成
     item_id = hashlib.sha256(
         link.encode("utf-8")
     ).hexdigest()[:16]
 
+    # 保存する候補データ
     return {
         "id": item_id,
         "title": title,
@@ -212,6 +263,7 @@ def make_candidate(item, source):
         "source_url": source["url"],
         "area": source["area"],
         "category": categories,
+        "priority": priority,
         "published_date": published_date,
         "description": description[:1500],
         "relevance": (
@@ -224,6 +276,11 @@ def make_candidate(item, source):
             timezone.utc
         ).isoformat(),
     }
+
+
+# ==========================================
+# RSS取得
+# ==========================================
 
 def fetch_rss(source):
     request = Request(
@@ -244,10 +301,12 @@ def fetch_rss(source):
     with urlopen(request, timeout=20) as response:
         raw_data = response.read(3_000_000)
 
-    # UTF-8として読み込み、文字コードの問題を確認しやすくする
-    text = raw_data.decode("utf-8-sig", errors="replace")
+    text = raw_data.decode(
+        "utf-8-sig",
+        errors="replace"
+    )
 
-    # XMLで禁止されている制御文字を除去
+    # XMLで禁止されている制御文字を削除
     text = re.sub(
         r"[\x00-\x08\x0B\x0C\x0E-\x1F]",
         "",
@@ -255,6 +314,12 @@ def fetch_rss(source):
     )
 
     return text.encode("utf-8")
+
+
+# ==========================================
+# メイン処理
+# ==========================================
+
 def main():
     os.makedirs("data", exist_ok=True)
 
@@ -275,13 +340,6 @@ def main():
         try:
             xml_data = fetch_rss(source)
 
-            # 取得したデータの冒頭をログに出す
-            preview = xml_data[:500].decode(
-                "utf-8", errors="replace"
-            )
-            print("RSS取得先:", source["url"])
-            print("取得データの冒頭:", repr(preview))
-
             root = ElementTree.fromstring(xml_data)
 
             items = [
@@ -292,13 +350,22 @@ def main():
             ]
 
             result["items_read"] = min(
-                len(items), MAX_ITEMS_PER_SOURCE
+                len(items),
+                MAX_ITEMS_PER_SOURCE
             )
+
             result["status"] = "取得成功"
+
+            print(
+                "取得記事数:",
+                source["name"],
+                result["items_read"]
+            )
 
             for item in items[:MAX_ITEMS_PER_SOURCE]:
                 candidate = make_candidate(
-                    item, source
+                    item,
+                    source
                 )
 
                 if candidate:
@@ -312,29 +379,108 @@ def main():
             ValueError,
         ) as error:
             result["error"] = str(error)[:300]
-            print("取得失敗:", result["error"])
+
+            print(
+                "取得失敗:",
+                source["name"],
+                result["error"]
+            )
 
         source_results.append(result)
 
-    # URLで重複を除外
+    # ======================================
+    # URLで重複排除
+    # ======================================
+
     unique = {}
 
     for item in candidates:
-        unique[item["url"]] = item
+        url = item["url"]
+
+        if url not in unique:
+            unique[url] = item
+        else:
+            existing = unique[url]
+
+            # 概要が空なら、別の候補にある概要を補う
+            if (
+                not existing["description"]
+                and item["description"]
+            ):
+                existing["description"] = item["description"]
+
+            # 分類を統合
+            existing["category"] = sorted(
+                set(
+                    existing["category"]
+                    + item["category"]
+                )
+            )
+
+            # 優先順位を再計算
+            existing["priority"] = get_priority(
+                existing["category"]
+            )
+
+            # エリア情報を統合
+            existing["area"] = sorted(
+                set(
+                    existing["area"]
+                    + item["area"]
+                )
+            )
+
+    # ======================================
+    # 優先順位で並べ替え
+    # ======================================
+
+    sorted_candidates = sorted(
+        unique.values(),
+        key=lambda item: (
+            item["priority"],
+            item["published_date"] or "",
+            item["title"],
+        ),
+        reverse=False,
+    )
+
+    # ======================================
+    # 分類別の件数を集計
+    # ======================================
+
+    category_counts = {}
+
+    for item in sorted_candidates:
+        if not item["category"]:
+            category_counts["未分類"] = (
+                category_counts.get("未分類", 0) + 1
+            )
+
+        for category in item["category"]:
+            category_counts[category] = (
+                category_counts.get(category, 0) + 1
+            )
+
+    # ======================================
+    # JSON保存
+    # ======================================
 
     output = {
         "generated_at": datetime.now(
             timezone.utc
         ).isoformat(),
         "source_count": len(source_results),
-        "candidate_count": len(unique),
+        "candidate_count": len(sorted_candidates),
+        "category_counts": category_counts,
         "sources": source_results,
         "note": (
             "RSSから取得した候補です。"
-            "分類はキーワードによる仮判定です。"
-            "公開前に元記事を確認してください。"
+            "分類と優先順位はキーワードによる仮判定です。"
+            "優先順位1は新店・閉店の確認候補です。"
+            "すべて未確認のため、元記事を確認するまで"
+            "公開しないでください。"
         ),
-        "candidates": list(unique.values()),
+        "candidates": sorted_candidates,
     }
 
     with open(
@@ -350,15 +496,25 @@ def main():
         )
 
     print("情報源:", len(source_results))
-    print("記事候補:", len(unique))
+    print("記事候補:", len(sorted_candidates))
+    print("分類別件数:", category_counts)
     print("保存先:", OUTPUT_FILE)
 
-    for item in unique.values():
-        print(
-            "-", item["category"],
-            item["title"],
-            item["url"],
-        )
+    print("\n優先順位の高い記事:")
+
+    for item in sorted_candidates:
+        if item["priority"] <= 2:
+            print(
+                "- 優先順位:",
+                item["priority"],
+                "| 分類:",
+                item["category"],
+                "| タイトル:",
+                item["title"],
+                "| URL:",
+                item["url"],
+            )
+
 
 if __name__ == "__main__":
     main()
