@@ -1,16 +1,251 @@
 {
-  "generated_at": "2026-10-14T23:29:10.288425+00:00",
+  "generated_at": "2026-10-15T13:06:38.926813+00:00",
   "source_count": 1,
-  "candidate_count": 0,
+  "candidate_count": 10,
   "sources": [
     {
       "name": "山口宇部経済新聞",
-      "url": "https://yamaguchi.keizai.biz/rss/",
-      "status": "取得失敗",
-      "items_read": 0,
-      "error": "not well-formed (invalid token): line 31, column 89"
+      "url": "https://yamaguchi.keizai.biz/rss.xml",
+      "status": "取得成功",
+      "items_read": 10,
+      "error": ""
     }
   ],
   "note": "RSSから取得した候補です。分類はキーワードによる仮判定です。公開前に元記事を確認してください。",
-  "candidates": []
+  "candidates": [
+    {
+      "id": "43b9dfcfe09c1a30",
+      "title": "宇部で企画展「彫刻とことば」始まる 記憶や思い出をテーマに作品展示",
+      "url": "http://yamaguchi.keizai.biz/headline/5546/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [],
+      "published_date": "2026-10-15T11:01:49+00:00",
+      "description": "企画展「彫刻とことば ～記録と記憶をたどる～」が10月9日、宇部の「ときわ湖水ホール アートギャラリー」（宇部市沖宇部）で始まった。 #山口宇部経済新聞",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926356+00:00"
+    },
+    {
+      "id": "5922721a03bfd0d7",
+      "title": "山陽小野田で「スマイルハロウィン」 ステージやブース、イベント多彩に",
+      "url": "http://yamaguchi.keizai.biz/headline/5545/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "published_date": "2026-10-14T11:00:17+00:00",
+      "description": "山陽小野田市の魅力をPRするイベント「スマイルハロウィンさんようおのだ2026」が10月18日、「おのサンサッカーパーク」（山陽小野田市小野田）で開催される。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926423+00:00"
+    },
+    {
+      "id": "dd1d1de7ded2c262",
+      "title": "レノファレディース、維新みらスタでホーム最終戦 2千人集客目指す",
+      "url": "http://yamaguchi.keizai.biz/headline/5544/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [],
+      "published_date": "2026-10-13T05:59:39+00:00",
+      "description": "なでしこリーグ2部のレノファ山口FCレディースが10月17日、「維新みらいふスタジアム」（山口市維新公園4）でヴィアティン三重レディースとのホーム最終戦に臨む。 #山口宇部経済新聞",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926473+00:00"
+    },
+    {
+      "id": "bd1a06c885aae7b1",
+      "title": "山口・きららドームで「ハンドメイドマーケット」 2日間2万人来場見込む",
+      "url": "http://yamaguchi.keizai.biz/headline/5543/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "published_date": "2026-10-09T05:23:17+00:00",
+      "description": "ハンドメードイベント「山口きららハンドメイドマーケット2026秋」が10月17日・18日の2日間、山口市阿知須の山口きらら博記念公園「やまぐち富士商ドーム（きららドーム）」で開催される。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926519+00:00"
+    },
+    {
+      "id": "de80ebf7f3e42e0e",
+      "title": "山陽小野田の農場「花の海」でキバナコスモス満開",
+      "url": "http://yamaguchi.keizai.biz/headline/5542/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [],
+      "published_date": "2026-10-08T07:07:07+00:00",
+      "description": "山陽小野田市埴生の総合園芸農場「花の海」（TEL 0836-79-0130）で10月8日、キバナコスモスが満開の見頃を迎えている。 #山口宇部経済新聞",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926590+00:00"
+    },
+    {
+      "id": "55ad15830db5ec42",
+      "title": "新山口駅で「ナナシマチBEER＆HARVEST」 地ビールとグルメ集結",
+      "url": "http://yamaguchi.keizai.biz/headline/5541/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "published_date": "2026-10-07T07:49:23+00:00",
+      "description": "山口県央エリアの地ビールや食の魅力を伝えるイベント「ナナシマチBEER＆HARVEST（ビアーアンドハーベスト）」が10月11日、新山口駅北口駅前広場（山口市小郡令和1）で開催される。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926635+00:00"
+    },
+    {
+      "id": "f4071aee9bdb2e1e",
+      "title": "山口パッツファイブのホーム戦 サインボール進呈や抽選会などイベント多彩",
+      "url": "http://yamaguchi.keizai.biz/headline/5540/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "published_date": "2026-10-06T11:11:42+00:00",
+      "description": "プロバスケットボールリーグ「B.NEXT」の山口パッツファイブが10月10日・11日、宇部の「俵田翁記念体育館」（宇部市恩田町4）でしながわシティバスケットボールクラブとのホーム戦に臨む。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926680+00:00"
+    },
+    {
+      "id": "e356da24e2a86c76",
+      "title": "宇部ときわ公園で「TOKIWAレイク・アートフェス」初開催へ",
+      "url": "http://yamaguchi.keizai.biz/headline/5539/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "published_date": "2026-10-05T02:45:00+00:00",
+      "description": "食と音楽、野外彫刻が一体となったイベント「TOKIWAレイク・アートフェス ～私を彫刻の丘に連れてって～」が10月11日、宇部ときわ公園（宇部市野中3）の彫刻の丘周辺で開催される。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926723+00:00"
+    },
+    {
+      "id": "202c775e33cb59a9",
+      "title": "宇部で「うべスポーツフェス」開催へ 体験ブースやショーなど多彩に",
+      "url": "http://yamaguchi.keizai.biz/headline/5538/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "published_date": "2026-10-02T09:17:28+00:00",
+      "description": "スポーツ体験イベント「うべスポーツフェス2026」が10月12日、宇部の「恩田スポーツパーク」（宇部市恩田町4）で開催される。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926768+00:00"
+    },
+    {
+      "id": "16403945a1326172",
+      "title": "宇部で「古着イベント」 県内外から20店舗が集結、雑貨や飲食も",
+      "url": "http://yamaguchi.keizai.biz/headline/5537/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "published_date": "2026-10-01T09:47:22+00:00",
+      "description": "「古着好きによる古着好きのための古着イベント」が10月12日、宇部の「ときわ湖水ホール」（宇部市沖宇部）で開催される。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:06:38.926808+00:00"
+    }
+  ]
 }
