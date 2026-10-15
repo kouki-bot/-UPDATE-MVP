@@ -1,7 +1,14 @@
 {
-  "generated_at": "2026-10-15T13:18:20.413920+00:00",
+  "generated_at": "2026-10-15T13:38:47.122730+00:00",
   "source_count": 3,
   "candidate_count": 30,
+  "category_counts": {
+    "閉店": 2,
+    "新店・開店": 4,
+    "移転": 1,
+    "イベント": 18,
+    "未分類": 7
+  },
   "sources": [
     {
       "name": "山口宇部経済新聞",
@@ -25,217 +32,169 @@
       "error": ""
     }
   ],
-  "note": "RSSから取得した候補です。分類はキーワードによる仮判定です。公開前に元記事を確認してください。",
+  "note": "RSSから取得した候補です。分類と優先順位はキーワードによる仮判定です。優先順位1は新店・閉店の確認候補です。すべて未確認のため、元記事を確認するまで公開しないでください。",
   "candidates": [
     {
-      "id": "43b9dfcfe09c1a30",
-      "title": "宇部で企画展「彫刻とことば」始まる 記憶や思い出をテーマに作品展示",
-      "url": "http://yamaguchi.keizai.biz/headline/5546/",
-      "source_name": "山口宇部経済新聞",
-      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "id": "31c2aeb80c24e5c1",
+      "title": "【山口市】欲しいが詰まった、山口市黒川にある楽しさ満点の「雑貨店」が、なんと近日閉店されるそうです…。",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/22/village_yamaguchi0430/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
       "area": [
         "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
+        "防府市"
       ],
-      "category": [],
-      "published_date": "2026-10-15T11:01:49+00:00",
-      "description": "企画展「彫刻とことば ～記録と記憶をたどる～」が10月9日、宇部の「ときわ湖水ホール アートギャラリー」（宇部市沖宇部）で始まった。 #山口宇部経済新聞",
-      "relevance": "内容確認が必要",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "2025-04-22T14:48:00+00:00",
+      "description": "情報ご提供者様より、山口市黒川にある「雑貨店」がなんと閉店されるとの驚きの情報を頂きました。 閉店されるお店は、維新公園から山口市黒川まで繋がる道の途中にあります。矢原駅を通り過ぎると、そろそろお店へと到着するのですが、 [&#8230;]",
+      "relevance": "関連キーワードあり",
       "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105568+00:00"
+      "checked_at": "2026-10-15T13:38:45.761787+00:00"
     },
     {
-      "id": "5922721a03bfd0d7",
-      "title": "山陽小野田で「スマイルハロウィン」 ステージやブース、イベント多彩に",
-      "url": "http://yamaguchi.keizai.biz/headline/5545/",
-      "source_name": "山口宇部経済新聞",
-      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "id": "fec3cd3433756024",
+      "title": "【山口市】間もなく待望のオープン。中国地方で最大級規模の「フラワーガーデン」は一体どんな感じ？気になり訪れてみました！",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/23/flowergarden_0425open/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
       "area": [
         "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
+        "防府市"
+      ],
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2025-04-23T13:56:00+00:00",
+      "description": "いよいよ2日後の2025年4月25日(金)、山口きらら博記念公園にて、中国地方で最大級規模の「フラワーガーデン」がオープンされるそうです！ フラワーガーデンでは、マリーゴールド・ナデシコ・バーベナ等の全11品目の花苗を植 [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:45.761735+00:00"
+    },
+    {
+      "id": "c3f9b08898bc9779",
+      "title": "【山口市】ご提供頂いた情報により、嬉しい詳細が判明！建設中の「ラーメン山岡家」について判明したことは一体…？！",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/26/newshop_2025route9/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
+      "area": [
+        "山口市",
+        "防府市"
+      ],
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2025-04-26T14:56:00+00:00",
+      "description": "2025年5月27日(火)のオープンに向けて、日々施工が進む「ラーメン山岡家 山口店」建設地。 山口市初出店となる「ラーメン山岡家」の建設地は、山口市吉敷の国道9号線沿い。以前「スタジオマリオ 山口・バイパス吉敷店」があ [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:45.761575+00:00"
+    },
+    {
+      "id": "fffd60e493a6b112",
+      "title": "【防府市】防府市天神に施工中の「横浜家系ラーメン京いち家」オープン日が判明！美味しい食事を楽しめるのは間もなく！？",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/28/tastyfood_newopen2025/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
+      "area": [
+        "山口市",
+        "防府市"
+      ],
+      "category": [
+        "新店・開店",
+        "閉店",
+        "移転"
+      ],
+      "priority": 1,
+      "published_date": "2025-04-28T14:38:00+00:00",
+      "description": "先日移転オープンのため閉店された「すき家 防府天神店」跡地にて施工中の、防府市初上陸となる「横浜家系ラーメン京いち家」。 キレのある醤油ダレに、手間をかけて旨みを抽出した濃厚豚骨スープや、自家製麺工場で作られるモチモチ特 [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:45.761467+00:00"
+    },
+    {
+      "id": "43751c45b732165d",
+      "title": "【山口市】すっかりと完成に近付く「湯田温泉こんこんパーク」。待望のオープンに施設詳細が判明！気になる詳細は…？！",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/29/yudapark_202506/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
+      "area": [
+        "山口市",
+        "防府市"
+      ],
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2025-04-29T14:28:00+00:00",
+      "description": "山口市湯田温泉5丁目に以前より建設中の「湯田温泉こんこんパーク」。 前回訪れた際は、大きく仮囲いが設置されつつ、敷地内は工事資材や工事車両がたくさん。大掛かりな工事が写真からも窺えます…。 そして先日、久しぶりに「湯田温 [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:45.761413+00:00"
+    },
+    {
+      "id": "83e94e0845d36cae",
+      "title": "【山口市】こどもの日は体を動かして楽しもう♪山口南総合センターでは、トレーニングルームなどを無料開放するイベントを開催！",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/24/sportandchildday_2025/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
+      "area": [
+        "山口市",
+        "防府市"
       ],
       "category": [
         "イベント"
       ],
-      "published_date": "2026-10-14T11:00:17+00:00",
-      "description": "山陽小野田市の魅力をPRするイベント「スマイルハロウィンさんようおのだ2026」が10月18日、「おのサンサッカーパーク」（山陽小野田市小野田）で開催される。 #山口宇部経済新聞",
+      "priority": 4,
+      "published_date": "2025-04-24T13:58:00+00:00",
+      "description": "もうすぐ待望のゴールデンウイーク。2025年4月もあっという間に後半となり、5月が近付いています。 街でこいのぼりを見ることも増えてきたこの頃ですが、5月5日(月・祝)のこどもの日に「山口南総合センター」にて、誰もが楽し [&#8230;]",
       "relevance": "関連キーワードあり",
       "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105631+00:00"
+      "checked_at": "2026-10-15T13:38:45.761683+00:00"
     },
     {
-      "id": "dd1d1de7ded2c262",
-      "title": "レノファレディース、維新みらスタでホーム最終戦 2千人集客目指す",
-      "url": "http://yamaguchi.keizai.biz/headline/5544/",
-      "source_name": "山口宇部経済新聞",
-      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "id": "0cb36df02e51d5ee",
+      "title": "【山口市】市立図書館が大賑わい♪26日(土)は「第10回こどもワイワイ図書館」が市内各図書館にて開催されます。",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/25/libraryevent_2025/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
       "area": [
         "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
-      ],
-      "category": [],
-      "published_date": "2026-10-13T05:59:39+00:00",
-      "description": "なでしこリーグ2部のレノファ山口FCレディースが10月17日、「維新みらいふスタジアム」（山口市維新公園4）でヴィアティン三重レディースとのホーム最終戦に臨む。 #山口宇部経済新聞",
-      "relevance": "内容確認が必要",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105673+00:00"
-    },
-    {
-      "id": "bd1a06c885aae7b1",
-      "title": "山口・きららドームで「ハンドメイドマーケット」 2日間2万人来場見込む",
-      "url": "http://yamaguchi.keizai.biz/headline/5543/",
-      "source_name": "山口宇部経済新聞",
-      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
-      "area": [
-        "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
+        "防府市"
       ],
       "category": [
         "イベント"
       ],
-      "published_date": "2026-10-09T05:23:17+00:00",
-      "description": "ハンドメードイベント「山口きららハンドメイドマーケット2026秋」が10月17日・18日の2日間、山口市阿知須の山口きらら博記念公園「やまぐち富士商ドーム（きららドーム）」で開催される。 #山口宇部経済新聞",
+      "priority": 4,
+      "published_date": "2025-04-25T14:48:00+00:00",
+      "description": "2025年4月26日(土)、山口市内6ヶ所の市立図書館にて、お楽しみのイベントを全館同時開催されるそうです。 いつもは静かな図書館。この日だけは明るい声で賑やかとなりそうですね。果たして、一体どんなイベントが開催されるの [&#8230;]",
       "relevance": "関連キーワードあり",
       "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105710+00:00"
+      "checked_at": "2026-10-15T13:38:45.761629+00:00"
     },
     {
-      "id": "de80ebf7f3e42e0e",
-      "title": "山陽小野田の農場「花の海」でキバナコスモス満開",
-      "url": "http://yamaguchi.keizai.biz/headline/5542/",
-      "source_name": "山口宇部経済新聞",
-      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "id": "d2c6557d7a77df63",
+      "title": "【山口市・防府市】いよいよ5月がスタート！週末に開催される、わくわくのイベント情報をまとめてみました♪",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/30/2025may_event/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
       "area": [
         "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
-      ],
-      "category": [],
-      "published_date": "2026-10-08T07:07:07+00:00",
-      "description": "山陽小野田市埴生の総合園芸農場「花の海」（TEL 0836-79-0130）で10月8日、キバナコスモスが満開の見頃を迎えている。 #山口宇部経済新聞",
-      "relevance": "内容確認が必要",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105745+00:00"
-    },
-    {
-      "id": "55ad15830db5ec42",
-      "title": "新山口駅で「ナナシマチBEER＆HARVEST」 地ビールとグルメ集結",
-      "url": "http://yamaguchi.keizai.biz/headline/5541/",
-      "source_name": "山口宇部経済新聞",
-      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
-      "area": [
-        "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
+        "防府市"
       ],
       "category": [
         "イベント"
       ],
-      "published_date": "2026-10-07T07:49:23+00:00",
-      "description": "山口県央エリアの地ビールや食の魅力を伝えるイベント「ナナシマチBEER＆HARVEST（ビアーアンドハーベスト）」が10月11日、新山口駅北口駅前広場（山口市小郡令和1）で開催される。 #山口宇部経済新聞",
+      "priority": 4,
+      "published_date": "2025-04-30T14:54:00+00:00",
+      "description": "いよいよ5月がスタート。2025年に入り、すっかりと5ヶ月が経ちました。ちょうど良い気候で過ごしやすい時期ですが、山口市・防府市では様々なイベントを開催されるようです！ ・道の駅きららあじす ハンドメイドマーケットGW( [&#8230;]",
       "relevance": "関連キーワードあり",
       "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105778+00:00"
-    },
-    {
-      "id": "f4071aee9bdb2e1e",
-      "title": "山口パッツファイブのホーム戦 サインボール進呈や抽選会などイベント多彩",
-      "url": "http://yamaguchi.keizai.biz/headline/5540/",
-      "source_name": "山口宇部経済新聞",
-      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
-      "area": [
-        "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2026-10-06T11:11:42+00:00",
-      "description": "プロバスケットボールリーグ「B.NEXT」の山口パッツファイブが10月10日・11日、宇部の「俵田翁記念体育館」（宇部市恩田町4）でしながわシティバスケットボールクラブとのホーム戦に臨む。 #山口宇部経済新聞",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105814+00:00"
-    },
-    {
-      "id": "e356da24e2a86c76",
-      "title": "宇部ときわ公園で「TOKIWAレイク・アートフェス」初開催へ",
-      "url": "http://yamaguchi.keizai.biz/headline/5539/",
-      "source_name": "山口宇部経済新聞",
-      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
-      "area": [
-        "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2026-10-05T02:45:00+00:00",
-      "description": "食と音楽、野外彫刻が一体となったイベント「TOKIWAレイク・アートフェス ～私を彫刻の丘に連れてって～」が10月11日、宇部ときわ公園（宇部市野中3）の彫刻の丘周辺で開催される。 #山口宇部経済新聞",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105846+00:00"
-    },
-    {
-      "id": "202c775e33cb59a9",
-      "title": "宇部で「うべスポーツフェス」開催へ 体験ブースやショーなど多彩に",
-      "url": "http://yamaguchi.keizai.biz/headline/5538/",
-      "source_name": "山口宇部経済新聞",
-      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
-      "area": [
-        "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2026-10-02T09:17:28+00:00",
-      "description": "スポーツ体験イベント「うべスポーツフェス2026」が10月12日、宇部の「恩田スポーツパーク」（宇部市恩田町4）で開催される。 #山口宇部経済新聞",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105880+00:00"
+      "checked_at": "2026-10-15T13:38:45.761353+00:00"
     },
     {
       "id": "16403945a1326172",
@@ -255,366 +214,62 @@
       "category": [
         "イベント"
       ],
+      "priority": 4,
       "published_date": "2026-10-01T09:47:22+00:00",
       "description": "「古着好きによる古着好きのための古着イベント」が10月12日、宇部の「ときわ湖水ホール」（宇部市沖宇部）で開催される。 #山口宇部経済新聞",
       "relevance": "関連キーワードあり",
       "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:17.105910+00:00"
+      "checked_at": "2026-10-15T13:38:44.503560+00:00"
     },
     {
-      "id": "1d4648364ca424df",
-      "title": "【山口市・防府市】7日ごろまで大雨が続く可能性。あなたの家の浸水リスク、知っていますか？",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2026/09/03/mamorioh-heavyrain/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
+      "id": "202c775e33cb59a9",
+      "title": "宇部で「うべスポーツフェス」開催へ 体験ブースやショーなど多彩に",
+      "url": "http://yamaguchi.keizai.biz/headline/5538/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
       "area": [
         "山口市",
-        "防府市"
-      ],
-      "category": [],
-      "published_date": "2026-09-03T09:46:47+00:00",
-      "description": "台風24号と秋雨前線の影響で、各地で雨が強まっています。 今回の台風は動きが遅く、雨の影響が長引く可能性があります。これからの雨の降り方が気になるところです。 7日ごろまで大雨が続く可能性も 【週明けにかけて前線や台風の [&#8230;]",
-      "relevance": "内容確認が必要",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993065+00:00"
-    },
-    {
-      "id": "d2c6557d7a77df63",
-      "title": "【山口市・防府市】いよいよ5月がスタート！週末に開催される、わくわくのイベント情報をまとめてみました♪",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/30/2025may_event/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-      "area": [
-        "山口市",
-        "防府市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2025-04-30T14:54:00+00:00",
-      "description": "いよいよ5月がスタート。2025年に入り、すっかりと5ヶ月が経ちました。ちょうど良い気候で過ごしやすい時期ですが、山口市・防府市では様々なイベントを開催されるようです！ ・道の駅きららあじす ハンドメイドマーケットGW( [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993123+00:00"
-    },
-    {
-      "id": "43751c45b732165d",
-      "title": "【山口市】すっかりと完成に近付く「湯田温泉こんこんパーク」。待望のオープンに施設詳細が判明！気になる詳細は…？！",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/29/yudapark_202506/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-      "area": [
-        "山口市",
-        "防府市"
-      ],
-      "category": [
-        "新店・開店"
-      ],
-      "published_date": "2025-04-29T14:28:00+00:00",
-      "description": "山口市湯田温泉5丁目に以前より建設中の「湯田温泉こんこんパーク」。 前回訪れた際は、大きく仮囲いが設置されつつ、敷地内は工事資材や工事車両がたくさん。大掛かりな工事が写真からも窺えます…。 そして先日、久しぶりに「湯田温 [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993182+00:00"
-    },
-    {
-      "id": "fffd60e493a6b112",
-      "title": "【防府市】防府市天神に施工中の「横浜家系ラーメン京いち家」オープン日が判明！美味しい食事を楽しめるのは間もなく！？",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/28/tastyfood_newopen2025/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-      "area": [
-        "山口市",
-        "防府市"
-      ],
-      "category": [
-        "新店・開店",
-        "閉店",
-        "移転"
-      ],
-      "published_date": "2025-04-28T14:38:00+00:00",
-      "description": "先日移転オープンのため閉店された「すき家 防府天神店」跡地にて施工中の、防府市初上陸となる「横浜家系ラーメン京いち家」。 キレのある醤油ダレに、手間をかけて旨みを抽出した濃厚豚骨スープや、自家製麺工場で作られるモチモチ特 [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993221+00:00"
-    },
-    {
-      "id": "6ed5387459b1579a",
-      "title": "【山口市】一体何が…！？山口市阿知須にあったカルチャースクール「フィッカルあじす」跡地に何やら動きが始まったようです。",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/27/storage_ajisu2025/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-      "area": [
-        "山口市",
-        "防府市"
-      ],
-      "category": [],
-      "published_date": "2025-04-27T12:56:00+00:00",
-      "description": "山口市阿知須にあったカルチャースクール「フィッカルあじす」。 フィッカルあじす公式ホームページによると、新型コロナウイルスの影響等により、2022年5月31日(火)をもって閉館されたそうです。トレーニングジムやカルチャー [&#8230;]",
-      "relevance": "内容確認が必要",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993257+00:00"
-    },
-    {
-      "id": "c3f9b08898bc9779",
-      "title": "【山口市】ご提供頂いた情報により、嬉しい詳細が判明！建設中の「ラーメン山岡家」について判明したことは一体…？！",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/26/newshop_2025route9/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-      "area": [
-        "山口市",
-        "防府市"
-      ],
-      "category": [
-        "新店・開店"
-      ],
-      "published_date": "2025-04-26T14:56:00+00:00",
-      "description": "2025年5月27日(火)のオープンに向けて、日々施工が進む「ラーメン山岡家 山口店」建設地。 山口市初出店となる「ラーメン山岡家」の建設地は、山口市吉敷の国道9号線沿い。以前「スタジオマリオ 山口・バイパス吉敷店」があ [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993291+00:00"
-    },
-    {
-      "id": "0cb36df02e51d5ee",
-      "title": "【山口市】市立図書館が大賑わい♪26日(土)は「第10回こどもワイワイ図書館」が市内各図書館にて開催されます。",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/25/libraryevent_2025/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-      "area": [
-        "山口市",
-        "防府市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2025-04-25T14:48:00+00:00",
-      "description": "2025年4月26日(土)、山口市内6ヶ所の市立図書館にて、お楽しみのイベントを全館同時開催されるそうです。 いつもは静かな図書館。この日だけは明るい声で賑やかとなりそうですね。果たして、一体どんなイベントが開催されるの [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993324+00:00"
-    },
-    {
-      "id": "83e94e0845d36cae",
-      "title": "【山口市】こどもの日は体を動かして楽しもう♪山口南総合センターでは、トレーニングルームなどを無料開放するイベントを開催！",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/24/sportandchildday_2025/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-      "area": [
-        "山口市",
-        "防府市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2025-04-24T13:58:00+00:00",
-      "description": "もうすぐ待望のゴールデンウイーク。2025年4月もあっという間に後半となり、5月が近付いています。 街でこいのぼりを見ることも増えてきたこの頃ですが、5月5日(月・祝)のこどもの日に「山口南総合センター」にて、誰もが楽し [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993358+00:00"
-    },
-    {
-      "id": "fec3cd3433756024",
-      "title": "【山口市】間もなく待望のオープン。中国地方で最大級規模の「フラワーガーデン」は一体どんな感じ？気になり訪れてみました！",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/23/flowergarden_0425open/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-      "area": [
-        "山口市",
-        "防府市"
-      ],
-      "category": [
-        "新店・開店"
-      ],
-      "published_date": "2025-04-23T13:56:00+00:00",
-      "description": "いよいよ2日後の2025年4月25日(金)、山口きらら博記念公園にて、中国地方で最大級規模の「フラワーガーデン」がオープンされるそうです！ フラワーガーデンでは、マリーゴールド・ナデシコ・バーベナ等の全11品目の花苗を植 [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993392+00:00"
-    },
-    {
-      "id": "31c2aeb80c24e5c1",
-      "title": "【山口市】欲しいが詰まった、山口市黒川にある楽しさ満点の「雑貨店」が、なんと近日閉店されるそうです…。",
-      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/22/village_yamaguchi0430/",
-      "source_name": "号外NET 山口市・防府市",
-      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-      "area": [
-        "山口市",
-        "防府市"
-      ],
-      "category": [
-        "閉店"
-      ],
-      "published_date": "2025-04-22T14:48:00+00:00",
-      "description": "情報ご提供者様より、山口市黒川にある「雑貨店」がなんと閉店されるとの驚きの情報を頂きました。 閉店されるお店は、維新公園から山口市黒川まで繋がる道の途中にあります。矢原駅を通り過ぎると、そろそろお店へと到着するのですが、 [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:18.993426+00:00"
-    },
-    {
-      "id": "20a1510f9083919b",
-      "title": "【山陽小野田市】未就学児の子ども用品を対象にした「秋のリユース会」が10月17日に開催されます！",
-      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/14/smilekids_event1017/",
-      "source_name": "号外NET 宇部市・山陽小野田市",
-      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
-      "area": [
         "宇部市",
-        "山陽小野田市"
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
       ],
       "category": [
         "イベント"
       ],
-      "published_date": "2026-10-14T14:23:10+00:00",
-      "description": "2026年10月17日(土)、山陽小野田市くし山にある「山陽小野田市子育て総合支援センター スマイルキッズ」では、未就学児の子ども用品を対象にしたリユース会を開催されるそうです。 スマイルキッズ2階の多目的室にて開催の「 [&#8230;]",
+      "priority": 4,
+      "published_date": "2026-10-02T09:17:28+00:00",
+      "description": "スポーツ体験イベント「うべスポーツフェス2026」が10月12日、宇部の「恩田スポーツパーク」（宇部市恩田町4）で開催される。 #山口宇部経済新聞",
       "relevance": "関連キーワードあり",
       "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413569+00:00"
+      "checked_at": "2026-10-15T13:38:44.503509+00:00"
     },
     {
-      "id": "994fab7b49920f6b",
-      "title": "【宇部市・山陽小野田市】毎日の暮らしに安心を。スマホに入れたい「山陽小野田・宇部 ごみ出し＆防災ナビ」アプリのご紹介です。",
-      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/13/musthave_2026apps/",
-      "source_name": "号外NET 宇部市・山陽小野田市",
-      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "id": "e356da24e2a86c76",
+      "title": "宇部ときわ公園で「TOKIWAレイク・アートフェス」初開催へ",
+      "url": "http://yamaguchi.keizai.biz/headline/5539/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
       "area": [
+        "山口市",
         "宇部市",
-        "山陽小野田市"
-      ],
-      "category": [],
-      "published_date": "2026-10-13T09:45:57+00:00",
-      "description": "突然ですが、皆さんは「あ、今日燃えるゴミの収集日だった…」と後になって思い出すといった経験はないでしょうか？ もし次回の収集日が翌週となると、捨てておけばよかった…と後悔される方もきっとおられることと思います。 そんな中 [&#8230;]",
-      "relevance": "内容確認が必要",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413624+00:00"
-    },
-    {
-      "id": "68fed29dc9858590",
-      "title": "【宇部市】10月17日・18日開催の「モバイルプラネタリウム投影会」申込締切日まであとわずかです。",
-      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/12/planetarium_1017/",
-      "source_name": "号外NET 宇部市・山陽小野田市",
-      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
-      "area": [
-        "宇部市",
-        "山陽小野田市"
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
       ],
       "category": [
         "イベント"
       ],
-      "published_date": "2026-10-12T07:56:56+00:00",
-      "description": "2026年10月17日(土)・18日(日)に開催の「モバイルプラネタリウム投影会～宇部の星空を学ぼう～」の参加申込は、あとわずかとなりました。 モバイルプラネタリウム投影会では、直径10m( 国内最大級)の大きなエアドー [&#8230;]",
+      "priority": 4,
+      "published_date": "2026-10-05T02:45:00+00:00",
+      "description": "食と音楽、野外彫刻が一体となったイベント「TOKIWAレイク・アートフェス ～私を彫刻の丘に連れてって～」が10月11日、宇部ときわ公園（宇部市野中3）の彫刻の丘周辺で開催される。 #山口宇部経済新聞",
       "relevance": "関連キーワードあり",
       "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413666+00:00"
-    },
-    {
-      "id": "c001d1ed540ddf29",
-      "title": "【宇部市】待望の第2弾！宇部市・山口市の2施設を巡る「花めぐりビンゴラリー」は10月25日まで。",
-      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/11/rallyevent_202610/",
-      "source_name": "号外NET 宇部市・山陽小野田市",
-      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
-      "area": [
-        "宇部市",
-        "山陽小野田市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2026-10-11T14:52:41+00:00",
-      "description": "2026年10月10日(土)より、前回も開催された「 花めぐりビンゴラリー」を開催中です！ 花めぐりビンゴラリー第1弾は、2026年4月25日(土)から5月10日(日)まで開催されました。そして、第2弾では10月25日( [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413702+00:00"
-    },
-    {
-      "id": "9991767a3369f9c5",
-      "title": "【宇部市】かわいいふれあい体験も♪10月11日は「わくわくプレーパークうべ in 蛭子公園」開催。",
-      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/10/enjoyday_1011/",
-      "source_name": "号外NET 宇部市・山陽小野田市",
-      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
-      "area": [
-        "宇部市",
-        "山陽小野田市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2026-10-10T13:56:10+00:00",
-      "description": "2026年10月11日(日)、宇部市島にある蛭子公園(西部体育館横)にて「わくわくプレーパークうべ in 蛭子公園」が開催されます！ 開催時間は午前10時から午後3時までです。当日は、段ボールパニックやスラックライン、竹 [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413738+00:00"
-    },
-    {
-      "id": "8409f91329ca676d",
-      "title": "【宇部市・山陽小野田市】美味しいグルメが大集合！週末は電車に乗って「ナナシマチBEER＆HARVEST」で楽しみませんか♪",
-      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/09/bearfes_2026/",
-      "source_name": "号外NET 宇部市・山陽小野田市",
-      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
-      "area": [
-        "宇部市",
-        "山陽小野田市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2026-10-09T14:32:59+00:00",
-      "description": "ついに、嬉しい三連休がやってきます！涼しく過ごしやすい気候の中、2026年10月11日(日)には楽しい野外イベントが開催されるそうです。 山陽小野田市ホームページによると、山口市にてナナシマチのとっておきのクラフトビール [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413773+00:00"
-    },
-    {
-      "id": "792612ae9e836b1b",
-      "title": "【宇部市】体力測定とニュースポーツを体感しよう！宇部市恩田スポーツパークで「スポちゃれ祭2026」開催。",
-      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/08/sports_allday1012/",
-      "source_name": "号外NET 宇部市・山陽小野田市",
-      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
-      "area": [
-        "宇部市",
-        "山陽小野田市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2026-10-08T14:48:24+00:00",
-      "description": "2026年10月12日(月・祝)スポーツの日に、宇部市恩田スポーツパークで「スポちゃれ祭2026 ～ニュースポーツフェスティバル＆体力測定～」が開催されます！ 開催時間は10時～15時30分までです。また、先日ご紹介した [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413809+00:00"
-    },
-    {
-      "id": "a1a831c69965b73b",
-      "title": "【山陽小野田市】おいしいイベントも！山陽小野田市民活動センターで「ハロウィンワークショップ」開催。",
-      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/07/post-83366/",
-      "source_name": "号外NET 宇部市・山陽小野田市",
-      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
-      "area": [
-        "宇部市",
-        "山陽小野田市"
-      ],
-      "category": [
-        "イベント"
-      ],
-      "published_date": "2026-10-07T14:34:00+00:00",
-      "description": "山陽小野田市中央にある「山陽小野田市民活動センター」にて、近日10月らしいイベントが開催されるそうです！ 10月…と聞くと、きっと「ハロウィン」を思い浮かべる方が多いのではないでしょうか♪なんと、2026年10月10日( [&#8230;]",
-      "relevance": "関連キーワードあり",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413841+00:00"
-    },
-    {
-      "id": "a02fd5b7e9d324ca",
-      "title": "【宇部市】10月9日より「宇部湾岸道路」は、舗装工事に伴い一部時間帯が全面通行止となるそうです。",
-      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/06/post-83356/",
-      "source_name": "号外NET 宇部市・山陽小野田市",
-      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
-      "area": [
-        "宇部市",
-        "山陽小野田市"
-      ],
-      "category": [],
-      "published_date": "2026-10-06T11:32:52+00:00",
-      "description": "宇部湾岸道路(宇部スカイロード)では、2026年10月9日(金)より一部時間帯において、全面通行止となるそうです。 規制区間は、西中町ＩＣから東須恵ＩＣの全区間です。実施期間は10月9日(金)から10月24日(土)までで [&#8230;]",
-      "relevance": "内容確認が必要",
-      "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413875+00:00"
+      "checked_at": "2026-10-15T13:38:44.503461+00:00"
     },
     {
       "id": "11528fc45d875b80",
@@ -629,11 +284,393 @@
       "category": [
         "イベント"
       ],
+      "priority": 4,
       "published_date": "2026-10-05T22:28:47+00:00",
       "description": "山陽小野田市中央図書館では、11月1日(日)15時40分から「英語でおはなし会 ハロウィンファッションショー」を開催されます！ 開催場所は、1F 中央通路（AVコーナーガラス面前）です。「英語でおはなし会」終了後に行われ [&#8230;]",
       "relevance": "関連キーワードあり",
       "status": "未確認・公開禁止",
-      "checked_at": "2026-10-15T13:18:20.413908+00:00"
+      "checked_at": "2026-10-15T13:38:47.122693+00:00"
+    },
+    {
+      "id": "f4071aee9bdb2e1e",
+      "title": "山口パッツファイブのホーム戦 サインボール進呈や抽選会などイベント多彩",
+      "url": "http://yamaguchi.keizai.biz/headline/5540/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-06T11:11:42+00:00",
+      "description": "プロバスケットボールリーグ「B.NEXT」の山口パッツファイブが10月10日・11日、宇部の「俵田翁記念体育館」（宇部市恩田町4）でしながわシティバスケットボールクラブとのホーム戦に臨む。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:44.503410+00:00"
+    },
+    {
+      "id": "55ad15830db5ec42",
+      "title": "新山口駅で「ナナシマチBEER＆HARVEST」 地ビールとグルメ集結",
+      "url": "http://yamaguchi.keizai.biz/headline/5541/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-07T07:49:23+00:00",
+      "description": "山口県央エリアの地ビールや食の魅力を伝えるイベント「ナナシマチBEER＆HARVEST（ビアーアンドハーベスト）」が10月11日、新山口駅北口駅前広場（山口市小郡令和1）で開催される。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:44.503354+00:00"
+    },
+    {
+      "id": "a1a831c69965b73b",
+      "title": "【山陽小野田市】おいしいイベントも！山陽小野田市民活動センターで「ハロウィンワークショップ」開催。",
+      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/07/post-83366/",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-07T14:34:00+00:00",
+      "description": "山陽小野田市中央にある「山陽小野田市民活動センター」にて、近日10月らしいイベントが開催されるそうです！ 10月…と聞くと、きっと「ハロウィン」を思い浮かべる方が多いのではないでしょうか♪なんと、2026年10月10日( [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:47.122609+00:00"
+    },
+    {
+      "id": "792612ae9e836b1b",
+      "title": "【宇部市】体力測定とニュースポーツを体感しよう！宇部市恩田スポーツパークで「スポちゃれ祭2026」開催。",
+      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/08/sports_allday1012/",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-08T14:48:24+00:00",
+      "description": "2026年10月12日(月・祝)スポーツの日に、宇部市恩田スポーツパークで「スポちゃれ祭2026 ～ニュースポーツフェスティバル＆体力測定～」が開催されます！ 開催時間は10時～15時30分までです。また、先日ご紹介した [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:47.122566+00:00"
+    },
+    {
+      "id": "bd1a06c885aae7b1",
+      "title": "山口・きららドームで「ハンドメイドマーケット」 2日間2万人来場見込む",
+      "url": "http://yamaguchi.keizai.biz/headline/5543/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-09T05:23:17+00:00",
+      "description": "ハンドメードイベント「山口きららハンドメイドマーケット2026秋」が10月17日・18日の2日間、山口市阿知須の山口きらら博記念公園「やまぐち富士商ドーム（きららドーム）」で開催される。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:44.503247+00:00"
+    },
+    {
+      "id": "8409f91329ca676d",
+      "title": "【宇部市・山陽小野田市】美味しいグルメが大集合！週末は電車に乗って「ナナシマチBEER＆HARVEST」で楽しみませんか♪",
+      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/09/bearfes_2026/",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-09T14:32:59+00:00",
+      "description": "ついに、嬉しい三連休がやってきます！涼しく過ごしやすい気候の中、2026年10月11日(日)には楽しい野外イベントが開催されるそうです。 山陽小野田市ホームページによると、山口市にてナナシマチのとっておきのクラフトビール [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:47.122521+00:00"
+    },
+    {
+      "id": "9991767a3369f9c5",
+      "title": "【宇部市】かわいいふれあい体験も♪10月11日は「わくわくプレーパークうべ in 蛭子公園」開催。",
+      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/10/enjoyday_1011/",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-10T13:56:10+00:00",
+      "description": "2026年10月11日(日)、宇部市島にある蛭子公園(西部体育館横)にて「わくわくプレーパークうべ in 蛭子公園」が開催されます！ 開催時間は午前10時から午後3時までです。当日は、段ボールパニックやスラックライン、竹 [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:47.122477+00:00"
+    },
+    {
+      "id": "c001d1ed540ddf29",
+      "title": "【宇部市】待望の第2弾！宇部市・山口市の2施設を巡る「花めぐりビンゴラリー」は10月25日まで。",
+      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/11/rallyevent_202610/",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-11T14:52:41+00:00",
+      "description": "2026年10月10日(土)より、前回も開催された「 花めぐりビンゴラリー」を開催中です！ 花めぐりビンゴラリー第1弾は、2026年4月25日(土)から5月10日(日)まで開催されました。そして、第2弾では10月25日( [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:47.122431+00:00"
+    },
+    {
+      "id": "68fed29dc9858590",
+      "title": "【宇部市】10月17日・18日開催の「モバイルプラネタリウム投影会」申込締切日まであとわずかです。",
+      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/12/planetarium_1017/",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-12T07:56:56+00:00",
+      "description": "2026年10月17日(土)・18日(日)に開催の「モバイルプラネタリウム投影会～宇部の星空を学ぼう～」の参加申込は、あとわずかとなりました。 モバイルプラネタリウム投影会では、直径10m( 国内最大級)の大きなエアドー [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:47.122385+00:00"
+    },
+    {
+      "id": "5922721a03bfd0d7",
+      "title": "山陽小野田で「スマイルハロウィン」 ステージやブース、イベント多彩に",
+      "url": "http://yamaguchi.keizai.biz/headline/5545/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-14T11:00:17+00:00",
+      "description": "山陽小野田市の魅力をPRするイベント「スマイルハロウィンさんようおのだ2026」が10月18日、「おのサンサッカーパーク」（山陽小野田市小野田）で開催される。 #山口宇部経済新聞",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:44.503130+00:00"
+    },
+    {
+      "id": "20a1510f9083919b",
+      "title": "【山陽小野田市】未就学児の子ども用品を対象にした「秋のリユース会」が10月17日に開催されます！",
+      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/14/smilekids_event1017/",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "category": [
+        "イベント"
+      ],
+      "priority": 4,
+      "published_date": "2026-10-14T14:23:10+00:00",
+      "description": "2026年10月17日(土)、山陽小野田市くし山にある「山陽小野田市子育て総合支援センター スマイルキッズ」では、未就学児の子ども用品を対象にしたリユース会を開催されるそうです。 スマイルキッズ2階の多目的室にて開催の「 [&#8230;]",
+      "relevance": "関連キーワードあり",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:47.122276+00:00"
+    },
+    {
+      "id": "6ed5387459b1579a",
+      "title": "【山口市】一体何が…！？山口市阿知須にあったカルチャースクール「フィッカルあじす」跡地に何やら動きが始まったようです。",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2025/04/27/storage_ajisu2025/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
+      "area": [
+        "山口市",
+        "防府市"
+      ],
+      "category": [],
+      "priority": 5,
+      "published_date": "2025-04-27T12:56:00+00:00",
+      "description": "山口市阿知須にあったカルチャースクール「フィッカルあじす」。 フィッカルあじす公式ホームページによると、新型コロナウイルスの影響等により、2022年5月31日(火)をもって閉館されたそうです。トレーニングジムやカルチャー [&#8230;]",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:45.761521+00:00"
+    },
+    {
+      "id": "1d4648364ca424df",
+      "title": "【山口市・防府市】7日ごろまで大雨が続く可能性。あなたの家の浸水リスク、知っていますか？",
+      "url": "https://yamaguchi-hofu.goguynet.jp/2026/09/03/mamorioh-heavyrain/",
+      "source_name": "号外NET 山口市・防府市",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/feed/",
+      "area": [
+        "山口市",
+        "防府市"
+      ],
+      "category": [],
+      "priority": 5,
+      "published_date": "2026-09-03T09:46:47+00:00",
+      "description": "台風24号と秋雨前線の影響で、各地で雨が強まっています。 今回の台風は動きが遅く、雨の影響が長引く可能性があります。これからの雨の降り方が気になるところです。 7日ごろまで大雨が続く可能性も 【週明けにかけて前線や台風の [&#8230;]",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:45.761277+00:00"
+    },
+    {
+      "id": "a02fd5b7e9d324ca",
+      "title": "【宇部市】10月9日より「宇部湾岸道路」は、舗装工事に伴い一部時間帯が全面通行止となるそうです。",
+      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/06/post-83356/",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "category": [],
+      "priority": 5,
+      "published_date": "2026-10-06T11:32:52+00:00",
+      "description": "宇部湾岸道路(宇部スカイロード)では、2026年10月9日(金)より一部時間帯において、全面通行止となるそうです。 規制区間は、西中町ＩＣから東須恵ＩＣの全区間です。実施期間は10月9日(金)から10月24日(土)までで [&#8230;]",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:47.122650+00:00"
+    },
+    {
+      "id": "de80ebf7f3e42e0e",
+      "title": "山陽小野田の農場「花の海」でキバナコスモス満開",
+      "url": "http://yamaguchi.keizai.biz/headline/5542/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [],
+      "priority": 5,
+      "published_date": "2026-10-08T07:07:07+00:00",
+      "description": "山陽小野田市埴生の総合園芸農場「花の海」（TEL 0836-79-0130）で10月8日、キバナコスモスが満開の見頃を迎えている。 #山口宇部経済新聞",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:44.503300+00:00"
+    },
+    {
+      "id": "dd1d1de7ded2c262",
+      "title": "レノファレディース、維新みらスタでホーム最終戦 2千人集客目指す",
+      "url": "http://yamaguchi.keizai.biz/headline/5544/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [],
+      "priority": 5,
+      "published_date": "2026-10-13T05:59:39+00:00",
+      "description": "なでしこリーグ2部のレノファ山口FCレディースが10月17日、「維新みらいふスタジアム」（山口市維新公園4）でヴィアティン三重レディースとのホーム最終戦に臨む。 #山口宇部経済新聞",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:44.503192+00:00"
+    },
+    {
+      "id": "994fab7b49920f6b",
+      "title": "【宇部市・山陽小野田市】毎日の暮らしに安心を。スマホに入れたい「山陽小野田・宇部 ごみ出し＆防災ナビ」アプリのご紹介です。",
+      "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/13/musthave_2026apps/",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "category": [],
+      "priority": 5,
+      "published_date": "2026-10-13T09:45:57+00:00",
+      "description": "突然ですが、皆さんは「あ、今日燃えるゴミの収集日だった…」と後になって思い出すといった経験はないでしょうか？ もし次回の収集日が翌週となると、捨てておけばよかった…と後悔される方もきっとおられることと思います。 そんな中 [&#8230;]",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:47.122336+00:00"
+    },
+    {
+      "id": "43b9dfcfe09c1a30",
+      "title": "宇部で企画展「彫刻とことば」始まる 記憶や思い出をテーマに作品展示",
+      "url": "http://yamaguchi.keizai.biz/headline/5546/",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/rss.xml",
+      "area": [
+        "山口市",
+        "宇部市",
+        "山陽小野田市",
+        "美祢市",
+        "防府市",
+        "萩市",
+        "長門市"
+      ],
+      "category": [],
+      "priority": 5,
+      "published_date": "2026-10-15T11:01:49+00:00",
+      "description": "企画展「彫刻とことば ～記録と記憶をたどる～」が10月9日、宇部の「ときわ湖水ホール アートギャラリー」（宇部市沖宇部）で始まった。 #山口宇部経済新聞",
+      "relevance": "内容確認が必要",
+      "status": "未確認・公開禁止",
+      "checked_at": "2026-10-15T13:38:44.503048+00:00"
     }
   ]
 }
