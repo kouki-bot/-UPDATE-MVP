@@ -13,14 +13,19 @@ RSS_SOURCES = [
         "name": "山口宇部経済新聞",
         "url": "https://yamaguchi.keizai.biz/rss.xml",
         "area": [
-            "山口市",
-            "宇部市",
-            "山陽小野田市",
-            "美祢市",
-            "防府市",
-            "萩市",
-            "長門市",
+            "山口市", "宇部市", "山陽小野田市",
+            "美祢市", "防府市", "萩市", "長門市"
         ],
+    },
+    {
+        "name": "号外NET 山口市・防府市",
+        "url": "https://yamaguchi-hofu.goguynet.jp/feed/",
+        "area": ["山口市", "防府市"],
+    },
+    {
+        "name": "号外NET 宇部市・山陽小野田市",
+        "url": "https://ube-sanyoonoda.goguynet.jp/feed/",
+        "area": ["宇部市", "山陽小野田市"],
     },
 ]
 
