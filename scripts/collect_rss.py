@@ -136,6 +136,7 @@ def parse_date(value):
         return ""
 
 def classify_text(text):
+    text = clean_text(text)
     categories = []
 
     for category, keywords in KEYWORD_GROUPS.items():
@@ -151,6 +152,26 @@ def classify_text(text):
 
     return categories
 
+
+def get_priority(categories):
+    # 数字が小さいほど優先度が高い
+    if "新店・開店" in categories:
+        return 1
+
+    if "閉店" in categories:
+        return 1
+
+    if "移転" in categories or "リニューアル" in categories:
+        return 2
+
+    if "求人" in categories:
+        return 3
+
+    if "イベント" in categories:
+        return 4
+
+    return 5
+    
 def make_candidate(item, source):
     title = get_text(item, {"title"})
     link = get_link(item)
