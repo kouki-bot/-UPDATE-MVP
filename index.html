@@ -1,328 +1,282 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>山口ローカルUPDATE｜山口県の新店・閉店・地域情報</title>
-
-  <meta
-    name="description"
-    content="山口県の新店・閉店・移転・リニューアル・イベント情報を紹介する地域情報サイト。確認済みの地域情報を分かりやすくお届けします。"
-  >
-
-  <meta name="theme-color" content="#f7f8f5">
-
+  <meta name="theme-color" content="#f7f6f0">
+  <meta name="description" content="山口県の新店舗・閉店・移転・リニューアル情報をお届けする地域情報メディア。">
+  <title>YAMAGUCHI LOCAL UPDATE｜山口のお店の新しい情報</title>
   <link rel="stylesheet" href="index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-
-<header class="site-header">
-  <div class="container header-inner">
-
-    <a class="logo" href="index.html">
-      山口ローカルUPDATE
-      <span>YAMAGUCHI LOCAL UPDATE</span>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="トップページ">
+      <span class="brand-mark">LU<span>.</span></span>
+      <span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span>
     </a>
-
-    <nav class="nav">
-      <a href="index.html">トップ</a>
-      <a href="new.html">新店情報</a>
+    <nav class="header-nav" aria-label="メインメニュー">
+      <a href="#latest">LATEST</a>
+      <a href="new.html">新店舗</a>
       <a href="closed.html">閉店情報</a>
-      <a href="listing.html">掲載依頼</a>
-      <a href="contact.html">お問い合わせ</a>
+      <a class="nav-contact" href="listing.html">掲載・相談</a>
     </nav>
+  </header>
 
-  </div>
-</header>
-
-<main>
-
-  <section class="hero">
-    <div class="container hero-inner">
-
-      <span class="eyebrow">YAMAGUCHI LOCAL UPDATE</span>
-
-      <h1>
-        山口の街の変化を、<br>
-        もっと身近に。
-      </h1>
-
-      <p>
-        新しいお店、閉店、移転、リニューアル、地域のイベント。
-        山口県内の新しい動きを、情報源とともに分かりやすく紹介します。
-      </p>
-
-      <div class="btns">
-        <a class="btn" href="new.html">新店情報を見る</a>
-        <a class="btn secondary" href="closed.html">閉店情報を見る</a>
-      </div>
-
-      <div class="kpi">
-        <div>
-          <strong>NEW OPEN</strong>
-          <span>新店・開店情報</span>
-        </div>
-
-        <div>
-          <strong>CLOSE</strong>
-          <span>閉店・営業終了</span>
-        </div>
-
-        <div>
-          <strong>LOCAL</strong>
-          <span>地域・イベント情報</span>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">LATEST UPDATES</span>
-          <h2>地域の新着情報</h2>
-          <p>確認済みの地域情報を掲載しています。</p>
-        </div>
-
-        <a href="new.html" class="meta">新店一覧 →</a>
-      </div>
-
-      <div id="published-articles" class="grid" aria-live="polite">
-        <p class="notice">公開情報を読み込んでいます。</p>
-      </div>
-
-      <div class="notice">
-        <strong>掲載情報について</strong>
-        <p>
-          掲載前に情報源を確認しています。
-          開店日、営業時間、イベント開催状況などは変更される場合があります。
-          お出かけ前には、リンク先の公式情報もご確認ください。
+  <main>
+    <section class="hero">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span></span> YOUR TOWN, YOUR UPDATE</p>
+        <h1>山口のお店の、<br>新しい動きを。</h1>
+        <p class="hero-description">
+          新しくできるお店。街を離れるお店。<br>
+          山口の街の変化を、わかりやすくお届けします。
         </p>
+        <a class="hero-link" href="#latest">
+          最新情報を見る <span>↘</span>
+        </a>
       </div>
 
-    </div>
-  </section>
+      <div class="hero-art reveal" aria-label="山口の街をイメージした装飾">
+        <div class="art-circle circle-one"></div>
+        <div class="art-circle circle-two"></div>
+        <div class="art-label">LOCAL<br>STORIES<br><span>YAMAGUCHI, JP</span></div>
+        <div class="art-bottom">DISCOVER SOMETHING NEW.</div>
+        <div class="art-number">01</div>
+      </div>
 
-  <section class="section section-soft">
-    <div class="container">
+      <div class="hero-side-note">LOCAL INFORMATION / YAMAGUCHI</div>
+    </section>
 
-      <div class="section-head">
+    <section class="category-section reveal" aria-label="カテゴリ">
+      <div class="section-kicker">EXPLORE</div>
+      <div class="category-grid">
+        <a class="category-card category-new" href="new.html">
+          <span class="category-number">01 / OPEN</span>
+          <span class="category-title">新しくできるお店</span>
+          <span class="category-sub">NEW & OPENING</span>
+          <span class="category-arrow">↗</span>
+        </a>
+        <a class="category-card category-closed" href="closed.html">
+          <span class="category-number">02 / CLOSE</span>
+          <span class="category-title">閉店・移転の情報</span>
+          <span class="category-sub">CLOSING & MOVING</span>
+          <span class="category-arrow">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="latest-section" id="latest">
+      <div class="section-heading reveal">
         <div>
-          <span class="eyebrow">FIND LOCAL INFORMATION</span>
-          <h2>知りたい情報から探す</h2>
-          <p>気になる地域の変化をカテゴリーから探せます。</p>
+          <p class="eyebrow"><span></span> THE LATEST</p>
+          <h2>街の最新ニュース<span class="heading-dot">.</span></h2>
+          <p class="section-description">山口のお店に関する、新しい情報をチェック。</p>
         </div>
+        <span class="heading-en">LOCAL<br>UPDATES</span>
       </div>
 
-      <div class="grid category-grid">
-
-        <a class="card category-card" href="new.html">
-          <span class="category-number">01</span>
-          <h3>新店・開店</h3>
-          <p>新しくオープンするお店や施設</p>
-          <span class="meta">情報を見る →</span>
-        </a>
-
-        <a class="card category-card" href="closed.html">
-          <span class="category-number">02</span>
-          <h3>閉店情報</h3>
-          <p>閉店・営業終了に関する情報</p>
-          <span class="meta">情報を見る →</span>
-        </a>
-
-        <a class="card category-card" href="new.html">
-          <span class="category-number">03</span>
-          <h3>移転・リニューアル</h3>
-          <p>場所や営業形態が変わるお店</p>
-          <span class="meta">情報を見る →</span>
-        </a>
-
-        <a class="card category-card" href="new.html">
-          <span class="category-number">04</span>
-          <h3>イベント・地域情報</h3>
-          <p>地域の催しや施設に関する情報</p>
-          <span class="meta">情報を見る →</span>
-        </a>
-
+      <div class="filter-row reveal" aria-label="情報の絞り込み">
+        <button class="filter-button active" data-filter="all" type="button">すべて</button>
+        <button class="filter-button" data-filter="new" type="button">新店舗</button>
+        <button class="filter-button" data-filter="closed" type="button">閉店</button>
+        <button class="filter-button" data-filter="other" type="button">移転・リニューアル</button>
       </div>
 
-    </div>
-  </section>
+      <div id="article-list" class="article-grid" aria-live="polite">
+        <p class="loading-message">最新情報を読み込んでいます…</p>
+      </div>
+      <p id="article-count" class="article-count"></p>
+    </section>
 
-  <section class="section">
-    <div class="container">
-
-      <div class="cta">
-        <span class="eyebrow">FOR LOCAL BUSINESSES</span>
-
-        <h2>
-          山口のお店の情報を<br>
-          地域の人に届けませんか？
-        </h2>
-
+    <section class="about-section reveal">
+      <div class="about-label">ABOUT THIS MEDIA</div>
+      <div class="about-content">
+        <h2>いつもの街に、<br>新しい発見を。</h2>
         <p>
-          新店オープン、リニューアル、新サービスなど、
-          地域の人に知ってほしい情報をお寄せください。
+          気になっていたお店のオープン情報や、街の変化を知るきっかけに。
+          地域のお店に関する情報を集め、確認できた内容から掲載していきます。
         </p>
-
-        <a class="btn" href="listing.html">掲載について相談する</a>
+        <a class="text-link" href="listing.html">店舗情報の提供・掲載相談はこちら <span>↗</span></a>
       </div>
+      <div class="about-decoration">LOCAL<br>IS SPECIAL.</div>
+    </section>
+  </main>
 
-    </div>
-  </section>
-
-</main>
-
-<footer class="footer">
-  <div class="container">
-
-    <a class="logo footer-logo" href="index.html">
-      山口ローカルUPDATE
-      <span>YAMAGUCHI LOCAL UPDATE</span>
-    </a>
-
+  <footer class="site-footer">
+    <a class="footer-brand" href="index.html">YAMAGUCHI LOCAL UPDATE<span>.</span></a>
     <div class="footer-links">
-      <a href="index.html">トップ</a>
-      <a href="new.html">新店情報</a>
+      <a href="new.html">新店舗情報</a>
       <a href="closed.html">閉店情報</a>
-      <a href="listing.html">掲載依頼</a>
-      <a href="contact.html">お問い合わせ</a>
+      <a href="listing.html">掲載・お問い合わせ</a>
     </div>
+    <p>地域のお店の情報を、わかりやすく。</p>
+    <small>© YAMAGUCHI LOCAL UPDATE</small>
+  </footer>
 
-    <p class="footer-description">
-      山口県内のお店・施設・地域の変化を紹介する地域情報サイトです。
-    </p>
+  <script>
+    const allowedCategories = {
+      new: ["新店・開店", "新店", "開店", "新施設・地域の動き"],
+      closed: ["閉店", "閉店・営業終了"],
+      other: ["移転", "リニューアル", "長期休業"]
+    };
 
-    <small>© 2026 山口ローカルUPDATE</small>
-
-  </div>
-</footer>
-
-<script>
-(async function () {
-  const container = document.getElementById("published-articles");
-
-  function createElement(tag, className, text) {
-    const element = document.createElement(tag);
-
-    if (className) {
-      element.className = className;
+    function categoryText(value) {
+      if (Array.isArray(value)) return value.join("・");
+      return typeof value === "string" ? value : "";
     }
 
-    if (text !== undefined) {
-      element.textContent = text;
+    function categoryGroup(value) {
+      const categories = Array.isArray(value) ? value : [value];
+      if (categories.some(c => allowedCategories.new.includes(c))) return "new";
+      if (categories.some(c => allowedCategories.closed.includes(c))) return "closed";
+      if (categories.some(c => allowedCategories.other.includes(c))) return "other";
+      return "";
     }
 
-    return element;
-  }
+    function safeUrl(value) {
+      try {
+        const url = new URL(value, location.href);
+        return ["http:", "https:"].includes(url.protocol) ? url.href : "";
+      } catch {
+        return "";
+      }
+    }
 
-  try {
-    const response = await fetch("data/published.json", {
-      cache: "no-store"
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;",
+        '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    const list = document.getElementById("article-list");
+    const count = document.getElementById("article-count");
+    let allArticles = [];
+    let activeFilter = "all";
+
+    function renderArticles() {
+      const filtered = allArticles.filter(article => {
+        const group = categoryGroup(article.category);
+        return activeFilter === "all" || group === activeFilter;
+      });
+
+      count.textContent = filtered.length
+        ? `${filtered.length} ARTICLES`
+        : "";
+
+      if (!filtered.length) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <span class="empty-mark">LOCAL UPDATE</span>
+            <h3>ただいま情報を準備中です。</h3>
+            <p>新しい店舗情報が確認でき次第、こちらに掲載します。</p>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map((article, index) => {
+        const group = categoryGroup(article.category);
+        const label = group === "new" ? "NEW OPEN"
+          : group === "closed" ? "CLOSED" : "UPDATE";
+        const area = Array.isArray(article.area)
+          ? article.area.join("・")
+          : (article.area || "");
+        const source = escapeHtml(article.source_name || "情報提供元");
+        const sourceUrl = safeUrl(article.source_url);
+        const date = escapeHtml(article.published_date || "");
+        const title = escapeHtml(article.title || "店舗情報");
+        const summary = escapeHtml(article.summary || article.draft_summary || "詳細は情報提供元をご確認ください。");
+
+        return `
+          <article class="article-card reveal" style="--card-index:${index}">
+            <div class="article-card-top">
+              <span class="article-tag tag-${group}">${label}</span>
+              <span class="article-category">${escapeHtml(categoryText(article.category))}</span>
+            </div>
+            <div class="article-card-body">
+              <p class="article-area">${escapeHtml(area || "山口県内")}</p>
+              <h3>${title}</h3>
+              <p class="article-summary">${summary}</p>
+            </div>
+            <div class="article-card-bottom">
+              <span class="article-date">${date}</span>
+              ${sourceUrl
+                ? `<a class="article-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">情報元：${source} ↗</a>`
+                : `<span class="article-source">情報元：${source}</span>`}
+            </div>
+          </article>`;
+      }).join("");
+
+      observeReveals();
+    }
+
+    document.querySelectorAll(".filter-button").forEach(button => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        document.querySelectorAll(".filter-button").forEach(item => {
+          item.classList.toggle("active", item === button);
+        });
+        renderArticles();
+      });
     });
 
-    if (!response.ok) {
-      throw new Error("公開記事データを取得できませんでした。");
+    async function loadArticles() {
+      try {
+        const response = await fetch("data/published.json");
+        if (!response.ok) throw new Error("記事データを取得できません");
+        const data = await response.json();
+
+        allArticles = (Array.isArray(data.articles) ? data.articles : [])
+          .filter(article =>
+            article.status === "公開" &&
+            article.title &&
+            categoryGroup(article.category)
+          )
+          .sort((a, b) =>
+            String(b.published_date || "").localeCompare(String(a.published_date || ""))
+          );
+
+        renderArticles();
+      } catch (error) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <h3>情報を読み込めませんでした。</h3>
+            <p>時間をおいて、もう一度ご確認ください。</p>
+          </div>`;
+      }
     }
 
-    const data = await response.json();
+    let revealObserver;
 
-    if (!Array.isArray(data.articles)) {
-      throw new Error("公開記事データの形式が正しくありません。");
+    function observeReveals() {
+      if (revealObserver) revealObserver.disconnect();
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const items = document.querySelectorAll(".reveal:not(.is-visible)");
+
+      if (reducedMotion || !("IntersectionObserver" in window)) {
+        items.forEach(item => item.classList.add("is-visible"));
+        return;
+      }
+
+      revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      items.forEach(item => revealObserver.observe(item));
     }
 
-    container.replaceChildren();
-
-    const articles = data.articles
-      .filter(article =>
-        article &&
-        article.status === "公開" &&
-        typeof article.title === "string" &&
-        article.title.trim() !== ""
-      )
-      .slice(0, 12);
-
-    if (articles.length === 0) {
-      const message = createElement(
-        "div",
-        "notice",
-        "現在、掲載準備中です。確認が完了した地域情報から順次掲載します。"
-      );
-
-      container.appendChild(message);
-      return;
-    }
-
-    for (const article of articles) {
-      const card = createElement("article", "card");
-
-      if (typeof article.category === "string" && article.category) {
-        card.appendChild(
-          createElement("span", "badge", article.category)
-        );
-      }
-
-      card.appendChild(
-        createElement("h3", "", article.title)
-      );
-
-      if (typeof article.area === "string" && article.area) {
-        card.appendChild(
-          createElement("p", "", "エリア：" + article.area)
-        );
-      }
-
-      if (typeof article.published_date === "string" && article.published_date) {
-        card.appendChild(
-          createElement("p", "meta", "情報日：" + article.published_date)
-        );
-      }
-
-      if (typeof article.summary === "string" && article.summary) {
-        card.appendChild(
-          createElement("p", "", article.summary)
-        );
-      }
-
-      if (
-        typeof article.source_name === "string" &&
-        typeof article.source_url === "string" &&
-        /^https?:\/\//i.test(article.source_url)
-      ) {
-        const sourceLink = createElement(
-          "a",
-          "card-link",
-          "情報源：" + article.source_name + " →"
-        );
-
-        sourceLink.href = article.source_url;
-        sourceLink.target = "_blank";
-        sourceLink.rel = "noopener noreferrer";
-
-        card.appendChild(sourceLink);
-      }
-
-      container.appendChild(card);
-    }
-
-  } catch (error) {
-    console.error(error);
-
-    container.replaceChildren(
-      createElement(
-        "div",
-        "notice",
-        "現在、情報を読み込めません。時間をおいて再度ご確認ください。"
-      )
-    );
-  }
-})();
-</script>
-
+    observeReveals();
+    loadArticles();
+  </script>
 </body>
 </html>
