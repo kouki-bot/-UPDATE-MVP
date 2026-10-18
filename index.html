@@ -40,31 +40,38 @@
         </a>
       </div>
 
-      <div class="hero-art reveal" aria-label="山口の街をイメージした装飾">
-        <div class="art-circle circle-one"></div>
-        <div class="art-circle circle-two"></div>
-        <div class="art-label">LOCAL<br>STORIES<br><span>YAMAGUCHI, JP</span></div>
-        <div class="art-bottom">DISCOVER SOMETHING NEW.</div>
-        <div class="art-number">01</div>
+      <div class="hero-art reveal" aria-label="カフェのイメージ写真">
+        <div class="hero-photo-caption">
+          <span>NEW & CLOSE</span>
+          <span>in Yamaguchi</span>
+        </div>
+        <span class="image-caption">イメージ写真</span>
       </div>
 
       <div class="hero-side-note">LOCAL INFORMATION / YAMAGUCHI</div>
     </section>
 
     <section class="category-section reveal" aria-label="カテゴリ">
-      <div class="section-kicker">EXPLORE</div>
+      <div class="category-intro">
+        <p class="section-kicker">EXPLORE</p>
+        <h2>気になる情報を<br>チェック</h2>
+      </div>
+
       <div class="category-grid">
         <a class="category-card category-new" href="new.html">
           <span class="category-number">01 / OPEN</span>
           <span class="category-title">新しくできるお店</span>
           <span class="category-sub">NEW & OPENING</span>
           <span class="category-arrow">↗</span>
+          <span class="image-caption">イメージ写真</span>
         </a>
+
         <a class="category-card category-closed" href="closed.html">
           <span class="category-number">02 / CLOSE</span>
           <span class="category-title">閉店・移転の情報</span>
           <span class="category-sub">CLOSING & MOVING</span>
           <span class="category-arrow">↗</span>
+          <span class="image-caption">イメージ写真</span>
         </a>
       </div>
     </section>
@@ -124,6 +131,16 @@
       other: ["移転", "リニューアル", "長期休業"]
     };
 
+    // サイトの雰囲気に合わせたカフェ等のイメージ写真
+    const imageLibrary = {
+      cafe: "https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1000&q=85",
+      coffee: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=85",
+      bakery: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=85",
+      interior: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=85",
+      shop: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1000&q=85",
+      plants: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=85"
+    };
+
     function categoryText(value) {
       if (Array.isArray(value)) return value.join("・");
       return typeof value === "string" ? value : "";
@@ -148,9 +165,45 @@
 
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>"']/g, char => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;",
-        '"': "&quot;", "'": "&#39;"
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
       })[char]);
+    }
+
+    function imageForArticle(article, index) {
+      // published.json に image_url がある場合は、その画像を優先
+      const suppliedImage = safeUrl(article.image_url);
+      if (suppliedImage) return suppliedImage;
+
+      const text = [
+        article.title || "",
+        categoryText(article.category),
+        article.summary || article.draft_summary || ""
+      ].join(" ");
+
+      if (/パン|ベーカリー|ケーキ|スイーツ/.test(text)) {
+        return imageLibrary.bakery;
+      }
+      if (/美容室|アパレル|セレクトショップ|雑貨/.test(text)) {
+        return imageLibrary.shop;
+      }
+      if (/リニューアル|改装|内装/.test(text)) {
+        return imageLibrary.plants;
+      }
+      if (/閉店|営業終了/.test(text)) {
+        return imageLibrary.interior;
+      }
+
+      const choices = [
+        imageLibrary.cafe,
+        imageLibrary.coffee,
+        imageLibrary.interior,
+        imageLibrary.plants
+      ];
+      return choices[index % choices.length];
     }
 
     const list = document.getElementById("article-list");
@@ -182,26 +235,43 @@
         const group = categoryGroup(article.category);
         const label = group === "new" ? "NEW OPEN"
           : group === "closed" ? "CLOSED" : "UPDATE";
+
         const area = Array.isArray(article.area)
           ? article.area.join("・")
           : (article.area || "");
+
         const source = escapeHtml(article.source_name || "情報提供元");
         const sourceUrl = safeUrl(article.source_url);
         const date = escapeHtml(article.published_date || "");
         const title = escapeHtml(article.title || "店舗情報");
-        const summary = escapeHtml(article.summary || article.draft_summary || "詳細は情報提供元をご確認ください。");
+        const summary = escapeHtml(
+          article.summary ||
+          article.draft_summary ||
+          "詳細は情報提供元をご確認ください。"
+        );
+
+        const imageUrl = escapeHtml(imageForArticle(article, index));
 
         return `
           <article class="article-card reveal" style="--card-index:${index}">
-            <div class="article-card-top">
+            <div class="article-image">
+              <img
+                src="${imageUrl}"
+                alt="店舗情報のイメージ写真"
+                loading="lazy"
+                onerror="this.style.display='none';"
+              >
               <span class="article-tag tag-${group}">${label}</span>
-              <span class="article-category">${escapeHtml(categoryText(article.category))}</span>
+              <span class="image-caption">イメージ写真</span>
             </div>
+
             <div class="article-card-body">
               <p class="article-area">${escapeHtml(area || "山口県内")}</p>
               <h3>${title}</h3>
+              <p class="article-category">${escapeHtml(categoryText(article.category))}</p>
               <p class="article-summary">${summary}</p>
             </div>
+
             <div class="article-card-bottom">
               <span class="article-date">${date}</span>
               ${sourceUrl
@@ -217,9 +287,11 @@
     document.querySelectorAll(".filter-button").forEach(button => {
       button.addEventListener("click", () => {
         activeFilter = button.dataset.filter;
+
         document.querySelectorAll(".filter-button").forEach(item => {
           item.classList.toggle("active", item === button);
         });
+
         renderArticles();
       });
     });
@@ -228,6 +300,7 @@
       try {
         const response = await fetch("data/published.json");
         if (!response.ok) throw new Error("記事データを取得できません");
+
         const data = await response.json();
 
         allArticles = (Array.isArray(data.articles) ? data.articles : [])
@@ -237,7 +310,9 @@
             categoryGroup(article.category)
           )
           .sort((a, b) =>
-            String(b.published_date || "").localeCompare(String(a.published_date || ""))
+            String(b.published_date || "").localeCompare(
+              String(a.published_date || "")
+            )
           );
 
         renderArticles();
@@ -255,7 +330,10 @@
     function observeReveals() {
       if (revealObserver) revealObserver.disconnect();
 
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
       const items = document.querySelectorAll(".reveal:not(.is-visible)");
 
       if (reducedMotion || !("IntersectionObserver" in window)) {
