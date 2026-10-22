@@ -1,27 +1,28 @@
+
 import json
-import os
 import re
 import hashlib
 
-from datetime import datetime, timezone, timedelta
-from urllib.parse import urlparse, urlunparse
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 
 
 # ==================================================
 # 基本設定
 # ==================================================
 
-OFFICIAL_FILE = "data/source_checks.json"
-RSS_FILE = "data/rss_candidates.json"
-OUTPUT_FILE = "data/drafts.json"
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+OFFICIAL_FILE = BASE_DIR / "data" / "source_checks.json"
+RSS_FILE = BASE_DIR / "data" / "rss_candidates.json"
+OUTPUT_FILE = BASE_DIR / "data" / "drafts.json"
 
 JST = timezone(timedelta(hours=9))
 UTC = timezone.utc
 
 RECENT_DAYS = 30
 
-
-# 店舗の動きに関する情報だけを対象にする
 ALLOWED_CATEGORIES = {
     "新店・開店",
     "閉店",
@@ -29,6 +30,26 @@ ALLOWED_CATEGORIES = {
     "リニューアル",
 }
 
+STORE_KEYWORDS = [
+    "新店", "新店舗", "新規開店", "新規出店",
+    "オープン", "開店", "開業", "出店",
+    "グランドオープン", "プレオープン",
+    "閉店", "営業終了", "閉業", "店じまい",
+    "移転", "移転オープン", "移転先",
+    "リニューアル", "改装オープン",
+    "リニューアルオープン", "営業再開",
+]
+
+EXCLUDE_KEYWORDS = [
+    "求人", "アルバイト募集", "スタッフ募集",
+    "採用情報", "正社員募集",
+    "イベント開催", "イベント情報",
+    "マルシェ開催", "フェス開催",
+    "祭り開催", "ワークショップ開催",
+    "参加者募集", "出店者募集",
+    "整備計画", "建設計画", "入札",
+    "議会", "市長会見", "補助金",
+]
 
 
 # ==================================================
@@ -54,16 +75,28 @@ def normalize_url(url):
         return ""
 
     try:
-        parsed = urlparse(url)
+        parsed = urlsplit(url)
 
-        path = parsed.path.rstrip("/") or "/"
+        tracking_names = {
+            "fbclid", "gclid", "yclid",
+            "mc_cid", "mc_eid",
+        }
 
-        return urlunparse((
+        query = [
+            (key, value)
+            for key, value in parse_qsl(
+                parsed.query,
+                keep_blank_values=True,
+            )
+            if key.lower() not in tracking_names
+            and not key.lower().startswith("utm_")
+        ]
+
+        return urlunsplit((
             parsed.scheme.lower(),
             parsed.netloc.lower(),
-            path,
-            "",
-            "",
+            parsed.path.rstrip("/") or "/",
+            urlencode(query),
             "",
         ))
 
@@ -103,7 +136,6 @@ def parse_date(value):
                 int(match.group(3)),
                 tzinfo=JST,
             )
-
         except ValueError:
             return None
 
@@ -111,164 +143,183 @@ def parse_date(value):
 
 
 def load_json(path):
-    if not os.path.exists(path):
+    if not path.exists():
         print("ファイルなし:", path)
         return {}
 
     try:
-        with open(
-            path,
-            "r",
-            encoding="utf-8",
-        ) as file:
-            return json.load(file)
+        with path.open("r", encoding="utf-8") as file:
+            data = json.load(file)
+
+        return data if isinstance(data, dict) else {}
 
     except (json.JSONDecodeError, OSError) as error:
-        print(
-            "読み込み失敗:",
-            path,
-            str(error),
-        )
+        print("読み込み失敗:", path, str(error))
         return {}
 
 
+# ==================================================
+# 対象記事の判定
+# ==================================================
+
 def normalize_categories(item):
-    """
-    新旧両方のデータ形式に対応する。
-
-    旧形式: category
-    新形式: categories
-    """
-
     categories = item.get(
         "categories",
         item.get("category", []),
     )
 
     if not isinstance(categories, list):
-        categories = (
-            [categories]
-            if categories
-            else []
-        )
+        categories = [categories] if categories else []
 
-    result = []
+    return list(dict.fromkeys(
+        clean_text(category)
+        for category in categories
+        if clean_text(category) in ALLOWED_CATEGORIES
+    ))
 
-    for category in categories:
-        category = clean_text(category)
 
-        if (
-            category in ALLOWED_CATEGORIES
-            and category not in result
-        ):
-            result.append(category)
+def is_store_news(title, body="", categories=None):
+    """
+    店舗の動きが確認できる記事だけを対象にする。
+    イベント・求人・公共事業などは除外する。
+    """
 
-    return result
+    title = clean_text(title)
+    body = clean_text(body)
+
+    if not title:
+        return False
+
+    # タイトルに除外語があれば原則として除外
+    if any(keyword in title for keyword in EXCLUDE_KEYWORDS):
+        # 店舗の閉店などが明確な場合は残す
+        if not any(keyword in title for keyword in [
+            "新店", "新店舗", "オープン", "開店",
+            "閉店", "移転", "リニューアル",
+        ]):
+            return False
+
+    # タイトルで店舗ニュースを判定
+    if any(keyword in title for keyword in STORE_KEYWORDS):
+        return True
+
+    # カテゴリーが許可対象でも、タイトルに店舗の動きが
+    # なければ自動的には採用しない
+    return False
 
 
 # ==================================================
-# 公式サイト候補の取得
+# 候補データの取得
 # ==================================================
+
+def convert_candidate(item, method, source_priority):
+    title = clean_text(item.get("title"))
+    url = clean_text(item.get("url"))
+
+    if not title or not url:
+        return None
+
+    body = clean_text(
+        item.get("body_excerpt", item.get("description", ""))
+    )[:1500]
+
+    categories = normalize_categories(item)
+
+    if not is_store_news(title, body, categories):
+        return None
+
+    # タイトルの語句からカテゴリーを補完
+    detected = []
+
+    keyword_map = {
+        "新店・開店": [
+            "新店", "新店舗", "新規開店", "新規出店",
+            "オープン", "開店", "開業", "出店",
+            "グランドオープン", "プレオープン",
+        ],
+        "閉店": [
+            "閉店", "営業終了", "閉業", "店じまい",
+        ],
+        "移転": [
+            "移転",
+        ],
+        "リニューアル": [
+            "リニューアル", "改装オープン",
+            "営業再開", "改装",
+        ],
+    }
+
+    for category, keywords in keyword_map.items():
+        if any(keyword in title for keyword in keywords):
+            detected.append(category)
+
+    categories = list(dict.fromkeys(categories + detected))
+
+    if not categories:
+        return None
+
+    area = item.get("area", [])
+
+    if not isinstance(area, list):
+        area = [area] if area else []
+
+    return {
+        "title": title,
+        "url": url,
+        "normalized_url": normalize_url(url),
+        "source_name": clean_text(item.get("source_name")),
+        "category": categories,
+        "published_date": clean_text(item.get("published_date")),
+        "body_excerpt": body,
+        "collection_method": method,
+        "category_basis": clean_text(item.get("category_basis")),
+        "area": area,
+        "source_priority": source_priority,
+    }
+
 
 def get_official_candidates():
     data = load_json(OFFICIAL_FILE)
     results = []
 
     for item in data.get("candidates", []):
-        title = clean_text(item.get("title"))
-        url = clean_text(item.get("url"))
+        candidate = convert_candidate(item, "公式サイト", 1)
 
-        if not title or not url:
-            continue
-
-        categories = normalize_categories(item)
-
-        results.append({
-            "title": title,
-            "url": url,
-            "source_name": clean_text(
-                item.get("source_name")
-            ),
-            "category": categories,
-            "published_date": clean_text(
-                item.get("published_date")
-            ),
-            "body_excerpt": clean_text(
-                item.get("body_excerpt")
-            )[:1500],
-            "collection_method": "公式サイト",
-            "category_basis": clean_text(
-                item.get("category_basis")
-            ),
-            "area": item.get("area", []),
-            "source_priority": 1,
-        })
+        if candidate:
+            results.append(candidate)
 
     return results
 
-
-# ==================================================
-# RSS候補の取得
-# ==================================================
 
 def get_rss_candidates():
     data = load_json(RSS_FILE)
     results = []
 
     for item in data.get("candidates", []):
-        title = clean_text(item.get("title"))
-        url = clean_text(item.get("url"))
+        candidate = convert_candidate(item, "RSS", 2)
 
-        if not title or not url:
-            continue
-
-        categories = normalize_categories(item)
-
-        results.append({
-            "title": title,
-            "url": url,
-            "source_name": clean_text(
-                item.get("source_name")
-            ),
-            "category": categories,
-            "published_date": clean_text(
-                item.get("published_date")
-            ),
-            "body_excerpt": clean_text(
-                item.get("description")
-            )[:1500],
-            "collection_method": "RSS",
-            "category_basis": clean_text(
-                item.get("category_basis")
-            ),
-            "area": item.get("area", []),
-            "source_priority": 2,
-        })
+        if candidate:
+            results.append(candidate)
 
     return results
 
 
 # ==================================================
-# 鮮度判定
+# 鮮度・優先順位
 # ==================================================
 
 def get_freshness(published_date):
-    parsed_date = parse_date(published_date)
+    parsed = parse_date(published_date)
 
-    if parsed_date is None:
+    if parsed is None:
         return "日付確認が必要", None
 
-    now = now_jst()
-
-    age_days = (
-        now.date() - parsed_date.date()
-    ).days
+    age_days = (now_jst().date() - parsed.date()).days
 
     if age_days < -1:
         return "未来日付・要確認", age_days
 
-    if age_days < 0:
-        age_days = 0
+    age_days = max(age_days, 0)
 
     if age_days <= RECENT_DAYS:
         return "直近30日", age_days
@@ -279,138 +330,14 @@ def get_freshness(published_date):
     return "90日より前", age_days
 
 
-# ==================================================
-# 優先順位
-# ==================================================
-
 def get_priority(categories):
-    if any(
-        category in categories
-        for category in [
-            "新店・開店",
-            "閉店",
-        ]
-    ):
+    if "閉店" in categories or "新店・開店" in categories:
         return 1
 
-    if any(
-        category in categories
-        for category in [
-            "移転",
-            "リニューアル",
-        ]
-    ):
+    if "移転" in categories or "リニューアル" in categories:
         return 2
 
-    if "イベント" in categories:
-        return 3
-
-    if "新施設・地域の動き" in categories:
-        return 4
-
     return 5
-
-
-# ==================================================
-# 下書き生成
-# ==================================================
-
-def make_draft(item):
-    title = item["title"]
-    url = item["url"]
-    source = item["source_name"]
-    categories = item["category"]
-    published_date = item["published_date"]
-    body = item["body_excerpt"]
-
-    freshness, age_days = get_freshness(
-        published_date
-    )
-
-    priority = get_priority(categories)
-
-    if not categories:
-        relevance = "分類要確認"
-    elif item.get("category_basis") == "概要・要確認":
-        relevance = "概要による仮分類・要確認"
-    elif item.get("category_basis") == "タイトル":
-        relevance = "タイトルによる仮分類"
-    else:
-        relevance = "自動分類・要確認"
-
-    if freshness == "直近30日":
-        freshness_note = (
-            "比較的新しい情報ですが、"
-            "公開前に現在の状況を確認してください。"
-        )
-
-    elif freshness == "31〜90日前":
-        freshness_note = (
-            "公開から31〜90日経過しています。"
-            "現在も有効な情報か確認してください。"
-        )
-
-    elif freshness == "90日より前":
-        freshness_note = (
-            "古い情報です。原則として新着記事にせず、"
-            "現在の状況を再確認してください。"
-        )
-
-    elif freshness == "未来日付・要確認":
-        freshness_note = (
-            "公開日が未来になっています。"
-            "日付と情報源を確認してください。"
-        )
-
-    else:
-        freshness_note = (
-            "公開日を確認できていません。"
-            "元記事で日付を確認してください。"
-        )
-
-    summary = (
-        "【公開前の確認事項】"
-        "店舗名・所在地・開店日・営業状況を"
-        "元記事や公式情報で確認してください。"
-        + freshness_note
-    )
-
-    if not body:
-        summary += (
-            " 元記事の説明文を取得できていないため、"
-            "本文の追加確認が必要です。"
-        )
-
-    normalized_url = normalize_url(url)
-
-    draft_id = hashlib.sha256(
-        normalized_url.encode("utf-8")
-    ).hexdigest()[:16]
-
-    area = item.get("area", [])
-
-    if not isinstance(area, list):
-        area = [area] if area else []
-
-    return {
-        "id": draft_id,
-        "title": title,
-        "suggested_headline": title,
-        "category": categories,
-        "priority": priority,
-        "published_date": published_date,
-        "freshness": freshness,
-        "age_days": age_days,
-        "area": area,
-        "source_name": source,
-        "source_url": url,
-        "body_excerpt": body,
-        "draft_summary": summary,
-        "relevance": relevance,
-        "collection_method": item["collection_method"],
-        "status": "未確認・公開禁止",
-        "created_at": now_jst().isoformat(),
-    }
 
 
 # ==================================================
@@ -421,67 +348,108 @@ def merge_candidates(combined):
     unique = {}
 
     for item in combined:
-        normalized = normalize_url(item["url"])
+        url = item.get("normalized_url") or normalize_url(item["url"])
 
-        if not normalized:
+        if not url:
             continue
 
-        if normalized not in unique:
-            unique[normalized] = item
+        if url not in unique:
+            unique[url] = item.copy()
             continue
 
-        existing = unique[normalized]
+        existing = unique[url]
 
-        # 公式サイト由来の情報を優先
-        if (
-            item.get("source_priority", 2)
-            < existing.get("source_priority", 2)
-        ):
-            preferred = item
-            other = existing
-
+        # 公式サイトの情報を優先
+        if item.get("source_priority", 2) < existing.get("source_priority", 2):
+            preferred, other = item, existing
         else:
-            preferred = existing
-            other = item
+            preferred, other = existing, item
 
-        merged = dict(preferred)
+        merged = preferred.copy()
 
-        # 本文が不足している場合は補完
+        merged["category"] = list(dict.fromkeys(
+            preferred.get("category", []) + other.get("category", [])
+        ))
+
+        merged["area"] = list(dict.fromkeys(
+            preferred.get("area", []) + other.get("area", [])
+        ))
+
         if not merged.get("body_excerpt"):
-            merged["body_excerpt"] = (
-                other.get("body_excerpt", "")
-            )
+            merged["body_excerpt"] = other.get("body_excerpt", "")
 
-        # カテゴリーは許可されたものだけ統合
-        merged["category"] = list(
-            dict.fromkeys(
-                preferred.get("category", [])
-                + other.get("category", [])
-            )
-        )
-
-        # 地域を統合
-        merged["area"] = list(
-            dict.fromkeys(
-                preferred.get("area", [])
-                + other.get("area", [])
-            )
-        )
-
-        # 日付が欠けていれば補完
         if not merged.get("published_date"):
-            merged["published_date"] = (
-                other.get("published_date", "")
-            )
+            merged["published_date"] = other.get("published_date", "")
 
-        unique[normalized] = merged
+        unique[url] = merged
 
     return list(unique.values())
 
 
 # ==================================================
-# 並び替え
+# 下書き生成
 # ==================================================
+
+def make_draft(item):
+    title = item["title"]
+    url = item["url"]
+    categories = item["category"]
+    published_date = item["published_date"]
+    body = item["body_excerpt"]
+
+    freshness, age_days = get_freshness(published_date)
+    priority = get_priority(categories)
+
+    if item.get("category_basis") == "タイトル":
+        relevance = "タイトルによる仮分類・要確認"
+    else:
+        relevance = "店舗ニュース候補・要確認"
+
+    if freshness == "直近30日":
+        freshness_note = "比較的新しい情報です。掲載前に現状を確認してください。"
+    elif freshness == "31〜90日前":
+        freshness_note = "公開から31〜90日経過しています。現在も有効か確認してください。"
+    elif freshness == "90日より前":
+        freshness_note = "古い情報です。新着記事としての掲載は慎重に判断してください。"
+    elif freshness == "未来日付・要確認":
+        freshness_note = "日付が未来になっています。元記事の日付を確認してください。"
+    else:
+        freshness_note = "公開日を確認できていません。元記事で確認してください。"
+
+    summary = (
+        "【公開前の確認事項】"
+        "店舗名・所在地・開店日または閉店日・"
+        "現在の営業状況・情報源を確認してください。"
+        + freshness_note
+    )
+
+    if not body:
+        summary += " 元記事の概要を取得できていないため、本文の確認が必要です。"
+
+    draft_id = hashlib.sha256(
+        normalize_url(url).encode("utf-8")
+    ).hexdigest()[:16]
+
+    return {
+        "id": draft_id,
+        "title": title,
+        "suggested_headline": title,
+        "category": categories,
+        "priority": priority,
+        "published_date": published_date,
+        "freshness": freshness,
+        "age_days": age_days,
+        "area": item.get("area", []),
+        "source_name": item.get("source_name", ""),
+        "source_url": url,
+        "body_excerpt": body,
+        "draft_summary": summary,
+        "relevance": relevance,
+        "collection_method": item.get("collection_method", ""),
+        "status": "未確認・公開禁止",
+        "created_at": now_jst().isoformat(),
+    }
+
 
 def draft_sort_key(item):
     freshness_order = {
@@ -492,21 +460,11 @@ def draft_sort_key(item):
         "90日より前": 4,
     }
 
-    parsed_date = parse_date(
-        item.get("published_date", "")
-    )
-
-    timestamp = (
-        parsed_date.timestamp()
-        if parsed_date
-        else 0
-    )
+    parsed = parse_date(item.get("published_date", ""))
+    timestamp = parsed.timestamp() if parsed else 0
 
     return (
-        freshness_order.get(
-            item.get("freshness", ""),
-            5,
-        ),
+        freshness_order.get(item.get("freshness", ""), 5),
         item.get("priority", 5),
         -timestamp,
         item.get("title", ""),
@@ -518,73 +476,43 @@ def draft_sort_key(item):
 # ==================================================
 
 def main():
-    os.makedirs("data", exist_ok=True)
-
     official = get_official_candidates()
     rss = get_rss_candidates()
 
     combined = official + rss
+    unique_candidates = merge_candidates(combined)
 
-    unique_candidates = merge_candidates(
-        combined
-    )
-
-    drafts = [
-        make_draft(item)
-        for item in unique_candidates
-    ]
-
-    drafts.sort(
-        key=draft_sort_key
-    )
+    drafts = [make_draft(item) for item in unique_candidates]
+    drafts.sort(key=draft_sort_key)
 
     freshness_counts = {}
-
-    for draft in drafts:
-        freshness = draft["freshness"]
-
-        freshness_counts[freshness] = (
-            freshness_counts.get(freshness, 0) + 1
-        )
-
     category_counts = {}
 
     for draft in drafts:
+        freshness = draft["freshness"]
+        freshness_counts[freshness] = freshness_counts.get(freshness, 0) + 1
+
         for category in draft["category"]:
-            category_counts[category] = (
-                category_counts.get(category, 0) + 1
-            )
+            category_counts[category] = category_counts.get(category, 0) + 1
 
     output = {
         "generated_at": now_jst().isoformat(),
         "draft_count": len(drafts),
-        "recent_draft_count": freshness_counts.get(
-            "直近30日",
-            0,
-        ),
+        "recent_draft_count": freshness_counts.get("直近30日", 0),
         "freshness_counts": freshness_counts,
         "category_counts": category_counts,
         "note": (
-            "公式サイトとRSSの候補を統合しています。"
-            "求人情報は対象外です。"
-            "分類・日付・本文は自動取得結果です。"
-            "すべて未確認のため、内容を確認するまで"
-            "公開しないでください。"
+            "対象は新店・開店、閉店、移転、リニューアルです。"
+            "自動分類結果は未確認です。"
+            "すべて未確認・公開禁止であり、確認前に公開しないでください。"
         ),
         "drafts": drafts,
     }
 
-    with open(
-        OUTPUT_FILE,
-        "w",
-        encoding="utf-8",
-    ) as file:
-        json.dump(
-            output,
-            file,
-            ensure_ascii=False,
-            indent=2,
-        )
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+    with OUTPUT_FILE.open("w", encoding="utf-8") as file:
+        json.dump(output, file, ensure_ascii=False, indent=2)
 
     print("公式サイト候補:", len(official))
     print("RSS候補:", len(rss))
