@@ -32,6 +32,45 @@ PUBLIC_KEYWORDS = [
     "庁舎", "公共施設", "交流拠点施設", "郷土館", "体験交流公園", "子育て支援拠点",
 ]
 
+
+YAMAGUCHI_MUNICIPALITIES = [
+    "山陽小野田市", "周防大島町", "田布施町", "上関町", "平生町", "和木町", "阿武町",
+    "下関市", "宇部市", "山口市", "萩市", "防府市", "下松市", "岩国市", "光市",
+    "長門市", "柳井市", "美祢市", "周南市",
+]
+
+def extract_municipality_candidates(title, body_excerpt):
+    """タイトル・本文抜粋に明記された山口県内市町名のみを候補として抽出。推測はしない。"""
+    text = clean_text(f"{title} {body_excerpt}")
+    found = []
+    # まず市町名の正式表記を優先する。
+    for name in YAMAGUCHI_MUNICIPALITIES:
+        if name in text:
+            found.append(name)
+    # 接尾辞なしの地名は、場所を示す語が近くにある場合のみ候補にする。
+    aliases = {
+        "山陽小野田": "山陽小野田市", "周防大島": "周防大島町",
+        "田布施": "田布施町", "上関": "上関町", "平生": "平生町",
+        "和木": "和木町", "阿武": "阿武町", "下関": "下関市",
+        "宇部": "宇部市", "山口": "山口市", "萩": "萩市",
+        "防府": "防府市", "下松": "下松市", "岩国": "岩国市",
+        "長門": "長門市", "柳井": "柳井市", "美祢": "美祢市", "周南": "周南市",
+        "光": "光市",
+    }
+    location_context = r"(?:市内|町内|市|町|駅周辺|駅前|周辺|市街地|商店街|で開店|に開店|でオープン|にオープン|で閉店|に閉店|の店舗|の店|にある|に誕生|で営業)"
+    for alias, official in aliases.items():
+        if official in found:
+            continue
+        # 山口県・山口新聞などを山口市と誤認しないよう、山口は文脈を厳しめにする。
+        if alias == "山口":
+            pattern = r"山口(?!県|新聞|放送|銀行|合同庁舎)(?:" + location_context + r")"
+        else:
+            pattern = re.escape(alias) + r"(?:" + location_context + r")"
+        if re.search(pattern, text):
+            found.append(official)
+    # 長い地名を先にし、順序を安定させる。
+    return sorted(set(found), key=lambda x: YAMAGUCHI_MUNICIPALITIES.index(x))
+
 def now_jst():
     return datetime.now(JST)
 
@@ -289,12 +328,29 @@ def make_draft(item):
     if not item.get("body_excerpt"):
         summary += " 元記事の概要を取得できていないため、本文の確認が必要です。"
     url = item["url"]
+    municipality_candidates = extract_municipality_candidates(
+        item.get("title", ""), item.get("body_excerpt", "")
+    )
+    if len(municipality_candidates) == 1:
+        municipality = municipality_candidates[0]
+        municipality_status = "要確認（タイトル・本文から抽出した候補）"
+        area_status = "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。"
+    elif len(municipality_candidates) > 1:
+        municipality = ""
+        municipality_status = "要確認（複数の市町名候補）"
+        area_status = "複数の市町名候補あり。店舗所在地は元記事で要確認。"
+    else:
+        municipality = ""
+        municipality_status = "要確認（市町名を抽出できず）"
+        area_status = "市町名を抽出できず。店舗所在地は元記事で要確認。"
     return {
         "id": hashlib.sha256(normalize_url(url).encode("utf-8")).hexdigest()[:16],
         "title": item["title"], "suggested_headline": item["title"],
         "category": item["category"], "priority": get_priority(item["category"]),
         "published_date": date_value, "freshness": freshness, "age_days": age,
-        "area": item.get("area", []), "area_status": item.get("area_status", "地域は未確認。所在地の確認が必要です。"),
+        "area": item.get("area", []), "area_status": area_status,
+        "municipality": municipality, "municipality_candidates": municipality_candidates,
+        "municipality_status": municipality_status,
         "source_name": item.get("source_name", ""), "source_url": url,
         "source_urls": item.get("source_urls", [{"source_name": item.get("source_name", ""), "url": url}]),
         "duplicate_sources_count": item.get("duplicate_sources_count", 1),
