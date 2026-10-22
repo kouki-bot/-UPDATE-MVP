@@ -311,6 +311,113 @@ def sort_key(item):
     return (order.get(item.get("freshness", ""), 5), item.get("priority", 5),
             -(date.timestamp() if date else 0), item.get("title", ""))
 
+
+class ArticleTextParser(HTMLParser):
+    """Extract a conservative article summary from meta descriptions and main text."""
+    def __init__(self):
+        super().__init__()
+        self.meta_description = ""
+        self.title_parts = []
+        self.paragraphs = []
+        self._in_title = False
+        self._capture = None
+        self._buffer = []
+        self._skip_depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        tag = tag.lower()
+        attrs = dict(attrs)
+        if tag in {"script", "style", "noscript", "svg", "nav", "footer", "header", "aside"}:
+            self._skip_depth += 1
+            return
+        if self._skip_depth:
+            return
+        if tag == "meta":
+            name = (attrs.get("name") or attrs.get("property") or "").lower()
+            content = clean_text(attrs.get("content", ""))
+            if name in {"description", "og:description", "twitter:description"} and content:
+                if len(content) > len(self.meta_description):
+                    self.meta_description = content
+        elif tag == "title":
+            self._in_title = True
+        elif tag in {"p", "article"}:
+            self._capture = tag
+            self._buffer = []
+
+    def handle_endtag(self, tag):
+        tag = tag.lower()
+        if tag in {"script", "style", "noscript", "svg", "nav", "footer", "header", "aside"}:
+            self._skip_depth = max(0, self._skip_depth - 1)
+            return
+        if self._skip_depth:
+            return
+        if tag == "title":
+            self._in_title = False
+        if self._capture == tag and tag in {"p", "article"}:
+            text = clean_text(" ".join(self._buffer))
+            if len(text) >= 25:
+                self.paragraphs.append(text)
+            self._capture = None
+            self._buffer = []
+
+    def handle_data(self, data):
+        if self._skip_depth:
+            return
+        value = clean_text(data)
+        if not value:
+            return
+        if self._in_title:
+            self.title_parts.append(value)
+        if self._capture in {"p", "article"}:
+            self._buffer.append(value)
+
+def fetch_article_excerpt(url):
+    """Fetch one article page and return a short extract; failure is non-fatal."""
+    if not url or urlsplit(url).scheme not in {"http", "https"}:
+        return ""
+    req = urllib.request.Request(url, headers={
+        "User-Agent": USER_AGENT,
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "ja,en-US;q=0.7,en;q=0.5",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=12) as response:
+            content_type = response.headers.get("Content-Type", "").lower()
+            if content_type and "html" not in content_type and "text/" not in content_type:
+                return ""
+            raw = response.read(1_500_000)
+    except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
+        print(f"[記事本文取得失敗] {url}: {exc}")
+        return ""
+    charset = "utf-8"
+    match = re.search(rb"charset=['\"]?([a-zA-Z0-9._-]+)", raw[:4096], re.I)
+    if match:
+        try:
+            charset = match.group(1).decode("ascii", errors="ignore")
+        except Exception:
+            charset = "utf-8"
+    try:
+        page = raw.decode(charset, errors="replace")
+    except LookupError:
+        page = raw.decode("utf-8", errors="replace")
+    parser = ArticleTextParser()
+    try:
+        parser.feed(page)
+    except Exception:
+        return ""
+    # Prefer a publisher-provided meta description; otherwise use a short article paragraph.
+    if parser.meta_description and len(parser.meta_description) >= 25:
+        return parser.meta_description[:1000]
+    paragraphs = []
+    seen = set()
+    for paragraph in parser.paragraphs:
+        if paragraph not in seen and len(paragraph) >= 25:
+            seen.add(paragraph)
+            paragraphs.append(paragraph)
+    if paragraphs:
+        return " ".join(paragraphs[:3])[:1000]
+    return ""
+
 def main():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     all_items, source_results = [], []
@@ -323,6 +430,22 @@ def main():
         source_results.append({"name": source["name"], "url": source["url"], "area": source["area"], "items_read": len(items), "method": "HTML一覧取得", "date_note": "記事URLから日付が取得できない場合は日付確認が必要"})
         all_items.extend(items)
     candidates = merge_candidates(all_items)
+    # Fetch article-page summaries only when RSS/list metadata has no useful excerpt.
+    # Limit page requests to reduce load and keep GitHub Actions runtime bounded.
+    fetch_count = 0
+    for item in candidates:
+        if item.get("description") and len(clean_text(item.get("description"))) >= 40:
+            item["body_excerpt"] = clean_text(item.get("description"))[:1000]
+            item["body_excerpt_method"] = "RSS description"
+            continue
+        if fetch_count >= 60:
+            item["body_excerpt"] = ""
+            item["body_excerpt_method"] = "not_fetched_limit"
+            continue
+        excerpt = fetch_article_excerpt(item.get("url", ""))
+        fetch_count += 1
+        item["body_excerpt"] = excerpt
+        item["body_excerpt_method"] = "article_meta_or_paragraph" if excerpt else "unavailable"
     candidates.sort(key=sort_key)
     cats, freshness = Counter(), Counter()
     for item in candidates:
