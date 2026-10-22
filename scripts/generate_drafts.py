@@ -126,7 +126,7 @@ def convert_candidate(item, method, source_priority):
     title, url = clean_text(item.get("title")), clean_text(item.get("url"))
     if not title or not url or not is_store_news(title):
         return None
-    body = clean_text(item.get("body_excerpt", item.get("description", "")))[:1500]
+    body = clean_text(item.get("body_excerpt") or item.get("description", ""))[:1500]
     categories = list(dict.fromkeys(normalize_categories(item) + detect_categories(title)))
     categories = [c for c in categories if c in ALLOWED_CATEGORIES]
     if not categories:
@@ -228,7 +228,7 @@ def make_draft(item):
         "published_date": date_value, "freshness": freshness, "age_days": age,
         "area": item.get("area", []), "area_status": item.get("area_status", "地域は未確認。所在地の確認が必要です。"),
         "source_name": item.get("source_name", ""), "source_url": url,
-        "body_excerpt": item.get("body_excerpt", ""), "draft_summary": summary,
+        "body_excerpt": item.get("body_excerpt", ""), "body_excerpt_method": item.get("body_excerpt_method", ""), "draft_summary": summary,
         "relevance": "店舗ニュース候補・要確認",
         "collection_method": item.get("collection_method", ""),
         "status": "未確認・公開禁止", "created_at": now_jst().isoformat(),
