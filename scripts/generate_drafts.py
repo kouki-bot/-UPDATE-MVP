@@ -36,7 +36,7 @@ def now_jst():
     return datetime.now(JST)
 
 def clean_text(value):
-    return re.sub(r"\\s+", " ", str(value or "")).strip()
+    return re.sub(r"\s+", " ", str(value or "")).strip()
 
 def normalize_url(url):
     url = clean_text(url)
@@ -62,13 +62,24 @@ def parse_date(value):
         return dt.astimezone(JST)
     except (TypeError, ValueError, OverflowError):
         pass
-    match = re.search(r"(20\\d{2})[年./-](\\d{1,2})[月./-](\\d{1,2})日?", value)
+    match = re.search(r"(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})日?", value)
     if match:
         try:
             return datetime(int(match.group(1)), int(match.group(2)), int(match.group(3)), tzinfo=JST)
         except ValueError:
             return None
     return None
+
+def date_from_title(title):
+    """タイトルに含まれる YYYY/MM/DD・YYYY年M月D日 を日付候補として抽出する。"""
+    title = clean_text(title)
+    match = re.search(r"(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})日?", title)
+    if not match:
+        return None
+    try:
+        return datetime(int(match.group(1)), int(match.group(2)), int(match.group(3)), tzinfo=JST)
+    except ValueError:
+        return None
 
 def load_json(path):
     if not path.exists():
@@ -123,10 +134,15 @@ def convert_candidate(item, method, source_priority):
     area = item.get("area", [])
     if not isinstance(area, list):
         area = [area] if area else []
+    date_value = clean_text(item.get("published_date"))
+    if not parse_date(date_value):
+        title_date = date_from_title(title)
+        if title_date:
+            date_value = title_date.isoformat()
     return {
         "title": title, "url": url, "normalized_url": normalize_url(url),
         "source_name": clean_text(item.get("source_name")), "category": categories,
-        "published_date": clean_text(item.get("published_date")), "body_excerpt": body,
+        "published_date": date_value, "body_excerpt": body,
         "collection_method": method, "category_basis": clean_text(item.get("category_basis")),
         "area": area,
         "area_status": clean_text(item.get("area_status")) or "地域は未確認。配信元の対象地域を店舗所在地として扱わない。",
