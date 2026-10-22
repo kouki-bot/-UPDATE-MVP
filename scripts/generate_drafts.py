@@ -180,29 +180,97 @@ def get_priority(categories):
         return 2
     return 5
 
+def title_fingerprint(title):
+    """タイトル比較用。日付・媒体名・記号などを除き、比較しやすくする。"""
+    value = clean_text(title).lower()
+    value = re.sub(r"20\d{2}[年./-]\d{1,2}[月./-]\d{1,2}日?", " ", value)
+    value = re.sub(r"[【】\[\]（）()「」『』〈〉《》・：:／/｜|—―\-〜～…!！?？,.，。]", " ", value)
+    value = re.sub(r"\s+", " ", value).strip()
+    return value
+
+def event_terms(item):
+    """重複判定用の店舗・イベント語。日付や一般的なニュース語は除く。"""
+    title = title_fingerprint(item.get("title", ""))
+    stop_words = [
+        "山口県", "山口市", "宇部市", "下関市", "周南市", "防府市", "岩国市",
+        "オープン", "開店", "新店", "新店舗", "新規出店", "グランドオープン",
+        "プレオープン", "閉店", "営業終了", "閉業", "店じまい", "移転",
+        "リニューアル", "改装", "営業再開", "のお知らせ", "について", "します",
+        "しました", "予定", "決定", "へ", "が", "で", "に", "の",
+    ]
+    for word in stop_words:
+        title = title.replace(word, " ")
+    return re.sub(r"\s+", " ", title).strip()
+
+def same_event(a, b):
+    """誤統合を避けるため、タイトルの一致度が高い場合だけ同一候補とみなす。"""
+    if set(a.get("category", [])) and set(b.get("category", [])):
+        if not (set(a["category"]) & set(b["category"])):
+            return False
+    ta = title_fingerprint(a.get("title", ""))
+    tb = title_fingerprint(b.get("title", ""))
+    if not ta or not tb:
+        return False
+    if ta == tb or ta in tb or tb in ta:
+        return True
+    ea, eb = event_terms(a), event_terms(b)
+    if len(ea) >= 5 and len(eb) >= 5 and (ea in eb or eb in ea):
+        return True
+    # タイトル全体の共通部分が十分に長く、短い方の大半を占める場合のみ統合
+    shorter, longer = (ta, tb) if len(ta) <= len(tb) else (tb, ta)
+    if len(shorter) >= 10 and shorter in longer:
+        return True
+    return False
+
 def merge_candidates(items):
-    unique = {}
+    """URL重複に加え、タイトルが明確に一致する別媒体記事も統合する。"""
+    merged_items = []
     for item in items:
-        key = item.get("normalized_url") or normalize_url(item.get("url", ""))
-        if not key:
+        normalized = item.get("normalized_url") or normalize_url(item.get("url", ""))
+        if not normalized:
             continue
-        if key not in unique:
-            unique[key] = item.copy()
+        candidate = item.copy()
+        candidate["normalized_url"] = normalized
+        candidate["source_urls"] = [{
+            "source_name": candidate.get("source_name", ""),
+            "url": candidate.get("url", ""),
+        }]
+        match_index = None
+        for index, old in enumerate(merged_items):
+            old_urls = {old.get("normalized_url", "")}
+            old_urls.update(normalize_url(s.get("url", "")) for s in old.get("source_urls", []))
+            if normalized in old_urls or same_event(candidate, old):
+                match_index = index
+                break
+        if match_index is None:
+            merged_items.append(candidate)
             continue
-        old = unique[key]
-        if item.get("source_priority", 2) < old.get("source_priority", 2):
-            preferred, other = item, old
+
+        old = merged_items[match_index]
+        if candidate.get("source_priority", 2) < old.get("source_priority", 2):
+            preferred, other = candidate, old
         else:
-            preferred, other = old, item
-        merged = preferred.copy()
-        merged["category"] = list(dict.fromkeys(preferred.get("category", []) + other.get("category", [])))
-        merged["area"] = list(dict.fromkeys(preferred.get("area", []) + other.get("area", [])))
-        if not merged.get("body_excerpt"):
-            merged["body_excerpt"] = other.get("body_excerpt", "")
-        if not merged.get("published_date") and other.get("published_date"):
-            merged["published_date"] = other.get("published_date", "")
-        unique[key] = merged
-    return list(unique.values())
+            preferred, other = old, candidate
+        combined = preferred.copy()
+        combined["category"] = list(dict.fromkeys(
+            preferred.get("category", []) + other.get("category", [])
+        ))
+        combined["area"] = list(dict.fromkeys(
+            preferred.get("area", []) + other.get("area", [])
+        ))
+        if len(other.get("body_excerpt", "")) > len(combined.get("body_excerpt", "")):
+            combined["body_excerpt"] = other.get("body_excerpt", "")
+            combined["body_excerpt_method"] = other.get("body_excerpt_method", "")
+        if not combined.get("published_date") and other.get("published_date"):
+            combined["published_date"] = other.get("published_date", "")
+        sources = []
+        for source in preferred.get("source_urls", []) + other.get("source_urls", []):
+            if source.get("url") and source.get("url") not in [x.get("url") for x in sources]:
+                sources.append(source)
+        combined["source_urls"] = sources
+        combined["duplicate_sources_count"] = len(sources)
+        merged_items[match_index] = combined
+    return merged_items
 
 def make_draft(item):
     date_value = item.get("published_date", "")
@@ -228,6 +296,8 @@ def make_draft(item):
         "published_date": date_value, "freshness": freshness, "age_days": age,
         "area": item.get("area", []), "area_status": item.get("area_status", "地域は未確認。所在地の確認が必要です。"),
         "source_name": item.get("source_name", ""), "source_url": url,
+        "source_urls": item.get("source_urls", [{"source_name": item.get("source_name", ""), "url": url}]),
+        "duplicate_sources_count": item.get("duplicate_sources_count", 1),
         "body_excerpt": item.get("body_excerpt", ""), "body_excerpt_method": item.get("body_excerpt_method", ""), "draft_summary": summary,
         "relevance": "店舗ニュース候補・要確認",
         "collection_method": item.get("collection_method", ""),
