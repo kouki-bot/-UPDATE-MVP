@@ -1,5 +1,7 @@
+
 import json
 import re
+import html
 import urllib.request
 import xml.etree.ElementTree as ET
 
@@ -8,6 +10,12 @@ from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.error import HTTPError, URLError
+from urllib.parse import (
+    urlsplit,
+    urlunsplit,
+    parse_qsl,
+    urlencode,
+)
 
 
 # ==================================================
@@ -31,8 +39,7 @@ USER_AGENT = (
 
 
 # ==================================================
-# 収集するRSS
-# 求人情報は対象外
+# RSSソース
 # ==================================================
 
 RSS_SOURCES = [
@@ -40,112 +47,70 @@ RSS_SOURCES = [
         "name": "山口宇部経済新聞",
         "url": "https://yamaguchi.keizai.biz/rss.xml",
         "area": [
-            "山口市",
-            "宇部市",
-            "山陽小野田市",
-            "美祢市",
-            "防府市",
-            "萩市",
-            "長門市",
+            "山口市", "宇部市", "山陽小野田市",
+            "美祢市", "防府市", "萩市", "長門市",
         ],
     },
     {
         "name": "号外NET 山口市・防府市",
         "url": "https://yamaguchi-hofu.goguynet.jp/feed/",
-        "area": [
-            "山口市",
-            "防府市",
-        ],
+        "area": ["山口市", "防府市"],
     },
     {
         "name": "号外NET 宇部市・山陽小野田市",
         "url": "https://ube-sanyoonoda.goguynet.jp/feed/",
-        "area": [
-            "宇部市",
-            "山陽小野田市",
-        ],
+        "area": ["宇部市", "山陽小野田市"],
     },
 ]
 
 
 # ==================================================
-# 分類キーワード
-# 求人カテゴリーは削除
+# 店舗ニュースの分類キーワード
 # ==================================================
 
 KEYWORD_GROUPS = {
     "新店・開店": [
-        "新店",
-        "新規開店",
-        "オープン",
-        "開店",
-        "出店",
-        "開業",
-        "新店舗",
-        "グランドオープン",
-        "プレオープン",
-        "オープン予定",
-        "新たにオープン",
-        "新しくオープン",
-        "オープンしました",
-        "開店予定",
-        "開業予定",
-        "初出店",
-        "新規出店",
+        "新店", "新店舗", "新規開店", "新規出店",
+        "オープン", "開店", "開業", "出店",
+        "グランドオープン", "プレオープン",
+        "初出店", "開店予定", "開業予定",
+        "オープン予定", "新たにオープン",
+        "新しくオープン", "オープンしました",
         "オープンする",
     ],
     "閉店": [
-        "閉店",
-        "営業終了",
-        "閉業",
-        "閉店のお知らせ",
-        "閉店しました",
-        "閉店予定",
-        "営業を終了",
-        "店じまい",
-        "閉鎖",
+        "閉店", "営業終了", "閉業", "店じまい",
+        "閉店のお知らせ", "閉店しました",
+        "閉店予定", "営業を終了",
     ],
     "移転": [
-        "移転",
-        "移転オープン",
-        "移転のお知らせ",
-        "移転しました",
-        "移転予定",
-        "移転先",
+        "移転", "移転オープン", "移転のお知らせ",
+        "移転しました", "移転予定", "移転先",
     ],
     "リニューアル": [
-        "リニューアル",
-        "改装オープン",
-        "リニューアルオープン",
-        "営業再開",
-        "リニューアル予定",
-    ],
-    "イベント": [
-        "イベント",
-        "開催",
-        "フェス",
-        "祭り",
-        "マルシェ",
-        "展示会",
-        "ワークショップ",
-        "催し",
-    ],
-    "新施設・地域の動き": [
-        "新施設",
-        "新設",
-        "整備計画",
-        "建設計画",
-        "商業施設",
-        "公共施設",
-        "複合施設",
-        "開設",
-        "供用開始",
+        "リニューアル", "改装オープン",
+        "リニューアルオープン", "営業再開",
+        "リニューアル予定", "改装",
     ],
 }
 
 
-# 明らかに対象外の地域記事などを除外する
-EXCLUDE_KEYWORDS = [
+# 店舗ニュースとして扱わない記事のキーワード。
+# ただし、店舗ニュースのタイトルに含まれていても
+# 一律に除外しないよう、除外対象を限定する。
+EXCLUDE_TITLE_KEYWORDS = [
+    "求人", "アルバイト募集", "スタッフ募集",
+    "採用情報", "正社員募集",
+    "イベント情報", "イベント開催",
+    "マルシェ開催", "フェス開催",
+    "祭り開催", "ワークショップ開催",
+    "参加者募集", "出店者募集",
+    "整備計画", "建設計画",
+    "入札", "議会", "市長会見",
+    "補助金", "公共施設の整備",
+]
+
+EXCLUDE_ARTICLE_KEYWORDS = [
     "仙台経済新聞",
     "横浜経済新聞",
 ]
@@ -159,39 +124,39 @@ def now_jst():
     return datetime.now(JST)
 
 
-def clean_text(text):
-    if not text:
+def clean_text(value):
+    if not value:
         return ""
 
-    text = re.sub(r"<[^>]+>", " ", text)
-    text = text.replace("&nbsp;", " ")
-    text = text.replace("\xa0", " ")
-    text = re.sub(r"\s+", " ", text)
+    value = html.unescape(str(value))
+    value = re.sub(r"<[^>]+>", " ", value)
+    value = value.replace("\xa0", " ")
+    value = re.sub(r"\s+", " ", value)
 
-    return text.strip()
+    return value.strip()
 
 
 def local_name(tag):
-    """XMLタグから名前空間を取り除く"""
-    return tag.split("}")[-1].lower()
+    return tag.split("}")[-1].split(":")[-1].lower()
 
 
 def get_child_text(element, names):
-    """指定した名前の子要素からテキストを取得する"""
-    names = {name.lower() for name in names}
+    names = {
+        name.lower().split(":")[-1]
+        for name in names
+    }
 
     for child in element:
         if local_name(child.tag) in names:
-            text = "".join(child.itertext()).strip()
+            value = "".join(child.itertext()).strip()
 
-            if text:
-                return clean_text(text)
+            if value:
+                return clean_text(value)
 
     return ""
 
 
 def get_link(element):
-    """RSS・Atomのリンクを取得する"""
     for child in element:
         if local_name(child.tag) != "link":
             continue
@@ -204,16 +169,50 @@ def get_link(element):
             if rel == "alternate":
                 return href
 
-        text = "".join(child.itertext()).strip()
+        value = "".join(child.itertext()).strip()
 
-        if text:
-            return text
+        if value:
+            return value
 
     return ""
 
 
+def normalize_url(url):
+    """追跡用パラメータを除いてURLを整理する"""
+    try:
+        parts = urlsplit(url.strip())
+
+        tracking_prefixes = ("utm_",)
+        tracking_names = {
+            "fbclid", "gclid", "yclid",
+            "mc_cid", "mc_eid",
+        }
+
+        query = [
+            (key, value)
+            for key, value in parse_qsl(
+                parts.query,
+                keep_blank_values=True,
+            )
+            if key.lower() not in tracking_names
+            and not key.lower().startswith(tracking_prefixes)
+        ]
+
+        path = parts.path.rstrip("/") or "/"
+
+        return urlunsplit((
+            parts.scheme.lower(),
+            parts.netloc.lower(),
+            path,
+            urlencode(query),
+            "",
+        ))
+
+    except (ValueError, TypeError):
+        return url.strip()
+
+
 def parse_date(value):
-    """RSSの日付をタイムゾーン付き日時に変換する"""
     if not value:
         return None
 
@@ -245,56 +244,75 @@ def parse_date(value):
 
 
 def extract_published_date(element):
-    """RSS・Atomから公開日を取得する"""
-    value = get_child_text(
-        element,
-        [
-            "pubDate",
-            "published",
-            "updated",
-            "date",
-            "dc:date",
-        ],
-    )
+    for child in element.iter():
+        if local_name(child.tag) in {
+            "pubdate", "published", "updated", "date"
+        }:
+            value = "".join(child.itertext()).strip()
 
-    # 名前空間付きdc:dateにも対応
-    if not value:
-        for child in element.iter():
-            if local_name(child.tag) == "date":
-                value = "".join(child.itertext()).strip()
+            if value:
+                parsed = parse_date(value)
 
-                if value:
-                    break
+                if parsed:
+                    return parsed
 
-    return parse_date(value)
+    return None
 
 
 # ==================================================
-# 分類処理
+# 分類・除外判定
 # ==================================================
 
 def classify_text(text):
-    """文字列に含まれるキーワードからカテゴリーを判定"""
     text = clean_text(text)
 
-    categories = []
+    return [
+        category
+        for category, keywords in KEYWORD_GROUPS.items()
+        if any(keyword in text for keyword in keywords)
+    ]
 
-    for category, keywords in KEYWORD_GROUPS.items():
-        if any(keyword in text for keyword in keywords):
-            categories.append(category)
 
-    return categories
+def is_excluded(title, description):
+    """
+    イベント・求人・公共事業などを候補から除外。
+    店舗の動きが明確なタイトルは一律除外しない。
+    """
+    title = clean_text(title)
+    description = clean_text(description)
+
+    title_categories = classify_text(title)
+
+    # 店舗の動きがタイトルで明確なら、
+    # 概要にイベント等の語があっても残す。
+    if title_categories:
+        return any(
+            keyword in title
+            for keyword in EXCLUDE_TITLE_KEYWORDS
+            if not any(
+                store_keyword in title
+                for store_keyword in [
+                    "新店", "新店舗", "オープン",
+                    "開店", "閉店", "移転",
+                    "リニューアル", "改装",
+                ]
+            )
+        )
+
+    combined = title + " " + description
+
+    if any(
+        keyword in combined
+        for keyword in EXCLUDE_ARTICLE_KEYWORDS
+    ):
+        return True
+
+    # タイトルに店舗ニュースの分類語がない記事は
+    # 原則として候補に入れない。
+    return True
 
 
 def classify_article(title, description):
-    """
-    タイトルを優先して分類する。
-
-    タイトルで分類できた場合、説明文のキーワードは
-    原則として分類に追加しない。
-    これにより、別店舗の閉店・移転情報による誤分類を減らす。
-    """
-
     title_categories = classify_text(title)
 
     if title_categories:
@@ -305,66 +323,41 @@ def classify_article(title, description):
     if description_categories:
         return description_categories, "概要・要確認"
 
-    return ["未分類"], "未分類"
+    return [], "未分類"
 
 
-def get_priority(categories):
-    """優先順位が高い記事ほど数字を小さくする"""
-
-    if any(
-        category in categories
-        for category in [
-            "新店・開店",
-            "閉店",
-        ]
-    ):
-        return 1
-
-    if any(
-        category in categories
-        for category in [
-            "移転",
-            "リニューアル",
-        ]
-    ):
-        return 2
-
-    if "イベント" in categories:
+def get_priority(categories, category_basis):
+    if category_basis != "タイトル":
         return 3
 
-    if "新施設・地域の動き" in categories:
-        return 4
+    if "閉店" in categories:
+        return 1
 
-    return 5
+    if "新店・開店" in categories:
+        return 1
+
+    if "移転" in categories or "リニューアル" in categories:
+        return 2
+
+    return 3
 
 
 # ==================================================
-# 記事の鮮度判定
+# 鮮度判定
 # ==================================================
 
 def get_freshness(published_date):
-    """
-    記事の公開日から鮮度を判定する。
-
-    30日以内       : 直近30日
-    31〜90日前     : 31〜90日前
-    90日より前     : 90日より前
-    日付不明       : 日付確認が必要
-    未来日付       : 未来日付・要確認
-    """
-
     if not published_date:
         return "日付確認が必要", None
 
-    now = now_jst()
-
-    age_days = (now.date() - published_date.date()).days
+    age_days = (
+        now_jst().date() - published_date.date()
+    ).days
 
     if age_days < -1:
         return "未来日付・要確認", age_days
 
-    if age_days < 0:
-        age_days = 0
+    age_days = max(age_days, 0)
 
     if age_days <= RECENT_DAYS:
         return "直近30日", age_days
@@ -376,31 +369,27 @@ def get_freshness(published_date):
 
 
 # ==================================================
-# RSS取得処理
+# RSS取得
 # ==================================================
 
 def fetch_rss(source):
     request = urllib.request.Request(
         source["url"],
-        headers={
-            "User-Agent": USER_AGENT,
-        },
+        headers={"User-Agent": USER_AGENT},
     )
 
     try:
         with urllib.request.urlopen(
-            request,
-            timeout=20,
+            request, timeout=20
         ) as response:
             raw_data = response.read()
 
-    except (HTTPError, URLError, TimeoutError, OSError) as exc:
-        print(
-            f"[取得失敗] {source['name']}: {exc}"
-        )
+    except (
+        HTTPError, URLError, TimeoutError, OSError
+    ) as exc:
+        print(f"[取得失敗] {source['name']}: {exc}")
         return []
 
-    # 不正な制御文字を除去
     text = raw_data.decode(
         "utf-8-sig",
         errors="replace",
@@ -416,73 +405,58 @@ def fetch_rss(source):
         root = ET.fromstring(text)
 
     except ET.ParseError as exc:
-        print(
-            f"[XML解析失敗] {source['name']}: {exc}"
-        )
+        print(f"[XML解析失敗] {source['name']}: {exc}")
         return []
 
     items = []
 
     for element in root.iter():
-        tag = local_name(element.tag)
-
-        if tag not in ["item", "entry"]:
+        if local_name(element.tag) not in {"item", "entry"}:
             continue
 
-        title = get_child_text(
-            element,
-            ["title"],
-        )
-
+        title = get_child_text(element, ["title"])
         link = get_link(element)
 
         description = get_child_text(
             element,
-            [
-                "description",
-                "summary",
-                "content",
-                "encoded",
-            ],
+            ["description", "summary", "content", "encoded"],
         )
-
-        published = extract_published_date(element)
 
         if not title or not link:
             continue
 
-        if any(
-            keyword in title
-            for keyword in EXCLUDE_KEYWORDS
-        ):
+        if is_excluded(title, description):
             continue
 
         categories, category_basis = classify_article(
-            title,
-            description,
+            title, description
         )
 
-        freshness, age_days = get_freshness(
-            published
-        )
+        if not categories:
+            continue
 
+        published = extract_published_date(element)
+
+        freshness, age_days = get_freshness(published)
+
+        # 古い記事は候補から除外せず、
+        # 鮮度情報を付けて確認できるようにする。
         published_date = (
-            published.isoformat()
-            if published
-            else ""
+            published.isoformat() if published else ""
         )
 
-        priority = get_priority(categories)
-
-        candidate = {
+        items.append({
             "title": title,
             "url": link,
+            "normalized_url": normalize_url(link),
             "source_name": source["name"],
             "source_url": source["url"],
             "area": source["area"],
             "categories": categories,
             "category_basis": category_basis,
-            "priority": priority,
+            "priority": get_priority(
+                categories, category_basis
+            ),
             "published_date": published_date,
             "freshness": freshness,
             "age_days": age_days,
@@ -491,14 +465,10 @@ def fetch_rss(source):
                 "タイトルから分類"
                 if category_basis == "タイトル"
                 else "概要から仮分類・要確認"
-                if category_basis == "概要・要確認"
-                else "分類できず・要確認"
             ),
             "status": "未確認・公開禁止",
             "checked_at": now_jst().isoformat(),
-        }
-
-        items.append(candidate)
+        })
 
         if len(items) >= MAX_ITEMS_PER_SOURCE:
             break
@@ -512,50 +482,53 @@ def fetch_rss(source):
 
 
 # ==================================================
-# 重複整理・並び替え
+# 重複整理
 # ==================================================
 
 def merge_candidates(candidates):
-    """同じURLの記事を統合する"""
-
     merged = {}
+    title_index = {}
 
     for item in candidates:
-        url = item["url"].strip()
+        url_key = normalize_url(item.get("url", ""))
 
-        if not url:
+        if not url_key:
             continue
 
-        if url not in merged:
-            merged[url] = item
-            continue
-
-        existing = merged[url]
-
-        # カテゴリーを統合
-        categories = list(
-            dict.fromkeys(
-                existing["categories"]
-                + item["categories"]
-            )
+        title_key = re.sub(
+            r"[\W_]+", "", item.get("title", "").lower()
         )
 
-        existing["categories"] = categories
-        existing["priority"] = get_priority(categories)
+        key = url_key
 
-        # 地域を統合
-        existing["area"] = list(
-            dict.fromkeys(
-                existing["area"] + item["area"]
-            )
+        if key not in merged and title_key in title_index:
+            key = title_index[title_key]
+
+        if key not in merged:
+            merged[key] = item.copy()
+            merged[key]["area"] = list(item["area"])
+            merged[key]["categories"] = list(item["categories"])
+            title_index[title_key] = key
+            continue
+
+        existing = merged[key]
+
+        existing["categories"] = list(dict.fromkeys(
+            existing["categories"] + item["categories"]
+        ))
+
+        existing["area"] = list(dict.fromkeys(
+            existing["area"] + item["area"]
+        ))
+
+        existing["priority"] = min(
+            existing["priority"], item["priority"]
         )
 
     return list(merged.values())
 
 
 def sort_key(item):
-    """新しい記事を先に、同じ鮮度なら重要度順にする"""
-
     freshness_order = {
         "直近30日": 0,
         "31〜90日前": 1,
@@ -564,21 +537,12 @@ def sort_key(item):
         "未来日付・要確認": 4,
     }
 
-    published = parse_date(
-        item.get("published_date", "")
-    )
+    published = parse_date(item.get("published_date", ""))
 
-    timestamp = (
-        published.timestamp()
-        if published
-        else 0
-    )
+    timestamp = published.timestamp() if published else 0
 
     return (
-        freshness_order.get(
-            item.get("freshness", ""),
-            5,
-        ),
+        freshness_order.get(item.get("freshness", ""), 5),
         item.get("priority", 5),
         -timestamp,
         item.get("title", ""),
@@ -590,10 +554,7 @@ def sort_key(item):
 # ==================================================
 
 def main():
-    DATA_DIR.mkdir(
-        parents=True,
-        exist_ok=True,
-    )
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     all_candidates = []
     source_results = []
@@ -610,60 +571,43 @@ def main():
 
         all_candidates.extend(items)
 
-    candidates = merge_candidates(
-        all_candidates
-    )
-
-    candidates.sort(
-        key=sort_key
-    )
+    candidates = merge_candidates(all_candidates)
+    candidates.sort(key=sort_key)
 
     category_counts = Counter()
     freshness_counts = Counter()
-    priority_counts = Counter()
 
     for item in candidates:
         for category in item["categories"]:
             category_counts[category] += 1
 
-        freshness_counts[
-            item["freshness"]
-        ] += 1
-
-        priority_counts[
-            str(item["priority"])
-        ] += 1
+        freshness_counts[item["freshness"]] += 1
 
     recent_count = sum(
-        1
-        for item in candidates
+        1 for item in candidates
         if item["freshness"] == "直近30日"
     )
 
     result = {
         "generated_at": now_jst().isoformat(),
         "purpose": (
-            "山口県内の新店・閉店・移転・"
-            "リニューアル・イベント・地域情報の候補収集"
+            "山口県内の新店舗・閉店・移転・"
+            "リニューアル情報の候補収集"
         ),
         "total_candidates": len(candidates),
         "recent_candidate_count": recent_count,
         "category_counts": dict(category_counts),
         "freshness_counts": dict(freshness_counts),
-        "priority_counts": dict(priority_counts),
         "sources": source_results,
         "candidates": candidates,
         "notice": (
-            "収集記事は未確認です。"
-            "掲載前に公開日・店舗名・所在地・"
-            "営業状況を確認してください。"
+            "すべて未確認です。自動公開は禁止。"
+            "掲載前に店舗名・所在地・日付・"
+            "営業状況・情報源を確認してください。"
         ),
     }
 
-    with OUTPUT_FILE.open(
-        "w",
-        encoding="utf-8",
-    ) as file:
+    with OUTPUT_FILE.open("w", encoding="utf-8") as file:
         json.dump(
             result,
             file,
@@ -675,21 +619,12 @@ def main():
     print("========== RSS収集結果 ==========")
     print(f"候補記事数: {len(candidates)}")
     print(f"直近30日の記事: {recent_count}件")
-    print("")
     print("カテゴリー別:")
     print(json.dumps(
         dict(category_counts),
         ensure_ascii=False,
         indent=2,
     ))
-    print("")
-    print("鮮度別:")
-    print(json.dumps(
-        dict(freshness_counts),
-        ensure_ascii=False,
-        indent=2,
-    ))
-    print("")
     print(f"保存先: {OUTPUT_FILE}")
 
 
