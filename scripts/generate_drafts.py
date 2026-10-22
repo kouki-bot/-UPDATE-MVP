@@ -57,11 +57,13 @@ def extract_municipality_candidates(title, body_excerpt):
         "長門": "長門市", "柳井": "柳井市", "美祢": "美祢市", "周南": "周南市",
         "光": "光市",
     }
-    location_context = r"(?:市内|町内|市|町|駅周辺|駅前|周辺|市街地|商店街|で開店|に開店|でオープン|にオープン|で閉店|に閉店|の店舗|の店|にある|に誕生|で営業)"
+    # 市町名の直後に駅名・施設名などが続く記事見出しにも対応する。
+    location_context = r"(?:市内|町内|市|町|駅(?:前|周辺|近く)?|周辺|市街地|商店街|で開店|に開店|でオープン|にオープン|で閉店|に閉店|の店舗|の店|にある|に誕生|で営業|新川駅|駅)"
     for alias, official in aliases.items():
         if official in found:
             continue
-        # 山口県・山口新聞などを山口市と誤認しないよう、山口は文脈を厳しめにする。
+        # 「宇部新川駅」のように、市町名の後ろに駅名が直結するケースを拾う。
+        # 「山口」は県名・新聞名などを除外し、駅名/場所表現に限定する。
         if alias == "山口":
             pattern = r"山口(?!県|新聞|放送|銀行|合同庁舎)(?:" + location_context + r")"
         else:
@@ -69,6 +71,18 @@ def extract_municipality_candidates(title, body_excerpt):
         if re.search(pattern, text):
             found.append(official)
     # 長い地名を先にし、順序を安定させる。
+    # 代表的な駅名を使った補完。所在地の確定ではなく、確認用候補として扱う。
+    station_aliases = {
+        "宇部新川駅": "宇部市", "山口駅": "山口市", "下関駅": "下関市",
+        "徳山駅": "周南市", "新山口駅": "山口市", "防府駅": "防府市",
+        "岩国駅": "岩国市", "下松駅": "下松市", "柳井駅": "柳井市",
+        "長門市駅": "長門市", "美祢駅": "美祢市", "厚狭駅": "山陽小野田市",
+        "小野田駅": "山陽小野田市", "光駅": "光市", "萩駅": "萩市",
+    }
+    for station, municipality in station_aliases.items():
+        if station in text and municipality not in found:
+            found.append(municipality)
+
     return sorted(set(found), key=lambda x: YAMAGUCHI_MUNICIPALITIES.index(x))
 
 def now_jst():
