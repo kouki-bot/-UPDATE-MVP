@@ -1,4 +1,5 @@
 import html
+from html.parser import HTMLParser
 import json
 import re
 import urllib.request
@@ -26,6 +27,12 @@ RSS_SOURCES = [
      "area": ["山口市", "防府市"]},
     {"name": "号外NET 宇部市・山陽小野田市", "url": "https://ube-sanyoonoda.goguynet.jp/feed/",
      "area": ["宇部市", "山陽小野田市"]},
+]
+HTML_SOURCES = [
+    {"name": "山口新聞 開店・閉店一覧", "url": "https://yama.minato-yamaguchi.co.jp/topics/shops/",
+     "area": ["山口県内"]},
+    {"name": "開店閉店.com 山口カテゴリ", "url": "https://kaiten-heiten-24.com/category/yamaguchi/",
+     "area": ["山口県内"]},
 ]
 KEYWORD_GROUPS = {
     "新店・開店": ["新店", "新店舗", "新規開店", "新規出店", "オープン", "開店", "開業", "出店",
@@ -193,6 +200,82 @@ def fetch_rss(source):
     print(f"[取得完了] {source['name']}: {len(items)}件")
     return items
 
+
+class AnchorParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.anchors = []
+        self.current = None
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() == "a":
+            attrs = dict(attrs)
+            href = attrs.get("href", "")
+            if href.startswith("http"):
+                self.current = {"url": href, "text": ""}
+    def handle_data(self, data):
+        if self.current is not None:
+            self.current["text"] += data
+    def handle_endtag(self, tag):
+        if tag.lower() == "a" and self.current is not None:
+            self.current["text"] = clean_text(self.current["text"])
+            if self.current["text"]:
+                self.anchors.append(self.current)
+            self.current = None
+
+def date_from_url(url):
+    m = re.search(r"/(20\d{2})/(\d{1,2})/(\d{1,2})(?:/|$)", url)
+    if not m:
+        m = re.search(r"(20\d{2})[-/](\d{1,2})[-/](\d{1,2})", url)
+    if not m:
+        return None
+    try:
+        return datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), tzinfo=JST)
+    except ValueError:
+        return None
+
+def fetch_html_source(source):
+    req = urllib.request.Request(source["url"], headers={"User-Agent": USER_AGENT})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as response:
+            raw = response.read()
+    except (HTTPError, URLError, TimeoutError, OSError) as exc:
+        print(f"[HTML取得失敗] {source['name']}: {exc}")
+        return []
+    text = raw.decode("utf-8", errors="replace")
+    parser = AnchorParser()
+    parser.feed(text)
+    items, seen = [], set()
+    for a in parser.anchors:
+        title, url = a["text"], a["url"]
+        host = urlsplit(url).netloc.lower()
+        if not title or urlsplit(url).netloc.lower() == urlsplit(source["url"]).netloc.lower() and url.rstrip("/") == source["url"].rstrip("/"):
+            continue
+        if not any(domain in host for domain in ["minato-yamaguchi.co.jp", "kaiten-heiten-24.com", "kaiten-heiten.com"]):
+            continue
+        if url in seen or not classify_text(title) or is_excluded(title, ""):
+            continue
+        # 一覧ページのタグ・ナビゲーションを候補にしない
+        if len(title) < 8 or title in {"続きを読む", "次へ", "前へ", "開店・閉店"}:
+            continue
+        seen.add(url)
+        published = date_from_url(url)
+        freshness, age = get_freshness(published)
+        items.append({
+            "title": title, "url": url, "normalized_url": normalize_url(url),
+            "source_name": source["name"], "source_url": source["url"],
+            "area": source["area"], "area_status": "配信元の対象地域・店舗所在地は未確認",
+            "categories": classify_text(title), "category_basis": "一覧タイトル",
+            "priority": 1 if any(c in classify_text(title) for c in ["新店・開店", "閉店"]) else 2,
+            "published_date": published.isoformat() if published else "",
+            "freshness": freshness, "age_days": age, "description": "",
+            "relevance": "一覧タイトルから仮分類・要確認", "status": "未確認・公開禁止",
+            "checked_at": now_jst().isoformat(),
+        })
+        if len(items) >= MAX_ITEMS_PER_SOURCE:
+            break
+    print(f"[HTML取得完了] {source['name']}: {len(items)}件")
+    return items
+
 def merge_candidates(candidates):
     merged = {}
     title_index = {}
@@ -234,6 +317,10 @@ def main():
     for source in RSS_SOURCES:
         items = fetch_rss(source)
         source_results.append({"name": source["name"], "url": source["url"], "area": source["area"], "items_read": len(items)})
+        all_items.extend(items)
+    for source in HTML_SOURCES:
+        items = fetch_html_source(source)
+        source_results.append({"name": source["name"], "url": source["url"], "area": source["area"], "items_read": len(items), "method": "HTML一覧取得", "date_note": "記事URLから日付が取得できない場合は日付確認が必要"})
         all_items.extend(items)
     candidates = merge_candidates(all_items)
     candidates.sort(key=sort_key)
