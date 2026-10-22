@@ -1,10 +1,3120 @@
 {
-  "generated_at": "2026-10-22T15:54:37.378913+09:00",
-  "draft_count": 0,
+  "generated_at": "2026-10-22T16:05:21.583711+09:00",
+  "draft_count": 129,
   "recent_draft_count": 0,
   "excluded_old_count": 2,
-  "freshness_counts": {},
-  "category_counts": {},
+  "freshness_counts": {
+    "日付確認が必要": 129
+  },
+  "category_counts": {
+    "新店・開店": 95,
+    "リニューアル": 9,
+    "閉店": 26,
+    "移転": 5
+  },
   "note": "対象は新店・開店、閉店、移転、リニューアルです。90日より前の記事は通常の下書き候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。配信元の対象地域は店舗所在地を保証しません。",
-  "drafts": []
+  "drafts": [
+    {
+      "id": "d21049f6752ed4a5",
+      "title": "2024/02/16 06:00 市民がつくる“ブックマンション”開店下関・豊浦に「エルピスしものせき」",
+      "suggested_headline": "2024/02/16 06:00 市民がつくる“ブックマンション”開店下関・豊浦に「エルピスしものせき」",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/70107",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581499+09:00"
+    },
+    {
+      "id": "4b60bee6e1b8ae8b",
+      "title": "2024/03/01 06:00 県産品の販売協力店に中央フード熊毛店改装オープン",
+      "suggested_headline": "2024/03/01 06:00 県産品の販売協力店に中央フード熊毛店改装オープン",
+      "category": [
+        "新店・開店",
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/70750",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581534+09:00"
+    },
+    {
+      "id": "4355d8e537340999",
+      "title": "2024/03/21 06:00 【写真２枚】「鰻の成瀬」が県内に初出店ゆめタウン宇部に",
+      "suggested_headline": "2024/03/21 06:00 【写真２枚】「鰻の成瀬」が県内に初出店ゆめタウン宇部に",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/71553",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581554+09:00"
+    },
+    {
+      "id": "80e2743fc354a37f",
+      "title": "2024/03/22 06:00 家族向け設備充実へ下関・川棚のライダーズハウス公開 ５月グランドオープン",
+      "suggested_headline": "2024/03/22 06:00 家族向け設備充実へ下関・川棚のライダーズハウス公開 ５月グランドオープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/71609",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581571+09:00"
+    },
+    {
+      "id": "e2280ed3e4ef73b8",
+      "title": "2024/03/27 06:00 ＡＮＡクラウンプラザホテル宇部、みどりＨＤが取得今月末で営業終了、承…",
+      "suggested_headline": "2024/03/27 06:00 ＡＮＡクラウンプラザホテル宇部、みどりＨＤが取得今月末で営業終了、承…",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/71794",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581588+09:00"
+    },
+    {
+      "id": "c72936e0a3d0c37d",
+      "title": "2024/03/30 06:00 「お宿垢田の杜桂月」１日オープン下関の元飲食店が「癒やしの宿」に",
+      "suggested_headline": "2024/03/30 06:00 「お宿垢田の杜桂月」１日オープン下関の元飲食店が「癒やしの宿」に",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/71947",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581604+09:00"
+    },
+    {
+      "id": "c97db196e61f4249",
+      "title": "2024/04/19 06:00 トクヤマデッキにスーパーオープン開店前１００人超が行列",
+      "suggested_headline": "2024/04/19 06:00 トクヤマデッキにスーパーオープン開店前１００人超が行列",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/72718",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581656+09:00"
+    },
+    {
+      "id": "8f47f0fa1a65148f",
+      "title": "2024/04/25 06:00 基本設計完了、２６年秋オープンへ複合施設「常盤通りにぎわい交流拠点」",
+      "suggested_headline": "2024/04/25 06:00 基本設計完了、２６年秋オープンへ複合施設「常盤通りにぎわい交流拠点」",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/72933",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581678+09:00"
+    },
+    {
+      "id": "9ed85036f0164d73",
+      "title": "2024/05/06 06:00 ログハウスに二つのカフェオープン鹿野「ＫＢＡＳＥ」 曜日で店が入れ替わり",
+      "suggested_headline": "2024/05/06 06:00 ログハウスに二つのカフェオープン鹿野「ＫＢＡＳＥ」 曜日で店が入れ替わり",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/73359",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581694+09:00"
+    },
+    {
+      "id": "cff79549723467bc",
+      "title": "2024/05/10 06:00 マツキヨが山口初出店「コープタウン」新たに３店舗、７月全面開業",
+      "suggested_headline": "2024/05/10 06:00 マツキヨが山口初出店「コープタウン」新たに３店舗、７月全面開業",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/73477",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581710+09:00"
+    },
+    {
+      "id": "97082e2e5d4ce313",
+      "title": "2024/05/20 06:00 ライダーも家族連れも楽しめるくすの森キャンプ場グランドオープン 下関・…",
+      "suggested_headline": "2024/05/20 06:00 ライダーも家族連れも楽しめるくすの森キャンプ場グランドオープン 下関・…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/73835",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581724+09:00"
+    },
+    {
+      "id": "27a5d32bc935fd0c",
+      "title": "2024/07/10 06:00 むつみ昆虫王国１３日にオープン「カブトムシ触れて」",
+      "suggested_headline": "2024/07/10 06:00 むつみ昆虫王国１３日にオープン「カブトムシ触れて」",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/75925",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581739+09:00"
+    },
+    {
+      "id": "04146b7d6d4cbdf6",
+      "title": "2024/07/14 06:00 「コロガルあそびのひゃっかてん」山口市にオープン思い思いに元気いっぱ…",
+      "suggested_headline": "2024/07/14 06:00 「コロガルあそびのひゃっかてん」山口市にオープン思い思いに元気いっぱ…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/76123",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581758+09:00"
+    },
+    {
+      "id": "3f4bdeddd0d7fcc4",
+      "title": "2024/07/14 06:00 レジャープールオープンくだまつ健康パーク 親子連れでにぎわう",
+      "suggested_headline": "2024/07/14 06:00 レジャープールオープンくだまつ健康パーク 親子連れでにぎわう",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/76117",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581773+09:00"
+    },
+    {
+      "id": "56ea5c690dd8903e",
+      "title": "2024/08/23 06:00 人気キッチンカーが豊北町に店舗「角島オズバーガー」あすオープン",
+      "suggested_headline": "2024/08/23 06:00 人気キッチンカーが豊北町に店舗「角島オズバーガー」あすオープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/77549",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581787+09:00"
+    },
+    {
+      "id": "7b5a5fd99afe94e7",
+      "title": "2024/09/21 06:00 ３ブランド複合店県内初出店ダイソー、シーモール下関に",
+      "suggested_headline": "2024/09/21 06:00 ３ブランド複合店県内初出店ダイソー、シーモール下関に",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/78632",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581801+09:00"
+    },
+    {
+      "id": "ee4f089c5d50282e",
+      "title": "2024/09/27 06:00 高田が宇部市内に出店コーヒー専門店３店舗",
+      "suggested_headline": "2024/09/27 06:00 高田が宇部市内に出店コーヒー専門店３店舗",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/78897",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581815+09:00"
+    },
+    {
+      "id": "67c8088a655cf85f",
+      "title": "2024/10/22 06:00 萩・阿武６蔵の地酒ずらり、しーまーとに専門店オープン４０種類以上、地…",
+      "suggested_headline": "2024/10/22 06:00 萩・阿武６蔵の地酒ずらり、しーまーとに専門店オープン４０種類以上、地…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/80059",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581829+09:00"
+    },
+    {
+      "id": "0a46bd4763b43d4c",
+      "title": "2024/10/30 06:00 下関に障害者就労支援カフェ２号店オープンＮＰＯ、ひきこもり対応事業も",
+      "suggested_headline": "2024/10/30 06:00 下関に障害者就労支援カフェ２号店オープンＮＰＯ、ひきこもり対応事業も",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/80492",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581843+09:00"
+    },
+    {
+      "id": "b84257f205c8c7f2",
+      "title": "2024/11/16 06:00 エディオン山口小郡店２２日オープン県内１６店目直営店、太陽光発電を導入",
+      "suggested_headline": "2024/11/16 06:00 エディオン山口小郡店２２日オープン県内１６店目直営店、太陽光発電を導入",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/81273",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581856+09:00"
+    },
+    {
+      "id": "e75417727030dbf2",
+      "title": "2024/11/21 06:00 ジュンテンドー萩店オープンペットホテルのサービスも",
+      "suggested_headline": "2024/11/21 06:00 ジュンテンドー萩店オープンペットホテルのサービスも",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/81525",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581870+09:00"
+    },
+    {
+      "id": "cd62ea4c9015b6f8",
+      "title": "2024/11/21 06:00 ナチュラルブランドゾーンがオープン周南・銀座ＤＥＣＫＰＬＡＺＡ",
+      "suggested_headline": "2024/11/21 06:00 ナチュラルブランドゾーンがオープン周南・銀座ＤＥＣＫＰＬＡＺＡ",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/81526",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581884+09:00"
+    },
+    {
+      "id": "4079e66c0becac53",
+      "title": "2024/11/22 06:00 県内最大級「無印良品」オープン下関・ゆめタウン長府に約７０００品目",
+      "suggested_headline": "2024/11/22 06:00 県内最大級「無印良品」オープン下関・ゆめタウン長府に約７０００品目",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/81595",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581897+09:00"
+    },
+    {
+      "id": "715d3ada9da3508a",
+      "title": "2024/11/28 06:00 オープン２カ月遅れ来年６月山口・湯田温泉「こんこんパーク」 建設資材納…",
+      "suggested_headline": "2024/11/28 06:00 オープン２カ月遅れ来年６月山口・湯田温泉「こんこんパーク」 建設資材納…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/81822",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581911+09:00"
+    },
+    {
+      "id": "b7a1155ac9dfc867",
+      "title": "2025/01/15 06:00 防府に「あま～い魚屋」！？１７日オープン「メバル焼き」を名物に",
+      "suggested_headline": "2025/01/15 06:00 防府に「あま～い魚屋」！？１７日オープン「メバル焼き」を名物に",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/83755",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581925+09:00"
+    },
+    {
+      "id": "ee2516a27462e1e7",
+      "title": "2025/01/18 06:00 新名物「メバル焼き」いかが道の駅潮彩市場防府に「あま～い魚屋」オープン",
+      "suggested_headline": "2025/01/18 06:00 新名物「メバル焼き」いかが道の駅潮彩市場防府に「あま～い魚屋」オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/83886",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581939+09:00"
+    },
+    {
+      "id": "2d43b655a34e92b8",
+      "title": "2025/02/21 06:00 新下関に「ワークマンカラーズ」「女子」から転換しオープン ベーシック衣…",
+      "suggested_headline": "2025/02/21 06:00 新下関に「ワークマンカラーズ」「女子」から転換しオープン ベーシック衣…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/85476",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581955+09:00"
+    },
+    {
+      "id": "ad6639c50372b306",
+      "title": "2025/02/28 06:00 下松タウンセンター、買い物ついでに健康づくりジム来月２日オープン",
+      "suggested_headline": "2025/02/28 06:00 下松タウンセンター、買い物ついでに健康づくりジム来月２日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/85754",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581972+09:00"
+    },
+    {
+      "id": "fb75e6b1d697f307",
+      "title": "2025/04/19 06:00 新鮮な海鮮丼を提供柳井・大畠観光センター「はちよん」きょうオープン",
+      "suggested_headline": "2025/04/19 06:00 新鮮な海鮮丼を提供柳井・大畠観光センター「はちよん」きょうオープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/88138",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.581987+09:00"
+    },
+    {
+      "id": "232449348596afad",
+      "title": "2025/05/08 06:00 下関にインドアゴルフスクール「ステップゴルフ」山口県初出店",
+      "suggested_headline": "2025/05/08 06:00 下関にインドアゴルフスクール「ステップゴルフ」山口県初出店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/88899",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582001+09:00"
+    },
+    {
+      "id": "030ac77843d479b1",
+      "title": "2025/05/15 06:00 美祢市民会館に元協力隊員が飲食店オープン竹本さん「食事の瞬間を幸せに」",
+      "suggested_headline": "2025/05/15 06:00 美祢市民会館に元協力隊員が飲食店オープン竹本さん「食事の瞬間を幸せに」",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/89154",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582014+09:00"
+    },
+    {
+      "id": "4ced0a5044b78ce9",
+      "title": "2025/06/07 06:00 トクヤマデッキに井筒屋移転オープンさらなる集客期待",
+      "suggested_headline": "2025/06/07 06:00 トクヤマデッキに井筒屋移転オープンさらなる集客期待",
+      "category": [
+        "新店・開店",
+        "移転"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/90225",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582028+09:00"
+    },
+    {
+      "id": "f3a4936c8a8ae8ee",
+      "title": "2025/07/02 06:00 「キッズランドＵＳＭＡＸ」下関にオープン３千平方メートルに遊具４０種…",
+      "suggested_headline": "2025/07/02 06:00 「キッズランドＵＳＭＡＸ」下関にオープン３千平方メートルに遊具４０種…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/91313",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582041+09:00"
+    },
+    {
+      "id": "a56071aa8fc4b122",
+      "title": "2025/07/04 06:00 鹿野ファーム直営の総菜店大丸下関店にオープン",
+      "suggested_headline": "2025/07/04 06:00 鹿野ファーム直営の総菜店大丸下関店にオープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/91421",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582054+09:00"
+    },
+    {
+      "id": "751a6c5a58235b5c",
+      "title": "2025/07/12 06:00 ハローズ宇部きょうオープン市内最大のショッピングモール",
+      "suggested_headline": "2025/07/12 06:00 ハローズ宇部きょうオープン市内最大のショッピングモール",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/91838",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582067+09:00"
+    },
+    {
+      "id": "e2f5a74e1db60029",
+      "title": "2025/08/28 06:00 大規模改修進む道の駅仁保の郷（山口）あす先行オープンレストラン施設と…",
+      "suggested_headline": "2025/08/28 06:00 大規模改修進む道の駅仁保の郷（山口）あす先行オープンレストラン施設と…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/94015",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582081+09:00"
+    },
+    {
+      "id": "51aa2320eb4b5636",
+      "title": "2025/09/10 06:00 サンリブ唐戸 来年１月閉店下関４０年の営業に幕 住民ら「買い物難民」懸念",
+      "suggested_headline": "2025/09/10 06:00 サンリブ唐戸 来年１月閉店下関４０年の営業に幕 住民ら「買い物難民」懸念",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/94666",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582097+09:00"
+    },
+    {
+      "id": "e4949a300a8066b6",
+      "title": "2025/09/12 06:00 保護猫カフェと就労支援施設併設下関市に「ねこのわ」オープン",
+      "suggested_headline": "2025/09/12 06:00 保護猫カフェと就労支援施設併設下関市に「ねこのわ」オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/94752",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582112+09:00"
+    },
+    {
+      "id": "904bb6f22c70b7fd",
+      "title": "2025/11/01 06:00 山口市湯田温泉の元ホテルニュータナカ 全面改修し来秋開業へ東京の会社が…",
+      "suggested_headline": "2025/11/01 06:00 山口市湯田温泉の元ホテルニュータナカ 全面改修し来秋開業へ東京の会社が…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/96869",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582126+09:00"
+    },
+    {
+      "id": "100451bc5577c811",
+      "title": "2025/11/02 06:00 下関市のサンリブ唐戸閉店 「買い物不便」 懸念浮き彫りアンケート 跡地に…",
+      "suggested_headline": "2025/11/02 06:00 下関市のサンリブ唐戸閉店 「買い物不便」 懸念浮き彫りアンケート 跡地に…",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/96940",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582140+09:00"
+    },
+    {
+      "id": "8637a7270aad61cb",
+      "title": "2025/11/08 06:00 「下関大坂屋ホテル」１７日オープン旧東京第一ホテルをリニューアル 大妓…",
+      "suggested_headline": "2025/11/08 06:00 「下関大坂屋ホテル」１７日オープン旧東京第一ホテルをリニューアル 大妓…",
+      "category": [
+        "新店・開店",
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/97255",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582154+09:00"
+    },
+    {
+      "id": "0ab4a99dfe2925cf",
+      "title": "2025/11/18 06:00 下関大坂屋ホテルがグランドオープン旧東京第一ホテル下関をリニューアル",
+      "suggested_headline": "2025/11/18 06:00 下関大坂屋ホテルがグランドオープン旧東京第一ホテル下関をリニューアル",
+      "category": [
+        "新店・開店",
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/97702",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582168+09:00"
+    },
+    {
+      "id": "a272052eae5d95ce",
+      "title": "2025/11/22 06:00 下関市の「さくら工房菊川」直売所オープン手作り巻きずしなど週３日販売",
+      "suggested_headline": "2025/11/22 06:00 下関市の「さくら工房菊川」直売所オープン手作り巻きずしなど週３日販売",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/97883",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582181+09:00"
+    },
+    {
+      "id": "86ecf30bb250635f",
+      "title": "2025/11/30 06:00 下関市に「しもやき」販売店新名物目指し夫妻がオープン",
+      "suggested_headline": "2025/11/30 06:00 下関市に「しもやき」販売店新名物目指し夫妻がオープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/98213",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582198+09:00"
+    },
+    {
+      "id": "c453be4797afdb25",
+      "title": "2026/02/03 06:00 山口銀行唐戸支店の新店舗２４日オープン現在地で建て替え",
+      "suggested_headline": "2026/02/03 06:00 山口銀行唐戸支店の新店舗２４日オープン現在地で建て替え",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/100964",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582212+09:00"
+    },
+    {
+      "id": "96a3dde611a86cbb",
+      "title": "2026/02/25 06:00 山口銀行唐戸支店新店舗オープン",
+      "suggested_headline": "2026/02/25 06:00 山口銀行唐戸支店新店舗オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/101867",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582225+09:00"
+    },
+    {
+      "id": "dfa8b92620145869",
+      "title": "2026/02/27 06:00 宇部市のココランドに「恐竜の森」３月１日オープン１０種１５体実寸大で …",
+      "suggested_headline": "2026/02/27 06:00 宇部市のココランドに「恐竜の森」３月１日オープン１０種１５体実寸大で …",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/101987",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582241+09:00"
+    },
+    {
+      "id": "004820cab5cb032e",
+      "title": "2026/03/01 06:00 道の駅仁保の郷、本館棟改修終えプレオープン山口市、４月にグランドオー…",
+      "suggested_headline": "2026/03/01 06:00 道の駅仁保の郷、本館棟改修終えプレオープン山口市、４月にグランドオー…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/102057",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582256+09:00"
+    },
+    {
+      "id": "4d517c873732b429",
+      "title": "2026/03/18 06:00 「テスラ下関」山口県内初出店へシーモールに２８日",
+      "suggested_headline": "2026/03/18 06:00 「テスラ下関」山口県内初出店へシーモールに２８日",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/102816",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582269+09:00"
+    },
+    {
+      "id": "b831685f1708cee9",
+      "title": "2026/03/21 06:00 美祢市「カルスト・ゲート」２８日開業秋吉台周辺の観光拠点に",
+      "suggested_headline": "2026/03/21 06:00 美祢市「カルスト・ゲート」２８日開業秋吉台周辺の観光拠点に",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/102968",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582283+09:00"
+    },
+    {
+      "id": "bdb92c27299aab6e",
+      "title": "2026/03/25 06:00 山口県庁内にローソンオープン 中四国最大の店舗面積",
+      "suggested_headline": "2026/03/25 06:00 山口県庁内にローソンオープン 中四国最大の店舗面積",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/103142",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582297+09:00"
+    },
+    {
+      "id": "b2a667536cf30686",
+      "title": "2026/03/28 06:00 テスラ下関「気軽な体験拠点に」オープン前日に報道向け内覧会",
+      "suggested_headline": "2026/03/28 06:00 テスラ下関「気軽な体験拠点に」オープン前日に報道向け内覧会",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/103358",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582311+09:00"
+    },
+    {
+      "id": "5b3d586bf6ca5f0a",
+      "title": "2026/03/28 06:00 秋吉台サファリに「ねこ村」オープン自然の中で自由な猫に癒やされて",
+      "suggested_headline": "2026/03/28 06:00 秋吉台サファリに「ねこ村」オープン自然の中で自由な猫に癒やされて",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/103377",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582324+09:00"
+    },
+    {
+      "id": "e3981523f528686d",
+      "title": "2026/04/14 06:00 下関市に「アエナ」出店化粧品・食品ロス削減 在庫割安販売",
+      "suggested_headline": "2026/04/14 06:00 下関市に「アエナ」出店化粧品・食品ロス削減 在庫割安販売",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/104178",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582338+09:00"
+    },
+    {
+      "id": "2802a6f396afd5dd",
+      "title": "2026/04/16 06:00 空き店舗で地域活性化マルシェ山陽小野田市「よりみち商店 天神丸」オープン",
+      "suggested_headline": "2026/04/16 06:00 空き店舗で地域活性化マルシェ山陽小野田市「よりみち商店 天神丸」オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/104241",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582352+09:00"
+    },
+    {
+      "id": "5eb3a866cac25c43",
+      "title": "2026/05/02 06:00 ゆめタウン宇部に「まちライブラリー」「本を持ち寄り交流の場に」オープン",
+      "suggested_headline": "2026/05/02 06:00 ゆめタウン宇部に「まちライブラリー」「本を持ち寄り交流の場に」オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/104873",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582365+09:00"
+    },
+    {
+      "id": "87f1b329c367df03",
+      "title": "2026/05/10 06:00 日産プリンス山口 新しい下関幡生店がオープン貴船、幡生の旧２店統合 地…",
+      "suggested_headline": "2026/05/10 06:00 日産プリンス山口 新しい下関幡生店がオープン貴船、幡生の旧２店統合 地…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/105155",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582381+09:00"
+    },
+    {
+      "id": "b14d4e8fd6e407ad",
+      "title": "2026/05/31 06:00 下松市に高級スープの専門店「マーゼルマーゼル星プラザ店」オープン",
+      "suggested_headline": "2026/05/31 06:00 下松市に高級スープの専門店「マーゼルマーゼル星プラザ店」オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/106009",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582398+09:00"
+    },
+    {
+      "id": "6b7dc7f5e66257d3",
+      "title": "2026/06/07 06:00 虹ケ浜を眺めながら乾杯！光市のホテル松原屋 屋上ビアガーデンオープン",
+      "suggested_headline": "2026/06/07 06:00 虹ケ浜を眺めながら乾杯！光市のホテル松原屋 屋上ビアガーデンオープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/106342",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582411+09:00"
+    },
+    {
+      "id": "68340decb5342d84",
+      "title": "2026/06/13 06:00 ドン・キホーテ防府店６月１６日オープンディスカウント店、山口県内３店…",
+      "suggested_headline": "2026/06/13 06:00 ドン・キホーテ防府店６月１６日オープンディスカウント店、山口県内３店…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/106601",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582425+09:00"
+    },
+    {
+      "id": "66a2e1289e969fc9",
+      "title": "2026/06/13 06:00 岩国駅前商店街に「アパホテル」プレオープンプラザホテル改修、防府市に…",
+      "suggested_headline": "2026/06/13 06:00 岩国駅前商店街に「アパホテル」プレオープンプラザホテル改修、防府市に…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/106588",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582438+09:00"
+    },
+    {
+      "id": "7fdb54d292d86245",
+      "title": "2026/06/17 06:00 防府市に「ドンキ」待ってた！山口県内３店目 オープン前から７００人超行列",
+      "suggested_headline": "2026/06/17 06:00 防府市に「ドンキ」待ってた！山口県内３店目 オープン前から７００人超行列",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/106767",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582452+09:00"
+    },
+    {
+      "id": "7acde048c20d1562",
+      "title": "2026/06/19 06:00 親子で次世代の遊び体験「リトルプラネット」下関市きょうオープン山口県…",
+      "suggested_headline": "2026/06/19 06:00 親子で次世代の遊び体験「リトルプラネット」下関市きょうオープン山口県…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/106840",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582465+09:00"
+    },
+    {
+      "id": "9ab61876fdef7387",
+      "title": "2026/06/20 06:00 下関市に「ロフト」山口県内初出店、ゆめシティに２５０人が列",
+      "suggested_headline": "2026/06/20 06:00 下関市に「ロフト」山口県内初出店、ゆめシティに２５０人が列",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/106900",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582478+09:00"
+    },
+    {
+      "id": "bddeb919c49c6a5b",
+      "title": "2026/06/30 16:10 【速報】大丸下関店、２０２７年８月に閉店へ",
+      "suggested_headline": "2026/06/30 16:10 【速報】大丸下関店、２０２７年８月に閉店へ",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107413",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582492+09:00"
+    },
+    {
+      "id": "dd28e5f3dab41d51",
+      "title": "2026/07/01 06:00 大丸下関店２０２７年８月末で閉店赤字続き、地域密着型百貨店７６年で幕",
+      "suggested_headline": "2026/07/01 06:00 大丸下関店２０２７年８月末で閉店赤字続き、地域密着型百貨店７６年で幕",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107436",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582506+09:00"
+    },
+    {
+      "id": "0c51ca3ac242f2ec",
+      "title": "2026/07/01 06:00 大丸閉店「下関の象徴が」市民衝撃前田市長「影響最小限に抑える」",
+      "suggested_headline": "2026/07/01 06:00 大丸閉店「下関の象徴が」市民衝撃前田市長「影響最小限に抑える」",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107460",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582522+09:00"
+    },
+    {
+      "id": "f6336f73e6a1bc90",
+      "title": "2026/07/02 06:00 下関市が大丸下関店の来夏閉店で対策会議立ち上げ",
+      "suggested_headline": "2026/07/02 06:00 下関市が大丸下関店の来夏閉店で対策会議立ち上げ",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107498",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582536+09:00"
+    },
+    {
+      "id": "04193a39acb39a57",
+      "title": "2026/07/02 06:00 大丸下関店の来夏閉店「寝耳に水」「街の魅力失われる」驚きや不安",
+      "suggested_headline": "2026/07/02 06:00 大丸下関店の来夏閉店「寝耳に水」「街の魅力失われる」驚きや不安",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107514",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582550+09:00"
+    },
+    {
+      "id": "1b3c275dce392283",
+      "title": "2026/07/03 06:00 大丸下関店閉店で利用客から惜しむ声次々問い合わせカウンター設置",
+      "suggested_headline": "2026/07/03 06:00 大丸下関店閉店で利用客から惜しむ声次々問い合わせカウンター設置",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107633",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582563+09:00"
+    },
+    {
+      "id": "d508e1ef6594b5b7",
+      "title": "2026/07/07 06:00 大丸下関店閉店 市の対策会議初会合地元への影響最小限に 従業員雇用維持…",
+      "suggested_headline": "2026/07/07 06:00 大丸下関店閉店 市の対策会議初会合地元への影響最小限に 従業員雇用維持…",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107780",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582576+09:00"
+    },
+    {
+      "id": "5fb7f257e2bb24b7",
+      "title": "2026/07/07 14:30 【会見動画】大丸下関店閉店へ 会見で語られたことは",
+      "suggested_headline": "2026/07/07 14:30 【会見動画】大丸下関店閉店へ 会見で語られたことは",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107789",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582590+09:00"
+    },
+    {
+      "id": "a57cd58e4df33772",
+      "title": "2026/07/11 06:00 「ロピア山口井筒屋店」７月２２日オープン山口県内初出店",
+      "suggested_headline": "2026/07/11 06:00 「ロピア山口井筒屋店」７月２２日オープン山口県内初出店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107951",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582611+09:00"
+    },
+    {
+      "id": "0861a523378efcb9",
+      "title": "2026/07/16 06:00 きらら博公園「親水広場」７月２７日オープン噴水や水深５センチじゃぶじ…",
+      "suggested_headline": "2026/07/16 06:00 きらら博公園「親水広場」７月２７日オープン噴水や水深５センチじゃぶじ…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/108186",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582647+09:00"
+    },
+    {
+      "id": "bc88c865a19976a7",
+      "title": "2026/07/23 06:00 ロピア山口井筒屋店オープン山口県内初出店の「食のテーマパーク」",
+      "suggested_headline": "2026/07/23 06:00 ロピア山口井筒屋店オープン山口県内初出店の「食のテーマパーク」",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/108586",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582664+09:00"
+    },
+    {
+      "id": "62087717b7df007b",
+      "title": "2026/07/24 06:00 ロフト、おのだサンパークに９月１１日開店、山口県内２店舗目 旬の雑貨で…",
+      "suggested_headline": "2026/07/24 06:00 ロフト、おのだサンパークに９月１１日開店、山口県内２店舗目 旬の雑貨で…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/108623",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582678+09:00"
+    },
+    {
+      "id": "a98561ab3c5190dc",
+      "title": "2026/07/29 06:00 ロピアオープン「周辺商店街に好影響」山口市長が歓迎",
+      "suggested_headline": "2026/07/29 06:00 ロピアオープン「周辺商店街に好影響」山口市長が歓迎",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/108910",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582696+09:00"
+    },
+    {
+      "id": "5c9a5fa0200eb7cb",
+      "title": "2026/08/07 06:00 東横イン宇部新川駅オープン１４階２０７室、駐車場９８台収容",
+      "suggested_headline": "2026/08/07 06:00 東横イン宇部新川駅オープン１４階２０７室、駐車場９８台収容",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/109269",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582711+09:00"
+    },
+    {
+      "id": "e087173adf1a7af2",
+      "title": "2026/08/24 06:00 ラ・ムーが新たに下関市山の田北町に出店山口県内４店舗目、８月２７日オ…",
+      "suggested_headline": "2026/08/24 06:00 ラ・ムーが新たに下関市山の田北町に出店山口県内４店舗目、８月２７日オ…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/109882",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582726+09:00"
+    },
+    {
+      "id": "0d9c38a9a878616f",
+      "title": "2026/08/26 06:00 ブドウたわわ、ナシも旬周南市・須金で観光農園オープン",
+      "suggested_headline": "2026/08/26 06:00 ブドウたわわ、ナシも旬周南市・須金で観光農園オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/109963",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582739+09:00"
+    },
+    {
+      "id": "569d7aa074bdf503",
+      "title": "2026/09/12 06:00 おのだサンパークに「ロフト」オープン山口県内２店目",
+      "suggested_headline": "2026/09/12 06:00 おのだサンパークに「ロフト」オープン山口県内２店目",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/110649",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582753+09:00"
+    },
+    {
+      "id": "8eb96f7ffbfe235a",
+      "title": "2026/09/23 06:00 市民共創の拠点施設完成 「下関テイラーズ」オープン下関市豊前田・茶山地…",
+      "suggested_headline": "2026/09/23 06:00 市民共創の拠点施設完成 「下関テイラーズ」オープン下関市豊前田・茶山地…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111080",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582766+09:00"
+    },
+    {
+      "id": "82b792cd5379aba1",
+      "title": "2026/09/24 06:00 サイゼリヤおのだサンパーク店きょうオープン山口県内４店目、山陽小野田…",
+      "suggested_headline": "2026/09/24 06:00 サイゼリヤおのだサンパーク店きょうオープン山口県内４店目、山陽小野田…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111103",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582779+09:00"
+    },
+    {
+      "id": "7c92459cebfdb8e0",
+      "title": "2026/09/28 15:00 【まとめ】来夏閉店の大丸下関店 最近の話題や直営化後の動き",
+      "suggested_headline": "2026/09/28 15:00 【まとめ】来夏閉店の大丸下関店 最近の話題や直営化後の動き",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107679",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582793+09:00"
+    },
+    {
+      "id": "cd24ab81f8737b10",
+      "title": "2026年10月10日 中国, 山口, 牛丼・豚丼・丼物, 開店情報, 飲食店 【開店】松屋 下関長府店（松のや併設）",
+      "suggested_headline": "2026年10月10日 中国, 山口, 牛丼・豚丼・丼物, 開店情報, 飲食店 【開店】松屋 下関長府店（松のや併設）",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/matsuya-shimonosekichofu/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582806+09:00"
+    },
+    {
+      "id": "75c22b18244538f2",
+      "title": "2026年10月18日 ビュッフェ・バイキング, 中国, 山口, 閉店情報, 飲食店 【閉店】ビュッフェレストラン YUTAKA",
+      "suggested_headline": "2026年10月18日 ビュッフェ・バイキング, 中国, 山口, 閉店情報, 飲食店 【閉店】ビュッフェレストラン YUTAKA",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/yutaka-buffet/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582820+09:00"
+    },
+    {
+      "id": "5abd682219f9e38b",
+      "title": "2026年10月22日 中国, 小売店, 山口, 書店・文具, 閉店情報 【閉店】明屋書店 今宿店",
+      "suggested_headline": "2026年10月22日 中国, 小売店, 山口, 書店・文具, 閉店情報 【閉店】明屋書店 今宿店",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/haruyashoten-imajuku/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582836+09:00"
+    },
+    {
+      "id": "c13ec365835b46f5",
+      "title": "2026年10月7日 パン・ベーカリー, 中国, 山口, 閉店情報, 飲食店 【閉店】ミリーズブレッド（Miri’s Bread）",
+      "suggested_headline": "2026年10月7日 パン・ベーカリー, 中国, 山口, 閉店情報, 飲食店 【閉店】ミリーズブレッド（Miri’s Bread）",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/miris-bread/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582853+09:00"
+    },
+    {
+      "id": "35ff036a0c6dc104",
+      "title": "2026年8月11日 パン・ベーカリー, 中国, 山口, 閉店情報, 飲食店 【閉店】boulangerie gemme rizière",
+      "suggested_headline": "2026年8月11日 パン・ベーカリー, 中国, 山口, 閉店情報, 飲食店 【閉店】boulangerie gemme rizière",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/boulangerie-gemme-riziere-2/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582867+09:00"
+    },
+    {
+      "id": "e943d87f22fb72cc",
+      "title": "2026年8月13日 パン・ベーカリー, 中国, 山口, 閉店情報, 飲食店 【閉店】乃が美はなれ 山口店",
+      "suggested_headline": "2026年8月13日 パン・ベーカリー, 中国, 山口, 閉店情報, 飲食店 【閉店】乃が美はなれ 山口店",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/nogamihanare-yamaguchi/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582881+09:00"
+    },
+    {
+      "id": "11529b19b4350b24",
+      "title": "2026年8月14日 中国, 山口, 牛丼・豚丼・丼物, 開店情報, 飲食店 【開店】すき家 191号長門店",
+      "suggested_headline": "2026年8月14日 中国, 山口, 牛丼・豚丼・丼物, 開店情報, 飲食店 【開店】すき家 191号長門店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/sukiya-191gonagato/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582895+09:00"
+    },
+    {
+      "id": "82c9408c126c5b1f",
+      "title": "2026年8月20日 ファミレス, 中国, 山口, 閉店情報, 飲食店 【閉店】ロイヤルホスト 山の田店",
+      "suggested_headline": "2026年8月20日 ファミレス, 中国, 山口, 閉店情報, 飲食店 【閉店】ロイヤルホスト 山の田店",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/royalhost-yamanota/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582908+09:00"
+    },
+    {
+      "id": "251a8e70e2b760d7",
+      "title": "2026年8月23日 中国, 小売店, 山口, 贈答品・ギフトショップ, 閉店情報 【閉店】ギフトギャラリーオズ宇部店",
+      "suggested_headline": "2026年8月23日 中国, 小売店, 山口, 贈答品・ギフトショップ, 閉店情報 【閉店】ギフトギャラリーオズ宇部店",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/giftgalleryoz-ube/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582922+09:00"
+    },
+    {
+      "id": "578d60d80c78c5b6",
+      "title": "2026年8月24日 中国, 居酒屋, 山口, 開店情報, 飲食店 【開店】個室完備 大衆とり酒場 とりいちず 山口徳山店",
+      "suggested_headline": "2026年8月24日 中国, 居酒屋, 山口, 開店情報, 飲食店 【開店】個室完備 大衆とり酒場 とりいちず 山口徳山店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/toriichizu-yamaguchitokuyama/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582936+09:00"
+    },
+    {
+      "id": "13b0f5664008fe62",
+      "title": "2026年8月25日 そば・うどん店, 中国, 山口, 閉店情報, 飲食店 【閉店】いろり山賊 錦店",
+      "suggested_headline": "2026年8月25日 そば・うどん店, 中国, 山口, 閉店情報, 飲食店 【閉店】いろり山賊 錦店",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/irorisanzoku-nishiki/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582950+09:00"
+    },
+    {
+      "id": "bc503d82f3577eae",
+      "title": "2026年8月26日 ディスカウントストア, 中国, 小売店, 山口, 開店情報 【開店】ラ・ムー山の田店",
+      "suggested_headline": "2026年8月26日 ディスカウントストア, 中国, 小売店, 山口, 開店情報 【開店】ラ・ムー山の田店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/lamu-yamanota/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582964+09:00"
+    },
+    {
+      "id": "9f8da5a9895c8279",
+      "title": "2026年8月28日 そば・うどん店, 中国, 山口, 閉店情報, 飲食店 【閉店】元祖肉肉うどん 新下関店",
+      "suggested_headline": "2026年8月28日 そば・うどん店, 中国, 山口, 閉店情報, 飲食店 【閉店】元祖肉肉うどん 新下関店",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/nikunikuudon-shinshimonoseki/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582980+09:00"
+    },
+    {
+      "id": "4a1886ece43a2851",
+      "title": "2026年8月2日 ラーメン・ちゃんぽん, 中国, 山口, 開店情報, 飲食店 【開店】麺鮮醤油房 周月 徳山店",
+      "suggested_headline": "2026年8月2日 ラーメン・ちゃんぽん, 中国, 山口, 開店情報, 飲食店 【開店】麺鮮醤油房 周月 徳山店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/shugetsu-tokuyama/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.582994+09:00"
+    },
+    {
+      "id": "7866cc9a213e694e",
+      "title": "2026年8月6日 ゲームセンター, 中国, 山口, 観光・宿泊・レジャー, 開店情報 【開店】メガドリ宇部店",
+      "suggested_headline": "2026年8月6日 ゲームセンター, 中国, 山口, 観光・宿泊・レジャー, 開店情報 【開店】メガドリ宇部店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/megadori-ube/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583008+09:00"
+    },
+    {
+      "id": "3826dd0cb3ff1840",
+      "title": "2026年8月8日 コーヒーショップ, 中国, 山口, 開店情報, 飲食店 【開店】Sh:AKARIKI COFFEE",
+      "suggested_headline": "2026年8月8日 コーヒーショップ, 中国, 山口, 開店情報, 飲食店 【開店】Sh:AKARIKI COFFEE",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/%e3%80%90%e9%96%8b%e5%ba%97%e3%80%91shakariki-coffee/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583022+09:00"
+    },
+    {
+      "id": "588eba515ba69998",
+      "title": "2026年8月8日 スーパーストア, 中国, 小売店, 山口, 開店情報 【開店】ハローズ西岐波店",
+      "suggested_headline": "2026年8月8日 スーパーストア, 中国, 小売店, 山口, 開店情報 【開店】ハローズ西岐波店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/halows-nishikiwa/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583036+09:00"
+    },
+    {
+      "id": "6278805de3101bff",
+      "title": "2026年9月10日 スポーツ用品, 中国, 小売店, 山口, 開店情報 【開店】スポーツデポ/ゴルフ５おのだサンパーク店",
+      "suggested_headline": "2026年9月10日 スポーツ用品, 中国, 小売店, 山口, 開店情報 【開店】スポーツデポ/ゴルフ５おのだサンパーク店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/sportsdepo-golf5-onoda-sunpark/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583052+09:00"
+    },
+    {
+      "id": "b63297e9f97913b6",
+      "title": "2026年9月12日 ゴルフ練習場, スポーツ, 中国, 山口, 閉店情報 【閉店】ココランドゴルフ練習場",
+      "suggested_headline": "2026年9月12日 ゴルフ練習場, スポーツ, 中国, 山口, 閉店情報 【閉店】ココランドゴルフ練習場",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/cocoland-golf/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583067+09:00"
+    },
+    {
+      "id": "7916821a646d607d",
+      "title": "2026年9月18日 キャンプ場・グランピング, 中国, 山口, 観光・宿泊・レジャー, 開店情報 【開店】火の山山麓キャンプ場",
+      "suggested_headline": "2026年9月18日 キャンプ場・グランピング, 中国, 山口, 観光・宿泊・レジャー, 開店情報 【開店】火の山山麓キャンプ場",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/hinoyamacamp/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583083+09:00"
+    },
+    {
+      "id": "29d7a2dab51af969",
+      "title": "2026年9月23日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】サイゼリヤ おのだサンパーク店",
+      "suggested_headline": "2026年9月23日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】サイゼリヤ おのだサンパーク店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/saizeriya-onodasunpark/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583098+09:00"
+    },
+    {
+      "id": "8c0faee29ec6cd41",
+      "title": "2026年9月24日 サービス, 中国, 山口, 買取・質屋, 開店情報 【開店】セカンドストリート ゆめタウン南岩国店",
+      "suggested_headline": "2026年9月24日 サービス, 中国, 山口, 買取・質屋, 開店情報 【開店】セカンドストリート ゆめタウン南岩国店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/2ndstreet-yt-minamiiwakuni/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583112+09:00"
+    },
+    {
+      "id": "2c7db80e16d22e27",
+      "title": "2026年9月30日 中国, 居酒屋, 山口, 焼肉・ホルモン, 開店情報, 飲食店 【開店】もつ焼き 幸",
+      "suggested_headline": "2026年9月30日 中国, 居酒屋, 山口, 焼肉・ホルモン, 開店情報, 飲食店 【開店】もつ焼き 幸",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/motsuyaki-sachi/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583128+09:00"
+    },
+    {
+      "id": "ddc200c72881ce0c",
+      "title": "2026年9月8日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】生パスタ＆ワイン プレーゴ",
+      "suggested_headline": "2026年9月8日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】生パスタ＆ワイン プレーゴ",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/prego/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583143+09:00"
+    },
+    {
+      "id": "144b27d46f08fba9",
+      "title": "【開店】トロ壱 博多駅前店",
+      "suggested_headline": "【開店】トロ壱 博多駅前店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/toroichi-hakataekimae/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583158+09:00"
+    },
+    {
+      "id": "991654cdfc1f26ef",
+      "title": "【開店】串カツ田中 和歌山駅前店",
+      "suggested_headline": "【開店】串カツ田中 和歌山駅前店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/kushi-tanaka-wakayamaekimae/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583173+09:00"
+    },
+    {
+      "id": "8702ebf9b46e6252",
+      "title": "【開店】京都北白川 ラーメン魁力屋 足利店",
+      "suggested_headline": "【開店】京都北白川 ラーメン魁力屋 足利店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/kairikiya-ashikaga/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583187+09:00"
+    },
+    {
+      "id": "1fc36f848037ff1a",
+      "title": "【開店】土鍋ごはん KOTORABIYORI 北千住マルイ店",
+      "suggested_headline": "【開店】土鍋ごはん KOTORABIYORI 北千住マルイ店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/kotorabiyori-kitasenjumarui/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583201+09:00"
+    },
+    {
+      "id": "7dc3377cf64429a6",
+      "title": "【開店】廻転鮨 銀座おのでら ハレザ池袋店",
+      "suggested_headline": "【開店】廻転鮨 銀座おのでら ハレザ池袋店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/ginza-onodera-hareza-ikebukuro/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583214+09:00"
+    },
+    {
+      "id": "8b672ee85f6ce588",
+      "title": "閉店情報-地域別",
+      "suggested_headline": "閉店情報-地域別",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/area-close/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583228+09:00"
+    },
+    {
+      "id": "f600e28352a362cf",
+      "title": "閉店情報-業種別",
+      "suggested_headline": "閉店情報-業種別",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/heiten-gyousyubetsu/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583242+09:00"
+    },
+    {
+      "id": "1841f7d288b22c6c",
+      "title": "開店・閉店の記事一覧はこちら",
+      "suggested_headline": "開店・閉店の記事一覧はこちら",
+      "category": [
+        "新店・開店",
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/tag/s/%E9%96%8B%E5%BA%97%E3%83%BB%E9%96%89%E5%BA%97",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583256+09:00"
+    },
+    {
+      "id": "a7bcd9a72b56c284",
+      "title": "開店情報-地域別",
+      "suggested_headline": "開店情報-地域別",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/area-open/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583273+09:00"
+    },
+    {
+      "id": "f9573334a9563a49",
+      "title": "開店情報-業種別",
+      "suggested_headline": "開店情報-業種別",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/kaiten-gyousyubetsu/",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583290+09:00"
+    },
+    {
+      "id": "1dcb137b7eead594",
+      "title": "開店閉店.com",
+      "suggested_headline": "開店閉店.com",
+      "category": [
+        "新店・開店",
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583305+09:00"
+    },
+    {
+      "id": "12ce768ddf736bbd",
+      "title": "2024/04/28 06:00 道の駅萩・さんさん三見リニューアル物販など拡充、休憩・交流室も新設",
+      "suggested_headline": "2024/04/28 06:00 道の駅萩・さんさん三見リニューアル物販など拡充、休憩・交流室も新設",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/73078",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583320+09:00"
+    },
+    {
+      "id": "f655a774cda3c089",
+      "title": "2024/05/25 06:00 道の駅仁保の郷リニューアルへあす「みんなの マルシェ」開催 工事前に規…",
+      "suggested_headline": "2024/05/25 06:00 道の駅仁保の郷リニューアルへあす「みんなの マルシェ」開催 工事前に規…",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/74043",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583335+09:00"
+    },
+    {
+      "id": "55505c7d138ed321",
+      "title": "2025/12/27 06:00 「晋作の湯」新体制で営業再開下関市吉田、サウナ施設も併設",
+      "suggested_headline": "2025/12/27 06:00 「晋作の湯」新体制で営業再開下関市吉田、サウナ施設も併設",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/99422",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583349+09:00"
+    },
+    {
+      "id": "6116e124e5e7cbc4",
+      "title": "2026/01/31 06:00 山口銀行周南２支店２８年にも移転へ店舗内店舗方式で営業",
+      "suggested_headline": "2026/01/31 06:00 山口銀行周南２支店２８年にも移転へ店舗内店舗方式で営業",
+      "category": [
+        "移転"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/100848",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583363+09:00"
+    },
+    {
+      "id": "c0a165dd95d37b39",
+      "title": "2026/02/11 06:00 浜のてんぷら屋 リニューアル山陽小野田市、増築しイートインも ３月に記…",
+      "suggested_headline": "2026/02/11 06:00 浜のてんぷら屋 リニューアル山陽小野田市、増築しイートインも ３月に記…",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/101343",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583377+09:00"
+    },
+    {
+      "id": "963fe3e89f4c0c4b",
+      "title": "2026/02/11 06:00 西中国信用金庫、宇部市西岐波に２支店新築移転床波と東岐波支店、５月１…",
+      "suggested_headline": "2026/02/11 06:00 西中国信用金庫、宇部市西岐波に２支店新築移転床波と東岐波支店、５月１…",
+      "category": [
+        "移転"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/101342",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583394+09:00"
+    },
+    {
+      "id": "8b54620033f04ec0",
+      "title": "2026/04/14 06:00 「青春の作詞家」大津あきらメモリアル館リニューアル長門市仙崎 歌い継が…",
+      "suggested_headline": "2026/04/14 06:00 「青春の作詞家」大津あきらメモリアル館リニューアル長門市仙崎 歌い継が…",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/104138",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583408+09:00"
+    },
+    {
+      "id": "0a35b25048cd6d74",
+      "title": "2026/05/23 06:00 宇部市の西中国信金床波支店を新築移転東岐波支店も店内に",
+      "suggested_headline": "2026/05/23 06:00 宇部市の西中国信金床波支店を新築移転東岐波支店も店内に",
+      "category": [
+        "移転"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/105708",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583424+09:00"
+    },
+    {
+      "id": "e4e8c73449931010",
+      "title": "2026/09/30 06:00 「ハローワークプラザ下関」移転しましたシーモール下関５階に 就職や転職…",
+      "suggested_headline": "2026/09/30 06:00 「ハローワークプラザ下関」移転しましたシーモール下関５階に 就職や転職…",
+      "category": [
+        "移転"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111325",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583438+09:00"
+    },
+    {
+      "id": "4e2147ef02f22d10",
+      "title": "2026/10/09 06:00 周南市の徳山有楽町郵便局 リニューアルし営業再開自転車置き場など新設",
+      "suggested_headline": "2026/10/09 06:00 周南市の徳山有楽町郵便局 リニューアルし営業再開自転車置き場など新設",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 2,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "配信元の対象地域・店舗所在地は未確認",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111730",
+      "body_excerpt": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-22T16:05:21.583452+09:00"
+    }
+  ]
 }
