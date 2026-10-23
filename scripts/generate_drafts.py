@@ -364,6 +364,7 @@ def make_draft(item):
         "published_date": date_value, "freshness": freshness, "age_days": age,
         "area": item.get("area", []), "area_status": area_status,
         "municipality": municipality, "municipality_candidates": municipality_candidates,
+        "municipality_group": municipality if municipality else "地域要確認",
         "municipality_status": municipality_status,
         "source_name": item.get("source_name", ""), "source_url": url,
         "source_urls": item.get("source_urls", [{"source_name": item.get("source_name", ""), "url": url}]),
