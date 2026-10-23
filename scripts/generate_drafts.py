@@ -40,38 +40,38 @@ YAMAGUCHI_MUNICIPALITIES = [
 ]
 
 def extract_municipality_candidates(title, body_excerpt):
-    """タイトル・本文抜粋に明記された山口県内市町名のみを候補として抽出。推測はしない。"""
-    text = clean_text(f"{title} {body_excerpt}")
+    """タイトル・本文抜粋から市町名候補を抽出。所在地の確定や推測は行わない。"""
+    text = clean_text(f"{title or ''} {body_excerpt or ''}")
     found = []
-    # まず市町名の正式表記を優先する。
     for name in YAMAGUCHI_MUNICIPALITIES:
         if name in text:
             found.append(name)
-    # 接尾辞なしの地名は、場所を示す語が近くにある場合のみ候補にする。
+
     aliases = {
         "山陽小野田": "山陽小野田市", "周防大島": "周防大島町",
         "田布施": "田布施町", "上関": "上関町", "平生": "平生町",
         "和木": "和木町", "阿武": "阿武町", "下関": "下関市",
         "宇部": "宇部市", "山口": "山口市", "萩": "萩市",
         "防府": "防府市", "下松": "下松市", "岩国": "岩国市",
-        "長門": "長門市", "柳井": "柳井市", "美祢": "美祢市", "周南": "周南市",
-        "光": "光市",
+        "長門": "長門市", "柳井": "柳井市", "美祢": "美祢市",
+        "周南": "周南市", "光": "光市",
     }
-    # 市町名の直後に駅名・施設名などが続く記事見出しにも対応する。
-    location_context = r"(?:市内|町内|市|町|駅(?:前|周辺|近く)?|周辺|市街地|商店街|で開店|に開店|でオープン|にオープン|で閉店|に閉店|の店舗|の店|にある|に誕生|で営業|新川駅|駅)"
+    suffix_pattern = (
+        r"(?:店|店舗|支店|営業所|施設|ホテル|駅(?:前|周辺|近く)?|"
+        r"市内|町内|市|町|周辺|市街地|商店街|中央町|新川|"
+        r"で開店|に開店|でオープン|にオープン|で閉店|に閉店|"
+        r"の店舗|の店|にある|に誕生|で営業)"
+    )
     for alias, official in aliases.items():
         if official in found:
             continue
-        # 「宇部新川駅」のように、市町名の後ろに駅名が直結するケースを拾う。
-        # 「山口」は県名・新聞名などを除外し、駅名/場所表現に限定する。
         if alias == "山口":
-            pattern = r"山口(?!県|新聞|放送|銀行|合同庁舎)(?:" + location_context + r")"
+            pattern = r"山口(?!県|新聞|放送|銀行|合同庁舎)(?:" + suffix_pattern + r")"
         else:
-            pattern = re.escape(alias) + r"(?:" + location_context + r")"
+            pattern = re.escape(alias) + r"(?:" + suffix_pattern + r")"
         if re.search(pattern, text):
             found.append(official)
-    # 長い地名を先にし、順序を安定させる。
-    # 代表的な駅名を使った補完。所在地の確定ではなく、確認用候補として扱う。
+
     station_aliases = {
         "宇部新川駅": "宇部市", "山口駅": "山口市", "下関駅": "下関市",
         "徳山駅": "周南市", "新山口駅": "山口市", "防府駅": "防府市",
