@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-10-23T08:34:09.577530+09:00",
-  "draft_count": 44,
-  "recent_draft_count": 13,
+  "generated_at": "2026-10-24T07:21:41.425552+09:00",
+  "draft_count": 45,
+  "recent_draft_count": 11,
   "excluded_old_count": 85,
   "freshness_counts": {
-    "直近30日": 13,
-    "31〜90日前": 21,
-    "日付確認が必要": 10
+    "直近30日": 11,
+    "31〜90日前": 23,
+    "日付確認が必要": 11
   },
   "category_counts": {
-    "閉店": 20,
+    "閉店": 21,
     "新店・開店": 24,
     "リニューアル": 1,
     "移転": 1
@@ -26,7 +26,7 @@
       "priority": 1,
       "published_date": "2026-10-22T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 1,
+      "age_days": 2,
       "area": [
         "山口県内"
       ],
@@ -49,7 +49,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574955+09:00"
+      "created_at": "2026-10-24T07:21:41.422966+09:00"
     },
     {
       "id": "5abd682219f9e38b",
@@ -61,7 +61,7 @@
       "priority": 1,
       "published_date": "2026-10-22T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 1,
+      "age_days": 2,
       "area": [
         "山口県内"
       ],
@@ -84,7 +84,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575009+09:00"
+      "created_at": "2026-10-24T07:21:41.423019+09:00"
     },
     {
       "id": "75c22b18244538f2",
@@ -96,7 +96,7 @@
       "priority": 1,
       "published_date": "2026-10-18T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 5,
+      "age_days": 6,
       "area": [
         "山口県内"
       ],
@@ -119,7 +119,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574902+09:00"
+      "created_at": "2026-10-24T07:21:41.422914+09:00"
     },
     {
       "id": "cd24ab81f8737b10",
@@ -131,7 +131,7 @@
       "priority": 1,
       "published_date": "2026-10-10T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 13,
+      "age_days": 14,
       "area": [
         "山口県内"
       ],
@@ -154,7 +154,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574846+09:00"
+      "created_at": "2026-10-24T07:21:41.422859+09:00"
     },
     {
       "id": "c13ec365835b46f5",
@@ -166,7 +166,7 @@
       "priority": 1,
       "published_date": "2026-10-07T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 16,
+      "age_days": 17,
       "area": [
         "山口県内"
       ],
@@ -189,7 +189,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575063+09:00"
+      "created_at": "2026-10-24T07:21:41.423074+09:00"
     },
     {
       "id": "2c7db80e16d22e27",
@@ -201,7 +201,7 @@
       "priority": 1,
       "published_date": "2026-09-30T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 23,
+      "age_days": 24,
       "area": [
         "山口県内"
       ],
@@ -224,7 +224,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576063+09:00"
+      "created_at": "2026-10-24T07:21:41.424055+09:00"
     },
     {
       "id": "7c92459cebfdb8e0",
@@ -236,7 +236,7 @@
       "priority": 1,
       "published_date": "2026-09-28T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 25,
+      "age_days": 26,
       "area": [
         "山口県内"
       ],
@@ -259,7 +259,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574790+09:00"
+      "created_at": "2026-10-24T07:21:41.422804+09:00"
     },
     {
       "id": "82b792cd5379aba1",
@@ -271,7 +271,7 @@
       "priority": 1,
       "published_date": "2026-09-24T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 29,
+      "age_days": 30,
       "area": [
         "山口県内"
       ],
@@ -297,7 +297,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574730+09:00"
+      "created_at": "2026-10-24T07:21:41.422744+09:00"
     },
     {
       "id": "8c0faee29ec6cd41",
@@ -309,7 +309,7 @@
       "priority": 1,
       "published_date": "2026-09-24T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 29,
+      "age_days": 30,
       "area": [
         "山口県内"
       ],
@@ -332,79 +332,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576009+09:00"
-    },
-    {
-      "id": "8eb96f7ffbfe235a",
-      "title": "2026/09/23 06:00 市民共創の拠点施設完成 「下関テイラーズ」オープン下関市豊前田・茶山地…",
-      "suggested_headline": "2026/09/23 06:00 市民共創の拠点施設完成 「下関テイラーズ」オープン下関市豊前田・茶山地…",
-      "category": [
-        "新店・開店"
-      ],
-      "priority": 1,
-      "published_date": "2026-09-23T00:00:00+09:00",
-      "freshness": "直近30日",
-      "age_days": 30,
-      "area": [
-        "山口県内"
-      ],
-      "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
-      "municipality": "下関市",
-      "municipality_candidates": [
-        "下関市"
-      ],
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
-      "source_name": "山口新聞 開店・閉店一覧",
-      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111080",
-      "source_urls": [
-        {
-          "source_name": "山口新聞 開店・閉店一覧",
-          "url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111080"
-        }
-      ],
-      "duplicate_sources_count": 1,
-      "body_excerpt": "高校生や地域のクリエーターらが交流し、情報発信やものづくりに取り組む常設拠点「下関テイラーズ」が２２日、山口県下関市豊前田・茶山地区にオープンした。市民自らが地域の魅力に気づき、それぞれの思いで発信する「シティープロモーション」の拠点で...",
-      "body_excerpt_method": "",
-      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。直近30日の記事です。掲載前に現在の営業状況を確認してください。",
-      "relevance": "店舗ニュース候補・要確認",
-      "collection_method": "RSS",
-      "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574670+09:00"
-    },
-    {
-      "id": "29d7a2dab51af969",
-      "title": "2026年9月23日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】サイゼリヤ おのだサンパーク店",
-      "suggested_headline": "2026年9月23日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】サイゼリヤ おのだサンパーク店",
-      "category": [
-        "新店・開店"
-      ],
-      "priority": 1,
-      "published_date": "2026-09-23T00:00:00+09:00",
-      "freshness": "直近30日",
-      "age_days": 30,
-      "area": [
-        "山口県内"
-      ],
-      "area_status": "市町名を抽出できず。店舗所在地は元記事で要確認。",
-      "municipality": "",
-      "municipality_candidates": [],
-      "municipality_status": "要確認（市町名を抽出できず）",
-      "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/saizeriya-onodasunpark/",
-      "source_urls": [
-        {
-          "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/saizeriya-onodasunpark/"
-        }
-      ],
-      "duplicate_sources_count": 1,
-      "body_excerpt": "",
-      "body_excerpt_method": "",
-      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。直近30日の記事です。掲載前に現在の営業状況を確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
-      "relevance": "店舗ニュース候補・要確認",
-      "collection_method": "RSS",
-      "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575955+09:00"
+      "created_at": "2026-10-24T07:21:41.424001+09:00"
     },
     {
       "id": "4e2147ef02f22d10",
@@ -416,7 +344,7 @@
       "priority": 2,
       "published_date": "2026-10-09T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 14,
+      "age_days": 15,
       "area": [
         "山口県内"
       ],
@@ -441,7 +369,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.577215+09:00"
+      "created_at": "2026-10-24T07:21:41.425254+09:00"
     },
     {
       "id": "e4e8c73449931010",
@@ -453,7 +381,7 @@
       "priority": 2,
       "published_date": "2026-09-30T00:00:00+09:00",
       "freshness": "直近30日",
-      "age_days": 23,
+      "age_days": 24,
       "area": [
         "山口県内"
       ],
@@ -478,7 +406,79 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.577147+09:00"
+      "created_at": "2026-10-24T07:21:41.425194+09:00"
+    },
+    {
+      "id": "8eb96f7ffbfe235a",
+      "title": "2026/09/23 06:00 市民共創の拠点施設完成 「下関テイラーズ」オープン下関市豊前田・茶山地…",
+      "suggested_headline": "2026/09/23 06:00 市民共創の拠点施設完成 「下関テイラーズ」オープン下関市豊前田・茶山地…",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-09-23T00:00:00+09:00",
+      "freshness": "31〜90日前",
+      "age_days": 31,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
+      "municipality": "下関市",
+      "municipality_candidates": [
+        "下関市"
+      ],
+      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "source_name": "山口新聞 開店・閉店一覧",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111080",
+      "source_urls": [
+        {
+          "source_name": "山口新聞 開店・閉店一覧",
+          "url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111080"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "高校生や地域のクリエーターらが交流し、情報発信やものづくりに取り組む常設拠点「下関テイラーズ」が２２日、山口県下関市豊前田・茶山地区にオープンした。市民自らが地域の魅力に気づき、それぞれの思いで発信する「シティープロモーション」の拠点で...",
+      "body_excerpt_method": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開から31〜90日経過しています。現在も有効か確認してください。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-24T07:21:41.422686+09:00"
+    },
+    {
+      "id": "29d7a2dab51af969",
+      "title": "2026年9月23日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】サイゼリヤ おのだサンパーク店",
+      "suggested_headline": "2026年9月23日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】サイゼリヤ おのだサンパーク店",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-09-23T00:00:00+09:00",
+      "freshness": "31〜90日前",
+      "age_days": 31,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "市町名を抽出できず。店舗所在地は元記事で要確認。",
+      "municipality": "",
+      "municipality_candidates": [],
+      "municipality_status": "要確認（市町名を抽出できず）",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/saizeriya-onodasunpark/",
+      "source_urls": [
+        {
+          "source_name": "開店閉店.com 山口カテゴリ",
+          "url": "https://kaiten-heiten-24.com/saizeriya-onodasunpark/"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "",
+      "body_excerpt_method": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開から31〜90日経過しています。現在も有効か確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-24T07:21:41.423947+09:00"
     },
     {
       "id": "7916821a646d607d",
@@ -490,7 +490,7 @@
       "priority": 1,
       "published_date": "2026-09-18T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 35,
+      "age_days": 36,
       "area": [
         "山口県内"
       ],
@@ -513,7 +513,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575901+09:00"
+      "created_at": "2026-10-24T07:21:41.423893+09:00"
     },
     {
       "id": "569d7aa074bdf503",
@@ -525,7 +525,7 @@
       "priority": 1,
       "published_date": "2026-09-12T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 41,
+      "age_days": 42,
       "area": [
         "山口県内"
       ],
@@ -550,7 +550,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574585+09:00"
+      "created_at": "2026-10-24T07:21:41.422625+09:00"
     },
     {
       "id": "b63297e9f97913b6",
@@ -562,7 +562,7 @@
       "priority": 1,
       "published_date": "2026-09-12T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 41,
+      "age_days": 42,
       "area": [
         "山口県内"
       ],
@@ -585,7 +585,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575846+09:00"
+      "created_at": "2026-10-24T07:21:41.423839+09:00"
     },
     {
       "id": "6278805de3101bff",
@@ -597,7 +597,7 @@
       "priority": 1,
       "published_date": "2026-09-10T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 43,
+      "age_days": 44,
       "area": [
         "山口県内"
       ],
@@ -620,7 +620,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575793+09:00"
+      "created_at": "2026-10-24T07:21:41.423787+09:00"
     },
     {
       "id": "ddc200c72881ce0c",
@@ -632,7 +632,7 @@
       "priority": 1,
       "published_date": "2026-09-08T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 45,
+      "age_days": 46,
       "area": [
         "山口県内"
       ],
@@ -655,7 +655,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576116+09:00"
+      "created_at": "2026-10-24T07:21:41.424108+09:00"
     },
     {
       "id": "9f8da5a9895c8279",
@@ -667,7 +667,7 @@
       "priority": 1,
       "published_date": "2026-08-28T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 56,
+      "age_days": 57,
       "area": [
         "山口県内"
       ],
@@ -690,7 +690,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575548+09:00"
+      "created_at": "2026-10-24T07:21:41.423557+09:00"
     },
     {
       "id": "0d9c38a9a878616f",
@@ -702,7 +702,7 @@
       "priority": 1,
       "published_date": "2026-08-26T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 58,
+      "age_days": 59,
       "area": [
         "山口県内"
       ],
@@ -727,7 +727,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574527+09:00"
+      "created_at": "2026-10-24T07:21:41.422555+09:00"
     },
     {
       "id": "bc503d82f3577eae",
@@ -739,7 +739,7 @@
       "priority": 1,
       "published_date": "2026-08-26T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 58,
+      "age_days": 59,
       "area": [
         "山口県内"
       ],
@@ -762,7 +762,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575495+09:00"
+      "created_at": "2026-10-24T07:21:41.423505+09:00"
     },
     {
       "id": "13b0f5664008fe62",
@@ -774,7 +774,7 @@
       "priority": 1,
       "published_date": "2026-08-25T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 59,
+      "age_days": 60,
       "area": [
         "山口県内"
       ],
@@ -797,7 +797,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575443+09:00"
+      "created_at": "2026-10-24T07:21:41.423452+09:00"
     },
     {
       "id": "e087173adf1a7af2",
@@ -809,7 +809,7 @@
       "priority": 1,
       "published_date": "2026-08-24T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 60,
+      "age_days": 61,
       "area": [
         "山口県内"
       ],
@@ -834,7 +834,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574469+09:00"
+      "created_at": "2026-10-24T07:21:41.422497+09:00"
     },
     {
       "id": "578d60d80c78c5b6",
@@ -846,7 +846,7 @@
       "priority": 1,
       "published_date": "2026-08-24T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 60,
+      "age_days": 61,
       "area": [
         "山口県内"
       ],
@@ -869,7 +869,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575391+09:00"
+      "created_at": "2026-10-24T07:21:41.423399+09:00"
     },
     {
       "id": "251a8e70e2b760d7",
@@ -881,7 +881,7 @@
       "priority": 1,
       "published_date": "2026-08-23T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 61,
+      "age_days": 62,
       "area": [
         "山口県内"
       ],
@@ -904,7 +904,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575336+09:00"
+      "created_at": "2026-10-24T07:21:41.423345+09:00"
     },
     {
       "id": "82c9408c126c5b1f",
@@ -916,7 +916,7 @@
       "priority": 1,
       "published_date": "2026-08-20T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 64,
+      "age_days": 65,
       "area": [
         "山口県内"
       ],
@@ -939,7 +939,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575283+09:00"
+      "created_at": "2026-10-24T07:21:41.423292+09:00"
     },
     {
       "id": "11529b19b4350b24",
@@ -951,7 +951,7 @@
       "priority": 1,
       "published_date": "2026-08-14T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 70,
+      "age_days": 71,
       "area": [
         "山口県内"
       ],
@@ -974,7 +974,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575231+09:00"
+      "created_at": "2026-10-24T07:21:41.423239+09:00"
     },
     {
       "id": "e943d87f22fb72cc",
@@ -986,7 +986,7 @@
       "priority": 1,
       "published_date": "2026-08-13T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 71,
+      "age_days": 72,
       "area": [
         "山口県内"
       ],
@@ -1009,7 +1009,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575177+09:00"
+      "created_at": "2026-10-24T07:21:41.423184+09:00"
     },
     {
       "id": "35ff036a0c6dc104",
@@ -1021,7 +1021,7 @@
       "priority": 1,
       "published_date": "2026-08-11T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 73,
+      "age_days": 74,
       "area": [
         "山口県内"
       ],
@@ -1044,7 +1044,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575118+09:00"
+      "created_at": "2026-10-24T07:21:41.423131+09:00"
     },
     {
       "id": "3826dd0cb3ff1840",
@@ -1056,7 +1056,7 @@
       "priority": 1,
       "published_date": "2026-08-08T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 76,
+      "age_days": 77,
       "area": [
         "山口県内"
       ],
@@ -1079,7 +1079,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575685+09:00"
+      "created_at": "2026-10-24T07:21:41.423682+09:00"
     },
     {
       "id": "588eba515ba69998",
@@ -1091,7 +1091,7 @@
       "priority": 1,
       "published_date": "2026-08-08T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 76,
+      "age_days": 77,
       "area": [
         "山口県内"
       ],
@@ -1114,7 +1114,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575739+09:00"
+      "created_at": "2026-10-24T07:21:41.423734+09:00"
     },
     {
       "id": "5c9a5fa0200eb7cb",
@@ -1126,7 +1126,7 @@
       "priority": 1,
       "published_date": "2026-08-07T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 77,
+      "age_days": 78,
       "area": [
         "山口県内"
       ],
@@ -1151,7 +1151,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574407+09:00"
+      "created_at": "2026-10-24T07:21:41.422433+09:00"
     },
     {
       "id": "7866cc9a213e694e",
@@ -1163,7 +1163,7 @@
       "priority": 1,
       "published_date": "2026-08-06T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 78,
+      "age_days": 79,
       "area": [
         "山口県内"
       ],
@@ -1186,7 +1186,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.575626+09:00"
+      "created_at": "2026-10-24T07:21:41.423626+09:00"
     },
     {
       "id": "a98561ab3c5190dc",
@@ -1198,7 +1198,7 @@
       "priority": 1,
       "published_date": "2026-07-29T00:00:00+09:00",
       "freshness": "31〜90日前",
-      "age_days": 86,
+      "age_days": 87,
       "area": [
         "山口県内"
       ],
@@ -1223,12 +1223,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.574349+09:00"
+      "created_at": "2026-10-24T07:21:41.422372+09:00"
     },
     {
-      "id": "27fc312bcc8b304e",
-      "title": "【閉店】サイクルベースあさひ日立店",
-      "suggested_headline": "【閉店】サイクルベースあさひ日立店",
+      "id": "a5c29a266d2b8076",
+      "title": "【閉店】BOOK COMPASS リエール藤沢店",
+      "suggested_headline": "【閉店】BOOK COMPASS リエール藤沢店",
       "category": [
         "閉店"
       ],
@@ -1244,11 +1244,11 @@
       "municipality_candidates": [],
       "municipality_status": "要確認（市町名を抽出できず）",
       "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/cb-asahi-hitachi-2/",
+      "source_url": "https://kaiten-heiten-24.com/book-compass-lierre-fujisawa/",
       "source_urls": [
         {
           "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/cb-asahi-hitachi-2/"
+          "url": "https://kaiten-heiten-24.com/book-compass-lierre-fujisawa/"
         }
       ],
       "duplicate_sources_count": 1,
@@ -1258,12 +1258,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576165+09:00"
+      "created_at": "2026-10-24T07:21:41.424159+09:00"
     },
     {
-      "id": "c57aad0c392c9948",
-      "title": "【閉店】サロン卵と私 イオンモール四條畷店",
-      "suggested_headline": "【閉店】サロン卵と私 イオンモール四條畷店",
+      "id": "bf79f91ffda32c17",
+      "title": "【閉店】サッカーマーケット 前橋本店",
+      "suggested_headline": "【閉店】サッカーマーケット 前橋本店",
       "category": [
         "閉店"
       ],
@@ -1279,11 +1279,11 @@
       "municipality_candidates": [],
       "municipality_status": "要確認（市町名を抽出できず）",
       "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/salontamagotowatashi-am-shijonawate/",
+      "source_url": "https://kaiten-heiten-24.com/soccermarket-maebashi/",
       "source_urls": [
         {
           "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/salontamagotowatashi-am-shijonawate/"
+          "url": "https://kaiten-heiten-24.com/soccermarket-maebashi/"
         }
       ],
       "duplicate_sources_count": 1,
@@ -1293,12 +1293,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576213+09:00"
+      "created_at": "2026-10-24T07:21:41.424211+09:00"
     },
     {
-      "id": "bea68437f4822a28",
-      "title": "【閉店】サンディりんくうシークル店",
-      "suggested_headline": "【閉店】サンディりんくうシークル店",
+      "id": "525d8175637ae67d",
+      "title": "【閉店】メンズクリア 湘南藤沢オーパ店",
+      "suggested_headline": "【閉店】メンズクリア 湘南藤沢オーパ店",
       "category": [
         "閉店"
       ],
@@ -1314,11 +1314,11 @@
       "municipality_candidates": [],
       "municipality_status": "要確認（市町名を抽出できず）",
       "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/sundi-rinku-seacle/",
+      "source_url": "https://kaiten-heiten-24.com/mensclear-shonanfujisawa-opa/",
       "source_urls": [
         {
           "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/sundi-rinku-seacle/"
+          "url": "https://kaiten-heiten-24.com/mensclear-shonanfujisawa-opa/"
         }
       ],
       "duplicate_sources_count": 1,
@@ -1328,12 +1328,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576264+09:00"
+      "created_at": "2026-10-24T07:21:41.424260+09:00"
     },
     {
-      "id": "2cb6bb07d5a8c577",
-      "title": "【閉店】ナダール東京",
-      "suggested_headline": "【閉店】ナダール東京",
+      "id": "915dd3728f7b72b1",
+      "title": "【閉店】御菓子司モモヤ 布施店",
+      "suggested_headline": "【閉店】御菓子司モモヤ 布施店",
       "category": [
         "閉店"
       ],
@@ -1349,11 +1349,11 @@
       "municipality_candidates": [],
       "municipality_status": "要確認（市町名を抽出できず）",
       "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/g-nadar/",
+      "source_url": "https://kaiten-heiten-24.com/momoya-fuse/",
       "source_urls": [
         {
           "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/g-nadar/"
+          "url": "https://kaiten-heiten-24.com/momoya-fuse/"
         }
       ],
       "duplicate_sources_count": 1,
@@ -1363,7 +1363,42 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576312+09:00"
+      "created_at": "2026-10-24T07:21:41.424309+09:00"
+    },
+    {
+      "id": "c8379f8f00d04234",
+      "title": "【閉店】鳴門屋SHOP 徳島駅クレメントプラザ店",
+      "suggested_headline": "【閉店】鳴門屋SHOP 徳島駅クレメントプラザ店",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "市町名を抽出できず。店舗所在地は元記事で要確認。",
+      "municipality": "",
+      "municipality_candidates": [],
+      "municipality_status": "要確認（市町名を抽出できず）",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/narutota-shop-tokushimaeki-cp/",
+      "source_urls": [
+        {
+          "source_name": "開店閉店.com 山口カテゴリ",
+          "url": "https://kaiten-heiten-24.com/narutota-shop-tokushimaeki-cp/"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "",
+      "body_excerpt_method": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-24T07:21:41.424360+09:00"
     },
     {
       "id": "8b672ee85f6ce588",
@@ -1398,7 +1433,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576358+09:00"
+      "created_at": "2026-10-24T07:21:41.424407+09:00"
     },
     {
       "id": "f600e28352a362cf",
@@ -1433,7 +1468,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576403+09:00"
+      "created_at": "2026-10-24T07:21:41.424453+09:00"
     },
     {
       "id": "1841f7d288b22c6c",
@@ -1469,7 +1504,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576450+09:00"
+      "created_at": "2026-10-24T07:21:41.424501+09:00"
     },
     {
       "id": "a7bcd9a72b56c284",
@@ -1504,7 +1539,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576497+09:00"
+      "created_at": "2026-10-24T07:21:41.424551+09:00"
     },
     {
       "id": "f9573334a9563a49",
@@ -1539,7 +1574,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576545+09:00"
+      "created_at": "2026-10-24T07:21:41.424597+09:00"
     },
     {
       "id": "1dcb137b7eead594",
@@ -1575,7 +1610,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-23T08:34:09.576608+09:00"
+      "created_at": "2026-10-24T07:21:41.424657+09:00"
     }
   ]
 }
