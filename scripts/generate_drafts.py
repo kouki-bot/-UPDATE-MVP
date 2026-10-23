@@ -389,17 +389,21 @@ def main():
     # 古い記事は通常候補から除外。日付不明は確認用に残す。
     drafts = [x for x in all_drafts if x["freshness"] != "90日より前"]
     drafts.sort(key=sort_key)
-    freshness_counts, category_counts = {}, {}
+    freshness_counts, category_counts, municipality_counts = {}, {}, {}
     for draft in drafts:
         f = draft["freshness"]
         freshness_counts[f] = freshness_counts.get(f, 0) + 1
         for cat in draft["category"]:
             category_counts[cat] = category_counts.get(cat, 0) + 1
+        municipality = draft.get("municipality_group") or "地域要確認"
+        municipality_counts[municipality] = municipality_counts.get(municipality, 0) + 1
+    municipality_counts = dict(sorted(municipality_counts.items(), key=lambda item: (item[0] == "地域要確認", item[0])))
     output = {
         "generated_at": now_jst().isoformat(), "draft_count": len(drafts),
         "recent_draft_count": freshness_counts.get("直近30日", 0),
         "excluded_old_count": old_count, "freshness_counts": freshness_counts,
         "category_counts": category_counts,
+        "municipality_counts": municipality_counts,
         "note": "対象は新店・開店、閉店、移転、リニューアルです。90日より前の記事は通常の下書き候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。配信元の対象地域は店舗所在地を保証しません。",
         "drafts": drafts,
     }
@@ -410,6 +414,7 @@ def main():
     print("統合後:", len(unique), "下書き候補:", len(drafts), "90日より前の除外:", old_count)
     print("直近30日:", output["recent_draft_count"], "カテゴリー:", category_counts)
     print("鮮度:", freshness_counts, "保存先:", OUTPUT_FILE)
+    print("市町別件数:", municipality_counts)
 
 if __name__ == "__main__":
     main()
