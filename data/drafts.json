@@ -1,31 +1,82 @@
 {
-  "generated_at": "2026-10-24T08:13:48.822422+09:00",
-  "draft_count": 45,
-  "recent_draft_count": 11,
+  "generated_at": "2026-10-24T21:49:54.389640+09:00",
+  "draft_count": 46,
+  "recent_draft_count": 12,
   "excluded_old_count": 85,
   "freshness_counts": {
-    "直近30日": 11,
+    "直近30日": 12,
     "31〜90日前": 23,
     "日付確認が必要": 11
   },
   "category_counts": {
-    "閉店": 21,
+    "閉店": 22,
+    "移転": 2,
     "新店・開店": 24,
-    "リニューアル": 1,
-    "移転": 1
+    "リニューアル": 1
   },
   "municipality_counts": {
     "下関市": 5,
     "周南市": 2,
-    "宇部市": 3,
+    "宇部市": 4,
     "山口市": 2,
     "山陽小野田市": 1,
     "岩国市": 1,
     "長門市": 1,
     "地域要確認": 30
   },
+  "duplicate_group_count": 0,
+  "duplicate_candidate_count": 0,
+  "review_flag_counts": {
+    "公開日未確認": 11,
+    "市町候補が複数": 1,
+    "市町未特定": 29,
+    "本文抜粋なし": 35
+  },
+  "review_note": "重複は候補表示のみで自動削除しません。全記事は未確認・公開禁止です。",
   "note": "対象は新店・開店、閉店、移転、リニューアルです。90日より前の記事は通常の下書き候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。配信元の対象地域は店舗所在地を保証しません。",
   "drafts": [
+    {
+      "id": "6291e85dd3c2345a",
+      "title": "【宇部市】店舗移転前のラストチャンス！黒石にあるしまむらとバースデイが、10月25日まで閉店セールを開催中です。",
+      "suggested_headline": "【宇部市】店舗移転前のラストチャンス！黒石にあるしまむらとバースデイが、10月25日まで閉店セールを開催中です。",
+      "category": [
+        "閉店",
+        "移転"
+      ],
+      "priority": 1,
+      "published_date": "2026-10-24T09:58:21+09:00",
+      "freshness": "直近30日",
+      "age_days": 0,
+      "area": [
+        "宇部市",
+        "山陽小野田市"
+      ],
+      "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
+      "municipality": "宇部市",
+      "municipality_candidates": [
+        "宇部市"
+      ],
+      "municipality_group": "宇部市",
+      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "source_name": "号外NET 宇部市・山陽小野田市",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/2026/10/24/renewal_shimamura/",
+      "source_urls": [
+        {
+          "source_name": "号外NET 宇部市・山陽小野田市",
+          "url": "https://ube-sanyoonoda.goguynet.jp/2026/10/24/renewal_shimamura/"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "黒石にある「しまむら宇部店」と「バースデイ ゆめタウン宇部店」は、移転に伴い閉店セールを開催中です。 先日、しまむら宇部店へ訪れてみると、店舗入口には「店舗移転のお知らせ」とのお知らせが。2026年10月26日(月)より […]",
+      "body_excerpt_method": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。直近30日の記事です。掲載前に現在の営業状況を確認してください。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-24T21:49:54.377616+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
+    },
     {
       "id": "818bea298c827f3c",
       "title": "2026年10月22日 ホームセンター, 中国, 小売店, 山口, 閉店情報 【閉店】DCM三田尻店",
@@ -60,7 +111,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819330+09:00"
+      "created_at": "2026-10-24T21:49:54.383646+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "5abd682219f9e38b",
@@ -96,7 +152,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819396+09:00"
+      "created_at": "2026-10-24T21:49:54.383707+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "75c22b18244538f2",
@@ -132,7 +193,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819245+09:00"
+      "created_at": "2026-10-24T21:49:54.383584+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "cd24ab81f8737b10",
@@ -168,7 +234,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819172+09:00"
+      "created_at": "2026-10-24T21:49:54.383522+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "c13ec365835b46f5",
@@ -204,7 +275,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819460+09:00"
+      "created_at": "2026-10-24T21:49:54.383768+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "2c7db80e16d22e27",
@@ -240,7 +316,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820633+09:00"
+      "created_at": "2026-10-24T21:49:54.384935+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "7c92459cebfdb8e0",
@@ -278,7 +359,9 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819108+09:00"
+      "created_at": "2026-10-24T21:49:54.383459+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
     },
     {
       "id": "82b792cd5379aba1",
@@ -317,7 +400,11 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819039+09:00"
+      "created_at": "2026-10-24T21:49:54.383391+09:00",
+      "review_flags": [
+        "市町候補が複数"
+      ],
+      "review_priority": "要優先確認"
     },
     {
       "id": "8c0faee29ec6cd41",
@@ -355,7 +442,11 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820570+09:00"
+      "created_at": "2026-10-24T21:49:54.384872+09:00",
+      "review_flags": [
+        "本文抜粋なし"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "4e2147ef02f22d10",
@@ -393,7 +484,9 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.821998+09:00"
+      "created_at": "2026-10-24T21:49:54.386319+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
     },
     {
       "id": "e4e8c73449931010",
@@ -431,7 +524,9 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.821931+09:00"
+      "created_at": "2026-10-24T21:49:54.386251+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
     },
     {
       "id": "8eb96f7ffbfe235a",
@@ -469,7 +564,9 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.818972+09:00"
+      "created_at": "2026-10-24T21:49:54.383326+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
     },
     {
       "id": "29d7a2dab51af969",
@@ -505,7 +602,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820506+09:00"
+      "created_at": "2026-10-24T21:49:54.384808+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "7916821a646d607d",
@@ -541,7 +643,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820444+09:00"
+      "created_at": "2026-10-24T21:49:54.384747+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "569d7aa074bdf503",
@@ -579,7 +686,9 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.818905+09:00"
+      "created_at": "2026-10-24T21:49:54.383259+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
     },
     {
       "id": "b63297e9f97913b6",
@@ -615,7 +724,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820380+09:00"
+      "created_at": "2026-10-24T21:49:54.384685+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "6278805de3101bff",
@@ -651,7 +765,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820315+09:00"
+      "created_at": "2026-10-24T21:49:54.384626+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "ddc200c72881ce0c",
@@ -687,7 +806,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820695+09:00"
+      "created_at": "2026-10-24T21:49:54.385030+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "9f8da5a9895c8279",
@@ -725,7 +849,11 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820042+09:00"
+      "created_at": "2026-10-24T21:49:54.384383+09:00",
+      "review_flags": [
+        "本文抜粋なし"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "0d9c38a9a878616f",
@@ -763,7 +891,9 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.818839+09:00"
+      "created_at": "2026-10-24T21:49:54.383193+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
     },
     {
       "id": "bc503d82f3577eae",
@@ -799,7 +929,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819975+09:00"
+      "created_at": "2026-10-24T21:49:54.384320+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "13b0f5664008fe62",
@@ -835,7 +970,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819913+09:00"
+      "created_at": "2026-10-24T21:49:54.384254+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "e087173adf1a7af2",
@@ -873,7 +1013,9 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.818773+09:00"
+      "created_at": "2026-10-24T21:49:54.383127+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
     },
     {
       "id": "578d60d80c78c5b6",
@@ -909,7 +1051,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819850+09:00"
+      "created_at": "2026-10-24T21:49:54.384194+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "251a8e70e2b760d7",
@@ -947,7 +1094,11 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819782+09:00"
+      "created_at": "2026-10-24T21:49:54.384131+09:00",
+      "review_flags": [
+        "本文抜粋なし"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "82c9408c126c5b1f",
@@ -983,7 +1134,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819715+09:00"
+      "created_at": "2026-10-24T21:49:54.384067+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "11529b19b4350b24",
@@ -1021,7 +1177,11 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819653+09:00"
+      "created_at": "2026-10-24T21:49:54.383996+09:00",
+      "review_flags": [
+        "本文抜粋なし"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "e943d87f22fb72cc",
@@ -1059,7 +1219,11 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819588+09:00"
+      "created_at": "2026-10-24T21:49:54.383898+09:00",
+      "review_flags": [
+        "本文抜粋なし"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "35ff036a0c6dc104",
@@ -1095,7 +1259,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.819524+09:00"
+      "created_at": "2026-10-24T21:49:54.383832+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "3826dd0cb3ff1840",
@@ -1131,7 +1300,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820171+09:00"
+      "created_at": "2026-10-24T21:49:54.384507+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "588eba515ba69998",
@@ -1167,7 +1341,12 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820232+09:00"
+      "created_at": "2026-10-24T21:49:54.384565+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "5c9a5fa0200eb7cb",
@@ -1205,7 +1384,9 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.818702+09:00"
+      "created_at": "2026-10-24T21:49:54.383057+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
     },
     {
       "id": "7866cc9a213e694e",
@@ -1243,7 +1424,11 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820107+09:00"
+      "created_at": "2026-10-24T21:49:54.384446+09:00",
+      "review_flags": [
+        "本文抜粋なし"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "a98561ab3c5190dc",
@@ -1281,12 +1466,14 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.818634+09:00"
+      "created_at": "2026-10-24T21:49:54.382986+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要"
     },
     {
-      "id": "a5c29a266d2b8076",
-      "title": "【閉店】BOOK COMPASS リエール藤沢店",
-      "suggested_headline": "【閉店】BOOK COMPASS リエール藤沢店",
+      "id": "e39bab17f3969fcc",
+      "title": "【閉店】お食事処 横川食堂",
+      "suggested_headline": "【閉店】お食事処 横川食堂",
       "category": [
         "閉店"
       ],
@@ -1303,11 +1490,11 @@
       "municipality_group": "地域要確認",
       "municipality_status": "要確認（市町名を抽出できず）",
       "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/book-compass-lierre-fujisawa/",
+      "source_url": "https://kaiten-heiten-24.com/yokokawashokudo/",
       "source_urls": [
         {
           "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/book-compass-lierre-fujisawa/"
+          "url": "https://kaiten-heiten-24.com/yokokawashokudo/"
         }
       ],
       "duplicate_sources_count": 1,
@@ -1317,12 +1504,18 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820753+09:00"
+      "created_at": "2026-10-24T21:49:54.385090+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
-      "id": "bf79f91ffda32c17",
-      "title": "【閉店】サッカーマーケット 前橋本店",
-      "suggested_headline": "【閉店】サッカーマーケット 前橋本店",
+      "id": "81e72f6ae62cf078",
+      "title": "【閉店】きじやまCafe",
+      "suggested_headline": "【閉店】きじやまCafe",
       "category": [
         "閉店"
       ],
@@ -1339,11 +1532,11 @@
       "municipality_group": "地域要確認",
       "municipality_status": "要確認（市町名を抽出できず）",
       "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/soccermarket-maebashi/",
+      "source_url": "https://kaiten-heiten-24.com/kijiyama-cafe/",
       "source_urls": [
         {
           "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/soccermarket-maebashi/"
+          "url": "https://kaiten-heiten-24.com/kijiyama-cafe/"
         }
       ],
       "duplicate_sources_count": 1,
@@ -1353,12 +1546,18 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820809+09:00"
+      "created_at": "2026-10-24T21:49:54.385145+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
-      "id": "525d8175637ae67d",
-      "title": "【閉店】メンズクリア 湘南藤沢オーパ店",
-      "suggested_headline": "【閉店】メンズクリア 湘南藤沢オーパ店",
+      "id": "bd6c1ae7831c4c14",
+      "title": "【閉店】ホテルトマト十日町店",
+      "suggested_headline": "【閉店】ホテルトマト十日町店",
       "category": [
         "閉店"
       ],
@@ -1375,11 +1574,11 @@
       "municipality_group": "地域要確認",
       "municipality_status": "要確認（市町名を抽出できず）",
       "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/mensclear-shonanfujisawa-opa/",
+      "source_url": "https://kaiten-heiten-24.com/hotel-tomato-tokaichi/",
       "source_urls": [
         {
           "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/mensclear-shonanfujisawa-opa/"
+          "url": "https://kaiten-heiten-24.com/hotel-tomato-tokaichi/"
         }
       ],
       "duplicate_sources_count": 1,
@@ -1389,12 +1588,18 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820865+09:00"
+      "created_at": "2026-10-24T21:49:54.385199+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
-      "id": "915dd3728f7b72b1",
-      "title": "【閉店】御菓子司モモヤ 布施店",
-      "suggested_headline": "【閉店】御菓子司モモヤ 布施店",
+      "id": "39b1f33c5ab27e24",
+      "title": "【閉店】中華 桃園",
+      "suggested_headline": "【閉店】中華 桃園",
       "category": [
         "閉店"
       ],
@@ -1411,11 +1616,11 @@
       "municipality_group": "地域要確認",
       "municipality_status": "要確認（市町名を抽出できず）",
       "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/momoya-fuse/",
+      "source_url": "https://kaiten-heiten-24.com/chukas-toen/",
       "source_urls": [
         {
           "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/momoya-fuse/"
+          "url": "https://kaiten-heiten-24.com/chukas-toen/"
         }
       ],
       "duplicate_sources_count": 1,
@@ -1425,12 +1630,18 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820920+09:00"
+      "created_at": "2026-10-24T21:49:54.385252+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
-      "id": "c8379f8f00d04234",
-      "title": "【閉店】鳴門屋SHOP 徳島駅クレメントプラザ店",
-      "suggested_headline": "【閉店】鳴門屋SHOP 徳島駅クレメントプラザ店",
+      "id": "e3136433ade69905",
+      "title": "【閉店】彩食健美 仁来坊",
+      "suggested_headline": "【閉店】彩食健美 仁来坊",
       "category": [
         "閉店"
       ],
@@ -1447,11 +1658,11 @@
       "municipality_group": "地域要確認",
       "municipality_status": "要確認（市町名を抽出できず）",
       "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/narutota-shop-tokushimaeki-cp/",
+      "source_url": "https://kaiten-heiten-24.com/jinraibou/",
       "source_urls": [
         {
           "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/narutota-shop-tokushimaeki-cp/"
+          "url": "https://kaiten-heiten-24.com/jinraibou/"
         }
       ],
       "duplicate_sources_count": 1,
@@ -1461,7 +1672,13 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.820976+09:00"
+      "created_at": "2026-10-24T21:49:54.385306+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "8b672ee85f6ce588",
@@ -1497,7 +1714,13 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.821030+09:00"
+      "created_at": "2026-10-24T21:49:54.385358+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "f600e28352a362cf",
@@ -1533,7 +1756,13 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.821084+09:00"
+      "created_at": "2026-10-24T21:49:54.385409+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "1841f7d288b22c6c",
@@ -1570,7 +1799,13 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.821138+09:00"
+      "created_at": "2026-10-24T21:49:54.385463+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "a7bcd9a72b56c284",
@@ -1606,7 +1841,13 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.821191+09:00"
+      "created_at": "2026-10-24T21:49:54.385515+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "f9573334a9563a49",
@@ -1642,7 +1883,13 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.821244+09:00"
+      "created_at": "2026-10-24T21:49:54.385567+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     },
     {
       "id": "1dcb137b7eead594",
@@ -1679,7 +1926,13 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-24T08:13:48.821318+09:00"
+      "created_at": "2026-10-24T21:49:54.385620+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
     }
   ]
 }
