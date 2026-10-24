@@ -27,8 +27,12 @@ jobs:
       - name: Collect RSS news candidates
         run: python scripts/collect_rss.py
 
+      
       - name: Generate article drafts
         run: python scripts/generate_drafts.py
+
+      - name: Run review-safety tests
+        run: python -m unittest discover -s scripts/tests -v
 
       - name: Save results
         run: |
