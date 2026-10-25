@@ -9,6 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 OFFICIAL_FILE = BASE_DIR / "data" / "source_checks.json"
 RSS_FILE = BASE_DIR / "data" / "rss_candidates.json"
 OUTPUT_FILE = BASE_DIR / "data" / "drafts.json"
+HISTORY_FILE = BASE_DIR / "data" / "article_history.json"
 JST = timezone(timedelta(hours=9))
 UTC = timezone.utc
 RECENT_DAYS = 30
@@ -448,6 +449,65 @@ def annotate_review_flags(drafts):
     }
 
 
+def article_signature(draft):
+    """Signature of meaningful article fields for change detection."""
+    payload = {
+        "title": clean_text(draft.get("title")),
+        "category": sorted(draft.get("category", [])) if isinstance(draft.get("category"), list) else clean_text(draft.get("category")),
+        "published_date": clean_text(draft.get("published_date")),
+        "body_excerpt": clean_text(draft.get("body_excerpt")),
+        "source_url": normalize_url(draft.get("source_url", "")),
+        "municipality": clean_text(draft.get("municipality")),
+    }
+    return hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")).hexdigest()
+
+def load_article_history():
+    """Load prior observed articles; history is not a publication list."""
+    if not HISTORY_FILE.exists():
+        return {}
+    try:
+        with HISTORY_FILE.open("r", encoding="utf-8") as f:
+            data = json.load(f)
+        articles = data.get("articles", {}) if isinstance(data, dict) else {}
+        return articles if isinstance(articles, dict) else {}
+    except (OSError, json.JSONDecodeError) as error:
+        print("履歴読み込み失敗。空の履歴として開始:", str(error))
+        return {}
+
+def apply_change_tracking(drafts, previous_history):
+    """Label new/updated/previously-seen items without deleting or publishing anything."""
+    current_history = dict(previous_history)
+    counts = {"新着": 0, "更新": 0, "既出": 0}
+    for draft in drafts:
+        article_id = draft.get("id", "")
+        signature = article_signature(draft)
+        previous = previous_history.get(article_id)
+        if not previous:
+            change_status = "新着"
+            first_seen = now_jst().isoformat()
+        elif previous.get("signature") != signature:
+            change_status = "更新"
+            first_seen = previous.get("first_seen", previous.get("last_seen", now_jst().isoformat()))
+        else:
+            change_status = "既出"
+            first_seen = previous.get("first_seen", previous.get("last_seen", now_jst().isoformat()))
+        draft["change_status"] = change_status
+        draft["first_seen_at"] = first_seen
+        draft["last_seen_at"] = now_jst().isoformat()
+        counts[change_status] += 1
+        current_history[article_id] = {
+            "id": article_id,
+            "title": draft.get("title", ""),
+            "source_url": draft.get("source_url", ""),
+            "signature": signature,
+            "first_seen": first_seen,
+            "last_seen": draft["last_seen_at"],
+            "last_change_status": change_status,
+            "category": draft.get("category", []),
+            "status": "未確認・公開禁止",
+        }
+    return current_history, counts
+
 def main():
     official, rss = get_official_candidates(), get_rss_candidates()
     unique = merge_candidates(official + rss)
@@ -456,6 +516,8 @@ def main():
     # 古い記事は通常候補から除外。日付不明は確認用に残す。
     drafts = [x for x in all_drafts if x["freshness"] != "90日より前"]
     drafts.sort(key=sort_key)
+    previous_history = load_article_history()
+    current_history, change_counts = apply_change_tracking(drafts, previous_history)
     review_summary = annotate_review_flags(drafts)
     freshness_counts, category_counts, municipality_counts = {}, {}, {}
     for draft in drafts:
@@ -472,6 +534,8 @@ def main():
         "excluded_old_count": old_count, "freshness_counts": freshness_counts,
         "category_counts": category_counts,
         "municipality_counts": municipality_counts,
+        "change_status_counts": change_counts,
+        "history_article_count": len(current_history),
         **review_summary,
         "note": "対象は新店・開店、閉店、移転、リニューアルです。90日より前の記事は通常の下書き候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。配信元の対象地域は店舗所在地を保証しません。",
         "drafts": drafts,
@@ -479,11 +543,15 @@ def main():
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with OUTPUT_FILE.open("w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
+    HISTORY_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with HISTORY_FILE.open("w", encoding="utf-8") as f:
+        json.dump({"updated_at": now_jst().isoformat(), "articles": current_history, "note": "取得履歴のみ。公開許可や公開記事一覧ではありません。"}, f, ensure_ascii=False, indent=2)
     print("公式サイト候補:", len(official), "RSS候補:", len(rss))
     print("統合後:", len(unique), "下書き候補:", len(drafts), "90日より前の除外:", old_count)
     print("直近30日:", output["recent_draft_count"], "カテゴリー:", category_counts)
     print("鮮度:", freshness_counts, "保存先:", OUTPUT_FILE)
     print("市町別件数:", municipality_counts)
+    print("新着・更新・既出:", change_counts)
 
 if __name__ == "__main__":
     main()
