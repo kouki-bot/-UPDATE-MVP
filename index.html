@@ -236,10 +236,20 @@
       return choices[index % choices.length];
     }
 
-    const list = document.getElementById("article-list");
-    const count = document.getElementById("article-count");
-    let allArticles = [];
-    let activeFilter = "all";
+    
+const list = document.getElementById("article-list");
+const count = document.getElementById("article-count");
+const keywordSearch = document.getElementById("keyword-search");
+const areaFilter = document.getElementById("area-filter");
+const businessFilter = document.getElementById("business-filter");
+const resetSearch = document.getElementById("reset-search");
+
+let allArticles = [];
+let activeFilter = "all";
+let activeArea = "";
+let activeBusiness = "";
+let activeKeyword = "";
+
 
     function renderArticles() {
       const filtered = allArticles.filter(article => {
