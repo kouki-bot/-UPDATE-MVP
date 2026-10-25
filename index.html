@@ -87,6 +87,36 @@
       </div>
 
       <div class="filter-row reveal" aria-label="情報の絞り込み">
+        
+      <div class="search-panel reveal" aria-label="記事検索">
+  <div class="search-field">
+    <label for="keyword-search">キーワード</label>
+    <input
+      id="keyword-search"
+      type="search"
+      placeholder="店名・キーワードで検索"
+    >
+  </div>
+
+  <div class="search-field">
+    <label for="area-filter">市町</label>
+    <select id="area-filter">
+      <option value="">すべての地域</option>
+    </select>
+  </div>
+
+  <div class="search-field">
+    <label for="business-filter">業種</label>
+    <select id="business-filter">
+      <option value="">すべての業種</option>
+    </select>
+  </div>
+
+  <button id="reset-search" type="button" class="reset-search">
+    条件をリセット
+  </button>
+</div>
+
         <button class="filter-button active" data-filter="all" type="button">すべて</button>
         <button class="filter-button" data-filter="new" type="button">新店舗</button>
         <button class="filter-button" data-filter="closed" type="button">閉店</button>
