@@ -1,0 +1,64 @@
+/* Detail pages: visual language aligned with index.html */
+.detail-page {
+  --detail-paper: #f7f6f0;
+  --detail-ink: #20291f;
+  --detail-muted: #72776d;
+  --detail-green: #355b45;
+  --detail-orange: #e98655;
+  background: radial-gradient(ellipse at 5% 12%, rgba(220,229,211,.38), transparent 28rem), var(--detail-paper);
+  color: var(--detail-ink);
+}
+.detail-page .site-header {
+  width: min(1200px, calc(100% - 48px)); min-height: 88px; margin: auto;
+  display:flex; justify-content:space-between; align-items:center; gap:24px;
+  border-bottom:1px solid #dedfd5;
+}
+.detail-page .brand {display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none}
+.detail-page .brand-mark {font-family:Georgia,serif;font-size:34px;font-weight:700;letter-spacing:-3px;line-height:1}
+.detail-page .brand-mark span {color:var(--detail-orange)}
+.detail-page .brand-name {font-size:9px;font-weight:800;letter-spacing:1.3px;line-height:1.5}
+.detail-page .header-nav {display:flex;align-items:center;gap:clamp(12px,2vw,28px);font-size:11px;font-weight:700}
+.detail-page .header-nav a:hover {color:var(--detail-orange)}
+.detail-page .header-nav .nav-contact {padding:9px 14px;border:1px solid var(--detail-ink);border-radius:2px}
+.detail-page main {min-height:60vh}
+.detail-page .detail-hero {position:relative;overflow:hidden;background:linear-gradient(115deg,rgba(32,41,31,.94),rgba(53,91,69,.87)),radial-gradient(circle at 80% 20%,rgba(233,134,85,.5),transparent 25rem);color:#fff;padding:76px 0 82px}
+.detail-page .detail-hero:after {content:"YAMAGUCHI LOCAL UPDATE";position:absolute;right:4%;bottom:12px;color:rgba(255,255,255,.2);font:700 clamp(20px,4vw,48px) Georgia,serif;letter-spacing:2px;pointer-events:none}
+.detail-page .container {width:min(1120px,calc(100% - 48px));margin:0 auto;position:relative;z-index:1}
+.detail-page .eyebrow {display:inline-flex;align-items:center;gap:10px;margin:0 0 18px;color:#f0bd94;font-size:10px;font-weight:800;letter-spacing:2px}
+.detail-page .eyebrow:before {content:"";width:24px;height:2px;background:var(--detail-orange)}
+.detail-page .detail-hero h1 {max-width:850px;margin:0;font-size:clamp(32px,5vw,56px);line-height:1.35;letter-spacing:.04em;color:#fff}
+.detail-page .detail-hero p {max-width:700px;margin:22px 0 0;color:rgba(255,255,255,.83);font-size:14px;line-height:2.1}
+.detail-page .section {padding:54px 0 84px}
+.detail-page .section-head {display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:24px}
+.detail-page .section-head h2 {margin:0;font-size:clamp(22px,3vw,30px);letter-spacing:.03em}
+.detail-page .section-head p {margin:8px 0 0;color:var(--detail-muted);font-size:12px}
+.detail-page .notice {margin:22px 0;padding:22px 24px;border:1px solid #e2ded3;border-radius:12px;background:linear-gradient(135deg,#fffdf8,#f2eee4);box-shadow:0 8px 24px rgba(50,45,34,.04)}
+.detail-page .notice strong {display:block;margin-bottom:5px;color:var(--detail-green);font-size:14px}
+.detail-page .notice p {margin:0;color:#64695f;font-size:12px;line-height:2}
+.detail-page .list {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:24px 0}
+.detail-page .list-item {position:relative;display:flex;justify-content:space-between;gap:18px;min-height:190px;padding:24px;border:1px solid #e4e0d6;border-radius:12px;background:rgba(255,255,255,.82);box-shadow:0 12px 30px rgba(47,48,37,.055);transition:transform .2s ease,box-shadow .2s ease}
+.detail-page .list-item:hover {transform:translateY(-3px);box-shadow:0 18px 34px rgba(47,48,37,.1)}
+.detail-page .list-item h3 {margin:12px 0 8px;font-size:17px;line-height:1.65}
+.detail-page .list-item p {margin:0 0 12px;color:#666b62;font-size:12px;line-height:1.9}
+.detail-page .badge {display:inline-flex;padding:5px 10px;border-radius:999px;background:#e3eadf;color:#355b45;font-size:10px;font-weight:800;letter-spacing:.04em}
+.detail-page .meta {margin-top:5px;color:#7a7c72;font-size:11px}
+.detail-page .card-link {display:inline-flex;margin-top:12px;padding-bottom:3px;border-bottom:1px solid #355b45;color:#355b45;font-size:12px;font-weight:700}
+.detail-page .arrow {align-self:center;color:var(--detail-orange);font-size:24px}
+.detail-page .btn {display:inline-flex;align-items:center;justify-content:center;margin-top:16px;padding:12px 20px;border-radius:3px;background:var(--detail-green);color:#fff;font-size:12px;font-weight:700}
+.detail-page .cta {margin-top:30px;padding:32px;border-radius:12px;background:#e8e9df}
+.detail-page .cta h2 {margin:0 0 8px;font-size:22px}
+.detail-page .cta p {margin:0;color:var(--detail-muted);font-size:13px}
+.detail-page .footer {padding:30px 0;background:#20291f;color:#fff}
+.detail-page .footer-links {display:flex;flex-wrap:wrap;gap:20px;margin-bottom:16px;font-size:12px}
+.detail-page .footer small {color:rgba(255,255,255,.65)}
+@media(max-width:760px){
+ .detail-page .site-header{width:calc(100% - 32px);align-items:flex-start;flex-direction:column;padding:18px 0;gap:14px}
+ .detail-page .header-nav{width:100%;flex-wrap:wrap;gap:10px 16px;font-size:11px}
+ .detail-page .container{width:calc(100% - 32px)}
+ .detail-page .detail-hero{padding:52px 0 58px}
+ .detail-page .section{padding:36px 0 58px}
+ .detail-page .list{grid-template-columns:1fr;gap:13px}
+ .detail-page .list-item{padding:20px;min-height:unset}
+ .detail-page .section-head{align-items:flex-start;flex-direction:column}
+ .detail-page .notice{padding:18px}
+}
