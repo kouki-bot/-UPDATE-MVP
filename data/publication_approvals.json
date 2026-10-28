@@ -1,4 +1,12 @@
 {
-  "description": "公開許可リスト。内容確認後、公開する記事IDだけを approved_ids に追加してください。",
-  "approved_ids": []
+  "description": "人が元記事を確認した記事だけ公開許可する。approved_ids にIDを追加し、reviewed_articles に確認済み情報を記録する。",
+  "approved_ids": [],
+  "reviewed_articles": {},
+  "instructions": {
+    "required": "店舗所在地・開店/閉店日・現在の状況・情報源を元記事で確認する。",
+    "municipality": "確認した市町名を reviewed_articles[id].municipality に入力する。",
+    "review_flags": "解消した確認フラグだけ cleared_review_flags に列挙する。未解消なら承認しない。",
+    "review_record": "reviewed_at と reviewer_checked_source=true を記録する。",
+    "body": "確認済みの説明文を reviewed_articles[id].body に入力する。"
+  }
 }
