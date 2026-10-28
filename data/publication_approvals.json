@@ -1,0 +1,4 @@
+{
+  "description": "公開許可リスト。内容確認後、公開する記事IDだけを approved_ids に追加してください。",
+  "approved_ids": []
+}
