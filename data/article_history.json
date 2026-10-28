@@ -1,5 +1,620 @@
 {
-  "updated_at": null,
-  "articles": {},
+  "updated_at": "2026-10-28T13:14:14.208687+09:00",
+  "articles": {
+    "9a76513766e0afbb": {
+      "id": "9a76513766e0afbb",
+      "title": "2026/10/28 06:00 ケーズデンキ山口店あす１０月２９日オープン山口県内３店目 隣のウォンツ…",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/112481",
+      "signature": "be67c9be6d6794295b5baebaa0f0ab80d8b997a49e618dfac497cba5c12f904f",
+      "first_seen": "2026-10-28T13:14:14.201583+09:00",
+      "last_seen": "2026-10-28T13:14:14.201589+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "6291e85dd3c2345a": {
+      "id": "6291e85dd3c2345a",
+      "title": "【宇部市】店舗移転前のラストチャンス！黒石にあるしまむらとバースデイが、10月25日まで閉店セールを開催中です。",
+      "source_url": "https://ube-sanyoonoda.goguynet.jp/2026/10/24/renewal_shimamura/",
+      "signature": "50e6370e391f7c6a67847a9a89b3579acde2e538f0eb245e87ef81742bff0e12",
+      "first_seen": "2026-10-28T13:14:14.201645+09:00",
+      "last_seen": "2026-10-28T13:14:14.201649+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店",
+        "移転"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "818bea298c827f3c": {
+      "id": "818bea298c827f3c",
+      "title": "2026年10月22日 ホームセンター, 中国, 小売店, 山口, 閉店情報 【閉店】DCM三田尻店",
+      "source_url": "https://kaiten-heiten-24.com/dcm-mitajiri/",
+      "signature": "ee2528b8438a1a3a3da694a9af408f0bcfa99690b2f342ce38f5272ddfbbd794",
+      "first_seen": "2026-10-28T13:14:14.201683+09:00",
+      "last_seen": "2026-10-28T13:14:14.201686+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "5abd682219f9e38b": {
+      "id": "5abd682219f9e38b",
+      "title": "2026年10月22日 中国, 小売店, 山口, 書店・文具, 閉店情報 【閉店】明屋書店 今宿店",
+      "source_url": "https://kaiten-heiten-24.com/haruyashoten-imajuku/",
+      "signature": "56b2338206db3bb4c2732562c97bf1ba26e044687972a36dbf8ac71ce88a6a25",
+      "first_seen": "2026-10-28T13:14:14.201714+09:00",
+      "last_seen": "2026-10-28T13:14:14.201716+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "75c22b18244538f2": {
+      "id": "75c22b18244538f2",
+      "title": "2026年10月18日 ビュッフェ・バイキング, 中国, 山口, 閉店情報, 飲食店 【閉店】ビュッフェレストラン YUTAKA",
+      "source_url": "https://kaiten-heiten-24.com/yutaka-buffet/",
+      "signature": "a0dff5605d57881f370548cbc372fb1dc9c35ba51cca4cd17f55499bb763b7d5",
+      "first_seen": "2026-10-28T13:14:14.201744+09:00",
+      "last_seen": "2026-10-28T13:14:14.201772+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "cd24ab81f8737b10": {
+      "id": "cd24ab81f8737b10",
+      "title": "2026年10月10日 中国, 山口, 牛丼・豚丼・丼物, 開店情報, 飲食店 【開店】松屋 下関長府店（松のや併設）",
+      "source_url": "https://kaiten-heiten-24.com/matsuya-shimonosekichofu/",
+      "signature": "0f04a40a816fe7eb801e015c5c6c7f404aeb8f2f3e81e6f0fe89e60e6e058c03",
+      "first_seen": "2026-10-28T13:14:14.201811+09:00",
+      "last_seen": "2026-10-28T13:14:14.201814+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "c13ec365835b46f5": {
+      "id": "c13ec365835b46f5",
+      "title": "2026年10月7日 パン・ベーカリー, 中国, 山口, 閉店情報, 飲食店 【閉店】ミリーズブレッド（Miri’s Bread）",
+      "source_url": "https://kaiten-heiten-24.com/miris-bread/",
+      "signature": "c9a2bd8a521f8d353096bc14433a75809ae6517546104d9dd876639357c1c1d6",
+      "first_seen": "2026-10-28T13:14:14.201841+09:00",
+      "last_seen": "2026-10-28T13:14:14.201843+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "2c7db80e16d22e27": {
+      "id": "2c7db80e16d22e27",
+      "title": "2026年9月30日 中国, 居酒屋, 山口, 焼肉・ホルモン, 開店情報, 飲食店 【開店】もつ焼き 幸",
+      "source_url": "https://kaiten-heiten-24.com/motsuyaki-sachi/",
+      "signature": "368302e4f67ad0932da7a9e371c768418603b8bf2d280ea11e47bb70455669ea",
+      "first_seen": "2026-10-28T13:14:14.201869+09:00",
+      "last_seen": "2026-10-28T13:14:14.201871+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "7c92459cebfdb8e0": {
+      "id": "7c92459cebfdb8e0",
+      "title": "2026/09/28 15:00 【まとめ】来夏閉店の大丸下関店 最近の話題や直営化後の動き",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107679",
+      "signature": "340c8a2857357498b978dd9e5c662ead814460106cf9134497e809ea79184349",
+      "first_seen": "2026-10-28T13:14:14.201901+09:00",
+      "last_seen": "2026-10-28T13:14:14.201903+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "070c6bac986e7867": {
+      "id": "070c6bac986e7867",
+      "title": "【防府市】ゆめタウン防府が10/15に過去最大規模のリニューアルをし、3階に0歳から遊べる室内遊園地「The Kids」ができました。",
+      "source_url": "https://yamaguchi-hofu.goguynet.jp/2026/10/27/youmetown-hofu-renewal/",
+      "signature": "0b4c6743ea94c9b3d0b9792aab8f16a49590cd4e5703d2594fdaf558d409bca4",
+      "first_seen": "2026-10-28T13:14:14.201945+09:00",
+      "last_seen": "2026-10-28T13:14:14.201948+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "リニューアル"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "4e2147ef02f22d10": {
+      "id": "4e2147ef02f22d10",
+      "title": "2026/10/09 06:00 周南市の徳山有楽町郵便局 リニューアルし営業再開自転車置き場など新設",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111730",
+      "signature": "2c0e6caf50febf91fb9e0ce069722fa9e876c7a9e043ed5783d7138ce8cdc779",
+      "first_seen": "2026-10-28T13:14:14.201977+09:00",
+      "last_seen": "2026-10-28T13:14:14.201980+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "リニューアル"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "e4e8c73449931010": {
+      "id": "e4e8c73449931010",
+      "title": "2026/09/30 06:00 「ハローワークプラザ下関」移転しましたシーモール下関５階に 就職や転職…",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111325",
+      "signature": "1aad7453331a4a4304d054f122c7f23183a667a1b9c333abe567493b9ff0cf8c",
+      "first_seen": "2026-10-28T13:14:14.202008+09:00",
+      "last_seen": "2026-10-28T13:14:14.202011+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "移転"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "82b792cd5379aba1": {
+      "id": "82b792cd5379aba1",
+      "title": "2026/09/24 06:00 サイゼリヤおのだサンパーク店きょうオープン山口県内４店目、山陽小野田…",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111103",
+      "signature": "ae60641e28bbf7d970c4881fee3cc4308dbe0fa5ff7920a036e5d382fcbe78f8",
+      "first_seen": "2026-10-28T13:14:14.202039+09:00",
+      "last_seen": "2026-10-28T13:14:14.202041+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "8c0faee29ec6cd41": {
+      "id": "8c0faee29ec6cd41",
+      "title": "2026年9月24日 サービス, 中国, 山口, 買取・質屋, 開店情報 【開店】セカンドストリート ゆめタウン南岩国店",
+      "source_url": "https://kaiten-heiten-24.com/2ndstreet-yt-minamiiwakuni/",
+      "signature": "2d90d3cfea716e01c06c9fc49870e62b6be1b7ad910d2ae9920420c54d476926",
+      "first_seen": "2026-10-28T13:14:14.202069+09:00",
+      "last_seen": "2026-10-28T13:14:14.202071+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "8eb96f7ffbfe235a": {
+      "id": "8eb96f7ffbfe235a",
+      "title": "2026/09/23 06:00 市民共創の拠点施設完成 「下関テイラーズ」オープン下関市豊前田・茶山地…",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111080",
+      "signature": "241d5d4e79c975239c3cdcc057541fff20da557f4803b6d069bbfe55a51626af",
+      "first_seen": "2026-10-28T13:14:14.202098+09:00",
+      "last_seen": "2026-10-28T13:14:14.202100+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "29d7a2dab51af969": {
+      "id": "29d7a2dab51af969",
+      "title": "2026年9月23日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】サイゼリヤ おのだサンパーク店",
+      "source_url": "https://kaiten-heiten-24.com/saizeriya-onodasunpark/",
+      "signature": "e1353cae5af99c93cc703d5f99fd630900e69216b6fad3932cd77ea13bc42e9d",
+      "first_seen": "2026-10-28T13:14:14.202124+09:00",
+      "last_seen": "2026-10-28T13:14:14.202127+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "7916821a646d607d": {
+      "id": "7916821a646d607d",
+      "title": "2026年9月18日 キャンプ場・グランピング, 中国, 山口, 観光・宿泊・レジャー, 開店情報 【開店】火の山山麓キャンプ場",
+      "source_url": "https://kaiten-heiten-24.com/hinoyamacamp/",
+      "signature": "1b05d6f3d231c4cedf664bc54ada6e682e77d60284cf7c6ad50bda6aae0b1d47",
+      "first_seen": "2026-10-28T13:14:14.202150+09:00",
+      "last_seen": "2026-10-28T13:14:14.202152+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "569d7aa074bdf503": {
+      "id": "569d7aa074bdf503",
+      "title": "2026/09/12 06:00 おのだサンパークに「ロフト」オープン山口県内２店目",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/110649",
+      "signature": "c63887af08289dcc346976d1f31ec01f82ae73798bc3ce9575a5282669b42cf8",
+      "first_seen": "2026-10-28T13:14:14.202180+09:00",
+      "last_seen": "2026-10-28T13:14:14.202183+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "b63297e9f97913b6": {
+      "id": "b63297e9f97913b6",
+      "title": "2026年9月12日 ゴルフ練習場, スポーツ, 中国, 山口, 閉店情報 【閉店】ココランドゴルフ練習場",
+      "source_url": "https://kaiten-heiten-24.com/cocoland-golf/",
+      "signature": "f5813cd5356c389f1bde7f264cdd9f551d8d37dae5b940c886cae29bc9ff9a0b",
+      "first_seen": "2026-10-28T13:14:14.202206+09:00",
+      "last_seen": "2026-10-28T13:14:14.202208+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "6278805de3101bff": {
+      "id": "6278805de3101bff",
+      "title": "2026年9月10日 スポーツ用品, 中国, 小売店, 山口, 開店情報 【開店】スポーツデポ/ゴルフ５おのだサンパーク店",
+      "source_url": "https://kaiten-heiten-24.com/sportsdepo-golf5-onoda-sunpark/",
+      "signature": "400473d150342ceee1588d3018d5434e44279eadfbd23185a81f6970553e2bf5",
+      "first_seen": "2026-10-28T13:14:14.202233+09:00",
+      "last_seen": "2026-10-28T13:14:14.202235+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "ddc200c72881ce0c": {
+      "id": "ddc200c72881ce0c",
+      "title": "2026年9月8日 イタリアン・パスタ・ピザ, 中国, 山口, 開店情報, 飲食店 【開店】生パスタ＆ワイン プレーゴ",
+      "source_url": "https://kaiten-heiten-24.com/prego/",
+      "signature": "c28f047ddff7e2dd8a450dd87b66462139c7c7c83df2a676b2c86689d4ee5f86",
+      "first_seen": "2026-10-28T13:14:14.202259+09:00",
+      "last_seen": "2026-10-28T13:14:14.202261+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "9f8da5a9895c8279": {
+      "id": "9f8da5a9895c8279",
+      "title": "2026年8月28日 そば・うどん店, 中国, 山口, 閉店情報, 飲食店 【閉店】元祖肉肉うどん 新下関店",
+      "source_url": "https://kaiten-heiten-24.com/nikunikuudon-shinshimonoseki/",
+      "signature": "39ede04bddd74cdbd3a45a15ab707c7a7e3685b4602fa1e06ee067ec0a56af96",
+      "first_seen": "2026-10-28T13:14:14.202286+09:00",
+      "last_seen": "2026-10-28T13:14:14.202289+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "0d9c38a9a878616f": {
+      "id": "0d9c38a9a878616f",
+      "title": "2026/08/26 06:00 ブドウたわわ、ナシも旬周南市・須金で観光農園オープン",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/109963",
+      "signature": "9dcbd24e4e7f1e8f4f993e62ef300285fd08207ab4c9ba23fb1728bd6ad2e469",
+      "first_seen": "2026-10-28T13:14:14.202316+09:00",
+      "last_seen": "2026-10-28T13:14:14.202318+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "bc503d82f3577eae": {
+      "id": "bc503d82f3577eae",
+      "title": "2026年8月26日 ディスカウントストア, 中国, 小売店, 山口, 開店情報 【開店】ラ・ムー山の田店",
+      "source_url": "https://kaiten-heiten-24.com/lamu-yamanota/",
+      "signature": "e5d1efb88d7093f35b7808113db66ae0be1356bbd7ba4fed5dc8059c29e528bb",
+      "first_seen": "2026-10-28T13:14:14.202341+09:00",
+      "last_seen": "2026-10-28T13:14:14.202343+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "13b0f5664008fe62": {
+      "id": "13b0f5664008fe62",
+      "title": "2026年8月25日 そば・うどん店, 中国, 山口, 閉店情報, 飲食店 【閉店】いろり山賊 錦店",
+      "source_url": "https://kaiten-heiten-24.com/irorisanzoku-nishiki/",
+      "signature": "9ef419a691f8447eee884fa384a58ca2d50126b56ca2a3fd0d1fcc56f46bed52",
+      "first_seen": "2026-10-28T13:14:14.202367+09:00",
+      "last_seen": "2026-10-28T13:14:14.202369+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "e087173adf1a7af2": {
+      "id": "e087173adf1a7af2",
+      "title": "2026/08/24 06:00 ラ・ムーが新たに下関市山の田北町に出店山口県内４店舗目、８月２７日オ…",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/109882",
+      "signature": "4c2050ae9c99fa12a92b9cf7ff87cc1a5e2d934a3d38e69803c6f7c9c25d4d0c",
+      "first_seen": "2026-10-28T13:14:14.202399+09:00",
+      "last_seen": "2026-10-28T13:14:14.202401+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "578d60d80c78c5b6": {
+      "id": "578d60d80c78c5b6",
+      "title": "2026年8月24日 中国, 居酒屋, 山口, 開店情報, 飲食店 【開店】個室完備 大衆とり酒場 とりいちず 山口徳山店",
+      "source_url": "https://kaiten-heiten-24.com/toriichizu-yamaguchitokuyama/",
+      "signature": "afb5102acf221a5235aaf193572230b508d6f9e6f50c969d4b6defaa8d71648c",
+      "first_seen": "2026-10-28T13:14:14.202426+09:00",
+      "last_seen": "2026-10-28T13:14:14.202428+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "251a8e70e2b760d7": {
+      "id": "251a8e70e2b760d7",
+      "title": "2026年8月23日 中国, 小売店, 山口, 贈答品・ギフトショップ, 閉店情報 【閉店】ギフトギャラリーオズ宇部店",
+      "source_url": "https://kaiten-heiten-24.com/giftgalleryoz-ube/",
+      "signature": "bbc597b8aa6cd34badcd98f9bda77b3a260270e6fc5c3eae0e510a1eb280346b",
+      "first_seen": "2026-10-28T13:14:14.202452+09:00",
+      "last_seen": "2026-10-28T13:14:14.202455+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "82c9408c126c5b1f": {
+      "id": "82c9408c126c5b1f",
+      "title": "2026年8月20日 ファミレス, 中国, 山口, 閉店情報, 飲食店 【閉店】ロイヤルホスト 山の田店",
+      "source_url": "https://kaiten-heiten-24.com/royalhost-yamanota/",
+      "signature": "df999e9cee52b58a614ed5c8ce6fe8a34f2157320d6b452a6aa8d42b8d252ea4",
+      "first_seen": "2026-10-28T13:14:14.202478+09:00",
+      "last_seen": "2026-10-28T13:14:14.202481+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "11529b19b4350b24": {
+      "id": "11529b19b4350b24",
+      "title": "2026年8月14日 中国, 山口, 牛丼・豚丼・丼物, 開店情報, 飲食店 【開店】すき家 191号長門店",
+      "source_url": "https://kaiten-heiten-24.com/sukiya-191gonagato/",
+      "signature": "940db29a8f4c704434d8d838bc8ca2602c892a9036a55f7f1ffb6e7fe70bfd8e",
+      "first_seen": "2026-10-28T13:14:14.202505+09:00",
+      "last_seen": "2026-10-28T13:14:14.202507+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "e943d87f22fb72cc": {
+      "id": "e943d87f22fb72cc",
+      "title": "2026年8月13日 パン・ベーカリー, 中国, 山口, 閉店情報, 飲食店 【閉店】乃が美はなれ 山口店",
+      "source_url": "https://kaiten-heiten-24.com/nogamihanare-yamaguchi/",
+      "signature": "ac0c3793aa9ea37969cd54d5dcb2a80a8d6a758b2d23ed5e37288329323dff63",
+      "first_seen": "2026-10-28T13:14:14.202532+09:00",
+      "last_seen": "2026-10-28T13:14:14.202534+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "35ff036a0c6dc104": {
+      "id": "35ff036a0c6dc104",
+      "title": "2026年8月11日 パン・ベーカリー, 中国, 山口, 閉店情報, 飲食店 【閉店】boulangerie gemme rizière",
+      "source_url": "https://kaiten-heiten-24.com/boulangerie-gemme-riziere-2/",
+      "signature": "110474e013e33f36da35928acda165134d7b1433bb415a51ba01e404d47979ca",
+      "first_seen": "2026-10-28T13:14:14.202560+09:00",
+      "last_seen": "2026-10-28T13:14:14.202562+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "3826dd0cb3ff1840": {
+      "id": "3826dd0cb3ff1840",
+      "title": "2026年8月8日 コーヒーショップ, 中国, 山口, 開店情報, 飲食店 【開店】Sh:AKARIKI COFFEE",
+      "source_url": "https://kaiten-heiten-24.com/%e3%80%90%e9%96%8b%e5%ba%97%e3%80%91shakariki-coffee/",
+      "signature": "4ff749d1c2a9ad1bb73a1e9b9d6df5be24d69736a2f1d56bc34e2f314905e2c5",
+      "first_seen": "2026-10-28T13:14:14.202588+09:00",
+      "last_seen": "2026-10-28T13:14:14.202590+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "588eba515ba69998": {
+      "id": "588eba515ba69998",
+      "title": "2026年8月8日 スーパーストア, 中国, 小売店, 山口, 開店情報 【開店】ハローズ西岐波店",
+      "source_url": "https://kaiten-heiten-24.com/halows-nishikiwa/",
+      "signature": "a8db87672fc8a153c3f1cc557f52fb25938801c6787c4d4933fa653e3d1ea4e3",
+      "first_seen": "2026-10-28T13:14:14.202614+09:00",
+      "last_seen": "2026-10-28T13:14:14.202616+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "5c9a5fa0200eb7cb": {
+      "id": "5c9a5fa0200eb7cb",
+      "title": "2026/08/07 06:00 東横イン宇部新川駅オープン１４階２０７室、駐車場９８台収容",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/109269",
+      "signature": "81c48fdd99abf455649372afe6f6d50d1c05027953914442bebabb656fd38005",
+      "first_seen": "2026-10-28T13:14:14.202643+09:00",
+      "last_seen": "2026-10-28T13:14:14.202646+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "7866cc9a213e694e": {
+      "id": "7866cc9a213e694e",
+      "title": "2026年8月6日 ゲームセンター, 中国, 山口, 観光・宿泊・レジャー, 開店情報 【開店】メガドリ宇部店",
+      "source_url": "https://kaiten-heiten-24.com/megadori-ube/",
+      "signature": "eef1ec236c2ea3b5dd1c0fabec925e5275d5c40346aea18750008633bdb5fa5a",
+      "first_seen": "2026-10-28T13:14:14.202669+09:00",
+      "last_seen": "2026-10-28T13:14:14.202672+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "c6dd3ac4c87c96fc": {
+      "id": "c6dd3ac4c87c96fc",
+      "title": "【開店】むすびや",
+      "source_url": "https://kaiten-heiten-24.com/musubiya/",
+      "signature": "cf653e790c1134d8f1ad3bbed3f25b32611ec2d650134015e7c4a6920d196274",
+      "first_seen": "2026-10-28T13:14:14.202692+09:00",
+      "last_seen": "2026-10-28T13:14:14.202694+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "55eaa49c13d9c0d4": {
+      "id": "55eaa49c13d9c0d4",
+      "title": "【開店】やきとん一粋家 本郷三丁目店",
+      "source_url": "https://kaiten-heiten-24.com/issuiya-hongo3chome/",
+      "signature": "eb859340e1ce439304d4ec30d03c4fb15ea3a5c9cf884c57758fab2c8b8c9cf8",
+      "first_seen": "2026-10-28T13:14:14.202715+09:00",
+      "last_seen": "2026-10-28T13:14:14.202717+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "b628cb2d46f1f76c": {
+      "id": "b628cb2d46f1f76c",
+      "title": "【開店】ペコちゃんmilkyタイム インモール大高店",
+      "source_url": "https://kaiten-heiten-24.com/peko-milky-time-am-ootaka/",
+      "signature": "6c2100e367460dfeb2f24378789646ca8f173ce4acaa19dbbad95eac27ec5774",
+      "first_seen": "2026-10-28T13:14:14.202738+09:00",
+      "last_seen": "2026-10-28T13:14:14.202740+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "8472349f5ef5d5f5": {
+      "id": "8472349f5ef5d5f5",
+      "title": "【開店】マクドナルド 豊明沓掛店",
+      "source_url": "https://kaiten-heiten-24.com/mcdonalds-toyoakekutsukake/",
+      "signature": "f31aed64af11c6a8e684a7875f17b529243838440fc342cf75b987bfe9fe12d0",
+      "first_seen": "2026-10-28T13:14:14.202804+09:00",
+      "last_seen": "2026-10-28T13:14:14.202808+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "ca8d2bedfba0da20": {
+      "id": "ca8d2bedfba0da20",
+      "title": "【開店】海を走る弁当",
+      "source_url": "https://kaiten-heiten-24.com/umiwohashirubento/",
+      "signature": "f06a20db9d662e47fa277a611375fe5ad41601bf6dd18024314c9e30d4782edf",
+      "first_seen": "2026-10-28T13:14:14.202832+09:00",
+      "last_seen": "2026-10-28T13:14:14.202835+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "8b672ee85f6ce588": {
+      "id": "8b672ee85f6ce588",
+      "title": "閉店情報-地域別",
+      "source_url": "https://kaiten-heiten-24.com/area-close/",
+      "signature": "50bf9c52d66ff4c57c94a95f0bc6e5137c8bceb44d6b92ca7b40d0312c89e9cf",
+      "first_seen": "2026-10-28T13:14:14.202855+09:00",
+      "last_seen": "2026-10-28T13:14:14.202858+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "f600e28352a362cf": {
+      "id": "f600e28352a362cf",
+      "title": "閉店情報-業種別",
+      "source_url": "https://kaiten-heiten-24.com/heiten-gyousyubetsu/",
+      "signature": "9df53e0709a43ead2688366a9abbc139b6cf8d9cf9dcf281f2169e0fa41a9e4a",
+      "first_seen": "2026-10-28T13:14:14.202878+09:00",
+      "last_seen": "2026-10-28T13:14:14.202880+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "1841f7d288b22c6c": {
+      "id": "1841f7d288b22c6c",
+      "title": "開店・閉店の記事一覧はこちら",
+      "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/tag/s/%E9%96%8B%E5%BA%97%E3%83%BB%E9%96%89%E5%BA%97",
+      "signature": "e2c32364aa47506151d77a5bd1e2a9e64c4886ab06455e56c380aad31a7fe57b",
+      "first_seen": "2026-10-28T13:14:14.202903+09:00",
+      "last_seen": "2026-10-28T13:14:14.202905+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店",
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "a7bcd9a72b56c284": {
+      "id": "a7bcd9a72b56c284",
+      "title": "開店情報-地域別",
+      "source_url": "https://kaiten-heiten-24.com/area-open/",
+      "signature": "ec33bd1b2e6c0d11a7047b8c3db454cb67a3e12befa240cafa97bde958f974c9",
+      "first_seen": "2026-10-28T13:14:14.202925+09:00",
+      "last_seen": "2026-10-28T13:14:14.202927+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "f9573334a9563a49": {
+      "id": "f9573334a9563a49",
+      "title": "開店情報-業種別",
+      "source_url": "https://kaiten-heiten-24.com/kaiten-gyousyubetsu/",
+      "signature": "5bfdd09185f609aa0c8a7eda3f60118071c258ada7cf58279870384b198fa37f",
+      "first_seen": "2026-10-28T13:14:14.202947+09:00",
+      "last_seen": "2026-10-28T13:14:14.202949+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店"
+      ],
+      "status": "未確認・公開禁止"
+    },
+    "1dcb137b7eead594": {
+      "id": "1dcb137b7eead594",
+      "title": "開店閉店.com",
+      "source_url": "https://kaiten-heiten-24.com",
+      "signature": "c22966dc3ee50b05a5ead2bd715c7118888d38b0728044e0584bfe128bce0c68",
+      "first_seen": "2026-10-28T13:14:14.202969+09:00",
+      "last_seen": "2026-10-28T13:14:14.202971+09:00",
+      "last_change_status": "新着",
+      "category": [
+        "新店・開店",
+        "閉店"
+      ],
+      "status": "未確認・公開禁止"
+    }
+  },
   "note": "取得履歴のみ。公開許可や公開記事一覧ではありません。"
 }
