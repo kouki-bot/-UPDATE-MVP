@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>新店・開店情報｜山口ローカルUPDATE</title>
+<meta name="description" content="山口県内の新店・開店情報を紹介。公開情報を確認しながら掲載しています。">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="detail.css">
+<style>
+.page-wrap{max-width:1000px;margin:auto;padding:24px 16px 48px}.page-lead{line-height:1.8;color:#555}
+.notice{padding:14px 16px;margin:18px 0;border-radius:10px;background:#f7f1e8;line-height:1.7}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
+.filters label{display:block;font-weight:700;margin-bottom:6px}.filters input,.filters select{box-sizing:border-box;width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;background:#fff;font:inherit}
+.filter-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.filter-actions button{padding:10px 16px;border:0;border-radius:8px;background:#5d4636;color:#fff;font:inherit;cursor:pointer}.filter-actions .reset{background:#eee;color:#333}
+#result-count{color:#555;font-size:.92rem}.article-list{display:grid;gap:14px}.article-card{border:1px solid #e5e0da;border-radius:12px;padding:18px;background:#fff}
+.article-card h2{font-size:1.15rem;margin:0 0 8px;line-height:1.5}.article-card h2 a{color:inherit;text-decoration:none}.article-meta{font-size:.88rem;color:#666;line-height:1.7;margin:0 0 10px}.article-summary{line-height:1.8;margin:0 0 12px}
+.article-links{display:flex;gap:14px;flex-wrap:wrap;font-size:.92rem}.article-links a{color:#72523d}.empty-state,.load-error{padding:22px;text-align:center;background:#faf8f5;border-radius:10px;line-height:1.8}
+@media(max-width:600px){.filters{grid-template-columns:1fr}.page-wrap{padding:18px 14px 36px}.article-card{padding:15px}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="header-inner">
+<a class="site-logo" href="index.html">山口ローカルUPDATE</a>
+<nav class="site-nav" aria-label="メインメニュー"><a href="index.html">トップ</a><a href="new.html" aria-current="page">新店・開店</a><a href="closed.html">閉店情報</a></nav>
+</div></header>
+<main class="page-wrap">
+<h1>新店・開店情報</h1>
+<p class="page-lead">山口県内の新しいお店・施設の情報を掲載しています。公開情報をもとに確認し、未確認の情報は掲載しません。</p>
+<div class="notice"><strong>掲載について</strong><br>開店日や所在地などは、記事内の情報源もあわせてご確認ください。未確認の候補はこのページには表示されません。</div>
+<section aria-label="情報を検索">
+<div class="filters">
+<div><label for="keyword">キーワード</label><input id="keyword" type="search" placeholder="店名・地域・内容で検索"></div>
+<div><label for="area">地域</label><select id="area">
+<option value="">すべての地域</option><option>山口市</option><option>宇部市</option><option>山陽小野田市</option><option>下関市</option><option>防府市</option><option>周南市</option><option>岩国市</option><option>萩市</option><option>その他</option>
+</select></div></div>
+<div class="filter-actions"><button id="search-button" type="button">検索</button><button id="reset-button" class="reset" type="button">リセット</button><span id="result-count" aria-live="polite">情報を読み込んでいます…</span></div>
+</section>
+<section id="article-list" class="article-list" aria-live="polite"><p class="empty-state">公開情報を読み込んでいます…</p></section>
+</main>
+<footer class="site-footer"><p>山口ローカルUPDATE｜掲載情報は公開情報をもとに確認しています。</p></footer>
+<script>
+(() => {
+const list=document.getElementById('article-list'), keywordInput=document.getElementById('keyword'), areaSelect=document.getElementById('area'), count=document.getElementById('result-count');
+let articles=[];
+const categories=['新店・開店','新店','開店','新施設・地域の動き','新店舗'];
+const text=(o,keys)=>{for(const k of keys)if(typeof o[k]==='string'&&o[k].trim())return o[k].trim();return '';};
+const safeUrl=value=>{if(typeof value!=='string'||!value.trim())return '';try{const u=new URL(value,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch(e){return '';}};
+const areaOf=o=>{const s=[text(o,['area','city','location','address']),text(o,['title','name']),text(o,['summary','description','body'])].join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(a=>s.includes(a))||'その他';};
+const link=(href,label)=>{const url=safeUrl(href);if(!url)return null;const a=document.createElement('a');a.href=url;a.textContent=label;a.target='_blank';a.rel='noopener noreferrer';return a;};
+function render(){
+const kw=keywordInput.value.trim().toLowerCase(), area=areaSelect.value;
+const rows=articles.filter(o=>{const s=[text(o,['title','name']),text(o,['area','city','location','address']),text(o,['summary','description','body']),text(o,['category','type','genre'])].join(' ').toLowerCase();return (!kw||s.includes(kw))&&(!area||areaOf(o)===area);});
+list.replaceChildren();count.textContent=rows.length+'件の情報';
+if(!rows.length){const p=document.createElement('p');p.className='empty-state';p.textContent=articles.length?'条件に合う情報はありません。キーワードや地域を変えて検索してください。':'現在、掲載できる新店・開店情報はありません。情報が確認でき次第、掲載します。';list.appendChild(p);return;}
+rows.forEach(o=>{
+const card=document.createElement('article');card.className='article-card';
+const h=document.createElement('h2'), title=text(o,['title','name']), detail=text(o,['detail_url','page_url','article_url','url']), titleA=link(detail,title);
+if(titleA)h.appendChild(titleA);else h.textContent=title;card.appendChild(h);
+const meta=[text(o,['category','type','genre']),text(o,['area','city','location','address']),text(o,['date','opening_date','published_at','updated_at'])].filter(Boolean);
+if(meta.length){const p=document.createElement('p');p.className='article-meta';p.textContent=meta.join(' ｜ ');card.appendChild(p);}
+const summary=text(o,['summary','description','body','content']);if(summary){const p=document.createElement('p');p.className='article-summary';p.textContent=summary;card.appendChild(p);}
+const links=document.createElement('div');links.className='article-links';
+const src=link(text(o,['source_url','source','official_url','reference_url']),'情報源を確認する'), det=link(detail,'詳細を見る');
+if(src)links.appendChild(src);if(det)links.appendChild(det);if(links.childNodes.length)card.appendChild(links);list.appendChild(card);
+});
+}
+document.getElementById('search-button').addEventListener('click',render);
+document.getElementById('reset-button').addEventListener('click',()=>{keywordInput.value='';areaSelect.value='';render();});
+keywordInput.addEventListener('keydown',e=>{if(e.key==='Enter')render();});areaSelect.addEventListener('change',render);
+fetch('data/published.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{
+const rows=Array.isArray(data)?data:(Array.isArray(data.articles)?data.articles:[]);
+articles=rows.filter(o=>o&&o.status==='公開'&&text(o,['title','name'])&&categories.some(c=>text(o,['category','type','genre']).includes(c))).slice(0,100);render();
+}).catch(()=>{count.textContent='読み込みエラー';list.replaceChildren();const p=document.createElement('p');p.className='load-error';p.textContent='情報を読み込めませんでした。時間をおいて再読み込みしてください。';list.appendChild(p);});
+})();
+</script>
+</body>
+</html>
