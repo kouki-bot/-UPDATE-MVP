@@ -34,12 +34,21 @@ jobs:
       - name: Run review-safety tests
         run: python -m unittest discover -s scripts/tests -v
 
+      
       - name: Save results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/source_checks.json data/rss_candidates.json data/drafts.json
-          git diff --cached --quiet && exit 0
+
+          git add data/source_checks.json data/rss_candidates.json data/drafts.json data/published.json data/publication_approvals.json
+
+          if git diff --cached --quiet; then
+            echo "変更がないため保存をスキップします"
+            exit 0
+          fi
+
           git commit -m "Update news candidates and drafts"
-          git pull --rebase origin main
-          git push origin main
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
+
