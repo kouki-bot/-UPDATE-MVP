@@ -1,84 +1,51 @@
 #!/usr/bin/env python3
-"""Build published.json from explicitly approved, safe draft records."""
+"""Publish manually approved drafts without losing approvals during regeneration."""
 import json
-from datetime import datetime, timezone
 from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-DRAFTS_PATH = ROOT / "data" / "drafts.json"
-APPROVALS_PATH = ROOT / "data" / "publication_approvals.json"
-PUBLISHED_PATH = ROOT / "data" / "published.json"
-
-BLOCKED_STATUS = {"未確認・公開禁止"}
-BLOCKED_DUPLICATE = {"重複の可能性・要確認"}
-
-def load_json(path):
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
-
-def get_articles(data):
-    if isinstance(data, dict):
-        articles = data.get("articles", [])
-        return articles if isinstance(articles, list) else []
-    return data if isinstance(data, list) else []
-
-def is_publishable(article, approved_ids):
-    article_id = str(article.get("id", "")).strip()
-    if not article_id or article_id not in approved_ids:
-        return False
-    if article.get("status") in BLOCKED_STATUS:
-        return False
-    if article.get("duplicate_review") in BLOCKED_DUPLICATE:
-        return False
-    if article.get("review_flags"):
-        return False
-    if not str(article.get("title", "")).strip():
-        return False
-    if not str(article.get("source_url", "")).strip():
-        return False
-    if not str(article.get("body_excerpt", "")).strip():
-        return False
-    if not str(article.get("published_date", "")).strip():
-        return False
-    if not str(article.get("municipality", "")).strip():
-        return False
-    return True
-
+from datetime import datetime, timedelta, timezone
+BASE_DIR=Path(__file__).resolve().parent.parent
+DATA=BASE_DIR/"data"
+JST=timezone(timedelta(hours=9))
+def load(name, default):
+ p=DATA/name
+ return json.loads(p.read_text(encoding="utf-8")) if p.exists() else default
 def main():
-    drafts_data = load_json(DRAFTS_PATH)
-    approvals = load_json(APPROVALS_PATH)
-    approved_ids = {
-        str(item).strip()
-        for item in approvals.get("approved_ids", [])
-        if str(item).strip()
-    }
-    drafts = get_articles(drafts_data)
-    selected = [a for a in drafts if is_publishable(a, approved_ids)]
-
-    # Fail safe: never wipe existing public data just because no items pass.
-    if not selected:
-        print("公開条件を満たす記事が0件のため、published.json は変更しません。")
-        return
-
-    existing_data = load_json(PUBLISHED_PATH) if PUBLISHED_PATH.exists() else {}
-    existing = get_articles(existing_data)
-    by_id = {}
-    for article in existing:
-        if isinstance(article, dict) and article.get("id"):
-            by_id[str(article["id"])] = article
-    for article in selected:
-        by_id[str(article["id"])] = article
-
-    output = {
-        "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "articles": list(by_id.values()),
-    }
-    temp_path = PUBLISHED_PATH.with_suffix(".json.tmp")
-    with temp_path.open("w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
-        f.write("\\n")
-    temp_path.replace(PUBLISHED_PATH)
-    print(f"公開データを更新しました: 今回の追加・更新 {len(selected)} 件 / 合計 {len(output['articles'])} 件")
-
-if __name__ == "__main__":
-    main()
+ drafts=load("drafts.json",{"drafts":[]}).get("drafts",[])
+ approvals=load("publication_approvals.json",{"approved_ids":[],"reviewed_articles":{}})
+ published=load("published.json",{"updated_at":"","articles":[]})
+ approved=set(map(str,approvals.get("approved_ids",[])))
+ reviews=approvals.get("reviewed_articles",{})
+ existing={str(a.get("id")):a for a in published.get("articles",[]) if a.get("id")}
+ added=0
+ for draft in drafts:
+  aid=str(draft.get("id",""))
+  if not aid or aid not in approved: continue
+  review=reviews.get(aid,{})
+  article=dict(draft)
+  for key in ("municipality","body","published_date","source_url","title"):
+   if review.get(key) not in (None,""): article[key]=review[key]
+  if review.get("headline"): article["title"]=review["headline"]
+  missing=[k for k in ("title","source_url","published_date","municipality") if not str(article.get(k,"")).strip()]
+  flags=set(draft.get("review_flags") or [])-set(review.get("cleared_review_flags") or [])
+  if missing:
+   print(f"公開保留 {aid}: 必須項目不足 {', '.join(missing)}"); continue
+  if flags:
+   print(f"公開保留 {aid}: 未解消フラグ {', '.join(sorted(flags))}"); continue
+  if draft.get("duplicate_review")=="重複の可能性・要確認":
+   print(f"公開保留 {aid}: 重複確認が未完了"); continue
+  if draft.get("freshness") in ("未来日付・要確認","90日より前"):
+   print(f"公開保留 {aid}: 日付・鮮度の確認が必要"); continue
+  if not review.get("reviewed_at") or review.get("reviewer_checked_source") is not True:
+   print(f"公開保留 {aid}: reviewed_at と reviewer_checked_source=true が必要"); continue
+  article["status"]="公開済み"
+  article["approved_at"]=review["reviewed_at"]
+  article["published_at"]=datetime.now(JST).isoformat()
+  article["body"]=article.get("body") or article.get("body_excerpt","")
+  existing[aid]=article; added+=1
+ if added:
+  published["updated_at"]=datetime.now(JST).isoformat()
+  published["articles"]=sorted(existing.values(),key=lambda a:(a.get("published_date",""),a.get("title","")),reverse=True)
+  (DATA/"published.json").write_text(json.dumps(published,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+ print(f"公開候補として反映: {added}件")
+ if not added: print("公開可能な承認済み記事がないため published.json は変更していません。")
+if __name__=="__main__": main()
