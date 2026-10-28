@@ -1,3 +1,4 @@
+
 name: Yamaguchi Local Update
 
 on:
@@ -27,31 +28,22 @@ jobs:
       - name: Collect RSS news candidates
         run: python scripts/collect_rss.py
 
-      
       - name: Generate article drafts
         run: python scripts/generate_drafts.py
 
-      - name: Run review-safety tests
+      - name: Run publication safety tests
         run: python -m unittest discover -s scripts/tests -v
 
       - name: Build approved published data
         run: python scripts/publish_approved.py
-   
+
       - name: Save results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add data/source_checks.json data/rss_candidates.json data/drafts.json data/article_history.json data/published.json data/publication_approvals.json
-
-
-          if git diff --cached --quiet; then
-            echo "変更がないため保存をスキップします"
-            exit 0
-          fi
-
+          git add data/source_checks.json data/rss_candidates.json data/drafts.json data/published.json data/publication_approvals.json
+          git diff --cached --quiet && exit 0
           git commit -m "Update news candidates and drafts"
           git fetch origin main
           git rebase origin/main
-          git push origin HEAD:main
-
+          git push origin main
