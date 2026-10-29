@@ -276,7 +276,12 @@ def fetch_html_source(source):
 
         if normalized == source_normalized:
             continue
-        if path == "/":
+        if (
+            path.startswith("/category/")
+            or path.startswith("/tag/")
+            or path.startswith("/page/")
+            or path in {"/", ""}
+        ):
             continue
         if title in generic_titles or len(title) < 8:
             continue
