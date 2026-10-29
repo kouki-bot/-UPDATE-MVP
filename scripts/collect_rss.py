@@ -245,19 +245,50 @@ def fetch_html_source(source):
     parser = AnchorParser()
     parser.feed(text)
     items, seen = [], set()
+    
     for a in parser.anchors:
         title, url = a["text"], a["url"]
-        host = urlsplit(url).netloc.lower()
-        if not title or urlsplit(url).netloc.lower() == urlsplit(source["url"]).netloc.lower() and url.rstrip("/") == source["url"].rstrip("/"):
+        parsed_url = urlsplit(url)
+        host = parsed_url.netloc.lower()
+        path = parsed_url.path.rstrip("/") or "/"
+
+        # 対象サイト以外のリンクは除外
+        if not any(
+            domain in host
+            for domain in [
+                "minato-yamaguchi.co.jp",
+                "kaiten-heiten-24.com",
+                "kaiten-heiten.com",
+            ]
+        ):
             continue
-        if not any(domain in host for domain in ["minato-yamaguchi.co.jp", "kaiten-heiten-24.com", "kaiten-heiten.com"]):
+
+        # トップページ・カテゴリ一覧・サイト名だけの候補を除外
+        normalized = normalize_url(url)
+        source_normalized = normalize_url(source["url"])
+        generic_titles = {
+            "開店閉店.com",
+            "開店・閉店",
+            "続きを読む",
+            "次へ",
+            "前へ",
+        }
+
+        if normalized == source_normalized:
             continue
-        if url in seen or not classify_text(title) or is_excluded(title, ""):
+        if path == "/":
             continue
-        # 一覧ページのタグ・ナビゲーションを候補にしない
-        if len(title) < 8 or title in {"続きを読む", "次へ", "前へ", "開店・閉店"}:
+        if title in generic_titles or len(title) < 8:
             continue
-        seen.add(url)
+        if path.startswith("/category/") or path.startswith("/tag/"):
+            continue
+        if normalized in seen:
+            continue
+        if not classify_text(title) or is_excluded(title, ""):
+            continue
+
+        seen.add(normalized)
+
         published = date_from_url(url)
         freshness, age = get_freshness(published)
         items.append({
