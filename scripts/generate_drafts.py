@@ -424,6 +424,7 @@ def main():
         "excluded_old_count": old_count, "freshness_counts": freshness_counts,
         "category_counts": category_counts,
         "municipality_counts": municipality_counts,
+        **review_summary,
         "note": "対象は新店・開店、閉店、移転、リニューアルです。90日より前の記事は通常の下書き候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。配信元の対象地域は店舗所在地を保証しません。",
         "drafts": drafts,
     }
