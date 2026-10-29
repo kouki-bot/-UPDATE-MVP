@@ -305,10 +305,13 @@ def merge_candidates(items):
         match_index = None
         for index, old in enumerate(merged_items):
             old_urls = {old.get("normalized_url", "")}
-            old_urls.update(normalize_url(s.get("url", "")) for s in old.get("source_urls", []))
-         if normalized in old_urls:
-            match_index = index
-            break
+            old_urls.update(
+                normalize_url(s.get("url", ""))
+                for s in old.get("source_urls", [])
+            )
+            if normalized in old_urls:
+                match_index = index
+                break
         if match_index is None:
             merged_items.append(candidate)
             continue
