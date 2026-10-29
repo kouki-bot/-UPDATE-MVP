@@ -256,23 +256,37 @@ def event_terms(item):
     return re.sub(r"\s+", " ", title).strip()
 
 def same_event(a, b):
-    """誤統合を避けるため、タイトルの一致度が高い場合だけ同一候補とみなす。"""
-    if set(a.get("category", [])) and set(b.get("category", [])):
-        if not (set(a["category"]) & set(b["category"])):
-            return False
-    ta = title_fingerprint(a.get("title", ""))
-    tb = title_fingerprint(b.get("title", ""))
-    if not ta or not tb:
+    """誤統合を避け、明確に同じニュースと判断できる場合だけ統合する。"""
+
+    categories_a = set(a.get("category", []))
+    categories_b = set(b.get("category", []))
+
+    # カテゴリーが異なるニュースは統合しない
+    if categories_a and categories_b and not (categories_a & categories_b):
         return False
-    if ta == tb or ta in tb or tb in ta:
+
+    title_a = title_fingerprint(a.get("title", ""))
+    title_b = title_fingerprint(b.get("title", ""))
+
+    if not title_a or not title_b:
+        return False
+
+    # タイトルが完全一致する場合
+    if title_a == title_b:
         return True
-    ea, eb = event_terms(a), event_terms(b)
-    if len(ea) >= 5 and len(eb) >= 5 and (ea in eb or eb in ea):
+
+    # 短いタイトルが長いタイトルに含まれるだけでは
+    # 誤統合の可能性があるため、ここでは統合しない
+    terms_a = event_terms(a)
+    terms_b = event_terms(b)
+
+    if len(terms_a) < 6 or len(terms_b) < 6:
+        return False
+
+    # 店舗名などの主要語が一致する場合に限定する
+    if terms_a == terms_b:
         return True
-    # タイトル全体の共通部分が十分に長く、短い方の大半を占める場合のみ統合
-    shorter, longer = (ta, tb) if len(ta) <= len(tb) else (tb, ta)
-    if len(shorter) >= 10 and shorter in longer:
-        return True
+
     return False
 
 def merge_candidates(items):
