@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-29T22:39:30.043107+09:00",
+  "generated_at": "2026-10-29T23:08:19.338035+09:00",
   "draft_count": 47,
   "recent_draft_count": 13,
   "excluded_old_count": 86,
@@ -9,9 +9,9 @@
     "日付確認が必要": 10
   },
   "category_counts": {
-    "閉店": 21,
+    "閉店": 22,
     "移転": 3,
-    "新店・開店": 24,
+    "新店・開店": 23,
     "リニューアル": 2
   },
   "municipality_counts": {
@@ -74,7 +74,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.027939+09:00",
+      "created_at": "2026-10-29T23:08:19.310306+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -115,7 +115,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033039+09:00",
+      "created_at": "2026-10-29T23:08:19.313309+09:00",
       "review_flags": [
         "市町候補が複数"
       ],
@@ -157,7 +157,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033312+09:00",
+      "created_at": "2026-10-29T23:08:19.313473+09:00",
       "review_flags": [
         "本文抜粋なし"
       ],
@@ -201,7 +201,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.028033+09:00",
+      "created_at": "2026-10-29T23:08:19.310359+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -239,7 +239,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033203+09:00",
+      "created_at": "2026-10-29T23:08:19.313411+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -280,7 +280,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033257+09:00",
+      "created_at": "2026-10-29T23:08:19.313442+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -321,7 +321,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033149+09:00",
+      "created_at": "2026-10-29T23:08:19.313373+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -362,7 +362,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033095+09:00",
+      "created_at": "2026-10-29T23:08:19.313341+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -403,7 +403,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033365+09:00",
+      "created_at": "2026-10-29T23:08:19.313504+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -444,7 +444,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034289+09:00",
+      "created_at": "2026-10-29T23:08:19.314028+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -488,7 +488,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.028303+09:00",
+      "created_at": "2026-10-29T23:08:19.310532+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -528,7 +528,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.035398+09:00",
+      "created_at": "2026-10-29T23:08:19.314683+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -568,7 +568,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.035339+09:00",
+      "created_at": "2026-10-29T23:08:19.314648+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -608,7 +608,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.032972+09:00",
+      "created_at": "2026-10-29T23:08:19.313276+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -649,7 +649,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.032915+09:00",
+      "created_at": "2026-10-29T23:08:19.313242+09:00",
       "review_flags": [
         "市町候補が複数"
       ],
@@ -691,7 +691,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034234+09:00",
+      "created_at": "2026-10-29T23:08:19.313997+09:00",
       "review_flags": [
         "本文抜粋なし"
       ],
@@ -733,7 +733,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.032859+09:00",
+      "created_at": "2026-10-29T23:08:19.313209+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -771,7 +771,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034178+09:00",
+      "created_at": "2026-10-29T23:08:19.313966+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -812,7 +812,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034124+09:00",
+      "created_at": "2026-10-29T23:08:19.313935+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -855,7 +855,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.032801+09:00",
+      "created_at": "2026-10-29T23:08:19.313176+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -893,7 +893,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034071+09:00",
+      "created_at": "2026-10-29T23:08:19.313904+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -934,7 +934,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034015+09:00",
+      "created_at": "2026-10-29T23:08:19.313874+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -975,7 +975,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034342+09:00",
+      "created_at": "2026-10-29T23:08:19.314060+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -1018,7 +1018,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033847+09:00",
+      "created_at": "2026-10-29T23:08:19.313780+09:00",
       "review_flags": [
         "本文抜粋なし"
       ],
@@ -1060,7 +1060,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.032743+09:00",
+      "created_at": "2026-10-29T23:08:19.313141+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -1098,7 +1098,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033793+09:00",
+      "created_at": "2026-10-29T23:08:19.313750+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -1139,7 +1139,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033740+09:00",
+      "created_at": "2026-10-29T23:08:19.313720+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -1182,7 +1182,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.032687+09:00",
+      "created_at": "2026-10-29T23:08:19.313108+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -1220,7 +1220,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033688+09:00",
+      "created_at": "2026-10-29T23:08:19.313690+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -1263,7 +1263,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033632+09:00",
+      "created_at": "2026-10-29T23:08:19.313657+09:00",
       "review_flags": [
         "本文抜粋なし"
       ],
@@ -1303,7 +1303,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033578+09:00",
+      "created_at": "2026-10-29T23:08:19.313626+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -1346,7 +1346,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033526+09:00",
+      "created_at": "2026-10-29T23:08:19.313596+09:00",
       "review_flags": [
         "本文抜粋なし"
       ],
@@ -1388,7 +1388,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033472+09:00",
+      "created_at": "2026-10-29T23:08:19.313566+09:00",
       "review_flags": [
         "本文抜粋なし"
       ],
@@ -1428,7 +1428,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033419+09:00",
+      "created_at": "2026-10-29T23:08:19.313535+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -1469,7 +1469,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033901+09:00",
+      "created_at": "2026-10-29T23:08:19.313812+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -1510,7 +1510,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.033953+09:00",
+      "created_at": "2026-10-29T23:08:19.313844+09:00",
       "review_flags": [
         "本文抜粋なし",
         "市町未特定"
@@ -1553,7 +1553,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.032627+09:00",
+      "created_at": "2026-10-29T23:08:19.313073+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要"
     },
@@ -1591,7 +1591,49 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034394+09:00",
+      "created_at": "2026-10-29T23:08:19.314090+09:00",
+      "review_flags": [
+        "本文抜粋なし",
+        "公開日未確認",
+        "市町未特定"
+      ],
+      "review_priority": "確認推奨"
+    },
+    {
+      "id": "410786b2010c7b4c",
+      "title": "【閉店】パリミキ 荒牧店",
+      "suggested_headline": "【閉店】パリミキ 荒牧店",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "",
+      "freshness": "日付確認が必要",
+      "age_days": null,
+      "area": [
+        "山口県内"
+      ],
+      "area_status": "市町名を抽出できず。店舗所在地は元記事で要確認。",
+      "municipality": "",
+      "municipality_candidates": [],
+      "municipality_group": "地域要確認",
+      "municipality_status": "要確認（市町名を抽出できず）",
+      "source_name": "開店閉店.com 山口カテゴリ",
+      "source_url": "https://kaiten-heiten-24.com/paris-miki-aramaki/",
+      "source_urls": [
+        {
+          "source_name": "開店閉店.com 山口カテゴリ",
+          "url": "https://kaiten-heiten-24.com/paris-miki-aramaki/"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "",
+      "body_excerpt_method": "",
+      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
+      "relevance": "店舗ニュース候補・要確認",
+      "collection_method": "RSS",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-10-29T23:08:19.314118+09:00",
       "review_flags": [
         "本文抜粋なし",
         "公開日未確認",
@@ -1633,7 +1675,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034442+09:00",
+      "created_at": "2026-10-29T23:08:19.314145+09:00",
       "review_flags": [
         "本文抜粋なし",
         "公開日未確認",
@@ -1675,7 +1717,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034488+09:00",
+      "created_at": "2026-10-29T23:08:19.314172+09:00",
       "review_flags": [
         "本文抜粋なし",
         "公開日未確認",
@@ -1717,49 +1759,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034536+09:00",
-      "review_flags": [
-        "本文抜粋なし",
-        "公開日未確認",
-        "市町未特定"
-      ],
-      "review_priority": "確認推奨"
-    },
-    {
-      "id": "71efed00c68e0c9e",
-      "title": "【開店】眼鏡市場 コスタ行橋店",
-      "suggested_headline": "【開店】眼鏡市場 コスタ行橋店",
-      "category": [
-        "新店・開店"
-      ],
-      "priority": 1,
-      "published_date": "",
-      "freshness": "日付確認が必要",
-      "age_days": null,
-      "area": [
-        "山口県内"
-      ],
-      "area_status": "市町名を抽出できず。店舗所在地は元記事で要確認。",
-      "municipality": "",
-      "municipality_candidates": [],
-      "municipality_group": "地域要確認",
-      "municipality_status": "要確認（市町名を抽出できず）",
-      "source_name": "開店閉店.com 山口カテゴリ",
-      "source_url": "https://kaiten-heiten-24.com/meganeichiba-costa-yukuhashi/",
-      "source_urls": [
-        {
-          "source_name": "開店閉店.com 山口カテゴリ",
-          "url": "https://kaiten-heiten-24.com/meganeichiba-costa-yukuhashi/"
-        }
-      ],
-      "duplicate_sources_count": 1,
-      "body_excerpt": "",
-      "body_excerpt_method": "",
-      "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。公開日を確認できていません。元記事で確認してください。 元記事の概要を取得できていないため、本文の確認が必要です。",
-      "relevance": "店舗ニュース候補・要確認",
-      "collection_method": "RSS",
-      "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034584+09:00",
+      "created_at": "2026-10-29T23:08:19.314200+09:00",
       "review_flags": [
         "本文抜粋なし",
         "公開日未確認",
@@ -1801,7 +1801,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034629+09:00",
+      "created_at": "2026-10-29T23:08:19.314226+09:00",
       "review_flags": [
         "本文抜粋なし",
         "公開日未確認",
@@ -1843,7 +1843,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034673+09:00",
+      "created_at": "2026-10-29T23:08:19.314253+09:00",
       "review_flags": [
         "本文抜粋なし",
         "公開日未確認",
@@ -1886,7 +1886,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034720+09:00",
+      "created_at": "2026-10-29T23:08:19.314281+09:00",
       "review_flags": [
         "本文抜粋なし",
         "公開日未確認",
@@ -1928,7 +1928,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034766+09:00",
+      "created_at": "2026-10-29T23:08:19.314308+09:00",
       "review_flags": [
         "本文抜粋なし",
         "公開日未確認",
@@ -1970,7 +1970,7 @@
       "relevance": "店舗ニュース候補・要確認",
       "collection_method": "RSS",
       "status": "未確認・公開禁止",
-      "created_at": "2026-10-29T22:39:30.034811+09:00",
+      "created_at": "2026-10-29T23:08:19.314334+09:00",
       "review_flags": [
         "本文抜粋なし",
         "公開日未確認",
