@@ -280,8 +280,7 @@ def fetch_html_source(source):
             continue
         if title in generic_titles or len(title) < 8:
             continue
-        if path.startswith("/category/") or path.startswith("/tag/"):
-            continue
+        
         if normalized in seen:
             continue
         if not classify_text(title) or is_excluded(title, ""):
