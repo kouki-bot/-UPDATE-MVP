@@ -8,5 +8,5 @@
     “review_flags”: “解消した確認フラグだけ cleared_review_flags に列挙する。未解消なら承認しない。”,
     “review_record”: “reviewed_at と reviewer_checked_source=true を記録する。”,
     “body”: “確認済みの説明文を reviewed_articles[id].body に入力する。”
-}
+    }
 }
