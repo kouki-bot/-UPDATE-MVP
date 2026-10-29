@@ -406,6 +406,9 @@ def main():
     # 古い記事は通常候補から除外。日付不明は確認用に残す。
     drafts = [x for x in all_drafts if x["freshness"] != "90日より前"]
     drafts.sort(key=sort_key)
+    
+    review_summary = annotate_review_flags(drafts)
+    
     freshness_counts, category_counts, municipality_counts = {}, {}, {}
     for draft in drafts:
         f = draft["freshness"]
