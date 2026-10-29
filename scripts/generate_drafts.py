@@ -398,6 +398,85 @@ def sort_key(item):
     return (order.get(item.get("freshness", ""), 5), item.get("priority", 5),
             -(date.timestamp() if date else 0), item.get("title", ""))
 
+def duplicate_fingerprint(draft):
+    """重複確認用のタイトル判定。記事は削除しない。"""
+    title = (draft.get("title") or "").lower()
+    title = re.sub(r"^\\s*\\d{4}[年/.-]\\d{1,2}[月/.-]\\d{0,2}[^ ]*\\s*", "", title)
+    title = re.sub(r"【[^】]*】", " ", title)
+    title = re.sub(r"\\[[^\\]]*\\]", " ", title)
+    title = re.sub(
+        r"(開店|新店|閉店|移転|リニューアル|オープン|営業再開|営業終了|情報|まとめ)",
+        " ",
+        title,
+    )
+    title = re.sub(r"[^\\wぁ-んァ-ヶ一-龠]", "", title)
+    return title[:100]
+
+
+def annotate_review_flags(drafts):
+    """重複候補と確認事項を記録する。自動削除はしない。"""
+    groups = {}
+    for draft in drafts:
+        fingerprint = duplicate_fingerprint(draft)
+        if len(fingerprint) >= 4:
+            key = (fingerprint, tuple(sorted(draft.get("category", []))))
+            groups.setdefault(key, []).append(draft)
+
+    duplicate_group_count = 0
+    duplicate_candidate_count = 0
+
+    for group in groups.values():
+        if len(group) < 2:
+            continue
+
+        duplicate_group_count += 1
+        group_id = hashlib.sha256(
+            "|".join(sorted(x.get("id", "") for x in group)).encode("utf-8")
+        ).hexdigest()[:10]
+
+        for draft in group:
+            draft["duplicate_review"] = "重複の可能性・要確認"
+            draft["duplicate_group_id"] = group_id
+            draft["duplicate_candidate_ids"] = [
+                x.get("id", "") for x in group if x is not draft
+            ]
+            duplicate_candidate_count += 1
+
+    quality_counts = {}
+    for draft in drafts:
+        flags = []
+
+        if not draft.get("source_url") and not draft.get("source_urls"):
+            flags.append("情報源URLなし")
+        if not draft.get("body_excerpt"):
+            flags.append("本文抜粋なし")
+        if not draft.get("published_date"):
+            flags.append("公開日未確認")
+        if len(draft.get("municipality_candidates", [])) > 1:
+            flags.append("市町候補が複数")
+        elif not draft.get("municipality"):
+            flags.append("市町未特定")
+        if draft.get("freshness") == "未来日付・要確認":
+            flags.append("未来日付")
+
+        draft["review_flags"] = flags
+        draft["review_priority"] = (
+            "要優先確認"
+            if any(x in flags for x in ["情報源URLなし", "未来日付", "市町候補が複数"])
+            else "確認推奨" if flags else "基本項目あり・内容確認は必要"
+        )
+        draft["status"] = "未確認・公開禁止"
+
+        for flag in flags:
+            quality_counts[flag] = quality_counts.get(flag, 0) + 1
+
+    return {
+        "duplicate_group_count": duplicate_group_count,
+        "duplicate_candidate_count": duplicate_candidate_count,
+        "review_flag_counts": dict(sorted(quality_counts.items())),
+        "review_note": "重複は候補表示のみで自動削除しません。全記事は未確認・公開禁止です。",
+    }
+
 def main():
     official, rss = get_official_candidates(), get_rss_candidates()
     unique = merge_candidates(official + rss)
