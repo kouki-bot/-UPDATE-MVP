@@ -1,3 +1,7 @@
+import re
+import json
+import time
+from html.parser import HTMLParser
 # collect_news.py 修正用コード
 # GitHubの scripts/collect_news.py で、以下の2か所を置き換えてください。
 # 1) class PageParser(HTMLParser): から次の「# 共通処理」の直前まで
