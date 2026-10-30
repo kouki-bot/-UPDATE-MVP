@@ -148,6 +148,7 @@ class PageParser(HTMLParser):
         element_class = attrs.get("class", "")
         if element_id or element_class:
             print("HTML要素確認:", tag, "id:", element_id, "class:", element_class)
+        
         if tag in SKIP_TAGS:
             self.skip_depth += 1
             self.tag_stack.append(tag)
