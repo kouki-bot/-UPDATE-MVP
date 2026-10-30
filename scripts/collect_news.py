@@ -123,6 +123,8 @@ SKIP_TAGS = {
 
 class PageParser(HTMLParser):
     def __init__(self):
+        self.press_body_parts = []
+        self.press_body_depth = 0
         super().__init__()
 
         self.links = []
@@ -143,7 +145,11 @@ class PageParser(HTMLParser):
    
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
-
+    if tag == "div":
+        if attrs.get("id") == "press_main_body":
+            self.press_body_depth = 1
+        elif self.press_body_depth > 0:
+            self.press_body_depth += 1
         if tag in ("div", "main", "article", "section"):
             element_id = attrs.get("id", "")
             element_class = attrs.get("class", "")
@@ -190,6 +196,9 @@ class PageParser(HTMLParser):
 
 
     def handle_endtag(self, tag):
+        if tag == "div" and self.press_body_depth > 0:
+            self.press_body_depth -= 1
+        
         if tag in SKIP_TAGS:
             # 入れ子のタグを考慮してスキップ階層を戻す
             for index in range(
@@ -245,7 +254,8 @@ class PageParser(HTMLParser):
     def handle_data(self, data):
         if self.skip_depth:
             return
-
+        if self.press_body_depth > 0:
+            self.press_body_parts.append(text)
         text = re.sub(
             r"\s+",
             " ",
