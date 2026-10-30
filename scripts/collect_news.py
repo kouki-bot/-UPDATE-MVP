@@ -141,12 +141,13 @@ class PageParser(HTMLParser):
         self.in_title = False
 
     def handle_starttag(self, tag, attrs):
-        attrs = dict(attrs)
+    attrs = dict(attrs)
+
     if tag in ("div", "main", "article", "section"):
         element_id = attrs.get("id", "")
         element_class = attrs.get("class", "")
         if element_id or element_class:
-        print("HTML要素確認:", tag, "id:", element_id, "class:", element_class)
+            print("HTML要素確認:", tag, "id:", element_id, "class:", element_class)
         if tag in SKIP_TAGS:
             self.skip_depth += 1
             self.tag_stack.append(tag)
