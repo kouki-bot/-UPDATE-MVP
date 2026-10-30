@@ -146,6 +146,7 @@ class PageParser(HTMLParser):
         if tag in ("div", "main", "article", "section"):
             element_id = attrs.get("id", "")
             element_class = attrs.get("class", "")
+        
         if element_id or element_class:
             print("HTML要素確認:", tag, "id:", element_id, "class:", element_class)
         
