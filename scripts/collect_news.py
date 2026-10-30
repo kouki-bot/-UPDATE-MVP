@@ -471,7 +471,7 @@ def inspect_candidate(
         )
 
         body = extract_page_text(parser)
-
+        print("本文取得確認:", target_url, "文字数:", len(body), "本文:", body[:200])
         published_date, date_basis = (
             extract_published_date(parser, body)
         )
