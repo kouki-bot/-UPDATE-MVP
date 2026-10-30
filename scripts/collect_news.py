@@ -464,7 +464,7 @@ def inspect_candidate(
 
         parser = PageParser()
         parser.feed(html)
-
+        print("本文タグ確認:", target_url, "article_parts:", len(parser.article_parts), "text_parts:", len(parser.text_parts))
         article_title = (
             clean_text(" ".join(parser.title_parts))
             or article_title
