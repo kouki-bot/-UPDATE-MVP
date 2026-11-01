@@ -1,0 +1,36 @@
+name: Test RSS date quality improvement
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Compile Python files
+        run: |
+          python -m py_compile scripts/collect_news.py scripts/collect_rss.py scripts/generate_drafts.py scripts/publish_approved.py
+      - name: Run safety tests
+        run: python -m unittest discover -s scripts/tests -v
+      - name: Collect RSS candidates
+        run: python scripts/collect_rss.py
+      - name: Generate review-only drafts
+        run: python scripts/generate_drafts.py
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: rss-date-quality-test-results
+          path: |
+            data/rss_candidates.json
+            data/drafts.json
+          if-no-files-found: warn
+          retention-days: 7
