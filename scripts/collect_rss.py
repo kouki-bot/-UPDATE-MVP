@@ -488,6 +488,9 @@ def main():
         source_results.append({"name": source["name"], "url": source["url"], "area": source["area"], "items_read": len(items), "method": "HTML一覧取得", "date_note": "記事URLから日付が取得できない場合は日付確認が必要"})
         all_items.extend(items)
     candidates = merge_candidates(all_items)
+    # Spend the limited article-page request budget on the newest candidates first.
+    # Without this sort, old HTML-list entries can consume the cap before recent stories.
+    candidates.sort(key=sort_key)
     # Fetch article pages when either the excerpt or an explicit publication date is missing.
     # Keep a request cap to limit load and Actions runtime.
     fetch_count = 0
