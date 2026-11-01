@@ -196,7 +196,7 @@ class PageParser(HTMLParser):
 
         if tag == "a" and self.current_href:
             title = re.sub(
-                r"\\s+",
+                r"\s+",
                 " ",
                 " ".join(self.current_text),
             ).strip()
@@ -212,7 +212,7 @@ class PageParser(HTMLParser):
         if self._is_skipping():
             return
 
-        text = re.sub(r"\\s+", " ", data).strip()
+        text = re.sub(r"\s+", " ", data).strip()
         if not text:
             return
 
