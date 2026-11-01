@@ -352,6 +352,7 @@ class ArticleTextParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.meta_description = ""
+        self.meta_dates = []
         self.title_parts = []
         self.paragraphs = []
         self._in_title = False
@@ -373,6 +374,17 @@ class ArticleTextParser(HTMLParser):
             if name in {"description", "og:description", "twitter:description"} and content:
                 if len(content) > len(self.meta_description):
                     self.meta_description = content
+            date_name = (attrs.get("property") or attrs.get("name") or attrs.get("itemprop") or "").lower()
+            if content and date_name in {
+                "article:published_time", "datepublished", "datepublished",
+                "publishdate", "pubdate", "date", "dc.date", "dc.date.issued",
+                "og:published_time",
+            }:
+                self.meta_dates.append(content)
+        elif tag == "time":
+            date_value = attrs.get("datetime", "").strip()
+            if date_value:
+                self.meta_dates.append(date_value)
         elif tag == "title":
             self._in_title = True
         elif tag in {"p", "article"}:
@@ -407,9 +419,10 @@ class ArticleTextParser(HTMLParser):
             self._buffer.append(value)
 
 def fetch_article_excerpt(url):
-    """Fetch one article page and return a short extract; failure is non-fatal."""
+    """Fetch article excerpt and an explicitly published metadata date."""
+    empty = {"excerpt": "", "published_date": "", "date_basis": ""}
     if not url or urlsplit(url).scheme not in {"http", "https"}:
-        return ""
+        return empty
     req = urllib.request.Request(url, headers={
         "User-Agent": USER_AGENT,
         "Accept": "text/html,application/xhtml+xml",
@@ -419,11 +432,11 @@ def fetch_article_excerpt(url):
         with urllib.request.urlopen(req, timeout=12) as response:
             content_type = response.headers.get("Content-Type", "").lower()
             if content_type and "html" not in content_type and "text/" not in content_type:
-                return ""
+                return empty
             raw = response.read(1_500_000)
     except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
         print(f"[記事本文取得失敗] {url}: {exc}")
-        return ""
+        return empty
     charset = "utf-8"
     match = re.search(rb"charset=['\"]?([a-zA-Z0-9._-]+)", raw[:4096], re.I)
     if match:
@@ -439,19 +452,29 @@ def fetch_article_excerpt(url):
     try:
         parser.feed(page)
     except Exception:
-        return ""
+        return empty
+    published = None
+    for raw_date in parser.meta_dates:
+        published = parse_date(raw_date)
+        if published:
+            break
     # Prefer a publisher-provided meta description; otherwise use a short article paragraph.
+    excerpt = ""
     if parser.meta_description and len(parser.meta_description) >= 25:
-        return parser.meta_description[:1000]
+        excerpt = parser.meta_description[:1000]
     paragraphs = []
     seen = set()
     for paragraph in parser.paragraphs:
         if paragraph not in seen and len(paragraph) >= 25:
             seen.add(paragraph)
             paragraphs.append(paragraph)
-    if paragraphs:
-        return " ".join(paragraphs[:3])[:1000]
-    return ""
+    if not excerpt and paragraphs:
+        excerpt = " ".join(paragraphs[:3])[:1000]
+    return {
+        "excerpt": excerpt,
+        "published_date": published.isoformat() if published else "",
+        "date_basis": "記事ページの明示的メタ情報" if published else "",
+    }
 
 def main():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -465,22 +488,36 @@ def main():
         source_results.append({"name": source["name"], "url": source["url"], "area": source["area"], "items_read": len(items), "method": "HTML一覧取得", "date_note": "記事URLから日付が取得できない場合は日付確認が必要"})
         all_items.extend(items)
     candidates = merge_candidates(all_items)
-    # Fetch article-page summaries only when RSS/list metadata has no useful excerpt.
-    # Limit page requests to reduce load and keep GitHub Actions runtime bounded.
+    # Fetch article pages when either the excerpt or an explicit publication date is missing.
+    # Keep a request cap to limit load and Actions runtime.
     fetch_count = 0
     for item in candidates:
-        if item.get("description") and len(clean_text(item.get("description"))) >= 40:
-            item["body_excerpt"] = clean_text(item.get("description"))[:1000]
+        description = clean_text(item.get("description", ""))
+        if description and len(description) >= 40:
+            item["body_excerpt"] = description[:1000]
             item["body_excerpt_method"] = "RSS description"
-            continue
-        if fetch_count >= 60:
+        else:
             item["body_excerpt"] = ""
-            item["body_excerpt_method"] = "not_fetched_limit"
+            item["body_excerpt_method"] = "unavailable"
+        if fetch_count >= 80:
+            if not item.get("body_excerpt"):
+                item["body_excerpt_method"] = "not_fetched_limit"
             continue
-        excerpt = fetch_article_excerpt(item.get("url", ""))
+        if item.get("published_date") and item.get("body_excerpt"):
+            continue
+        page_data = fetch_article_excerpt(item.get("url", ""))
         fetch_count += 1
-        item["body_excerpt"] = excerpt
-        item["body_excerpt_method"] = "article_meta_or_paragraph" if excerpt else "unavailable"
+        if not item.get("body_excerpt") and page_data.get("excerpt"):
+            item["body_excerpt"] = page_data["excerpt"]
+            item["body_excerpt_method"] = "article_meta_or_paragraph"
+        if not item.get("published_date") and page_data.get("published_date"):
+            item["published_date"] = page_data["published_date"]
+            item["date_basis"] = page_data["date_basis"]
+            published = parse_date(item["published_date"])
+            item["freshness"], item["age_days"] = get_freshness(published)
+        elif not item.get("published_date"):
+            item["date_basis"] = "日付確認が必要"
+
     candidates.sort(key=sort_key)
     cats, freshness = Counter(), Counter()
     for item in candidates:
