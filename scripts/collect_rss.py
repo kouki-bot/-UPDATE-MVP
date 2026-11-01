@@ -419,8 +419,8 @@ class ArticleTextParser(HTMLParser):
             self._buffer.append(value)
 
 def fetch_article_excerpt(url):
-    """Fetch article excerpt and an explicitly published metadata date."""
-    empty = {"excerpt": "", "published_date": "", "date_basis": ""}
+    """Fetch article excerpt/date and return a diagnostic reason when extraction fails."""
+    empty = {"excerpt": "", "published_date": "", "date_basis": "", "fetch_status": "unknown"}
     if not url or urlsplit(url).scheme not in {"http", "https"}:
         return empty
     req = urllib.request.Request(url, headers={
@@ -431,12 +431,24 @@ def fetch_article_excerpt(url):
     try:
         with urllib.request.urlopen(req, timeout=12) as response:
             content_type = response.headers.get("Content-Type", "").lower()
-            if content_type and "html" not in content_type and "text/" not in content_type:
-                return empty
+            if content_type and "html" not in content_type and "text/html" not in content_type:
+                return {**empty, "fetch_status": "unsupported_content_type"}
             raw = response.read(1_500_000)
-    except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
+    except HTTPError as exc:
+        print(f"[記事本文HTTPエラー] {url}: HTTP {exc.code}")
+        return {**empty, "fetch_status": f"http_{exc.code}"}
+    except (TimeoutError,):
+        print(f"[記事本文タイムアウト] {url}")
+        return {**empty, "fetch_status": "timeout"}
+    except URLError as exc:
+        reason = "connection_error"
+        if isinstance(getattr(exc, "reason", None), TimeoutError):
+            reason = "timeout"
+        print(f"[記事本文接続失敗] {url}: {exc.reason}")
+        return {**empty, "fetch_status": reason}
+    except (OSError, ValueError) as exc:
         print(f"[記事本文取得失敗] {url}: {exc}")
-        return empty
+        return {**empty, "fetch_status": "request_error"}
     charset = "utf-8"
     match = re.search(rb"charset=['\"]?([a-zA-Z0-9._-]+)", raw[:4096], re.I)
     if match:
@@ -451,8 +463,9 @@ def fetch_article_excerpt(url):
     parser = ArticleTextParser()
     try:
         parser.feed(page)
-    except Exception:
-        return empty
+    except Exception as exc:
+        print(f"[記事HTML解析失敗] {url}: {exc}")
+        return {**empty, "fetch_status": "parse_error"}
     published = None
     for raw_date in parser.meta_dates:
         published = parse_date(raw_date)
@@ -474,6 +487,7 @@ def fetch_article_excerpt(url):
         "excerpt": excerpt,
         "published_date": published.isoformat() if published else "",
         "date_basis": "記事ページの明示的メタ情報" if published else "",
+        "fetch_status": "excerpt_found" if excerpt else "html_loaded_no_excerpt",
     }
 
 def main():
@@ -494,6 +508,7 @@ def main():
     # Fetch article pages when either the excerpt or an explicit publication date is missing.
     # Keep a request cap to limit load and Actions runtime.
     fetch_count = 0
+    fetch_status_counts = Counter()
     for item in candidates:
         description = clean_text(item.get("description", ""))
         if description and len(description) >= 40:
@@ -510,6 +525,8 @@ def main():
             continue
         page_data = fetch_article_excerpt(item.get("url", ""))
         fetch_count += 1
+        item["article_fetch_status"] = page_data.get("fetch_status", "unknown")
+        fetch_status_counts[item["article_fetch_status"]] += 1
         if not item.get("body_excerpt") and page_data.get("excerpt"):
             item["body_excerpt"] = page_data["excerpt"]
             item["body_excerpt_method"] = "article_meta_or_paragraph"
@@ -520,6 +537,14 @@ def main():
             item["freshness"], item["age_days"] = get_freshness(published)
         elif not item.get("published_date"):
             item["date_basis"] = "日付確認が必要"
+        if not item.get("body_excerpt") and page_data.get("fetch_status") == "html_loaded_no_excerpt":
+            item["body_excerpt_method"] = "html_loaded_no_excerpt"
+        elif not item.get("body_excerpt") and page_data.get("fetch_status") not in {"excerpt_found", "html_loaded_no_excerpt"}:
+            item["body_excerpt_method"] = "fetch_failed"
+
+    for item in candidates:
+        item.setdefault("article_fetch_status", "not_requested")
+        item.setdefault("body_excerpt_method", "RSS description" if item.get("body_excerpt") else "not_fetched_limit")
 
     candidates.sort(key=sort_key)
     cats, freshness = Counter(), Counter()
@@ -532,13 +557,19 @@ def main():
         "total_candidates": len(candidates),
         "recent_candidate_count": sum(1 for x in candidates if x["freshness"] == "直近30日"),
         "category_counts": dict(cats), "freshness_counts": dict(freshness),
+        "article_fetch_status_counts": dict(fetch_status_counts),
+        "article_pages_requested": fetch_count,
+        "body_excerpt_method_counts": dict(Counter(x.get("body_excerpt_method", "unknown") for x in candidates)),
         "sources": source_results, "candidates": candidates,
         "notice": "すべて未確認です。自動公開は禁止。配信元の対象地域は店舗所在地を保証しません。掲載前に店舗名・所在地・日付・営業状況・情報源を確認してください。",
     }
     with OUTPUT_FILE.open("w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
     print("RSS候補:", len(candidates), "直近30日:", result["recent_candidate_count"])
-    print("カテゴリー:", dict(cats), "鮮度:", dict(freshness), "保存先:", OUTPUT_FILE)
+    print("カテゴリー:", dict(cats), "鮮度:", dict(freshness))
+    print("記事ページ取得状況:", dict(fetch_status_counts), "確認件数:", fetch_count)
+    print("本文取得方法:", dict(Counter(x.get("body_excerpt_method", "unknown") for x in candidates)))
+    print("保存先:", OUTPUT_FILE)
 
 if __name__ == "__main__":
     main()
