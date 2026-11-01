@@ -1,0 +1,48 @@
+name: Test news collector repair
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repair branch
+        uses: actions/checkout@v5
+        with:
+          ref: repair/collect-news-body-extraction
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Compile Python files
+        run: |
+          python -m py_compile scripts/collect_news.py scripts/collect_rss.py scripts/generate_drafts.py scripts/publish_approved.py
+
+      - name: Run safety tests
+        run: python -m unittest discover -s scripts/tests -v
+
+      - name: Collect official source candidates
+        run: python scripts/collect_news.py
+
+      - name: Collect RSS candidates
+        run: python scripts/collect_rss.py
+
+      - name: Generate review-only drafts
+        run: python scripts/generate_drafts.py
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-repair-test-results
+          path: |
+            data/source_checks.json
+            data/rss_candidates.json
+            data/drafts.json
+          if-no-files-found: warn
+          retention-days: 7
