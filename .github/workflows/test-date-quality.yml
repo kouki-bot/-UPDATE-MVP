@@ -10,8 +10,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout selected branch
+      - name: Checkout improvement branch
         uses: actions/checkout@v5
+        with:
+          ref: improve/date-metadata-quality
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
