@@ -395,8 +395,10 @@ def make_draft(item):
 def sort_key(item):
     order = {"直近30日": 0, "31〜90日前": 1, "日付確認が必要": 2, "未来日付・要確認": 3, "90日より前": 4}
     date = parse_date(item.get("published_date", ""))
-    return (order.get(item.get("freshness", ""), 5), item.get("priority", 5),
-            -(date.timestamp() if date else 0), item.get("title", ""))
+    # Keep newer articles ahead of priority; priority only breaks date ties.
+    return (order.get(item.get("freshness", ""), 5),
+            -(date.timestamp() if date else 0),
+            item.get("priority", 5), item.get("title", ""))
 
 def duplicate_fingerprint(draft):
     """重複確認用のタイトル判定。記事は削除しない。"""
