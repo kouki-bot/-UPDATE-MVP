@@ -18,6 +18,7 @@ JST = timezone(timedelta(hours=9))
 UTC = timezone.utc
 RECENT_DAYS = 30
 MAX_ITEMS_PER_SOURCE = 100
+MAX_ARTICLE_PAGE_REQUESTS = 120
 USER_AGENT = "Mozilla/5.0 (compatible; YamaguchiLocalUpdate/1.1)"
 
 RSS_SOURCES = [
@@ -343,8 +344,11 @@ def merge_candidates(candidates):
 def sort_key(item):
     order = {"直近30日": 0, "31〜90日前": 1, "日付確認が必要": 2, "未来日付・要確認": 3, "90日より前": 4}
     date = parse_date(item.get("published_date", ""))
-    return (order.get(item.get("freshness", ""), 5), item.get("priority", 5),
-            -(date.timestamp() if date else 0), item.get("title", ""))
+    # Within each freshness group, sort by actual publication date (newest first).
+    # Priority is only a tie-breaker; it must not push an older story ahead of a newer one.
+    return (order.get(item.get("freshness", ""), 5),
+            -(date.timestamp() if date else 0),
+            item.get("priority", 5), item.get("title", ""))
 
 
 class ArticleTextParser(HTMLParser):
@@ -517,7 +521,7 @@ def main():
         else:
             item["body_excerpt"] = ""
             item["body_excerpt_method"] = "unavailable"
-        if fetch_count >= 80:
+        if fetch_count >= MAX_ARTICLE_PAGE_REQUESTS:
             if not item.get("body_excerpt"):
                 item["body_excerpt_method"] = "not_fetched_limit"
             continue
