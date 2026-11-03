@@ -2,6 +2,12 @@ name: Test RSS date quality improvement
 
 on:
   workflow_dispatch:
+    inputs:
+      target_ref:
+        description: "テスト対象ブランチ"
+        required: true
+        default: "improve/date-metadata-quality"
+        type: string
 
 permissions:
   contents: read
@@ -13,7 +19,7 @@ jobs:
       - name: Checkout improvement branch
         uses: actions/checkout@v5
         with:
-          ref: improve/date-metadata-quality
+          ref: ${{ inputs.target_ref }}
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
