@@ -175,9 +175,41 @@ def is_store_news(title):
         return False
     return True
 
+# Explicit non-Yamaguchi locations are excluded only when the title clearly ties
+# the place name to a store/location. Missing Yamaguchi evidence alone is not enough.
+FOREIGN_CITY_STORE_PATTERNS = [
+    r"伊勢崎(?:市)?(?:南店|店|市内)",
+    r"船橋市?(?:新船橋|船橋)(?:店|駅前|市内)",
+    r"中目黒(?:店|駅周辺|エリア)",
+    r"名古屋市?(?:ささしま|名駅|栄)(?:店|エリア)",
+]
+
+LISTING_URL_PARTS = ("/category/", "/tag/", "/page/", "/archive/", "/archives/")
+LISTING_TITLE_PATTERNS = (
+    "開店・閉店情報一覧", "開店閉店情報一覧", "新店・閉店一覧",
+    "オープン情報一覧", "閉店情報まとめ", "開店情報まとめ",
+)
+
+def is_listing_candidate(title, url):
+    """明らかな一覧・カテゴリーページだけを除外する。"""
+    path = urlsplit(clean_text(url)).path.lower()
+    if any(part in path for part in LISTING_URL_PARTS):
+        return True
+    normalized_title = clean_text(title)
+    return any(pattern in normalized_title for pattern in LISTING_TITLE_PATTERNS)
+
+def is_clearly_outside_yamaguchi(title, body_excerpt=""):
+    """県外店舗所在地がタイトルに明示された場合のみ除外する。"""
+    text = clean_text(title)
+    if any(name in text for name in YAMAGUCHI_MUNICIPALITIES) or "山口県" in text:
+        return False
+    return any(re.search(pattern, text) for pattern in FOREIGN_CITY_STORE_PATTERNS)
+
 def convert_candidate(item, method, source_priority):
     title, url = clean_text(item.get("title")), clean_text(item.get("url"))
     if not title or not url or not is_store_news(title):
+        return None
+    if is_listing_candidate(title, url) or is_clearly_outside_yamaguchi(title, item.get("body_excerpt") or item.get("description", "")):
         return None
     body = clean_text(item.get("body_excerpt") or item.get("description", ""))[:1500]
     categories = list(dict.fromkeys(normalize_categories(item) + detect_categories(title)))
@@ -518,98 +550,6 @@ def main():
     print("鮮度:", freshness_counts, "保存先:", OUTPUT_FILE)
     print("市町別件数:", municipality_counts)
 
+
 if __name__ == "__main__":
     main()
-    
-def duplicate_fingerprint(draft):
-    """類似タイトルを確認するための指紋を作成する。"""
-    title = (draft.get("title") or "").lower()
-    title = re.sub(r"^\s*\d{4}[年/.-]\d{1,2}[月/.-]\d{0,2}[^ ]*\s*", "", title)
-    title = re.sub(r"【[^】]*】", " ", title)
-    title = re.sub(r"\[[^\]]*\]", " ", title)
-    title = re.sub(
-        r"(開店|新店|閉店|移転|リニューアル|オープン|営業再開|営業終了|情報|まとめ)",
-        " ",
-        title,
-    )
-    title = re.sub(r"[^\wぁ-んァ-ヶ一-龠]", "", title)
-    return title[:100]
-
-
-def annotate_review_flags(drafts):
-    """不足情報と類似タイトルを検出し、確認項目を付与する。"""
-    groups = {}
-
-    for draft in drafts:
-        fingerprint = duplicate_fingerprint(draft)
-        if len(fingerprint) >= 4:
-            categories = draft.get("category", [])
-            if not isinstance(categories, list):
-                categories = [categories] if categories else []
-            key = (fingerprint, tuple(sorted(categories)))
-            groups.setdefault(key, []).append(draft)
-
-    duplicate_group_count = 0
-    duplicate_candidate_count = 0
-
-    for group in groups.values():
-        if len(group) < 2:
-            continue
-
-        duplicate_group_count += 1
-        group_id = hashlib.sha256(
-            "|".join(sorted(x.get("id", "") for x in group)).encode("utf-8")
-        ).hexdigest()[:10]
-
-        for draft in group:
-            draft["duplicate_review"] = "重複の可能性・要確認"
-            draft["duplicate_group_id"] = group_id
-            draft["duplicate_candidate_ids"] = [
-                x.get("id", "") for x in group if x is not draft
-            ]
-            duplicate_candidate_count += 1
-
-    quality_counts = {}
-
-    for draft in drafts:
-        flags = []
-
-        if not draft.get("source_url") and not draft.get("source_urls"):
-            flags.append("情報源URLなし")
-        if not draft.get("body_excerpt"):
-            flags.append("本文抜粋なし")
-        if not draft.get("published_date"):
-            flags.append("公開日未確認")
-        if len(draft.get("municipality_candidates", [])) > 1:
-            flags.append("市町候補が複数")
-        elif not draft.get("municipality"):
-            flags.append("市町未特定")
-        if draft.get("freshness") == "未来日付・要確認":
-            flags.append("未来日付")
-
-        draft["review_flags"] = flags
-        draft["review_priority"] = (
-            "要優先確認"
-            if any(flag in flags for flag in [
-                "情報源URLなし", "未来日付", "市町候補が複数"
-            ])
-            else "確認推奨"
-            if flags
-            else "基本項目あり・内容確認は必要"
-        )
-
-        for flag in flags:
-            quality_counts[flag] = quality_counts.get(flag, 0) + 1
-
-        draft["status"] = "未確認・公開禁止"
-
-    return {
-        "duplicate_group_count": duplicate_group_count,
-        "duplicate_candidate_count": duplicate_candidate_count,
-        "review_flag_counts": dict(sorted(quality_counts.items())),
-        "review_note": (
-            "類似記事は自動削除しません。"
-            "全記事は未確認・公開禁止です。"
-        ),
-    }
-
