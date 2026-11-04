@@ -435,15 +435,15 @@ def sort_key(item):
 def duplicate_fingerprint(draft):
     """重複確認用のタイトル判定。記事は削除しない。"""
     title = (draft.get("title") or "").lower()
-    title = re.sub(r"^\\s*\\d{4}[年/.-]\\d{1,2}[月/.-]\\d{0,2}[^ ]*\\s*", "", title)
+    title = re.sub(r"^\s*\d{4}[年/.-]\d{1,2}[月/.-]\d{0,2}[^ ]*\s*", "", title)
     title = re.sub(r"【[^】]*】", " ", title)
-    title = re.sub(r"\\[[^\\]]*\\]", " ", title)
+    title = re.sub(r"\[[^\]]*\]", " ", title)
     title = re.sub(
         r"(開店|新店|閉店|移転|リニューアル|オープン|営業再開|営業終了|情報|まとめ)",
         " ",
         title,
     )
-    title = re.sub(r"[^\\wぁ-んァ-ヶ一-龠]", "", title)
+    title = re.sub(r"[^\wぁ-んァ-ヶ一-龠]", "", title)
     return title[:100]
 
 
