@@ -18,11 +18,24 @@ class ReviewFlagTests(unittest.TestCase):
             ('東横イン宇部新川駅前が開業', '宿泊施設'),
             ('ケーズデンキ山口店がオープン', '店舗・商業施設'),
             ('サイゼリヤおのだサンパーク店が開店', '店舗・商業施設'),
-            ('下関テイラーズがオープン', 'その他施設・サービス（要確認）'),
+            ('下関テイラーズ 市民共創の拠点施設がオープン', '公共・地域施設'),
+            ('民間の交流拠点施設がオープン', 'その他施設・サービス（要確認）'),
         ]
         for title, expected in cases:
             with self.subTest(title=title):
                 self.assertEqual(module.classify_content_type(title), expected)
+
+    def test_civic_co_creation_hubs_are_classified_as_public_and_excluded_from_store_drafts(self):
+        item = {
+            'url': 'https://example.com/shimonoseki-tailors',
+            'title': '市民共創の拠点施設完成「下関テイラーズ」オープン',
+            'category': ['新店・開店'],
+            'published_date': '2026-09-23',
+            'body_excerpt': '市民自らが地域の魅力を発信する常設拠点',
+            'source_name': 'test',
+        }
+        self.assertEqual(module.classify_content_type(item['title'], item['body_excerpt']), '公共・地域施設')
+        self.assertIsNone(module.convert_candidate(item, 'RSS', 2))
 
     def test_public_facilities_are_excluded_from_store_drafts(self):
         cases = [
