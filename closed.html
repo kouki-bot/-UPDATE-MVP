@@ -56,6 +56,7 @@ const txt=(v)=>String(v??'');
 const esc=(v)=>txt(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const cats=a=>Array.isArray(a.category)?a.category.map(String):(typeof a.category==='string'?[a.category]:[]);
 const isRelated=a=>cats(a).some(c=>['閉店','閉店・営業終了','移転','リニューアル','長期休業'].includes(c));
+const isLodging=a=>a&&((a.content_type==='宿泊施設')||/ホテル|旅館|宿泊施設|民宿|民泊|ゲストハウス|ペンション|コテージ|簡易宿所|東横イン/.test(txt(a.title)+' '+txt(a.content_type)));
 const badge=a=>{const c=cats(a);if(c.includes('閉店')||c.includes('閉店・営業終了'))return '閉店情報';if(c.includes('移転'))return '移転情報';if(c.includes('リニューアル'))return 'リニューアル';if(c.includes('長期休業'))return '長期休業';return '営業情報';};
 const safeURL=v=>{try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:'';}catch(e){return '';}};
 const areaOf=a=>{const s=[a.area,a.title,a.summary].map(txt).join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(x=>s.includes(x))||'その他';};
@@ -81,7 +82,7 @@ keywordInput.addEventListener('keydown',e=>{if(e.key==='Enter')render();});areaS
 try{
 const response=await fetch('data/published.json',{cache:'no-store'});if(!response.ok)throw new Error('公開データの読み込みに失敗');
 const data=await response.json();const rows=Array.isArray(data.articles)?data.articles:[];
-articles=rows.filter(a=>a&&a.status==='公開'&&a.title&&isRelated(a)).slice(0,100);render();
+articles=rows.filter(a=>a&&(a.status==='公開'||a.status==='公開済み')&&!isLodging(a)&&a.title&&isRelated(a)).slice(0,100);render();
 }catch(e){count.textContent='読み込みエラー';container.replaceChildren();const p=document.createElement('p');p.className='load-error';p.textContent='情報を読み込めませんでした。data/published.json の配置と公開設定を確認してください。';container.appendChild(p);}
 })();
 </script>
