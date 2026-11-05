@@ -129,18 +129,20 @@ class YamaguchiScopeTests(unittest.TestCase):
             "title": "宇部にカフェ＆デリ「にくとはな」 肉料理メインに、キッチンカーも継続",
             "url": "https://example.com/niku-to-hana",
             "body_excerpt": "カフェ＆デリ「にくとはな」が10月23日にオープンしました。",
-            "categories": ["新店・開店"],
         }
-        self.assertIsNotNone(module.convert_candidate(item, "RSS", 2))
+        converted = module.convert_candidate(item, "RSS", 2)
+        self.assertIsNotNone(converted)
+        self.assertIn("新店・開店", converted["category"])
 
     def test_body_only_specialty_store_opening_is_kept(self):
         item = {
             "title": "防府駅前に解体専門店「ブラスト」 来店相談で空き家問題解決へ",
             "url": "https://example.com/blast",
             "body_excerpt": "解体専門店「ブラスト」が防府駅前に10月22日オープンしました。",
-            "categories": ["新店・開店"],
         }
-        self.assertIsNotNone(module.convert_candidate(item, "RSS", 2))
+        converted = module.convert_candidate(item, "RSS", 2)
+        self.assertIsNotNone(converted)
+        self.assertIn("新店・開店", converted["category"])
 
     def test_anniversary_mention_is_not_body_movement_evidence(self):
         self.assertFalse(module.has_body_movement_evidence(
