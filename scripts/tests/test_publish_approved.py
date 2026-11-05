@@ -13,7 +13,7 @@ class Tests(unittest.TestCase):
   d={"id":"abc","title":"山口店開店","source_url":"https://example.com","published_date":"2026-10-28","municipality":"","status":"未確認・公開禁止","freshness":"直近30日","review_flags":["市町候補が複数"],"body_excerpt":"抜粋"}
   d.update(kw); return d
  def review(self,**kw):
-  d={"municipality":"山口市","reviewed_at":"2026-10-29T10:00:00+09:00","reviewer_checked_source":True,"cleared_review_flags":["市町候補が複数"],"body":"確認済み本文"}
+  d={"municipality":"山口市","reviewed_at":"2026-10-29T10:00:00+09:00","reviewer_checked_source":True,"review_status":"確認済み","cleared_review_flags":["市町候補が複数"],"body":"確認済み本文"}
   d.update(kw); return d
  def setup(self,approved=True,review=None,draft=None,published=None):
   self.write("drafts.json",{"drafts":[draft or self.draft()]})
@@ -22,12 +22,16 @@ class Tests(unittest.TestCase):
  def published(self): return json.loads((self.base/"data/published.json").read_text(encoding="utf-8"))
  def test_approved_reviewed_publishes_even_status_unverified(self):
   self.setup(); self.run_script(); self.assertEqual(len(self.published()["articles"]),1); self.assertEqual(self.published()["articles"][0]["municipality"],"山口市")
+ def test_missing_explicit_review_status_blocked(self):
+  self.setup(review=self.review(review_status="未確認")); self.run_script(); self.assertEqual(self.published()["articles"],[])
  def test_unapproved_blocked(self):
   self.setup(approved=False); self.run_script(); self.assertEqual(self.published()["articles"],[])
  def test_no_review_record_blocked(self):
   self.setup(review={}); self.run_script(); self.assertEqual(self.published()["articles"],[])
  def test_unresolved_flag_blocked(self):
   self.setup(review=self.review(cleared_review_flags=[])); self.run_script(); self.assertEqual(self.published()["articles"],[])
+ def test_invalid_date_blocked(self):
+  self.setup(review=self.review(),draft=self.draft(published_date="not-a-date")); self.run_script(); self.assertEqual(self.published()["articles"],[])
  def test_missing_municipality_blocked(self):
   self.setup(review=self.review(municipality="")); self.run_script(); self.assertEqual(self.published()["articles"],[])
  def test_existing_articles_preserved_if_no_new_approved(self):
