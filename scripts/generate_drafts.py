@@ -179,7 +179,7 @@ def has_body_movement_evidence(body_excerpt):
     """RSS本文に実際の店舗移動アクションが明記されている場合だけ補完する。"""
     body_excerpt = clean_text(body_excerpt)
     # 既存店の周年紹介は新規開店の根拠にしない。
-    if re.search(r"(?:オープン|開店|開業)から.{0,12}\\d+周年", body_excerpt):
+    if re.search(r"(?:オープン|開店|開業)から.{0,12}\d+周年", body_excerpt):
         return False
     return bool(re.search(
         r"(?:オープン|開店|開業|出店|移転|閉店|営業終了|リニューアル)"
