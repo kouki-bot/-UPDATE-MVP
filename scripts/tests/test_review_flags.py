@@ -24,6 +24,45 @@ class ReviewFlagTests(unittest.TestCase):
             with self.subTest(title=title):
                 self.assertEqual(module.classify_content_type(title), expected)
 
+    def test_public_facilities_are_excluded_from_store_drafts(self):
+        cases = [
+            ('ハローワークプラザ下関が移転', '公共・地域施設', ['移転']),
+            ('徳山有楽町郵便局がリニューアル', '公共・地域施設', ['リニューアル']),
+            ('山口市立図書館がリニューアル', '公共・地域施設', ['リニューアル']),
+        ]
+        for title, expected_type, categories in cases:
+            with self.subTest(title=title):
+                item = {
+                    'url': 'https://example.com/post',
+                    'title': title,
+                    'category': categories,
+                    'published_date': '2026-11-01',
+                    'body_excerpt': '',
+                    'source_name': 'test',
+                }
+                self.assertEqual(module.classify_content_type(title), expected_type)
+                self.assertIsNone(module.convert_candidate(item, 'RSS', 2))
+
+    def test_hotel_and_leisure_candidates_remain_separately_classified(self):
+        cases = [
+            ('東横イン宇部新川駅前が開業', '宿泊施設'),
+            ('須金観光農園がオープン', '観光・レジャー'),
+            ('ケーズデンキ山口店がオープン', '店舗・商業施設'),
+        ]
+        for title, expected_type in cases:
+            with self.subTest(title=title):
+                item = {
+                    'url': 'https://example.com/post',
+                    'title': title,
+                    'category': ['新店・開店'],
+                    'published_date': '2026-11-01',
+                    'body_excerpt': '',
+                    'source_name': 'test',
+                }
+                converted = module.convert_candidate(item, 'RSS', 2)
+                self.assertIsNotNone(converted)
+                self.assertEqual(module.classify_content_type(title), expected_type)
+
     def test_make_draft_keeps_unverified_status_and_content_type(self):
         item = {'url': 'https://example.com/post', 'title': '東横イン宇部新川駅前が開業',
                 'category': ['新店・開店'], 'published_date': '2026-11-01',
