@@ -42,6 +42,20 @@ YAMAGUCHI_MUNICIPALITIES = [
 def extract_municipality_candidates(title, body_excerpt):
     """タイトル・本文抜粋から市町名候補を抽出。所在地の確定や推測は行わない。"""
     text = clean_text(f"{title or ''} {body_excerpt or ''}")
+    # 「山口県山口市黒川」のような住所表記を優先する。
+    # 本文中の他市の比較情報・県内店舗数などを所在地候補に混ぜない。
+    municipality_pattern = "|".join(
+        re.escape(name) for name in YAMAGUCHI_MUNICIPALITIES
+    )
+    explicit_addresses = re.findall(
+        r"山口県\\s*(" + municipality_pattern + r")", text
+    )
+    if explicit_addresses:
+        return sorted(
+            set(explicit_addresses),
+            key=lambda x: YAMAGUCHI_MUNICIPALITIES.index(x)
+        )
+
     found = []
     for name in YAMAGUCHI_MUNICIPALITIES:
         if name in text:
