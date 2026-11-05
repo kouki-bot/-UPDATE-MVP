@@ -30,6 +30,31 @@ class YamaguchiScopeTests(unittest.TestCase):
             "https://example.com/2026/11/04/cafe-open"
         ))
 
+    def test_industry_category_pages_are_excluded_by_url(self):
+        cases = [
+            ("閉店情報-業種別", "https://kaiten-heiten-24.com/heiten-gyousyubetsu/"),
+            ("開店情報-業種別", "https://kaiten-heiten-24.com/kaiten-gyousyubetsu/"),
+        ]
+        for title, url in cases:
+            with self.subTest(title=title):
+                self.assertTrue(module.is_listing_candidate(title, url))
+
+    def test_industry_category_page_is_excluded_via_source_url(self):
+        item = {
+            "title": "【閉店】山口県の店舗が閉店",
+            "url": "https://example.com/feed/item/123",
+            "source_url": "https://kaiten-heiten-24.com/heiten-gyousyubetsu/",
+            "description": "閉店情報を業種別にまとめたページ",
+            "categories": ["閉店"],
+        }
+        self.assertIsNone(module.convert_candidate(item, "RSS", 2))
+
+    def test_individual_article_with_industry_word_is_kept(self):
+        self.assertFalse(module.is_listing_candidate(
+            "【開店】山口市に新しい美容室がオープン",
+            "https://example.com/2026/11/04/new-salon"
+        ))
+
     def test_foreign_filter_does_not_use_publisher_area(self):
         item = {
             "title": "【開店】伊勢崎南店がオープン",
