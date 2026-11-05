@@ -467,7 +467,7 @@ def classify_content_type(title, body_excerpt=''):
     leisure = ['観光農園', 'キャンプ場', '遊園地', '観光施設', 'レジャー', 'テーマパーク', '観光牧場', '果樹園', '体験農園']
     if any(word in text for word in leisure):
         return '観光・レジャー'
-    commercial = ['店', '店舗', 'カフェ', '飲食店', 'レストラン', 'スーパー', 'ショッピング', '商業施設', '家電', '美容室', 'サロン', 'ドラッグストア', 'コンビニ', '書店', 'アパレル', '飲食']
+    commercial = ['店', '店舗', 'カフェ', '飲食店', 'レストラン', 'スーパー', 'ショッピング', '商業施設', '家電', '美容室', 'サロン', 'ドラッグストア', 'コンビニ', '書店', 'アパレル', '飲食', 'ピラティス', 'スタジオ', 'フィットネス', 'ジム']
     if any(word in text for word in commercial):
         return '店舗・商業施設'
     return 'その他施設・サービス（要確認）'
@@ -546,6 +546,38 @@ def duplicate_fingerprint(draft):
     return title[:100]
 
 
+def duplicate_store_entity(title):
+    """記事タイトルから重複確認に使える固有の店舗名候補を抽出する。"""
+    value = clean_text(title)
+    value = re.sub(r"^\\s*20\\d{2}[年/.-]\\d{1,2}[月/.-]\\d{1,2}[^ ]*\\s*", "", value)
+    value = re.sub(r"【[^】]*】|\\[[^\\]]*\\]", " ", value)
+    generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
+    matches = re.findall(r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24}?(?:店|スタジオ|専門店)", value)
+    candidates = []
+    for match in matches:
+        name = re.sub(r"^(?:新しい|新たな|おしゃれな|話題の)", "", match)
+        if name not in generic and len(name) >= 4:
+            candidates.append(name)
+    return list(dict.fromkeys(candidates))
+
+
+def same_store_duplicate(a, b):
+    """同じ市町・同じ店舗名・同じ動き・近い掲載日の記事だけ重複候補にする。"""
+    municipality_a = clean_text(a.get("municipality"))
+    municipality_b = clean_text(b.get("municipality"))
+    if not municipality_a or municipality_a != municipality_b:
+        return False
+    if not (set(a.get("category", [])) & set(b.get("category", []))):
+        return False
+    date_a = parse_date(a.get("published_date", ""))
+    date_b = parse_date(b.get("published_date", ""))
+    if not date_a or not date_b or abs((date_a.date() - date_b.date()).days) > 21:
+        return False
+    names_a = set(duplicate_store_entity(a.get("title", "")))
+    names_b = set(duplicate_store_entity(b.get("title", "")))
+    return bool(names_a & names_b)
+
+
 def annotate_review_flags(drafts):
     """重複候補と確認事項を記録する。自動削除はしない。"""
     groups = {}
@@ -554,6 +586,23 @@ def annotate_review_flags(drafts):
         if len(fingerprint) >= 4:
             key = (fingerprint, tuple(sorted(draft.get("category", []))))
             groups.setdefault(key, []).append(draft)
+
+    # 見出しの表現が異なる同一店舗ニュースも、店舗名・市町・カテゴリ・日付で保守的に検知する。
+    entity_groups = []
+    for index, draft in enumerate(drafts):
+        for other in drafts[index + 1:]:
+            if same_store_duplicate(draft, other):
+                entity_groups.append([draft, other])
+
+    seen_group_ids = {
+        frozenset(x.get("id", "") for x in group)
+        for group in groups.values() if len(group) >= 2
+    }
+    for group in entity_groups:
+        key = frozenset(x.get("id", "") for x in group)
+        if key not in seen_group_ids:
+            groups[("store_entity", tuple(sorted(key)))] = group
+            seen_group_ids.add(key)
 
     duplicate_group_count = 0
     duplicate_candidate_count = 0
