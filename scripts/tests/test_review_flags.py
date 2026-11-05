@@ -141,6 +141,22 @@ class ReviewFlagTests(unittest.TestCase):
             with self.subTest(title=title):
                 self.assertEqual(module.classify_content_type(title, '近隣にはホテルや旅館があります。'), expected)
 
+    def test_lodging_closure_terms_are_detected(self):
+        title = '下関市の旅館が閉館'
+        self.assertTrue(module.is_store_news(title))
+        self.assertEqual(module.detect_categories(title), ['閉店'])
+        item = {
+            'url': 'https://example.com/inn-closure',
+            'title': title,
+            'category': ['閉店'],
+            'published_date': '2026-11-05',
+            'body_excerpt': '旅館の営業を終了します。',
+            'source_name': 'test',
+        }
+        converted = module.convert_candidate(item, 'RSS', 2)
+        self.assertIsNotNone(converted)
+        self.assertEqual(module.classify_content_type(title), '宿泊施設')
+
     def test_make_draft_keeps_unverified_status_and_content_type(self):
         item = {'url': 'https://example.com/post', 'title': '東横イン宇部新川駅前が開業',
                 'category': ['新店・開店'], 'published_date': '2026-11-01',
