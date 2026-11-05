@@ -444,6 +444,10 @@ def classify_content_type(title, body_excerpt=''):
     ]
     if any(word in text for word in public):
         return '公共・地域施設'
+    # 市民参加・地域発信を目的とする常設の共創拠点は、一般店舗と分ける。
+    # 「交流拠点」だけでは民間施設もあり得るため、目的語との組み合わせで判定する。
+    if '拠点' in text and any(word in text for word in ['市民共創', 'シティープロモーション', '市民自ら', '地域の魅力を発信']):
+        return '公共・地域施設'
     lodging = ['ホテル', '旅館', '宿泊施設', '民宿', 'ゲストハウス', '東横イン']
     if any(word in text for word in lodging):
         return '宿泊施設'
