@@ -265,6 +265,9 @@ def convert_candidate(item, method, source_priority):
     if is_listing_candidate(title, url, item.get("source_url", "")) or is_clearly_outside_yamaguchi(title, item.get("body_excerpt") or item.get("description", "")):
         return None
     body = clean_text(item.get("body_excerpt") or item.get("description", ""))[:1500]
+    # 公共・行政施設は店舗ニュースの主対象外。ホテル・観光施設は別カテゴリで残す。
+    if classify_content_type(title, body) == "公共・地域施設":
+        return None
     body_categories = detect_categories(body)
     categories = list(dict.fromkeys(
         normalize_categories(item) + detect_categories(title) + body_categories
@@ -433,7 +436,12 @@ def merge_candidates(items):
 def classify_content_type(title, body_excerpt=''):
     '''ニュース対象の施設・事業者タイプを分類。判断材料が弱い場合は要確認にする。'''
     text = clean_text(f"{title or ''} {body_excerpt or ''}")
-    public = ['ハローワーク', '郵便局', '市役所', '県庁', '図書館', '公民館', '公共施設', '公共サービス', '行政窓口', '支所', '出張所', '地域交流センター', 'コミュニティセンター']
+    public = [
+        'ハローワーク', '郵便局', '市役所', '町役場', '村役場', '県庁', '図書館',
+        '公民館', '公共施設', '公共サービス', '行政窓口', '支所', '出張所',
+        '地域交流センター', 'コミュニティセンター', '税務署', '年金事務所',
+        '警察署', '交番', '消防署',
+    ]
     if any(word in text for word in public):
         return '公共・地域施設'
     lodging = ['ホテル', '旅館', '宿泊施設', '民宿', 'ゲストハウス', '東横イン']
