@@ -48,7 +48,7 @@ def extract_municipality_candidates(title, body_excerpt):
         re.escape(name) for name in YAMAGUCHI_MUNICIPALITIES
     )
     explicit_addresses = re.findall(
-        r"山口県\\s*(" + municipality_pattern + r")", text
+        r"山口県\s*(" + municipality_pattern + r")", text
     )
     if explicit_addresses:
         return sorted(
