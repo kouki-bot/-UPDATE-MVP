@@ -188,6 +188,9 @@ def has_body_movement_evidence(body_excerpt):
     ))
 
 def is_store_news(title, body_excerpt=""):
+    # 「オープンキャンパス」は店舗の開店ではないため、強い除外条件とする。
+    if "オープンキャンパス" in clean_text(title):
+        return False
     # タイトルに動きがなくても、本文に明確な実施表現があれば候補化する。
     if not title or (not detect_categories(title) and not has_body_movement_evidence(body_excerpt)):
         return False
