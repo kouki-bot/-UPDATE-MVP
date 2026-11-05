@@ -35,8 +35,16 @@ def main():
    print(f"公開保留 {aid}: 重複確認が未完了"); continue
   if draft.get("freshness") in ("未来日付・要確認","90日より前"):
    print(f"公開保留 {aid}: 日付・鮮度の確認が必要"); continue
+  if review.get("review_status") != "確認済み":
+   print(f"公開保留 {aid}: review_status=確認済み が必要"); continue
   if not review.get("reviewed_at") or review.get("reviewer_checked_source") is not True:
    print(f"公開保留 {aid}: reviewed_at と reviewer_checked_source=true が必要"); continue
+  try:
+   datetime.fromisoformat(str(article.get("published_date","")).replace("Z","+00:00"))
+  except ValueError:
+   print(f"公開保留 {aid}: 日付形式が不正"); continue
+  if not str(article.get("source_url","")).startswith(("https://","http://")):
+   print(f"公開保留 {aid}: 元記事URLが不正"); continue
   article["status"]="公開済み"
   article["approved_at"]=review["reviewed_at"]
   article["published_at"]=datetime.now(JST).isoformat()
