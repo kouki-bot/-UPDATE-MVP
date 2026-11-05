@@ -198,12 +198,33 @@ def is_listing_candidate(title, url):
     normalized_title = clean_text(title)
     return any(pattern in normalized_title for pattern in LISTING_TITLE_PATTERNS)
 
+NON_YAMAGUCHI_PREFECTURES = [
+    "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
+    "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県",
+    "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県",
+    "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県",
+    "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県",
+    "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県",
+    "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県",
+]
+
 def is_clearly_outside_yamaguchi(title, body_excerpt=""):
-    """県外店舗所在地がタイトルに明示された場合のみ除外する。"""
-    text = clean_text(title)
-    if any(name in text for name in YAMAGUCHI_MUNICIPALITIES) or "山口県" in text:
+    """タイトルまたは記事冒頭の所在地表記から県外と確認できる場合のみ除外する。"""
+    title_text = clean_text(title)
+    body_text = clean_text(body_excerpt)
+
+    # 明示された山口県内の市町名は県外判定しない。
+    if any(name in title_text for name in YAMAGUCHI_MUNICIPALITIES) or "山口県" in title_text:
         return False
-    return any(re.search(pattern, text) for pattern in FOREIGN_CITY_STORE_PATTERNS)
+
+    # 店舗記事の冒頭にある所在地（例: 群馬県伊勢崎市、東京都目黒区）を確認。
+    # 配信元のareaメタデータは判定に使用しない。
+    location_prefix = body_text[:120]
+    if any(prefecture in location_prefix for prefecture in NON_YAMAGUCHI_PREFECTURES):
+        return True
+
+    combined = f"{title_text} {location_prefix}"
+    return any(re.search(pattern, combined) for pattern in FOREIGN_CITY_STORE_PATTERNS)
 
 def convert_candidate(item, method, source_priority):
     title, url = clean_text(item.get("title")), clean_text(item.get("url"))
