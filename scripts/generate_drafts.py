@@ -414,6 +414,23 @@ def merge_candidates(items):
         merged_items[match_index] = combined
     return merged_items
 
+def classify_content_type(title, body_excerpt=''):
+    '''ニュース対象の施設・事業者タイプを分類。判断材料が弱い場合は要確認にする。'''
+    text = clean_text(f"{title or ''} {body_excerpt or ''}")
+    public = ['ハローワーク', '郵便局', '市役所', '県庁', '図書館', '公民館', '公共施設', '公共サービス', '行政窓口', '支所', '出張所', '地域交流センター', 'コミュニティセンター']
+    if any(word in text for word in public):
+        return '公共・地域施設'
+    lodging = ['ホテル', '旅館', '宿泊施設', '民宿', 'ゲストハウス', '東横イン']
+    if any(word in text for word in lodging):
+        return '宿泊施設'
+    leisure = ['観光農園', 'キャンプ場', '遊園地', '観光施設', 'レジャー', 'テーマパーク', '観光牧場', '果樹園', '体験農園']
+    if any(word in text for word in leisure):
+        return '観光・レジャー'
+    commercial = ['店', '店舗', 'カフェ', '飲食店', 'レストラン', 'スーパー', 'ショッピング', '商業施設', '家電', '美容室', 'サロン', 'ドラッグストア', 'コンビニ', '書店', 'アパレル', '飲食']
+    if any(word in text for word in commercial):
+        return '店舗・商業施設'
+    return 'その他施設・サービス（要確認）'
+
 def make_draft(item):
     date_value = item.get("published_date", "")
     freshness, age = get_freshness(date_value)
@@ -460,6 +477,7 @@ def make_draft(item):
         "duplicate_sources_count": item.get("duplicate_sources_count", 1),
         "body_excerpt": item.get("body_excerpt", ""), "body_excerpt_method": item.get("body_excerpt_method", ""), "draft_summary": summary,
         "relevance": "店舗ニュース候補・要確認",
+        "content_type": classify_content_type(item.get("title", ""), item.get("body_excerpt", "")),
         "collection_method": item.get("collection_method", ""),
         "status": "未確認・公開禁止", "created_at": now_jst().isoformat(),
     }
@@ -562,12 +580,14 @@ def main():
     
     review_summary = annotate_review_flags(drafts)
     
-    freshness_counts, category_counts, municipality_counts = {}, {}, {}
+    freshness_counts, category_counts, municipality_counts, content_type_counts = {}, {}, {}, {}
     for draft in drafts:
         f = draft["freshness"]
         freshness_counts[f] = freshness_counts.get(f, 0) + 1
         for cat in draft["category"]:
             category_counts[cat] = category_counts.get(cat, 0) + 1
+        content_type = draft.get("content_type", "その他施設・サービス（要確認）")
+        content_type_counts[content_type] = content_type_counts.get(content_type, 0) + 1
         municipality = draft.get("municipality_group") or "地域要確認"
         municipality_counts[municipality] = municipality_counts.get(municipality, 0) + 1
     municipality_counts = dict(sorted(municipality_counts.items(), key=lambda item: (item[0] == "地域要確認", item[0])))
@@ -576,6 +596,7 @@ def main():
         "recent_draft_count": freshness_counts.get("直近30日", 0),
         "excluded_old_count": old_count, "freshness_counts": freshness_counts,
         "category_counts": category_counts,
+        "content_type_counts": dict(sorted(content_type_counts.items())),
         "municipality_counts": municipality_counts,
         **review_summary,
         "note": "対象は新店・開店、閉店、移転、リニューアルです。90日より前の記事は通常の下書き候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。配信元の対象地域は店舗所在地を保証しません。",
@@ -588,6 +609,7 @@ def main():
     print("統合後:", len(unique), "下書き候補:", len(drafts), "90日より前の除外:", old_count)
     print("直近30日:", output["recent_draft_count"], "カテゴリー:", category_counts)
     print("鮮度:", freshness_counts, "保存先:", OUTPUT_FILE)
+    print("施設タイプ別件数:", output["content_type_counts"])
     print("市町別件数:", municipality_counts)
 
 
