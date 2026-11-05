@@ -132,7 +132,7 @@ def classify_text(text):
 def has_body_movement_evidence(description):
     """Require an action phrase in the RSS body; keyword mentions alone are insufficient."""
     description = clean_text(description)
-    if re.search(r"(?:オープン|開店|開業)から.{0,12}\\d+周年", description):
+    if re.search(r"(?:オープン|開店|開業)から.{0,12}\d+周年", description):
         return False
     return bool(re.search(
         r"(?:オープン|開店|開業|出店|移転|閉店|営業終了|リニューアル)"
@@ -150,7 +150,7 @@ def exclusion_reason(title, description):
     body_evidence = has_body_movement_evidence(description)
 
     if not title_categories and not body_evidence:
-        if re.search(r"(?:オープン|開店|開業)から.{0,12}\\d+周年", description):
+        if re.search(r"(?:オープン|開店|開業)から.{0,12}\d+周年", description):
             return "anniversary_existing_store"
         return "no_store_movement_keyword"
     if not any(w in title for w in STRONG_STORE_WORDS):
