@@ -157,11 +157,24 @@ def get_freshness(published):
     return "90日より前", age
 
 def fetch_rss(source):
+    diagnostics = {
+        "http_status": "not_checked",
+        "raw_entries": 0,
+        "missing_title_or_link": 0,
+        "excluded_by_filter": 0,
+        "no_relevant_keyword": 0,
+        "accepted": 0,
+        "error": "",
+    }
+    source["_diagnostics"] = diagnostics
     req = urllib.request.Request(source["url"], headers={"User-Agent": USER_AGENT})
     try:
         with urllib.request.urlopen(req, timeout=20) as response:
+            diagnostics["http_status"] = getattr(response, "status", 200)
             raw = response.read()
     except (HTTPError, URLError, TimeoutError, OSError) as exc:
+        diagnostics["http_status"] = getattr(exc, "code", "request_failed")
+        diagnostics["error"] = str(exc)[:300]
         print(f"[取得失敗] {source['name']}: {exc}")
         return []
     text = raw.decode("utf-8-sig", errors="replace")
@@ -169,19 +182,26 @@ def fetch_rss(source):
     try:
         root = ET.fromstring(text)
     except ET.ParseError as exc:
+        diagnostics["error"] = f"xml_parse_error: {exc}"
         print(f"[XML解析失敗] {source['name']}: {exc}")
         return []
     items = []
     for element in root.iter():
         if local_name(element.tag) not in {"item", "entry"}:
             continue
+        diagnostics["raw_entries"] += 1
         title = get_child_text(element, ["title"])
         link = get_link(element)
         description = get_child_text(element, ["description", "summary", "content", "encoded"])
-        if not title or not link or is_excluded(title, description):
+        if not title or not link:
+            diagnostics["missing_title_or_link"] += 1
+            continue
+        if is_excluded(title, description):
+            diagnostics["excluded_by_filter"] += 1
             continue
         categories = classify_text(title)
         if not categories:
+            diagnostics["no_relevant_keyword"] += 1
             continue
         published = extract_published_date(element)
         freshness, age = get_freshness(published)
@@ -198,7 +218,8 @@ def fetch_rss(source):
         })
         if len(items) >= MAX_ITEMS_PER_SOURCE:
             break
-    print(f"[取得完了] {source['name']}: {len(items)}件")
+    diagnostics["accepted"] = len(items)
+    print(f"[取得完了] {source['name']}: 採用{len(items)}件 / 生記事{diagnostics['raw_entries']}件 / 除外{diagnostics['excluded_by_filter']}件 / キーワード不一致{diagnostics['no_relevant_keyword']}件")
     return items
 
 
@@ -499,7 +520,7 @@ def main():
     all_items, source_results = [], []
     for source in RSS_SOURCES:
         items = fetch_rss(source)
-        source_results.append({"name": source["name"], "url": source["url"], "area": source["area"], "items_read": len(items)})
+        source_results.append({"name": source["name"], "url": source["url"], "area": source["area"], "items_read": len(items), "diagnostics": source.get("_diagnostics", {})})
         all_items.extend(items)
     for source in HTML_SOURCES:
         items = fetch_html_source(source)
