@@ -64,6 +64,20 @@ class ReviewFlagTests(unittest.TestCase):
         self.assertTrue(module.is_store_news(title, body))
         self.assertIsNotNone(module.convert_candidate(item, 'RSS', 2))
 
+    def test_facility_preopening_event_is_not_treated_as_new_opening(self):
+        title = '秋吉台エコ・ミュージアム プレオープンイベントの開催について'
+        body = 'プレオープンイベントについて、詳細が決定しました。多くの方の御来場をお待ちしています。'
+        item = {
+            'url': 'https://example.com/akiyoshidai-event',
+            'title': title,
+            'category': ['新店・開店'],
+            'published_date': '2026-11-04',
+            'body_excerpt': body,
+            'source_name': 'test',
+        }
+        self.assertFalse(module.is_store_news(title, body))
+        self.assertIsNone(module.convert_candidate(item, '公式サイト', 1))
+
     def test_open_campus_is_not_treated_as_store_opening(self):
         title = '山口県立農業大学校「夏のオープンキャンパス」を開催'
         item = {
