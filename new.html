@@ -48,7 +48,7 @@ const text=(o,keys)=>{for(const k of keys)if(typeof o[k]==='string'&&o[k].trim()
 const categoryText=o=>Array.isArray(o.category)?o.category.join(' '):text(o,['category','type','genre']);
 const isLodging=o=>o&&((o.content_type==='宿泊施設')||/ホテル|旅館|宿泊施設|民宿|民泊|ゲストハウス|ペンション|コテージ|簡易宿所|東横イン/.test([text(o,['title','name']),text(o,['content_type'])].join(' ')));
 const safeUrl=value=>{if(typeof value!=='string'||!value.trim())return '';try{const u=new URL(value,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch(e){return '';}};
-const areaOf=o=>{const s=[text(o,['area','city','location','address']),text(o,['title','name']),text(o,['summary','description','body'])].join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(a=>s.includes(a))||'その他';};
+const areaOf=o=>{const s=[text(o,['municipality','city']),Array.isArray(o.area)?o.area.join(' '):text(o,['area','location','address']),text(o,['title','name']),text(o,['summary','description','body'])].join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(a=>s.includes(a))||'その他';};
 const link=(href,label)=>{const url=safeUrl(href);if(!url)return null;const a=document.createElement('a');a.href=url;a.textContent=label;a.target='_blank';a.rel='noopener noreferrer';return a;};
 function render(){
 const kw=keywordInput.value.trim().toLowerCase(), area=areaSelect.value;
@@ -59,7 +59,7 @@ rows.forEach(o=>{
 const card=document.createElement('article');card.className='article-card';
 const h=document.createElement('h2'), title=text(o,['title','name']), detail=text(o,['detail_url','page_url','article_url','url']), titleA=link(detail,title);
 if(titleA)h.appendChild(titleA);else h.textContent=title;card.appendChild(h);
-const meta=[categoryText(o),text(o,['area','city','location','address']),text(o,['published_date','date','opening_date','published_at','updated_at'])].filter(Boolean);
+const meta=[categoryText(o),(text(o,['municipality','city'])||(Array.isArray(o.area)?o.area.join('・'):text(o,['area','location','address']))),text(o,['published_date','date','opening_date','published_at','updated_at'])].filter(Boolean);
 if(meta.length){const p=document.createElement('p');p.className='article-meta';p.textContent=meta.join(' ｜ ');card.appendChild(p);}
 const summary=text(o,['summary','description','body','content']);if(summary){const p=document.createElement('p');p.className='article-summary';p.textContent=summary;card.appendChild(p);}
 const links=document.createElement('div');links.className='article-links';
