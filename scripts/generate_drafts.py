@@ -175,8 +175,21 @@ def detect_categories(title):
     }
     return [cat for cat, words in mapping.items() if any(w in title for w in words)]
 
-def is_store_news(title):
-    if not title or not detect_categories(title):
+def has_body_movement_evidence(body_excerpt):
+    """RSS本文に実際の店舗移動アクションが明記されている場合だけ補完する。"""
+    body_excerpt = clean_text(body_excerpt)
+    # 既存店の周年紹介は新規開店の根拠にしない。
+    if re.search(r"(?:オープン|開店|開業)から.{0,12}\\d+周年", body_excerpt):
+        return False
+    return bool(re.search(
+        r"(?:オープン|開店|開業|出店|移転|閉店|営業終了|リニューアル)"
+        r"(?:し(?:た|ている|ます)|する|を開始|予定|を予定|した)",
+        body_excerpt,
+    ))
+
+def is_store_news(title, body_excerpt=""):
+    # タイトルに動きがなくても、本文に明確な実施表現があれば候補化する。
+    if not title or (not detect_categories(title) and not has_body_movement_evidence(body_excerpt)):
         return False
     # 店舗の動きが明確なタイトルだけを対象にし、公共施設等は原則除外。
     if any(w in title for w in EXCLUDE_KEYWORDS):
@@ -247,7 +260,7 @@ def is_clearly_outside_yamaguchi(title, body_excerpt=""):
 
 def convert_candidate(item, method, source_priority):
     title, url = clean_text(item.get("title")), clean_text(item.get("url"))
-    if not title or not url or not is_store_news(title):
+    if not title or not url or not is_store_news(title, item.get("body_excerpt") or item.get("description", "")):
         return None
     if is_listing_candidate(title, url, item.get("source_url", "")) or is_clearly_outside_yamaguchi(title, item.get("body_excerpt") or item.get("description", "")):
         return None
