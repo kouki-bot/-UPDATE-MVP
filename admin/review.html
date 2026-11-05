@@ -63,6 +63,7 @@ var selectedId="",localKey="ylu_review_work_v1";
 var el=function(id){return document.getElementById(id);};
 var esc=function(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
 var dateOnly=function(v){return String(v||"").slice(0,10);};
+var safeHttpUrl=function(v){try{var u=new URL(String(v||""));return (u.protocol==="https:"||u.protocol==="http:")?u.href:"";}catch(e){return "";}};
 var statusOf=function(id){var r=approvals.reviewed_articles[id]||{};return r.review_status|| (approvals.approved_ids.indexOf(id)>=0?"確認済み":"未確認");};
 function saveLocal(){try{localStorage.setItem(localKey,JSON.stringify(approvals));}catch(e){alert("端末内に保存できませんでした。JSONを書き出して保存してください。");}}
 function loadLocal(){try{var raw=localStorage.getItem(localKey);if(raw){var x=JSON.parse(raw);if(x&&Array.isArray(x.approved_ids)&&x.reviewed_articles)approvals=x;}}catch(e){}}
@@ -98,7 +99,7 @@ function renderDetail(){
 var d=drafts.find(function(x){return String(x.id)===selectedId;});
 if(!d){el("detail").innerHTML='<div class="empty">左側の記事を選択してください。</div>';el("detailId").textContent="";return;}
 var id=String(d.id),r=approvals.reviewed_articles[id]||{},sources=Array.isArray(d.source_urls)&&d.source_urls.length?d.source_urls:[{source_name:d.source_name,url:d.source_url}];
-var sourceHtml=sources.map(function(s){var u=String(s.url||"");return '<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(s.source_name||"元記事")+'：'+esc(u)+'</a>';}).join("");
+var sourceHtml=sources.map(function(s){var u=safeHttpUrl(s.url);return u?'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(s.source_name||"元記事")+'：'+esc(u)+'</a>':'<span>'+esc(s.source_name||"元記事")+'：URL未設定または不正</span>';}).join("");
 var flags=flagsFor(d),cleared=Array.isArray(r.cleared_review_flags)?r.cleared_review_flags:[];
 var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消したものだけチェック）</b>'+flags.map(function(f){return '<label><input type="checkbox" class="clearFlag" value="'+esc(f)+'" '+(cleared.indexOf(f)>=0?"checked":"")+'><span>'+esc(f)+'</span></label>';}).join("")+'</div>':'<p class="sub">自動検出された確認フラグはありません。内容確認は必要です。</p>';
 var status=statusOf(id);
