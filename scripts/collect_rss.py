@@ -22,6 +22,9 @@ MAX_ARTICLE_PAGE_REQUESTS = 150
 USER_AGENT = "Mozilla/5.0 (compatible; YamaguchiLocalUpdate/1.1)"
 
 RSS_SOURCES = [
+    # 山口県公式の報道発表RSS。自治体の一次情報を追加し、必ず記事本文で再確認する。
+    {"name": "山口県公式・報道発表", "url": "https://www.pref.yamaguchi.lg.jp/rss/10/list10.xml",
+     "area": ["山口県内"]},
     {"name": "山口宇部経済新聞", "url": "https://yamaguchi.keizai.biz/rss.xml",
      "area": ["山口市", "宇部市", "山陽小野田市", "美祢市", "防府市", "萩市", "長門市"]},
     {"name": "号外NET 山口市・防府市", "url": "https://yamaguchi-hofu.goguynet.jp/feed/",
