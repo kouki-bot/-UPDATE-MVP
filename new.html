@@ -45,6 +45,7 @@ const list=document.getElementById('article-list'), keywordInput=document.getEle
 let articles=[];
 const categories=['新店・開店','新店','開店','新施設・地域の動き','新店舗'];
 const text=(o,keys)=>{for(const k of keys)if(typeof o[k]==='string'&&o[k].trim())return o[k].trim();return '';};
+const isLodging=o=>o&&((o.content_type==='宿泊施設')||/ホテル|旅館|宿泊施設|民宿|民泊|ゲストハウス|ペンション|コテージ|簡易宿所|東横イン/.test([text(o,['title','name']),text(o,['content_type'])].join(' ')));
 const safeUrl=value=>{if(typeof value!=='string'||!value.trim())return '';try{const u=new URL(value,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch(e){return '';}};
 const areaOf=o=>{const s=[text(o,['area','city','location','address']),text(o,['title','name']),text(o,['summary','description','body'])].join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(a=>s.includes(a))||'その他';};
 const link=(href,label)=>{const url=safeUrl(href);if(!url)return null;const a=document.createElement('a');a.href=url;a.textContent=label;a.target='_blank';a.rel='noopener noreferrer';return a;};
@@ -70,7 +71,7 @@ document.getElementById('reset-button').addEventListener('click',()=>{keywordInp
 keywordInput.addEventListener('keydown',e=>{if(e.key==='Enter')render();});areaSelect.addEventListener('change',render);
 fetch('data/published.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{
 const rows=Array.isArray(data)?data:(Array.isArray(data.articles)?data.articles:[]);
-articles=rows.filter(o=>o&&o.status==='公開'&&text(o,['title','name'])&&categories.some(c=>text(o,['category','type','genre']).includes(c))).slice(0,100);render();
+articles=rows.filter(o=>o&&(o.status==='公開'||o.status==='公開済み')&&!isLodging(o)&&text(o,['title','name'])&&categories.some(c=>text(o,['category','type','genre']).includes(c))).slice(0,100);render();
 }).catch(()=>{count.textContent='読み込みエラー';list.replaceChildren();const p=document.createElement('p');p.className='load-error';p.textContent='情報を読み込めませんでした。時間をおいて再読み込みしてください。';list.appendChild(p);});
 })();
 </script>
