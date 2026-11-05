@@ -188,9 +188,17 @@ def has_body_movement_evidence(body_excerpt):
     ))
 
 def is_store_news(title, body_excerpt=""):
-    # 「オープンキャンパス」は店舗の開店ではないため、強い除外条件とする。
-    if "オープンキャンパス" in clean_text(title):
+    # 学校行事・イベント告知の「オープン」は施設や店舗の開業を意味しない。
+    title_text = clean_text(title)
+    if "オープンキャンパス" in title_text:
         return False
+    if any(word in title_text for word in ["イベント", "フェア", "説明会", "体験会"]):
+        actual_opening = re.search(
+            r"(?:オープン|開店|開業|開館|開園)(?:し(?:た|ます|ました)|する|しました|しました)",
+            title_text + " " + clean_text(body_excerpt),
+        )
+        if not actual_opening:
+            return False
     # タイトルに動きがなくても、本文に明確な実施表現があれば候補化する。
     if not title or (not detect_categories(title) and not has_body_movement_evidence(body_excerpt)):
         return False
