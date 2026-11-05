@@ -129,11 +129,29 @@ def classify_text(text):
     text = clean_text(text)
     return [cat for cat, words in KEYWORD_GROUPS.items() if any(w in text for w in words)]
 
+def has_body_movement_evidence(description):
+    """Require an action phrase in the RSS body; keyword mentions alone are insufficient."""
+    description = clean_text(description)
+    if re.search(r"(?:オープン|開店|開業)から.{0,12}\\d+周年", description):
+        return False
+    return bool(re.search(
+        r"(?:オープン|開店|開業|出店|移転|閉店|営業終了|リニューアル)"
+        r"(?:し(?:た|ている|ます)|する|を開始|予定|を予定|した)",
+        description,
+    ))
+
+
 def exclusion_reason(title, description):
     """Return a stable diagnostic reason for a rejected RSS item, or an empty string."""
     title = clean_text(title)
-    combined = title + " " + clean_text(description)
-    if not classify_text(title):
+    description = clean_text(description)
+    combined = title + " " + description
+    title_categories = classify_text(title)
+    body_evidence = has_body_movement_evidence(description)
+
+    if not title_categories and not body_evidence:
+        if re.search(r"(?:オープン|開店|開業)から.{0,12}\\d+周年", description):
+            return "anniversary_existing_store"
         return "no_store_movement_keyword"
     if not any(w in title for w in STRONG_STORE_WORDS):
         blocked = next((w for w in EXCLUDE_TITLE_KEYWORDS if w in title), "")
@@ -217,6 +235,10 @@ def fetch_rss(source):
                 })
             continue
         categories = classify_text(title)
+        category_basis = "タイトル"
+        if not categories:
+            categories = classify_text(description)
+            category_basis = "タイトル＋RSS本文"
         if not categories:
             diagnostics["no_relevant_keyword"] += 1
             continue
@@ -226,7 +248,7 @@ def fetch_rss(source):
             "title": title, "url": link, "normalized_url": normalize_url(link),
             "source_name": source["name"], "source_url": source["url"],
             "area": source["area"], "area_status": "配信元の対象地域・店舗所在地は未確認",
-            "categories": categories, "category_basis": "タイトル",
+            "categories": categories, "category_basis": category_basis,
             "priority": 1 if any(c in categories for c in ["新店・開店", "閉店"]) else 2,
             "published_date": published.isoformat() if published else "",
             "freshness": freshness, "age_days": age, "description": description[:1000],
