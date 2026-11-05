@@ -183,7 +183,7 @@ def has_body_movement_evidence(body_excerpt):
         return False
     return bool(re.search(
         r"(?:オープン|開店|開業|出店|移転|閉店|営業終了|リニューアル)"
-        r"(?:し(?:た|ている|ます)|する|を開始|予定|を予定|した)",
+        r"(?:しました|していました|しています|した|している|します|する|を開始|予定|を予定)",
         body_excerpt,
     ))
 
