@@ -176,6 +176,56 @@ class ReviewFlagTests(unittest.TestCase):
         self.assertTrue(all(x["duplicate_review"] == "重複の可能性・要確認" for x in drafts))
         self.assertTrue(all(x["status"] == "未確認・公開禁止" for x in drafts))
 
+    def test_pilates_studio_is_classified_as_commercial(self):
+        self.assertEqual(
+            module.classify_content_type('宇部・恩田にピラティススタジオ「UNO」 マシン完備で個別ケア提供'),
+            '店舗・商業施設',
+        )
+
+    def test_same_store_different_headlines_are_flagged_but_not_removed(self):
+        drafts = [
+            {
+                "id": "k1",
+                "title": "2026/10/30 06:00 ケーズデンキ山口店オープン開店前２００人が列",
+                "category": ["新店・開店"],
+                "published_date": "2026-10-30",
+                "municipality": "山口市",
+                "municipality_candidates": ["山口市"],
+                "source_url": "https://example.com/k1",
+                "source_urls": [{"url": "https://example.com/k1"}],
+                "body_excerpt": "家電量販店が山口市にオープン",
+                "freshness": "直近30日",
+            },
+            {
+                "id": "k2",
+                "title": "2026/10/28 06:00 ケーズデンキ山口店あす１０月２９日オープン山口県内３店目",
+                "category": ["新店・開店"],
+                "published_date": "2026-10-28",
+                "municipality": "山口市",
+                "municipality_candidates": ["山口市"],
+                "source_url": "https://example.com/k2",
+                "source_urls": [{"url": "https://example.com/k2"}],
+                "body_excerpt": "ケーズデンキ山口店が開店",
+                "freshness": "直近30日",
+            },
+        ]
+        summary = module.annotate_review_flags(drafts)
+        self.assertEqual(len(drafts), 2)
+        self.assertGreaterEqual(summary["duplicate_group_count"], 1)
+        self.assertTrue(all("重複の可能性・要確認" in x["review_flags"] for x in drafts))
+        self.assertTrue(all(x["status"] == "未確認・公開禁止" for x in drafts))
+
+    def test_different_municipality_or_store_is_not_flagged_as_duplicate(self):
+        base = {
+            "category": ["新店・開店"],
+            "published_date": "2026-10-30",
+        }
+        a = {**base, "title": "ケーズデンキ山口店がオープン", "municipality": "山口市"}
+        b = {**base, "title": "ケーズデンキ宇部店がオープン", "municipality": "宇部市"}
+        c = {**base, "title": "ヤマダデンキ山口店がオープン", "municipality": "山口市"}
+        self.assertFalse(module.same_store_duplicate(a, b))
+        self.assertFalse(module.same_store_duplicate(a, c))
+
     def test_missing_data_flagged(self):
         drafts = [{"id":"x","title":"店舗","category":["閉店"],"source_url":"","source_urls":[],"body_excerpt":"","published_date":"","municipality":"","municipality_candidates":[],"freshness":"日付確認が必要","status":"x"}]
         module.annotate_review_flags(drafts)
