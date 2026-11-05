@@ -18,7 +18,7 @@ JST = timezone(timedelta(hours=9))
 UTC = timezone.utc
 RECENT_DAYS = 30
 MAX_ITEMS_PER_SOURCE = 100
-MAX_ARTICLE_PAGE_REQUESTS = 120
+MAX_ARTICLE_PAGE_REQUESTS = 150
 USER_AGENT = "Mozilla/5.0 (compatible; YamaguchiLocalUpdate/1.1)"
 
 RSS_SOURCES = [
