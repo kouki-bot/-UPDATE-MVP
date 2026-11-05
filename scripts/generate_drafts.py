@@ -188,13 +188,18 @@ LISTING_URL_PARTS = ("/category/", "/tag/", "/page/", "/archive/", "/archives/")
 LISTING_TITLE_PATTERNS = (
     "開店・閉店情報一覧", "開店閉店情報一覧", "新店・閉店一覧",
     "オープン情報一覧", "閉店情報まとめ", "開店情報まとめ",
+    "閉店情報-業種別", "開店情報-業種別", "閉店情報 業種別", "開店情報 業種別",
 )
 
-def is_listing_candidate(title, url):
+def is_listing_candidate(title, url, source_url=""):
     """明らかな一覧・カテゴリーページだけを除外する。"""
-    path = urlsplit(clean_text(url)).path.lower()
-    if any(part in path for part in LISTING_URL_PARTS):
-        return True
+    for candidate_url in (url, source_url):
+        path = urlsplit(clean_text(candidate_url)).path.lower()
+        if any(part in path for part in LISTING_URL_PARTS):
+            return True
+        # 開店閉店.com の業種別カテゴリーページなど、category パスを使わない一覧URL
+        if re.search(r"/(?:kaiten|heiten)-gyousyubetsu/?$", path):
+            return True
     normalized_title = clean_text(title)
     return any(pattern in normalized_title for pattern in LISTING_TITLE_PATTERNS)
 
@@ -230,7 +235,7 @@ def convert_candidate(item, method, source_priority):
     title, url = clean_text(item.get("title")), clean_text(item.get("url"))
     if not title or not url or not is_store_news(title):
         return None
-    if is_listing_candidate(title, url) or is_clearly_outside_yamaguchi(title, item.get("body_excerpt") or item.get("description", "")):
+    if is_listing_candidate(title, url, item.get("source_url", "")) or is_clearly_outside_yamaguchi(title, item.get("body_excerpt") or item.get("description", "")):
         return None
     body = clean_text(item.get("body_excerpt") or item.get("description", ""))[:1500]
     categories = list(dict.fromkeys(normalize_categories(item) + detect_categories(title)))
