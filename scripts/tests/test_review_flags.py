@@ -130,6 +130,17 @@ class ReviewFlagTests(unittest.TestCase):
                 self.assertIsNotNone(converted)
                 self.assertEqual(module.classify_content_type(title), expected_type)
 
+    def test_lodging_classification_uses_facility_name_not_incidental_body_mentions(self):
+        cases = [
+            ('山口市に新しい民泊施設が開業', '宿泊施設'),
+            ('萩市のゲストハウスがリニューアル', '宿泊施設'),
+            ('長門市の旅館が営業終了', '宿泊施設'),
+            ('山口市のカフェがオープン', '店舗・商業施設'),
+        ]
+        for title, expected in cases:
+            with self.subTest(title=title):
+                self.assertEqual(module.classify_content_type(title, '近隣にはホテルや旅館があります。'), expected)
+
     def test_make_draft_keeps_unverified_status_and_content_type(self):
         item = {'url': 'https://example.com/post', 'title': '東横イン宇部新川駅前が開業',
                 'category': ['新店・開店'], 'published_date': '2026-11-01',
