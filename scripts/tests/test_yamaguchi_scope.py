@@ -114,6 +114,43 @@ class YamaguchiScopeTests(unittest.TestCase):
         }
         self.assertIsNone(module.convert_candidate(item, "RSS", 2))
 
+    def test_body_only_pilates_opening_is_kept(self):
+        item = {
+            "title": "宇部・恩田にピラティススタジオ「UNO」 マシン完備で個別ケア提供",
+            "url": "https://example.com/uno",
+            "body_excerpt": "女性専用のピラティススタジオが宇部市に10月1日オープンしました。",
+            "categories": ["新店・開店"],
+        }
+        self.assertIsNotNone(module.convert_candidate(item, "RSS", 2))
+
+    def test_body_only_cafe_opening_is_kept(self):
+        item = {
+            "title": "宇部にカフェ＆デリ「にくとはな」 肉料理メインに、キッチンカーも継続",
+            "url": "https://example.com/niku-to-hana",
+            "body_excerpt": "カフェ＆デリ「にくとはな」が10月23日にオープンしました。",
+            "categories": ["新店・開店"],
+        }
+        self.assertIsNotNone(module.convert_candidate(item, "RSS", 2))
+
+    def test_body_only_specialty_store_opening_is_kept(self):
+        item = {
+            "title": "防府駅前に解体専門店「ブラスト」 来店相談で空き家問題解決へ",
+            "url": "https://example.com/blast",
+            "body_excerpt": "解体専門店「ブラスト」が防府駅前に10月22日オープンしました。",
+            "categories": ["新店・開店"],
+        }
+        self.assertIsNotNone(module.convert_candidate(item, "RSS", 2))
+
+    def test_anniversary_mention_is_not_body_movement_evidence(self):
+        self.assertFalse(module.has_body_movement_evidence(
+            "同店はオープンから10周年を迎えました。"
+        ))
+
+    def test_event_venue_mention_is_not_body_movement_evidence(self):
+        self.assertFalse(module.has_body_movement_evidence(
+            "イベント会場は新しくオープンしたカフェです。"
+        ))
+
     def test_unknown_location_remains_reviewable(self):
         item = {
             "title": "【閉店】所在地不明の店舗",
