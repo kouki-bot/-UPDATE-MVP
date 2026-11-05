@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f5f3ed">
+<title>記事確認・承認管理｜YAMAGUCHI LOCAL UPDATE</title>
+<style>
+:root{--ink:#202820;--muted:#697269;--green:#315b43;--paper:#f5f3ed;--line:#e3e0d7;--white:#fff;--amber:#94621b;--red:#9d4540}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif;font-size:14px;line-height:1.6}
+header{background:#243c2e;color:white;padding:18px max(16px,calc((100% - 1100px)/2));position:sticky;top:0;z-index:5}
+.brand{font-family:Georgia,serif;font-size:13px;letter-spacing:.12em}.brand small{display:block;font:11px sans-serif;letter-spacing:.08em;opacity:.75;margin-top:3px}
+main{max-width:1100px;margin:auto;padding:20px 14px 70px}
+.notice{background:#fff8e9;border:1px solid #e9d8b5;border-radius:10px;padding:12px 14px;color:#62491e;font-size:12px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.stat{background:white;border:1px solid var(--line);border-radius:9px;padding:12px}.stat b{display:block;font-size:23px;font-variant-numeric:tabular-nums}.stat span{font-size:11px;color:var(--muted)}
+.toolbar{display:grid;grid-template-columns:1fr 150px 150px;gap:8px;margin:14px 0}.toolbar input,.toolbar select,.field input,.field textarea,.field select{width:100%;border:1px solid #d8d9d0;border-radius:7px;background:white;padding:11px;font:inherit;color:var(--ink);min-height:44px}
+button{font:inherit;cursor:pointer;border:0;border-radius:7px;padding:11px 14px;font-weight:700}.primary{background:var(--green);color:white}.secondary{background:#e8ece6;color:var(--green)}.danger{background:#f7e9e7;color:var(--red)}.plain{background:white;border:1px solid var(--line);color:var(--ink)}
+.layout{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(0,1.4fr);gap:14px;align-items:start}
+.list,.detail{background:white;border:1px solid var(--line);border-radius:11px;overflow:hidden}.list-head,.detail-head{padding:14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}.list-items{max-height:70vh;overflow:auto}
+.item{display:block;width:100%;text-align:left;background:white;border-radius:0;border-bottom:1px solid var(--line);padding:13px 14px;color:var(--ink)}.item.active{background:#edf2ec;box-shadow:inset 3px 0 var(--green)}.item-title{font-weight:700;font-size:13px;display:block;line-height:1.5}.item-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px;color:var(--muted);font-size:11px}
+.pill{display:inline-block;border-radius:99px;padding:2px 8px;background:#eee;color:#4d554d;font-size:10px}.pill.ok{background:#e4efe5;color:#28583a}.pill.fix{background:#fff0d9;color:#825718}.pill.out{background:#f6e7e5;color:#93433d}
+.detail-body{padding:16px}.empty{padding:35px 18px;text-align:center;color:var(--muted)}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;color:var(--muted)}
+.field{margin:13px 0}.field label{display:block;font-weight:700;font-size:12px;margin-bottom:5px}.field textarea{min-height:100px;resize:vertical}.field small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.source-box,.excerpt{background:#f7f7f3;border-radius:8px;padding:11px;margin:10px 0;font-size:12px;overflow-wrap:anywhere}.source-box a{color:#315b43;display:block;margin:4px 0}
+.flags{display:grid;gap:7px;background:#fff8e9;border:1px solid #eee0c2;padding:11px;border-radius:8px}.flags label{display:flex;gap:8px;align-items:flex-start;font-size:12px}
+.checkline{display:flex;gap:9px;align-items:flex-start;background:#edf2ec;padding:12px;border-radius:8px;margin:14px 0;font-weight:700}.checkline input,.flags input{width:18px;height:18px;flex:none}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.actions .approve{grid-column:1/-1;background:#315b43;color:white;min-height:50px}
+.exportbar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.exportbar button{flex:1;min-width:130px}
+.footer-note{font-size:11px;color:var(--muted);margin-top:16px}
+@media(max-width:760px){header{position:static}.stats{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.layout{grid-template-columns:1fr}.list-items{max-height:38vh}.detail-body{padding:13px}.actions{grid-template-columns:1fr}.actions .approve{grid-column:auto}}
+</style>
+</head>
+<body>
+<header><div class="brand">YAMAGUCHI LOCAL UPDATE<small>EDITORIAL REVIEW DESK / 記事確認・承認管理</small></div></header>
+<main>
+<div class="notice"><b>管理用画面について</b><br>この画面の操作だけでは記事は公開されません。確認結果はこの端末に一時保存され、JSONを書き出してGitHubの data/publication_approvals.json に反映する必要があります。元記事を確認せずに承認しないでください。</div>
+<h1>記事確認・承認管理</h1><div class="sub">収集された候補を確認し、公開可能な情報だけを承認します。</div>
+<div class="stats">
+<div class="stat"><b id="totalCount">-</b><span>候補記事</span></div>
+<div class="stat"><b id="pendingCount">-</b><span>未確認</span></div>
+<div class="stat"><b id="approvedCount">-</b><span>確認済み・承認</span></div>
+<div class="stat"><b id="holdCount">-</b><span>要修正・対象外</span></div>
+</div>
+<div class="exportbar"><button class="primary" id="exportBtn">承認データを書き出す</button><button class="secondary" id="importBtn">承認データを読み込む</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="importFile" accept="application/json,.json" hidden></div>
+<div class="toolbar">
+<input id="search" type="search" placeholder="店名・市町・情報元で検索">
+<select id="statusFilter"><option value="all">すべての状態</option><option value="未確認">未確認</option><option value="確認済み">確認済み・承認</option><option value="要修正">要修正</option><option value="対象外">対象外</option></select>
+<select id="areaFilter"><option value="">すべての市町</option></select>
+</div>
+<div class="layout">
+<section class="list"><div class="list-head"><b>確認待ち・記事一覧</b><span class="sub" id="shownCount"></span></div><div class="list-items" id="items"><div class="empty">記事データを読み込んでいます。</div></div></section>
+<section class="detail"><div class="detail-head"><b>記事の確認</b><span class="sub" id="detailId"></span></div><div class="detail-body" id="detail"><div class="empty">左側の記事を選択してください。</div></div></section>
+</div>
+<p class="footer-note">承認条件：元記事確認チェック、市町名、日付、タイトル、情報元URL、確認日時、未解消フラグなし。重複・日付・鮮度の警告は公開処理側でも再検査されます。</p>
+</main>
+<script>
+(function(){
+"use strict";
+var drafts=[],approvals={description:"人が元記事を確認した記事だけ公開許可する。",approved_ids:[],reviewed_articles:{},instructions:{}};
+var selectedId="",localKey="ylu_review_work_v1";
+var el=function(id){return document.getElementById(id);};
+var esc=function(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
+var dateOnly=function(v){return String(v||"").slice(0,10);};
+var statusOf=function(id){var r=approvals.reviewed_articles[id]||{};return r.review_status|| (approvals.approved_ids.indexOf(id)>=0?"確認済み":"未確認");};
+function saveLocal(){try{localStorage.setItem(localKey,JSON.stringify(approvals));}catch(e){alert("端末内に保存できませんでした。JSONを書き出して保存してください。");}}
+function loadLocal(){try{var raw=localStorage.getItem(localKey);if(raw){var x=JSON.parse(raw);if(x&&Array.isArray(x.approved_ids)&&x.reviewed_articles)approvals=x;}}catch(e){}}
+function flagsFor(d){return Array.isArray(d.review_flags)?d.review_flags:[];}
+function updateStats(){
+var counts={"未確認":0,"確認済み":0,"要修正":0,"対象外":0};
+drafts.forEach(function(d){var s=statusOf(String(d.id));counts[counts.hasOwnProperty(s)?s:"未確認"]++;});
+el("totalCount").textContent=drafts.length;el("pendingCount").textContent=counts["未確認"];el("approvedCount").textContent=counts["確認済み"];el("holdCount").textContent=counts["要修正"]+counts["対象外"];
+}
+function populateAreas(){
+var old=el("areaFilter").value,areas={};
+drafts.forEach(function(d){var m=d.municipality||"";if(m)areas[m]=1;(d.municipality_candidates||[]).forEach(function(x){areas[x]=1;});});
+el("areaFilter").innerHTML='<option value="">すべての市町</option>'+Object.keys(areas).sort().map(function(a){return '<option value="'+esc(a)+'">'+esc(a)+'</option>';}).join("");
+el("areaFilter").value=old;
+}
+function renderList(){
+var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value;
+var rows=drafts.filter(function(d){
+var id=String(d.id),s=statusOf(id),hay=[d.title,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
+var areas=[d.municipality||""].concat(d.municipality_candidates||[],d.area||[]);
+return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0);
+});
+el("shownCount").textContent=rows.length+"件";
+if(!rows.length){el("items").innerHTML='<div class="empty">条件に一致する記事はありません。</div>';return;}
+el("items").innerHTML=rows.map(function(d){
+var id=String(d.id),s=statusOf(id),cls=s==="確認済み"?"ok":s==="要修正"?"fix":s==="対象外"?"out":"";
+return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
+}).join("");
+Array.prototype.forEach.call(el("items").querySelectorAll("[data-id]"),function(b){b.addEventListener("click",function(){selectedId=b.getAttribute("data-id");renderList();renderDetail();});});
+updateStats();
+}
+function renderDetail(){
+var d=drafts.find(function(x){return String(x.id)===selectedId;});
+if(!d){el("detail").innerHTML='<div class="empty">左側の記事を選択してください。</div>';el("detailId").textContent="";return;}
+var id=String(d.id),r=approvals.reviewed_articles[id]||{},sources=Array.isArray(d.source_urls)&&d.source_urls.length?d.source_urls:[{source_name:d.source_name,url:d.source_url}];
+var sourceHtml=sources.map(function(s){var u=String(s.url||"");return '<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(s.source_name||"元記事")+'：'+esc(u)+'</a>';}).join("");
+var flags=flagsFor(d),cleared=Array.isArray(r.cleared_review_flags)?r.cleared_review_flags:[];
+var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消したものだけチェック）</b>'+flags.map(function(f){return '<label><input type="checkbox" class="clearFlag" value="'+esc(f)+'" '+(cleared.indexOf(f)>=0?"checked":"")+'><span>'+esc(f)+'</span></label>';}).join("")+'</div>':'<p class="sub">自動検出された確認フラグはありません。内容確認は必要です。</p>';
+var status=statusOf(id);
+el("detailId").textContent="ID: "+id;
+el("detail").innerHTML=
+'<div class="sub">現在の状態：<b>'+esc(status)+'</b>　／　情報元：'+esc(d.source_name||"未設定")+'</div>'+
+'<div class="source-box"><b>元記事リンク（必ず開いて確認）</b>'+sourceHtml+'</div>'+
+'<div class="excerpt"><b>自動取得した本文抜粋</b><br>'+esc(d.body_excerpt||"本文抜粋なし。元記事を直接確認してください。")+'</div>'+
+'<div class="field"><label for="headline">掲載タイトル（確認・必要なら修正）</label><input id="headline" value="'+esc(r.headline||d.suggested_headline||d.title||"")+'"></div>'+
+'<div class="field"><label for="municipality">店舗所在地の市町名 *</label><input id="municipality" placeholder="例：山口市" value="'+esc(r.municipality||d.municipality||"")+'"><small>記事配信元の地域ではなく、店舗の実際の所在地を入力。</small></div>'+
+'<div class="field"><label for="eventDate">開店・閉店・移転等の日付 *</label><input id="eventDate" type="date" value="'+esc(dateOnly(r.published_date||d.published_date))+'"><small>記事の公開日と店舗の実際の動作日が異なる場合は、確認できた日付を入力。</small></div>'+
+'<div class="field"><label for="bodyText">確認済みの説明文</label><textarea id="bodyText" placeholder="元記事で確認できた事実を簡潔に記入">'+esc(r.body||d.body_excerpt||"")+'</textarea><small>推測や未確認情報は書かない。記事本文の長文転載は避ける。</small></div>'+
+flagHtml+
+'<label class="checkline"><input type="checkbox" id="sourceChecked" '+(r.reviewer_checked_source===true?"checked":"")+'><span>元記事を開き、店舗名・所在地・日付・現在の状況を確認した *</span></label>'+
+'<div class="actions"><button class="approve" id="approveBtn">確認済みとして承認</button><button class="secondary" id="fixBtn">要修正として保存</button><button class="danger" id="excludeBtn">対象外として保存</button><button class="plain" id="pendingBtn">未確認に戻す</button></div>';
+el("approveBtn").addEventListener("click",function(){saveReview("確認済み");});
+el("fixBtn").addEventListener("click",function(){saveReview("要修正");});
+el("excludeBtn").addEventListener("click",function(){if(confirm("この記事を対象外として記録しますか？"))saveReview("対象外");});
+el("pendingBtn").addEventListener("click",function(){saveReview("未確認");});
+}
+function saveReview(status){
+var d=drafts.find(function(x){return String(x.id)===selectedId;});if(!d)return;
+var id=String(d.id),headline=el("headline").value.trim(),municipality=el("municipality").value.trim(),eventDate=el("eventDate").value,body=el("bodyText").value.trim(),checked=el("sourceChecked").checked;
+var cleared=Array.prototype.map.call(document.querySelectorAll(".clearFlag:checked"),function(x){return x.value;});
+if(status==="確認済み"){
+if(!checked){alert("承認には「元記事を確認した」チェックが必要です。");return;}
+if(!headline||!municipality||!eventDate||!d.source_url){alert("タイトル・市町名・日付・元記事URLをすべて確認してください。");return;}
+var remaining=flagsFor(d).filter(function(f){return cleared.indexOf(f)<0;});
+if(remaining.length){alert("未解消の確認フラグがあります。解消を確認できた項目だけチェックしてください。");return;}
+}
+var rec=approvals.reviewed_articles[id]||{};
+rec.review_status=status;rec.headline=headline;rec.municipality=municipality;rec.published_date=eventDate;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
+if(status==="確認済み"){rec.reviewed_at=new Date().toISOString();approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});approvals.approved_ids.push(id);}
+else{delete rec.reviewed_at;approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});}
+approvals.reviewed_articles[id]=rec;saveLocal();renderList();renderDetail();
+}
+function downloadFile(name,text){
+var blob=new Blob([text],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+el("exportBtn").addEventListener("click",function(){
+var out=JSON.stringify(approvals,null,2)+"\n";downloadFile("publication_approvals.json",out);
+alert("JSONを書き出しました。GitHubの data/publication_approvals.json に反映してください。書き出しただけではサイトには反映されません。");
+});
+el("importBtn").addEventListener("click",function(){el("importFile").click();});
+el("importFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.approved_ids)||!x.reviewed_articles)throw new Error("形式が違います");approvals=x;saveLocal();renderList();renderDetail();alert("承認データを読み込みました。");}catch(err){alert("JSONを読み込めませんでした。ファイル形式を確認してください。");}};reader.readAsText(f);e.target.value="";});
+el("resetBtn").addEventListener("click",function(){if(!confirm("この端末に保存した編集内容を破棄し、リポジトリの承認データを再読み込みしますか？"))return;localStorage.removeItem(localKey);location.reload();});
+["search","statusFilter","areaFilter"].forEach(function(id){el(id).addEventListener("input",renderList);el(id).addEventListener("change",renderList);});
+async function init(){
+try{
+var results=await Promise.all([fetch("../data/drafts.json",{cache:"no-store"}),fetch("../data/publication_approvals.json",{cache:"no-store"})]);
+if(!results[0].ok)throw new Error("drafts.json not found");
+var draftData=await results[0].json();drafts=Array.isArray(draftData.drafts)?draftData.drafts:[];
+if(results[1].ok){var base=await results[1].json();if(Array.isArray(base.approved_ids)&&base.reviewed_articles)approvals=base;}
+loadLocal();populateAreas();renderList();
+if(drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}
+}catch(e){el("items").innerHTML='<div class="empty">記事データを読み込めません。GitHub Pagesに data/drafts.json が存在するか確認してください。<br>'+esc(e.message)+'</div>';}
+}
+init();
+})();
+</script>
+</body>
+</html>
