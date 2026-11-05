@@ -10,6 +10,28 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 class ReviewFlagTests(unittest.TestCase):
+    def test_content_type_classification(self):
+        cases = [
+            ('ハローワークプラザ下関が移転', '公共・地域施設'),
+            ('徳山有楽町郵便局がリニューアル', '公共・地域施設'),
+            ('須金観光農園がオープン', '観光・レジャー'),
+            ('東横イン宇部新川駅前が開業', '宿泊施設'),
+            ('ケーズデンキ山口店がオープン', '店舗・商業施設'),
+            ('サイゼリヤおのだサンパーク店が開店', '店舗・商業施設'),
+            ('下関テイラーズがオープン', 'その他施設・サービス（要確認）'),
+        ]
+        for title, expected in cases:
+            with self.subTest(title=title):
+                self.assertEqual(module.classify_content_type(title), expected)
+
+    def test_make_draft_keeps_unverified_status_and_content_type(self):
+        item = {'url': 'https://example.com/post', 'title': '東横イン宇部新川駅前が開業',
+                'category': ['新店・開店'], 'published_date': '2026-11-01',
+                'body_excerpt': 'ホテルが開業', 'source_name': 'test'}
+        draft = module.make_draft(item)
+        self.assertEqual(draft['content_type'], '宿泊施設')
+        self.assertEqual(draft['status'], '未確認・公開禁止')
+
     def test_similar_titles_flagged_not_removed(self):
         drafts = [
             {"id":"a","title":"【開店】カフェ青空 宇部店","category":["新店・開店"],"source_url":"https://example.com/a","source_urls":[{"url":"https://example.com/a"}],"body_excerpt":"紹介文","published_date":"2026-10-01","municipality":"宇部市","municipality_candidates":["宇部市"],"freshness":"直近30日","status":"x"},
