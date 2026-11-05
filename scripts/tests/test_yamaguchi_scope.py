@@ -119,9 +119,10 @@ class YamaguchiScopeTests(unittest.TestCase):
             "title": "宇部・恩田にピラティススタジオ「UNO」 マシン完備で個別ケア提供",
             "url": "https://example.com/uno",
             "body_excerpt": "女性専用のピラティススタジオが宇部市に10月1日オープンしました。",
-            "categories": ["新店・開店"],
         }
-        self.assertIsNotNone(module.convert_candidate(item, "RSS", 2))
+        converted = module.convert_candidate(item, "RSS", 2)
+        self.assertIsNotNone(converted)
+        self.assertIn("新店・開店", converted["category"])
 
     def test_body_only_cafe_opening_is_kept(self):
         item = {
@@ -148,7 +149,7 @@ class YamaguchiScopeTests(unittest.TestCase):
 
     def test_event_venue_mention_is_not_body_movement_evidence(self):
         self.assertFalse(module.has_body_movement_evidence(
-            "イベント会場は新しくオープンしたカフェです。"
+            "既存カフェを会場にマルシェを開催します。新店の紹介ではありません。"
         ))
 
     def test_unknown_location_remains_reviewable(self):
