@@ -40,7 +40,7 @@
 <section class="latest-section" id="latest">
 <div class="section-heading reveal"><div><p class="eyebrow"><span></span> THE LATEST</p><h2>街の最新ニュース<span class="heading-dot">.</span></h2><p class="section-description">山口のお店に関する、新しい情報をチェック。</p></div><span class="heading-en">LOCAL<br>UPDATES</span></div>
 <div class="filter-row reveal" aria-label="情報の絞り込み">
-<button class="filter-button active" data-filter="all" type="button">すべて</button><button class="filter-button" data-filter="new" type="button">新店舗</button><button class="filter-button" data-filter="closed" type="button">閉店</button><button class="filter-button" data-filter="other" type="button">移転・リニューアル</button>
+<button class="filter-button active" data-filter="all" type="button">すべて</button><button class="filter-button" data-filter="new" type="button">新店舗</button><button class="filter-button" data-filter="closed" type="button">閉店</button><button class="filter-button" data-filter="other" type="button">移転・リニューアル</button><button class="filter-button" data-filter="lodging" type="button">宿泊施設</button>
 </div>
 <div class="search-panel reveal" aria-label="記事検索">
 <div class="search-field"><label for="keyword-search">キーワード</label><input id="keyword-search" type="search" placeholder="店名・キーワードで検索"></div>
@@ -65,6 +65,7 @@ plants:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format
 function categoryText(value){if(Array.isArray(value))return value.join("・");return typeof value==="string"?value:"";}
 function categoryGroup(value){const categories=Array.isArray(value)?value:[value];if(categories.some(c=>allowedCategories.new.includes(c)))return"new";if(categories.some(c=>allowedCategories.closed.includes(c)))return"closed";if(categories.some(c=>allowedCategories.other.includes(c)))return"other";return"";}
 function articleBusiness(article){
+if(article.content_type==="宿泊施設")return"宿泊施設";
 const text=[article.title||"",categoryText(article.category),article.summary||"",article.draft_summary||""].join(" ");
 const rules=[
 ["飲食店",/飲食店|レストラン|食堂|居酒屋|ラーメン|カフェ|喫茶|寿司|焼肉|うどん|そば|弁当|料理|グルメ/],
@@ -98,7 +99,8 @@ if(areas.includes(selectedArea))areaFilter.value=selectedArea;if(businesses.incl
 function renderArticles(){
 const filtered=allArticles.filter(article=>{
 const group=categoryGroup(article.category);
-const matchesType=activeFilter==="all"||group===activeFilter;
+const isLodging=article.content_type==="宿泊施設";
+const matchesType=activeFilter==="lodging"?isLodging:!isLodging&&(activeFilter==="all"||group===activeFilter);
 const matchesArea=!activeArea||articleAreas(article).includes(activeArea);
 const matchesBusiness=!activeBusiness||articleBusiness(article)===activeBusiness;
 const searchText=[article.title||"",categoryText(article.category),article.summary||"",article.draft_summary||"",...articleAreas(article)].join(" ").toLocaleLowerCase("ja");
@@ -129,7 +131,7 @@ async function loadArticles(){
 try{
 const response=await fetch("data/published.json");if(!response.ok)throw new Error("記事データを取得できません");
 const data=await response.json();
-allArticles=(Array.isArray(data.articles)?data.articles:[]).filter(article=>article.status==="公開"&&article.title&&categoryGroup(article.category)).sort((a,b)=>String(b.published_date||"").localeCompare(String(a.published_date||"")));
+allArticles=(Array.isArray(data.articles)?data.articles:[]).filter(article=>(article.status==="公開"||article.status==="公開済み")&&article.title&&categoryGroup(article.category)).sort((a,b)=>String(b.published_date||"").localeCompare(String(a.published_date||"")));
 populateSearchOptions();renderArticles();
 }catch(error){list.innerHTML=`<div class="empty-state"><h3>情報を読み込めませんでした。</h3><p>時間をおいて、もう一度ご確認ください。</p></div>`;}}
 observeReveals();loadArticles();
