@@ -18,6 +18,20 @@ class YamaguchiScopeTests(unittest.TestCase):
     def test_unknown_location_is_not_excluded(self):
         self.assertFalse(module.is_clearly_outside_yamaguchi("【開店】新しいカフェがオープン"))
 
+    def test_explicit_address_wins_over_other_city_mentions(self):
+        candidates = module.extract_municipality_candidates(
+            "ケーズデンキ山口店オープン",
+            "山口県山口市黒川にオープン。県内では宇部、岩国市に次いで3店目。"
+        )
+        self.assertEqual(candidates, ["山口市"])
+
+    def test_multiple_explicit_addresses_remain_uncertain(self):
+        candidates = module.extract_municipality_candidates(
+            "県内2店舗の話題",
+            "山口県山口市に新店、山口県岩国市にも新店がオープン。"
+        )
+        self.assertEqual(set(candidates), {"山口市", "岩国市"})
+
     def test_listing_path_is_excluded(self):
         self.assertTrue(module.is_listing_candidate(
             "山口県の開店・閉店情報一覧",
