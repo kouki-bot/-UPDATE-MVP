@@ -210,7 +210,11 @@ def fetch_rss(source):
             counts = diagnostics["exclusion_reason_counts"]
             counts[reason] = counts.get(reason, 0) + 1
             if len(diagnostics["excluded_title_samples"]) < 10:
-                diagnostics["excluded_title_samples"].append({"title": title[:180], "reason": reason})
+                diagnostics["excluded_title_samples"].append({
+                    "title": title[:180],
+                    "description": clean_text(description)[:500],
+                    "reason": reason,
+                })
             continue
         categories = classify_text(title)
         if not categories:
