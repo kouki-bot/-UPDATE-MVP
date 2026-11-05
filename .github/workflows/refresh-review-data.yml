@@ -1,0 +1,66 @@
+name: Refresh review candidates (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ensure this is not the main branch
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "Run this workflow on a review branch, not main."
+            exit 1
+          fi
+
+      - name: Checkout selected review branch
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Collect official news candidates
+        run: python scripts/collect_news.py
+
+      - name: Collect RSS news candidates
+        run: python scripts/collect_rss.py
+
+      - name: Generate review-only drafts
+        run: python scripts/generate_drafts.py
+
+      - name: Run publication safety tests
+        run: python -m unittest discover -s scripts/tests -v
+
+      - name: Save refreshed review data to selected branch
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/source_checks.json data/rss_candidates.json data/drafts.json
+          if git diff --cached --quiet; then
+            echo "No review data changes."
+            exit 0
+          fi
+          git commit -m "Refresh review candidates"
+          git push origin "HEAD:${TARGET_BRANCH}"
+
+      - name: Upload refreshed review data
+        uses: actions/upload-artifact@v4
+        with:
+          name: refreshed-review-data
+          path: |
+            data/source_checks.json
+            data/rss_candidates.json
+            data/drafts.json
+          if-no-files-found: error
+          retention-days: 14
