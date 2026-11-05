@@ -10,10 +10,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout improvement branch
+      - name: Checkout scope-fix branch
         uses: actions/checkout@v5
         with:
-          ref: improve/date-metadata-quality
+          ref: fix/yamaguchi-scope-and-listing-filter
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
