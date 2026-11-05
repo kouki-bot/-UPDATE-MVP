@@ -4,35 +4,67 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout scope-fix branch
+      - name: Prevent writing to main
+        run: |
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "Select the review branch, not main."
+            exit 1
+          fi
+
+      - name: Checkout selected review branch
         uses: actions/checkout@v5
         with:
-          ref: fix/yamaguchi-scope-and-listing-filter
+          ref: ${{ github.ref }}
+          fetch-depth: 0
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+
       - name: Compile Python files
         run: |
           python -m py_compile scripts/collect_news.py scripts/collect_rss.py scripts/generate_drafts.py scripts/publish_approved.py
+
       - name: Run safety tests
         run: python -m unittest discover -s scripts/tests -v
+
+      - name: Collect official news candidates
+        run: python scripts/collect_news.py
+
       - name: Collect RSS candidates
         run: python scripts/collect_rss.py
+
       - name: Generate review-only drafts
         run: python scripts/generate_drafts.py
-      - name: Upload test results
+
+      - name: Save refreshed review data to selected branch
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/source_checks.json data/rss_candidates.json data/drafts.json
+          if git diff --cached --quiet; then
+            echo "No review data changes."
+            exit 0
+          fi
+          git commit -m "Refresh review candidates"
+          git push origin "HEAD:${TARGET_BRANCH}"
+
+      - name: Upload refreshed review data
         uses: actions/upload-artifact@v4
         with:
           name: rss-date-quality-test-results
           path: |
+            data/source_checks.json
             data/rss_candidates.json
             data/drafts.json
-          if-no-files-found: warn
-          retention-days: 7
+          if-no-files-found: error
+          retention-days: 14
