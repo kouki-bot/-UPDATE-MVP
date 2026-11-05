@@ -265,7 +265,10 @@ def convert_candidate(item, method, source_priority):
     if is_listing_candidate(title, url, item.get("source_url", "")) or is_clearly_outside_yamaguchi(title, item.get("body_excerpt") or item.get("description", "")):
         return None
     body = clean_text(item.get("body_excerpt") or item.get("description", ""))[:1500]
-    categories = list(dict.fromkeys(normalize_categories(item) + detect_categories(title)))
+    body_categories = detect_categories(body)
+    categories = list(dict.fromkeys(
+        normalize_categories(item) + detect_categories(title) + body_categories
+    ))
     categories = [c for c in categories if c in ALLOWED_CATEGORIES]
     if not categories:
         return None
