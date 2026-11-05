@@ -37,6 +37,33 @@ class ReviewFlagTests(unittest.TestCase):
         self.assertEqual(module.classify_content_type(item['title'], item['body_excerpt']), '公共・地域施設')
         self.assertIsNone(module.convert_candidate(item, 'RSS', 2))
 
+    def test_preopening_event_announcement_is_not_treated_as_facility_opening(self):
+        title = '秋吉台エコ・ミュージアム プレオープンイベントの開催について'
+        item = {
+            'url': 'https://example.com/akiyoshidai-event',
+            'title': title,
+            'category': ['新店・開店'],
+            'published_date': '2026-11-04',
+            'body_excerpt': 'プレオープンイベントの詳細が決定しましたのでお知らせします。',
+            'source_name': '山口県公式・報道発表',
+        }
+        self.assertFalse(module.is_store_news(title, item['body_excerpt']))
+        self.assertIsNone(module.convert_candidate(item, 'RSS', 2))
+
+    def test_real_store_opening_with_celebration_event_is_kept(self):
+        title = '宇部市にカフェ新店舗オープン記念イベント開催'
+        body = 'カフェが11月5日にオープンしました。'
+        item = {
+            'url': 'https://example.com/cafe-opening',
+            'title': title,
+            'category': ['新店・開店'],
+            'published_date': '2026-11-05',
+            'body_excerpt': body,
+            'source_name': 'test',
+        }
+        self.assertTrue(module.is_store_news(title, body))
+        self.assertIsNotNone(module.convert_candidate(item, 'RSS', 2))
+
     def test_open_campus_is_not_treated_as_store_opening(self):
         title = '山口県立農業大学校「夏のオープンキャンパス」を開催'
         item = {
