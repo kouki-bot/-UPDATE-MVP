@@ -37,6 +37,19 @@ class ReviewFlagTests(unittest.TestCase):
         self.assertEqual(module.classify_content_type(item['title'], item['body_excerpt']), '公共・地域施設')
         self.assertIsNone(module.convert_candidate(item, 'RSS', 2))
 
+    def test_open_campus_is_not_treated_as_store_opening(self):
+        title = '山口県立農業大学校「夏のオープンキャンパス」を開催'
+        item = {
+            'url': 'https://example.com/open-campus',
+            'title': title,
+            'category': ['新店・開店'],
+            'published_date': '2026-11-01',
+            'body_excerpt': 'オープンキャンパスを開催します。',
+            'source_name': 'test',
+        }
+        self.assertFalse(module.is_store_news(title, item['body_excerpt']))
+        self.assertIsNone(module.convert_candidate(item, 'RSS', 2))
+
     def test_public_facilities_are_excluded_from_store_drafts(self):
         cases = [
             ('ハローワークプラザ下関が移転', '公共・地域施設', ['移転']),
