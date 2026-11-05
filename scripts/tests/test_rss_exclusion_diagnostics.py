@@ -11,7 +11,7 @@ spec.loader.exec_module(module)
 class RssExclusionDiagnosticsTests(unittest.TestCase):
     def test_reason_identifies_excluded_public_title(self):
         self.assertEqual(
-            module.exclusion_reason("山口市役所の公式サイトをリニューアル", ""),
+            module.exclusion_reason("山口市役所が営業終了", ""),
             "excluded_title_keyword:市役所",
         )
 
