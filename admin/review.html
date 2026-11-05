@@ -90,7 +90,7 @@ el("shownCount").textContent=rows.length+"件";
 if(!rows.length){el("items").innerHTML='<div class="empty">条件に一致する記事はありません。</div>';return;}
 el("items").innerHTML=rows.map(function(d){
 var id=String(d.id),s=statusOf(id),cls=s==="確認済み"?"ok":s==="要修正"?"fix":s==="対象外"?"out":"";
-return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span><span>'+esc(d.content_type||"種別要確認")+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
+return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span>'+(d.duplicate_review?'<span class="pill fix">重複候補</span>':'')+'<span>'+esc(d.content_type||"種別要確認")+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
 }).join("");
 Array.prototype.forEach.call(el("items").querySelectorAll("[data-id]"),function(b){b.addEventListener("click",function(){selectedId=b.getAttribute("data-id");renderList();renderDetail();});});
 updateStats();
