@@ -1,35 +1,39 @@
-name: Test RSS date quality improvement
+name: Refresh review candidates
 
 on:
   workflow_dispatch:
-    inputs:
-      target_ref:
-        description: "更新対象の確認用ブランチ（mainは禁止）"
-        required: true
-        default: "fix/yamaguchi-scope-and-listing-filter"
-        type: string
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: refresh-yamaguchi-review-candidates
+  cancel-in-progress: false
 
 jobs:
-  test:
+  refresh:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Prevent writing to main
-        env:
-          TARGET_BRANCH: ${{ inputs.target_ref }}
-        run: |
-          if [ "${TARGET_BRANCH}" = "main" ]; then
-            echo "Select the review branch, not main."
-            exit 1
-          fi
-
-      - name: Checkout selected review branch
+      - name: Checkout the fixed review branch
         uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.target_ref }}
+          ref: fix/yamaguchi-scope-and-listing-filter
           fetch-depth: 0
+
+      - name: Verify the checkout target
+        run: |
+          EXPECTED_BRANCH="fix/yamaguchi-scope-and-listing-filter"
+          ACTUAL_BRANCH="$(git branch --show-current)"
+          if [ "$ACTUAL_BRANCH" != "$EXPECTED_BRANCH" ]; then
+            echo "Unexpected checkout: $ACTUAL_BRANCH"
+            exit 1
+          fi
+          if [ "$GITHUB_REPOSITORY" != "kouki-bot/-UPDATE-MVP" ]; then
+            echo "Unexpected repository."
+            exit 1
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -52,24 +56,22 @@ jobs:
       - name: Generate review-only drafts
         run: python scripts/generate_drafts.py
 
-      - name: Save refreshed review data to selected branch
-        env:
-          TARGET_BRANCH: ${{ inputs.target_ref }}
+      - name: Save refreshed review data to the fixed review branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/source_checks.json data/rss_candidates.json data/drafts.json
           if git diff --cached --quiet; then
             echo "No review data changes."
-            exit 0
+          else
+            git commit -m "Refresh review candidates"
+            git push origin "HEAD:refs/heads/fix/yamaguchi-scope-and-listing-filter"
           fi
-          git commit -m "Refresh review candidates"
-          git push origin "HEAD:${TARGET_BRANCH}"
 
       - name: Upload refreshed review data
         uses: actions/upload-artifact@v4
         with:
-          name: rss-date-quality-test-results
+          name: yamaguchi-review-candidates
           path: |
             data/source_checks.json
             data/rss_candidates.json
