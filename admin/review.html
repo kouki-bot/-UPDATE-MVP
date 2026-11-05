@@ -82,7 +82,7 @@ el("areaFilter").value=old;
 function renderList(){
 var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value;
 var rows=drafts.filter(function(d){
-var id=String(d.id),s=statusOf(id),hay=[d.title,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
+var id=String(d.id),s=statusOf(id),hay=[d.title,d.content_type,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
 var areas=[d.municipality||""].concat(d.municipality_candidates||[],d.area||[]);
 return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0);
 });
@@ -90,7 +90,7 @@ el("shownCount").textContent=rows.length+"件";
 if(!rows.length){el("items").innerHTML='<div class="empty">条件に一致する記事はありません。</div>';return;}
 el("items").innerHTML=rows.map(function(d){
 var id=String(d.id),s=statusOf(id),cls=s==="確認済み"?"ok":s==="要修正"?"fix":s==="対象外"?"out":"";
-return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
+return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span><span>'+esc(d.content_type||"種別要確認")+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
 }).join("");
 Array.prototype.forEach.call(el("items").querySelectorAll("[data-id]"),function(b){b.addEventListener("click",function(){selectedId=b.getAttribute("data-id");renderList();renderDetail();});});
 updateStats();
@@ -105,7 +105,7 @@ var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消した�
 var status=statusOf(id);
 el("detailId").textContent="ID: "+id;
 el("detail").innerHTML=
-'<div class="sub">現在の状態：<b>'+esc(status)+'</b>　／　情報元：'+esc(d.source_name||"未設定")+'</div>'+
+'<div class="sub">現在の状態：<b>'+esc(status)+'</b>　／　種別：'+esc(d.content_type||"要確認")+'　／　情報元：'+esc(d.source_name||"未設定")+'</div>'+
 '<div class="source-box"><b>元記事リンク（必ず開いて確認）</b>'+sourceHtml+'</div>'+
 '<div class="excerpt"><b>自動取得した本文抜粋</b><br>'+esc(d.body_excerpt||"本文抜粋なし。元記事を直接確認してください。")+'</div>'+
 '<div class="field"><label for="headline">掲載タイトル（確認・必要なら修正）</label><input id="headline" value="'+esc(r.headline||d.suggested_headline||d.title||"")+'"></div>'+
