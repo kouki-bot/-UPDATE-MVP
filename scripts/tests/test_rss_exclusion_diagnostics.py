@@ -9,6 +9,12 @@ spec.loader.exec_module(module)
 
 
 class RssExclusionDiagnosticsTests(unittest.TestCase):
+    def test_yamaguchi_prefecture_official_press_release_feed_is_configured(self):
+        source = next((item for item in module.RSS_SOURCES if item['name'] == '山口県公式・報道発表'), None)
+        self.assertIsNotNone(source)
+        self.assertEqual(source['url'], 'https://www.pref.yamaguchi.lg.jp/rss/10/list10.xml')
+        self.assertEqual(source['area'], ['山口県内'])
+
     def test_reason_identifies_excluded_public_title(self):
         self.assertEqual(
             module.exclusion_reason("山口市役所が営業終了", ""),
