@@ -446,7 +446,9 @@ def merge_candidates(items):
 
 def classify_content_type(title, body_excerpt=''):
     '''ニュース対象の施設・事業者タイプを分類。判断材料が弱い場合は要確認にする。'''
-    text = clean_text(f"{title or ''} {body_excerpt or ''}")
+    # 施設種別は原則タイトルで判定し、本文中に偶然登場したホテル等で誤分類しない。
+    title_text = clean_text(title)
+    text = title_text or clean_text(body_excerpt)
     public = [
         'ハローワーク', '郵便局', '市役所', '町役場', '村役場', '県庁', '図書館',
         '公民館', '公共施設', '公共サービス', '行政窓口', '支所', '出張所',
@@ -459,7 +461,7 @@ def classify_content_type(title, body_excerpt=''):
     # 「交流拠点」だけでは民間施設もあり得るため、目的語との組み合わせで判定する。
     if '拠点' in text and any(word in text for word in ['市民共創', 'シティープロモーション', '市民自ら', '地域の魅力を発信']):
         return '公共・地域施設'
-    lodging = ['ホテル', '旅館', '宿泊施設', '民宿', 'ゲストハウス', '東横イン']
+    lodging = ['ホテル', '旅館', '宿泊施設', '民宿', '民泊', 'ゲストハウス', 'ペンション', 'コテージ', '簡易宿所', '東横イン']
     if any(word in text for word in lodging):
         return '宿泊施設'
     leisure = ['観光農園', 'キャンプ場', '遊園地', '観光施設', 'レジャー', 'テーマパーク', '観光牧場', '果樹園', '体験農園']
