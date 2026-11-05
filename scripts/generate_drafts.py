@@ -549,8 +549,8 @@ def duplicate_fingerprint(draft):
 def duplicate_store_entity(title):
     """記事タイトルから重複確認に使える固有の店舗名候補を抽出する。"""
     value = clean_text(title)
-    value = re.sub(r"^\\s*20\\d{2}[年/.-]\\d{1,2}[月/.-]\\d{1,2}[^ ]*\\s*", "", value)
-    value = re.sub(r"【[^】]*】|\\[[^\\]]*\\]", " ", value)
+    value = re.sub(r"^\s*20\d{2}[年/.-]\d{1,2}[月/.-]\d{1,2}[^ ]*\s*", "", value)
+    value = re.sub(r"【[^】]*】|\[[^\]]*\]", " ", value)
     generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
     matches = re.findall(r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24}?(?:店|スタジオ|専門店)", value)
     candidates = []
@@ -640,8 +640,10 @@ def annotate_review_flags(drafts):
             flags.append("市町未特定")
         if draft.get("freshness") == "未来日付・要確認":
             flags.append("未来日付")
+        if draft.get("duplicate_review"):
+            flags.append("重複の可能性・要確認")
 
-        draft["review_flags"] = flags
+        draft["review_flags"] = list(dict.fromkeys(flags))
         draft["review_priority"] = (
             "要優先確認"
             if any(x in flags for x in ["情報源URLなし", "未来日付", "市町候補が複数"])
