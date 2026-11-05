@@ -129,19 +129,25 @@ def classify_text(text):
     text = clean_text(text)
     return [cat for cat, words in KEYWORD_GROUPS.items() if any(w in text for w in words)]
 
-def is_excluded(title, description):
+def exclusion_reason(title, description):
+    """Return a stable diagnostic reason for a rejected RSS item, or an empty string."""
     title = clean_text(title)
+    combined = title + " " + clean_text(description)
     if not classify_text(title):
-        return True
-    # 公共施設・行政・求人・イベント告知を除外。ただしタイトル自体に明確な店舗動向がある場合は要確認候補に残す。
-    if any(w in title for w in EXCLUDE_TITLE_KEYWORDS):
-        if not any(w in title for w in STRONG_STORE_WORDS):
-            return True
+        return "no_store_movement_keyword"
+    if not any(w in title for w in STRONG_STORE_WORDS):
+        blocked = next((w for w in EXCLUDE_TITLE_KEYWORDS if w in title), "")
+        if blocked:
+            return "excluded_title_keyword:" + blocked
     if any(w in title for w in ["ウェブサイト", "ホームページ", "公式サイト"]):
-        return True
-    if any(w in (title + " " + clean_text(description)) for w in ["仙台経済新聞", "横浜経済新聞"]):
-        return True
-    return False
+        return "website_or_homepage"
+    if any(w in combined for w in ["仙台経済新聞", "横浜経済新聞"]):
+        return "foreign_syndicated_content"
+    return ""
+
+
+def is_excluded(title, description):
+    return bool(exclusion_reason(title, description))
 
 def get_freshness(published):
     if not published:
@@ -164,6 +170,8 @@ def fetch_rss(source):
         "excluded_by_filter": 0,
         "no_relevant_keyword": 0,
         "accepted": 0,
+        "exclusion_reason_counts": {},
+        "excluded_title_samples": [],
         "error": "",
     }
     source["_diagnostics"] = diagnostics
@@ -196,8 +204,13 @@ def fetch_rss(source):
         if not title or not link:
             diagnostics["missing_title_or_link"] += 1
             continue
-        if is_excluded(title, description):
+        reason = exclusion_reason(title, description)
+        if reason:
             diagnostics["excluded_by_filter"] += 1
+            counts = diagnostics["exclusion_reason_counts"]
+            counts[reason] = counts.get(reason, 0) + 1
+            if len(diagnostics["excluded_title_samples"]) < 10:
+                diagnostics["excluded_title_samples"].append({"title": title[:180], "reason": reason})
             continue
         categories = classify_text(title)
         if not categories:
@@ -219,7 +232,7 @@ def fetch_rss(source):
         if len(items) >= MAX_ITEMS_PER_SOURCE:
             break
     diagnostics["accepted"] = len(items)
-    print(f"[取得完了] {source['name']}: 採用{len(items)}件 / 生記事{diagnostics['raw_entries']}件 / 除外{diagnostics['excluded_by_filter']}件 / キーワード不一致{diagnostics['no_relevant_keyword']}件")
+    print(f"[取得完了] {source['name']}: 採用{len(items)}件 / 生記事{diagnostics['raw_entries']}件 / 除外{diagnostics['excluded_by_filter']}件 / 除外理由{diagnostics['exclusion_reason_counts']}")
     return items
 
 
