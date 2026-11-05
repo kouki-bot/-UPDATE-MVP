@@ -2,6 +2,12 @@ name: Test RSS date quality improvement
 
 on:
   workflow_dispatch:
+    inputs:
+      target_ref:
+        description: "更新対象の確認用ブランチ（mainは禁止）"
+        required: true
+        default: "fix/yamaguchi-scope-and-listing-filter"
+        type: string
 
 permissions:
   contents: write
@@ -11,8 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Prevent writing to main
+        env:
+          TARGET_BRANCH: ${{ inputs.target_ref }}
         run: |
-          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+          if [ "${TARGET_BRANCH}" = "main" ]; then
             echo "Select the review branch, not main."
             exit 1
           fi
@@ -20,7 +28,7 @@ jobs:
       - name: Checkout selected review branch
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ inputs.target_ref }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -46,7 +54,7 @@ jobs:
 
       - name: Save refreshed review data to selected branch
         env:
-          TARGET_BRANCH: ${{ github.ref_name }}
+          TARGET_BRANCH: ${{ inputs.target_ref }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
