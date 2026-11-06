@@ -134,6 +134,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: official-site-collector-results
-          path: |\n            data/source_checks.json\n            data/drafts.json
+          path: |
+            data/source_checks.json
+            data/drafts.json
           if-no-files-found: error
           retention-days: 7
