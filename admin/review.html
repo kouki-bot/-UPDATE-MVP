@@ -35,7 +35,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <body>
 <header><div class="brand">YAMAGUCHI LOCAL UPDATE<small>EDITORIAL REVIEW DESK / 記事確認・承認管理</small></div></header>
 <main>
-<div class="notice"><b>管理用画面について</b><br>この画面の操作だけでは記事は公開されません。確認結果はこの端末に一時保存され、JSONを書き出してGitHubの data/publication_approvals.json に反映する必要があります。記事公開日と店舗動作日を分け、営業状態と重複候補も確認してください。</div>
+<div class="notice"><b>管理用画面について</b><br>候補データは公開サイトに保存していません。GitHub Actionsの実行成果物からダウンロードした drafts.json を「候補データを読み込む」から選択してください。承認データを書き出しただけでは公開されません。記事公開日・店舗動作日・営業状態・重複候補を確認してください。</div>
 <h1>記事確認・承認管理</h1><div class="sub">収集された候補を確認し、公開可能な情報だけを承認します。</div>
 <div class="stats">
 <div class="stat"><b id="totalCount">-</b><span>候補記事</span></div>
@@ -43,7 +43,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <div class="stat"><b id="approvedCount">-</b><span>確認済み・承認</span></div>
 <div class="stat"><b id="holdCount">-</b><span>要修正・対象外</span></div>
 </div>
-<div class="exportbar"><button class="primary" id="exportBtn">承認データを書き出す</button><button class="secondary" id="importBtn">承認データを読み込む</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="importFile" accept="application/json,.json" hidden></div>
+<div class="exportbar"><button class="primary" id="draftImportBtn">候補データを読み込む</button><button class="secondary" id="exportBtn">承認データを書き出す</button><button class="plain" id="importBtn">承認データを読み込む</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="draftFile" accept="application/json,.json" hidden><input type="file" id="importFile" accept="application/json,.json" hidden></div>
 <div class="toolbar">
 <input id="search" type="search" placeholder="店名・市町・情報元で検索">
 <select id="statusFilter"><option value="all">すべての状態</option><option value="未確認">未確認</option><option value="確認済み">確認済み・承認</option><option value="要修正">要修正</option><option value="対象外">対象外</option></select>
@@ -156,21 +156,21 @@ var blob=new Blob([text],{type:"application/json;charset=utf-8"}),url=URL.create
 }
 el("exportBtn").addEventListener("click",function(){
 var out=JSON.stringify(approvals,null,2)+"\n";downloadFile("publication_approvals.json",out);
-alert("JSONを書き出しました。GitHubの data/publication_approvals.json に反映してください。書き出しただけではサイトには反映されません。");
+alert("JSONを書き出しました。GitHubの data/publication_approvals.json に反映し、更新ワークフローを実行すると承認済み記事だけが公開データに反映されます。");
 });
+el("draftImportBtn").addEventListener("click",function(){el("draftFile").click();});
+el("draftFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.drafts))throw new Error("drafts配列がありません");var unsafe=x.drafts.filter(function(d){return d.status!=="未確認・公開禁止";});if(unsafe.length)throw new Error("未確認・公開禁止ではない候補が含まれています");drafts=x.drafts;populateAreas();renderList();if(drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}else{selectedId="";renderDetail();}alert("候補データ "+drafts.length+"件を読み込みました。");}catch(err){alert("候補データを読み込めませんでした："+err.message);} };reader.readAsText(f);e.target.value="";});
 el("importBtn").addEventListener("click",function(){el("importFile").click();});
 el("importFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.approved_ids)||!x.reviewed_articles)throw new Error("形式が違います");approvals=x;saveLocal();renderList();renderDetail();alert("承認データを読み込みました。");}catch(err){alert("JSONを読み込めませんでした。ファイル形式を確認してください。");}};reader.readAsText(f);e.target.value="";});
 el("resetBtn").addEventListener("click",function(){if(!confirm("この端末に保存した編集内容を破棄し、リポジトリの承認データを再読み込みしますか？"))return;localStorage.removeItem(localKey);location.reload();});
 ["search","statusFilter","areaFilter","priorityFilter"].forEach(function(id){el(id).addEventListener("input",renderList);el(id).addEventListener("change",renderList);});
 async function init(){
 try{
-var results=await Promise.all([fetch("../data/drafts.json",{cache:"no-store"}),fetch("../data/publication_approvals.json",{cache:"no-store"})]);
-if(!results[0].ok)throw new Error("drafts.json not found");
-var draftData=await results[0].json();drafts=Array.isArray(draftData.drafts)?draftData.drafts:[];
-if(results[1].ok){var base=await results[1].json();if(Array.isArray(base.approved_ids)&&base.reviewed_articles)approvals=base;}
+var response=await fetch("../data/publication_approvals.json",{cache:"no-store"});
+if(response.ok){var base=await response.json();if(Array.isArray(base.approved_ids)&&base.reviewed_articles)approvals=base;}
 loadLocal();populateAreas();renderList();
-if(drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}
-}catch(e){el("items").innerHTML='<div class="empty">記事データを読み込めません。GitHub Pagesに data/drafts.json が存在するか確認してください。<br>'+esc(e.message)+'</div>';}
+if(!drafts.length){el("items").innerHTML='<div class="empty">Actionsの実行成果物から drafts.json をダウンロードし、「候補データを読み込む」から選択してください。</div>';}
+}catch(e){loadLocal();renderList();el("items").innerHTML='<div class="empty">承認データを読み込めません。候補データを読み込んでから利用してください。<br>'+esc(e.message)+'</div>';}
 }
 init();
 })();
