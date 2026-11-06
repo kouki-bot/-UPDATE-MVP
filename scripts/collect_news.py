@@ -649,7 +649,7 @@ def extract_opening_date(text):
         r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
     )
     movement_pattern = re.compile(
-        r"(?:オープンしました|オープンします|オープンいたします|オープンいたしました|オープン予定|開店しました|開店します|営業開始|営業を開始|New\s+Open|新規オープン)",
+        r"(?:オープン(?!情報)|開店しました|開店します|営業開始|営業を開始|New\s+Open|新規オープン)",
         flags=re.IGNORECASE,
     )
     for sentence in sentences:
