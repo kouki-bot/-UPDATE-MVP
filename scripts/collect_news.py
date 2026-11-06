@@ -645,11 +645,11 @@ def extract_opening_date(text):
     text = clean_text(text)
     sentences = re.split(r"(?<=[。！？])", text)
     date_pattern = re.compile(
-        r"(?<!\\d)((?:20\\d{2}|\\d{2})年\\d{1,2}月\\d{1,2}日)"
+        r"(?<!\d)((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)"
         r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
     )
     movement_pattern = re.compile(
-        r"(?:オープン|開店|営業開始|営業を開始|New\\s+Open)",
+        r"(?:オープンしました|オープンします|オープンいたします|オープンいたしました|オープン予定|開店しました|開店します|営業開始|営業を開始|New\s+Open|新規オープン)",
         flags=re.IGNORECASE,
     )
     for sentence in sentences:
@@ -659,11 +659,11 @@ def extract_opening_date(text):
         if not match:
             continue
         date_text = match.group(1)
-        year_match = re.match(r"(20\\d{2}|\\d{2})年", date_text)
+        year_match = re.match(r"(20\d{2}|\d{2})年", date_text)
         year = int(year_match.group(1))
         if year < 100:
             year += 2000
-            date_text = re.sub(r"^\\d{2}年", f"{year}年", date_text)
+            date_text = re.sub(r"^\d{2}年", f"{year}年", date_text)
         return date_text
     return ""
 
