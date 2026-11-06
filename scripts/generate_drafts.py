@@ -730,7 +730,16 @@ def duplicate_store_entity(title):
     matches = re.findall(r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24}?(?:店|スタジオ|専門店)", value)
     candidates = []
     for match in matches:
-        name = re.sub(r"^(?:新しい|新たな|おしゃれな|話題の)", "", match)
+        # 見出し先頭の時期・動作表現が店舗名に混ざるのを防ぐ。
+        # 例: 「来夏閉店の大丸下関店」→「大丸下関店」
+        name = re.sub(
+            r"^(?:(?:来夏|来年|今夏|今月|今週|今秋|今冬)?"
+            r"(?:閉店|開店|移転|閉業|営業終了|リニューアル)"
+            r"(?:予定|へ|の|する|となる)?)+",
+            "",
+            match,
+        )
+        name = re.sub(r"^(?:新しい|新たな|おしゃれな|話題の)", "", name)
         if name not in generic and len(name) >= 4:
             candidates.append(name)
     return list(dict.fromkeys(candidates))
