@@ -48,6 +48,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <input id="search" type="search" placeholder="店名・市町・情報元で検索">
 <select id="statusFilter"><option value="all">すべての状態</option><option value="未確認">未確認</option><option value="確認済み">確認済み・承認</option><option value="要修正">要修正</option><option value="対象外">対象外</option></select>
 <select id="areaFilter"><option value="">すべての市町</option></select>
+<select id="priorityFilter"><option value="all">すべての確認区分</option><option value="要優先確認">要優先確認</option><option value="重複確認">重複確認</option><option value="情報不足・保留">情報不足・保留</option><option value="確認推奨">確認推奨</option><option value="基本項目あり・内容確認は必要">基本項目あり</option></select>
 </div>
 <div class="layout">
 <section class="list"><div class="list-head"><b>確認待ち・記事一覧</b><span class="sub" id="shownCount"></span></div><div class="list-items" id="items"><div class="empty">記事データを読み込んでいます。</div></div></section>
@@ -80,17 +81,21 @@ el("areaFilter").innerHTML='<option value="">すべての市町</option>'+Object
 el("areaFilter").value=old;
 }
 function renderList(){
-var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value;
+var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value,pf=el("priorityFilter").value;
 var rows=drafts.filter(function(d){
-var id=String(d.id),s=statusOf(id),hay=[d.title,d.content_type,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
+var id=String(d.id),s=statusOf(id),priority=d.review_priority||"確認推奨",hay=[d.title,d.content_type,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
 var areas=[d.municipality||""].concat(d.municipality_candidates||[],d.area||[]);
-return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0);
+return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0)&&(pf==="all"||priority===pf);
+});
+rows.sort(function(a,b){
+var order={"要優先確認":0,"重複確認":1,"情報不足・保留":2,"確認推奨":3,"基本項目あり・内容確認は必要":4};
+return (order[a.review_priority||"確認推奨"]||9)-(order[b.review_priority||"確認推奨"]||9);
 });
 el("shownCount").textContent=rows.length+"件";
 if(!rows.length){el("items").innerHTML='<div class="empty">条件に一致する記事はありません。</div>';return;}
 el("items").innerHTML=rows.map(function(d){
 var id=String(d.id),s=statusOf(id),cls=s==="確認済み"?"ok":s==="要修正"?"fix":s==="対象外"?"out":"";
-return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span>'+(d.duplicate_review?'<span class="pill fix">重複候補</span>':'')+'<span>'+esc(d.content_type||"種別要確認")+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
+return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span>'+'<span class="pill '+(d.review_priority==="要優先確認"?"out":d.review_priority==="重複確認"?"fix":"")+'">'+esc(d.review_priority||"確認推奨")+'</span>'+'<span>'+esc(d.content_type||"種別要確認")+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
 }).join("");
 Array.prototype.forEach.call(el("items").querySelectorAll("[data-id]"),function(b){b.addEventListener("click",function(){selectedId=b.getAttribute("data-id");renderList();renderDetail();});});
 updateStats();
@@ -155,7 +160,7 @@ alert("JSONを書き出しました。GitHubの data/publication_approvals.json 
 el("importBtn").addEventListener("click",function(){el("importFile").click();});
 el("importFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.approved_ids)||!x.reviewed_articles)throw new Error("形式が違います");approvals=x;saveLocal();renderList();renderDetail();alert("承認データを読み込みました。");}catch(err){alert("JSONを読み込めませんでした。ファイル形式を確認してください。");}};reader.readAsText(f);e.target.value="";});
 el("resetBtn").addEventListener("click",function(){if(!confirm("この端末に保存した編集内容を破棄し、リポジトリの承認データを再読み込みしますか？"))return;localStorage.removeItem(localKey);location.reload();});
-["search","statusFilter","areaFilter"].forEach(function(id){el(id).addEventListener("input",renderList);el(id).addEventListener("change",renderList);});
+["search","statusFilter","areaFilter","priorityFilter"].forEach(function(id){el(id).addEventListener("input",renderList);el(id).addEventListener("change",renderList);});
 async function init(){
 try{
 var results=await Promise.all([fetch("../data/drafts.json",{cache:"no-store"}),fetch("../data/publication_approvals.json",{cache:"no-store"})]);
