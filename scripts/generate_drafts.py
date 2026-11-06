@@ -483,17 +483,30 @@ def event_terms(item):
     return re.sub(r"\s+", " ", title).strip()
 
 def same_store_news_candidate(a, b):
-    """同じ店舗名・同じ動き・近い記事日付の候補だけ統合する。"""
+    """同じ店舗・同じ動作日を報じる別媒体記事を統合する。"""
     if not (set(a.get("category", [])) & set(b.get("category", []))):
         return False
     names_a = set(duplicate_store_entity(a.get("title", "")))
     names_b = set(duplicate_store_entity(b.get("title", "")))
     if not names_a or not (names_a & names_b):
         return False
-    date_a = parse_date(a.get("published_date", ""))
-    date_b = parse_date(b.get("published_date", ""))
-    if date_a and date_b and abs((date_a.date() - date_b.date()).days) > 21:
-        return False
+
+    # 公開日が離れていても、店舗動作日が同一なら同じ案件として扱う。
+    event_a = clean_text(a.get("event_date", "")) or extract_event_date(
+        a.get("title", ""), a.get("body_excerpt", ""), a.get("published_date", "")
+    )
+    event_b = clean_text(b.get("event_date", "")) or extract_event_date(
+        b.get("title", ""), b.get("body_excerpt", ""), b.get("published_date", "")
+    )
+    if event_a and event_b:
+        if event_a != event_b:
+            return False
+    else:
+        date_a = parse_date(a.get("published_date", ""))
+        date_b = parse_date(b.get("published_date", ""))
+        if not date_a or not date_b or abs((date_a.date() - date_b.date()).days) > 21:
+            return False
+
     # 同名チェーンでも別市町なら統合しない。
     towns_a = set(extract_municipality_candidates(a.get("title", ""), a.get("body_excerpt", "")))
     towns_b = set(extract_municipality_candidates(b.get("title", ""), b.get("body_excerpt", "")))
