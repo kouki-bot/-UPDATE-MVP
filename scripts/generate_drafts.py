@@ -291,11 +291,7 @@ def convert_candidate(item, method, source_priority):
         area = [area] if area else []
     date_value = clean_text(item.get("published_date"))
     event_date = clean_text(item.get("event_date") or item.get("opening_date"))
-    # 公式施設の店舗一覧にある開店日は、記事公開日へ流用しない。
-    if not parse_date(date_value) and not event_date:
-        title_date = date_from_title(title)
-        if title_date:
-            date_value = title_date.isoformat()
+    # 記事公開日は取得元の明示情報だけを使用する。タイトル内の日付は店舗動作日かもしれないため流用しない。
     return {
         "title": title, "url": url, "normalized_url": normalize_url(url),
         "event_date": event_date,
