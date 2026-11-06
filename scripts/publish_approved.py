@@ -29,6 +29,10 @@ def main():
   aid=str(draft.get("id",""))
   if not aid or aid not in approved: continue
   review=reviews.get(aid,{})
+  # 店舗サイトの対象外カテゴリは、承認データがあっても公開しない。
+  excluded_types={"宿泊施設","観光・レジャー","公共・地域施設"}
+  if draft.get("content_type") in excluded_types:
+   print(f"公開保留 {aid}: 店舗サイトの対象外カテゴリ ({draft.get('content_type')})"); continue
   # 下書き段階で明示された記事公開日が不正なら、承認データの上書きで隠さず公開を止める。
   if draft.get("published_date") not in (None,"") and not valid_date(draft.get("published_date")):
    print(f"公開保留 {aid}: 下書きの記事公開日が不正。元情報を再確認してください"); continue
