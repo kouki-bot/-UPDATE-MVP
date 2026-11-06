@@ -164,6 +164,37 @@ class YamaguchiScopeTests(unittest.TestCase):
         }
         self.assertIsNotNone(module.convert_candidate(item, "RSS", 2))
 
+    def test_one_day_event_is_excluded(self):
+        self.assertFalse(module.is_store_news(
+            "山口市で一日限定イベント開催・マルシェ出店者募集",
+            "地域イベントの案内です。"
+        ))
+
+    def test_store_opening_with_event_word_is_kept(self):
+        self.assertTrue(module.is_store_news(
+            "宇部市に新しいカフェがオープン、記念イベント開催",
+            "カフェが新規開店しました。"
+        ))
+
+    def test_same_store_news_with_different_headlines_is_merged(self):
+        a = {
+            "title": "【新店】ケーズデンキ山口店がオープン",
+            "url": "https://example.com/news/a",
+            "normalized_url": "https://example.com/news/a",
+            "category": ["新店・開店"], "source_name": "媒体A",
+            "source_priority": 2, "body_excerpt": "山口店が開店しました。",
+        }
+        b = {
+            "title": "ケーズデンキ山口店 新規開店のお知らせ",
+            "url": "https://example.net/news/b",
+            "normalized_url": "https://example.net/news/b",
+            "category": ["新店・開店"], "source_name": "媒体B",
+            "source_priority": 2, "body_excerpt": "山口店が新規開店しました。",
+        }
+        merged = module.merge_candidates([a, b])
+        self.assertEqual(len(merged), 1)
+        self.assertEqual(merged[0]["duplicate_sources_count"], 2)
+
 
 if __name__ == "__main__":
     unittest.main()
