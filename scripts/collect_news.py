@@ -300,13 +300,13 @@ def fetch_page(url):
                 raw = response.read(MAX_HTML_BYTES)
 
                 charset_match = re.search(
-                    r"charset=([^\\s;]+)",
+                    r"charset=([^\s;]+)",
                     content_type,
                     flags=re.IGNORECASE,
                 )
 
                 charset = (
-                    charset_match.group(1).strip("\\"'")
+                    charset_match.group(1).strip("\"\'")
                     if charset_match
                     else "utf-8"
                 )
