@@ -50,6 +50,14 @@ jobs:
               print(f"{filename}: {len(rows)}件すべて未確認・公開禁止")
           PY
 
+      - name: Save review candidates as downloadable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: yamaguchi-review-candidates
+          path: data/drafts.json
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Upload candidates to private review repository
         env:
           PRIVATE_REVIEW_TOKEN: ${{ secrets.PRIVATE_REVIEW_TOKEN }}
