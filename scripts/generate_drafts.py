@@ -297,24 +297,52 @@ def is_clearly_outside_yamaguchi(title, body_excerpt=""):
     return any(re.search(pattern, combined) for pattern in FOREIGN_CITY_STORE_PATTERNS)
 
 def extract_event_date(title, body_excerpt, published_date=""):
-    """記事本文・タイトルから店舗動作日を抽出。年なし日付は公開日の年を使う。"""
-    explicit = re.search(r"(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})日?", clean_text(body_excerpt) + " " + clean_text(title))
+    """本文中の店舗動作日を優先して抽出。公開日しかない場合は動作日と誤認しない。"""
+    body = clean_text(body_excerpt)
+    title_text = clean_text(title)
+    base = parse_date(published_date)
+
+    # 本文中の年付き日付を最優先する。
+    explicit = re.search(r"(20\\d{2})[年./-](\\d{1,2})[月./-](\\d{1,2})日?", body)
     if explicit:
         try:
             return datetime(int(explicit.group(1)), int(explicit.group(2)), int(explicit.group(3)), tzinfo=JST).date().isoformat()
         except ValueError:
-            return ""
-    base = parse_date(published_date)
+            pass
+
+    # 「2027年8月末で閉店」のような月単位の予定日。
+    month_end = re.search(r"(20\\d{2})年(\\d{1,2})月末", body)
+    if month_end:
+        try:
+            year, month = int(month_end.group(1)), int(month_end.group(2))
+            next_month = datetime(year + (month == 12), month % 12 + 1, 1, tzinfo=JST)
+            return (next_month.date() - timedelta(days=1)).isoformat()
+        except ValueError:
+            pass
+
+    # 本文の「10月23日」「29日」など。公開日から120日以内だけ採用。
     if base:
-        month_day = re.search(r"(\\d{1,2})月(\\d{1,2})日", clean_text(body_excerpt) + " " + clean_text(title))
-        if month_day:
-            try:
+        month_day = re.search(r"(\\d{1,2})月(\\d{1,2})日", body)
+        day_only = re.search(r"(?<!月)(?<!\\d)(\\d{1,2})日", body) if not month_day else None
+        try:
+            if month_day:
                 candidate = datetime(base.year, int(month_day.group(1)), int(month_day.group(2)), tzinfo=JST)
-                # 公開日から大きく離れる年跨ぎは誤推定しない。
-                if abs((candidate.date() - base.date()).days) <= 120:
-                    return candidate.date().isoformat()
-            except ValueError:
-                pass
+            elif day_only:
+                candidate = datetime(base.year, base.month, int(day_only.group(1)), tzinfo=JST)
+            else:
+                candidate = None
+            if candidate and abs((candidate.date() - base.date()).days) <= 120:
+                return candidate.date().isoformat()
+        except ValueError:
+            pass
+
+    # 本文に動作日がない場合のみ、タイトル内の年付き日付を採用。
+    explicit_title = re.search(r"(20\\d{2})[年./-](\\d{1,2})[月./-](\\d{1,2})日?", title_text)
+    if explicit_title:
+        try:
+            return datetime(int(explicit_title.group(1)), int(explicit_title.group(2)), int(explicit_title.group(3)), tzinfo=JST).date().isoformat()
+        except ValueError:
+            pass
     return ""
 
 
