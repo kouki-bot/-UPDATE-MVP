@@ -635,6 +635,12 @@ def extract_area(text):
     return found
 
 
+def resolve_area(text, default_area=""):
+    """記事本文に地域があれば優先し、公式施設の所在地は補完情報として使う。"""
+    areas = extract_area(text)
+    return areas if areas else ([default_area] if default_area else [])
+
+
 def is_relevant_page(title, body):
     categories, basis = classify_text(
         title,
@@ -714,11 +720,10 @@ def inspect_candidate(
                 "category": categories,
             })
 
-        area = extract_area(
-            article_title + " " + body
+        area = resolve_area(
+            article_title + " " + body,
+            default_area,
         )
-        if not area and default_area:
-            area = [default_area]
 
         item_id = hashlib.sha256(
             target_url.encode("utf-8")
