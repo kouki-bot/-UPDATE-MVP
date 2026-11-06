@@ -298,7 +298,7 @@ def is_clearly_outside_yamaguchi(title, body_excerpt=""):
 
 def extract_event_date(title, body_excerpt, published_date=""):
     """記事本文・タイトルから店舗動作日を抽出。年なし日付は公開日の年を使う。"""
-    explicit = re.search(r"(20\\d{2})[年./-](\\d{1,2})[月./-](\\d{1,2})日?", clean_text(body_excerpt) + " " + clean_text(title))
+    explicit = re.search(r"(20\d{2})[年./-](\d{1,2})[月./-](\d{1,2})日?", clean_text(body_excerpt) + " " + clean_text(title))
     if explicit:
         try:
             return datetime(int(explicit.group(1)), int(explicit.group(2)), int(explicit.group(3)), tzinfo=JST).date().isoformat()
