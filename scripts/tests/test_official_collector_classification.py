@@ -263,5 +263,28 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         self.assertIn("閉店", categories)
 
 
+    def test_seamall_new_store_listing_extracts_name_and_opening_date(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年11月21日オープン 店名 LUNA STUDIO 場所 5階 "
+                "2026年11月3日オープン 店名 ナイスネイル 場所 3階"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(len(entries), 2)
+        self.assertEqual(entries[0]["store_name"], "LUNA STUDIO")
+        self.assertEqual(entries[0]["opening_date"], "2026年11月21日")
+        self.assertEqual(entries[1]["store_name"], "ナイスネイル")
+
+    def test_seamall_listing_without_store_name_is_ignored(self):
+        entries = module.extract_shop_listing_entries(
+            ["2026年11月21日オープン 場所 5階"],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries, [])
+
+
 if __name__ == "__main__":
     unittest.main()
