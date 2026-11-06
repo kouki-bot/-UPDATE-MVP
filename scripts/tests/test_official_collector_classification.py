@@ -138,6 +138,23 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
             "",
         )
 
+    def test_lodging_facility_is_excluded_from_shop_feed(self):
+        for title in [
+            "山口市に新しいホテルがオープン",
+            "下関市の旅館がリニューアルオープン",
+            "周南市にゲストハウスが開業",
+        ]:
+            with self.subTest(title=title):
+                categories, _ = module.classify_text(title)
+                self.assertEqual(categories, [])
+
+    def test_public_support_center_is_excluded_from_shop_feed(self):
+        categories, basis = module.classify_text(
+            "子育て支援センター「あいあいキッズ 星プラザ」がオープン中"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
+
     def test_store_opening_is_kept(self):
         categories, basis = module.classify_text(
             "山口市に新しいカフェがオープン"
