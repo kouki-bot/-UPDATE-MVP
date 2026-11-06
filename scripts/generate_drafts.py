@@ -196,6 +196,12 @@ def is_event_only_content(title, body_excerpt=""):
         "祭り開催", "ワークショップ", "参加者募集", "出店者募集",
         "説明会", "体験会",
     )
+    body_text = clean_text(body_excerpt)
+    # 学校の授業・実習として一日だけ営業するレストランは新規店舗ではない。
+    if re.search(r"(?:専門学校|高校|大学).{0,40}(?:在校生|学生).{0,30}(?:調理|接客).{0,30}(?:レストラン|飲食)", body_text):
+        return True
+    if re.search(r"(?:一日限り|1日限り|一日だけ|1日だけ|一日限定|1日限定).{0,30}(?:営業|開店|レストラン|飲食店)", body_text):
+        return True
     if not any(marker in title_text for marker in event_markers):
         return False
     store_movement = re.search(
@@ -290,6 +296,28 @@ def is_clearly_outside_yamaguchi(title, body_excerpt=""):
     combined = f"{title_text} {location_prefix}"
     return any(re.search(pattern, combined) for pattern in FOREIGN_CITY_STORE_PATTERNS)
 
+def extract_event_date(title, body_excerpt, published_date=""):
+    """記事本文・タイトルから店舗動作日を抽出。年なし日付は公開日の年を使う。"""
+    explicit = re.search(r"(20\\d{2})[年./-](\\d{1,2})[月./-](\\d{1,2})日?", clean_text(body_excerpt) + " " + clean_text(title))
+    if explicit:
+        try:
+            return datetime(int(explicit.group(1)), int(explicit.group(2)), int(explicit.group(3)), tzinfo=JST).date().isoformat()
+        except ValueError:
+            return ""
+    base = parse_date(published_date)
+    if base:
+        month_day = re.search(r"(\\d{1,2})月(\\d{1,2})日", clean_text(body_excerpt) + " " + clean_text(title))
+        if month_day:
+            try:
+                candidate = datetime(base.year, int(month_day.group(1)), int(month_day.group(2)), tzinfo=JST)
+                # 公開日から大きく離れる年跨ぎは誤推定しない。
+                if abs((candidate.date() - base.date()).days) <= 120:
+                    return candidate.date().isoformat()
+            except ValueError:
+                pass
+    return ""
+
+
 def convert_candidate(item, method, source_priority):
     title, url = clean_text(item.get("title")), clean_text(item.get("url"))
     if not title or not url or not is_store_news(title, item.get("body_excerpt") or item.get("description", "")):
@@ -311,7 +339,7 @@ def convert_candidate(item, method, source_priority):
     if not isinstance(area, list):
         area = [area] if area else []
     date_value = clean_text(item.get("published_date"))
-    event_date = clean_text(item.get("event_date") or item.get("opening_date"))
+    event_date = clean_text(item.get("event_date") or item.get("opening_date")) or extract_event_date(title, body, date_value)
     # 記事公開日は取得元の明示情報だけを使用する。タイトル内の日付は店舗動作日かもしれないため流用しない。
     return {
         "title": title, "url": url, "normalized_url": normalize_url(url),
@@ -377,6 +405,26 @@ def event_terms(item):
         title = title.replace(word, " ")
     return re.sub(r"\s+", " ", title).strip()
 
+def same_store_news_candidate(a, b):
+    """同じ店舗名・同じ動き・近い記事日付の候補だけ統合する。"""
+    if not (set(a.get("category", [])) & set(b.get("category", []))):
+        return False
+    names_a = set(duplicate_store_entity(a.get("title", "")))
+    names_b = set(duplicate_store_entity(b.get("title", "")))
+    if not names_a or not (names_a & names_b):
+        return False
+    date_a = parse_date(a.get("published_date", ""))
+    date_b = parse_date(b.get("published_date", ""))
+    if date_a and date_b and abs((date_a.date() - date_b.date()).days) > 21:
+        return False
+    # 同名チェーンでも別市町なら統合しない。
+    towns_a = set(extract_municipality_candidates(a.get("title", ""), a.get("body_excerpt", "")))
+    towns_b = set(extract_municipality_candidates(b.get("title", ""), b.get("body_excerpt", "")))
+    if towns_a and towns_b and not (towns_a & towns_b):
+        return False
+    return True
+
+
 def same_event(a, b):
     """誤統合を避け、明確に同じニュースと判断できる場合だけ統合する。"""
 
@@ -431,7 +479,7 @@ def merge_candidates(items):
                 normalize_url(s.get("url", ""))
                 for s in old.get("source_urls", [])
             )
-            if normalized in old_urls or same_event(candidate, old):
+            if normalized in old_urls or same_event(candidate, old) or same_store_news_candidate(candidate, old):
                 match_index = index
                 break
         if match_index is None:
@@ -507,7 +555,8 @@ def is_in_store_scope(item):
 
 def make_draft(item):
     date_value = item.get("published_date", "")
-    freshness, age = get_freshness(date_value)
+    freshness_basis = date_value or item.get("event_date", "")
+    freshness, age = get_freshness(freshness_basis)
     if freshness == "直近30日":
         note = "直近30日の記事です。掲載前に現在の営業状況を確認してください。"
     elif freshness == "31〜90日前":
@@ -519,6 +568,8 @@ def make_draft(item):
     else:
         note = "公開日を確認できていません。元記事で確認してください。"
     summary = "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。" + note
+    if not date_value and item.get("event_date"):
+        summary += " 鮮度は記事公開日ではなく、本文から抽出した店舗動作日を基準にしています。"
     if not item.get("body_excerpt"):
         summary += " 元記事の概要を取得できていないため、本文の確認が必要です。"
     url = item["url"]
