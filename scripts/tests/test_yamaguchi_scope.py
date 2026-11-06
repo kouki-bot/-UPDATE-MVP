@@ -192,6 +192,28 @@ class YamaguchiScopeTests(unittest.TestCase):
             "2026-08-27",
         )
 
+    def test_opening_sale_end_date_is_not_used_as_opening_date(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "ケーズデンキ山口店オープン開店前２００人が列",
+                "家電量販店「ケーズデンキ山口店」が２９日、山口市にオープンした。"
+                "１１月１３日までのオープンセールが始まり、初日の店内はにぎわった。",
+                "2026-10-30",
+            ),
+            "2026-10-29",
+        )
+
+    def test_next_day_after_closure_is_not_closure_date(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "宇部の新店舗",
+                "しまむら宇部店は、店舗移転に伴い閉店しました。"
+                "閉店した翌日(2026年10月26日)から作業が行われました。",
+                "2026-10-30",
+            ),
+            "",
+        )
+
     def test_future_month_end_closure_date_is_extracted(self):
         self.assertEqual(
             module.extract_event_date(
