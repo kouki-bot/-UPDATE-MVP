@@ -187,9 +187,30 @@ def has_body_movement_evidence(body_excerpt):
         body_excerpt,
     ))
 
-def is_store_news(title, body_excerpt=""):
-    # 学校行事・イベント告知の「オープン」は施設や店舗の開業を意味しない。
+def is_event_only_content(title, body_excerpt=""):
+    """店舗の開業・閉店ではなく、単発イベント告知と判断できる候補を除外する。"""
     title_text = clean_text(title)
+    event_markers = (
+        "オープンキャンパス", "一日限定イベント", "1日限定イベント",
+        "一日イベント", "イベント開催", "マルシェ", "フェス開催",
+        "祭り開催", "ワークショップ", "参加者募集", "出店者募集",
+        "説明会", "体験会",
+    )
+    if not any(marker in title_text for marker in event_markers):
+        return False
+    store_movement = re.search(
+        r"(?:新店|新店舗|新規開店|新規出店|オープン|開店|開業|閉店|営業終了|閉業|移転|リニューアル|改装オープン)",
+        title_text,
+    )
+    return not bool(store_movement)
+
+
+def is_store_news(title, body_excerpt=""):
+    # 単発イベント・学校行事は店舗の開閉店情報ではないため除外。
+    title_text = clean_text(title)
+    if is_event_only_content(title_text, body_excerpt):
+        return False
+    # 学校行事・イベント告知の「オープン」は施設や店舗の開業を意味しない。
     if "オープンキャンパス" in title_text:
         return False
     if any(word in title_text for word in ["イベント", "フェア", "説明会", "体験会"]):
@@ -410,7 +431,7 @@ def merge_candidates(items):
                 normalize_url(s.get("url", ""))
                 for s in old.get("source_urls", [])
             )
-            if normalized in old_urls:
+            if normalized in old_urls or same_event(candidate, old):
                 match_index = index
                 break
         if match_index is None:
@@ -674,6 +695,21 @@ def annotate_review_flags(drafts):
             draft["review_priority"] = "確認推奨"
         else:
             draft["review_priority"] = "基本項目あり・内容確認は必要"
+
+        hold_flags = {
+            "情報源URLなし", "本文抜粋なし", "公開日未確認",
+            "開店・閉店等の日付未確認", "市町候補が複数",
+            "市町未特定", "未来日付", "重複の可能性・要確認",
+        }
+        if draft.get("freshness") not in {"直近30日", "31〜90日前"}:
+            draft["review_bucket"] = "確認待ち"
+        elif any(flag in hold_flags for flag in flags):
+            draft["review_bucket"] = "確認待ち"
+        elif draft.get("content_type") == "その他施設・サービス（要確認）":
+            draft["review_bucket"] = "確認待ち"
+        else:
+            draft["review_bucket"] = "通常候補（要確認）"
+
         draft["status"] = "未確認・公開禁止"
 
         for flag in flags:
@@ -698,7 +734,11 @@ def main():
     drafts.sort(key=sort_key)
     
     review_summary = annotate_review_flags(drafts)
-    
+    review_bucket_counts = {}
+    for draft in drafts:
+        bucket = draft.get("review_bucket", "確認待ち")
+        review_bucket_counts[bucket] = review_bucket_counts.get(bucket, 0) + 1
+
     freshness_counts, category_counts, municipality_counts, content_type_counts = {}, {}, {}, {}
     for draft in drafts:
         f = draft["freshness"]
@@ -717,6 +757,7 @@ def main():
         "category_counts": category_counts,
         "content_type_counts": dict(sorted(content_type_counts.items())),
         "municipality_counts": municipality_counts,
+        "review_bucket_counts": review_bucket_counts,
         **review_summary,
         "note": "対象は山口県内の店舗・商業サービスの新店・開店、閉店、移転、リニューアルです。宿泊施設・観光レジャー・公共地域施設は対象外。90日より前の記事は通常候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。",
         "drafts": drafts,
