@@ -415,7 +415,7 @@ def classify_text(title, body=""):
         return [], "イベント除外"
 
     categories = []
-    if any(word in title for word in ["閉店", "営業終了", "閉業"]):
+    if any(word in title for word in ["閉店", "営業終了", "閉業", "廃業", "営業を終了"]):
         categories.append("閉店")
 
     if any(word in title for word in ["移転", "店舗移転"]):
@@ -442,6 +442,27 @@ def classify_text(title, body=""):
         ):
             categories.append("新店・開店")
 
+    # 地域名と店舗の動きがタイトルに明記されている場合は、
+    # 店名に業種語がなくても「要確認候補」として拾う。
+    # 例:「ケーズデンキ山口店オープン」「サイゼリヤ...山陽小野田市...オープン」
+    local_context = any(area in combined for area in JAPAN_AREAS) or "山口県内" in combined
+    if not categories and local_context:
+        title_has_shop_name = bool(re.search(
+            r"(?:[一-龥ぁ-んァ-ヶA-Za-z0-9ー・]{2,}(?:店|店舗)|県内初(?:出店|進出))",
+            title,
+        ))
+        if title_has_shop_name:
+            if any(word in title for word in ["閉店", "営業終了", "営業を終了", "閉業", "廃業"]):
+                categories.append("閉店")
+            elif any(word in title for word in ["移転", "移転オープン"]):
+                categories.append("移転")
+            elif any(word in title for word in ["リニューアル", "改装オープン"]):
+                categories.append("リニューアル")
+            elif any(word in title for word in ["オープン", "開店", "開業", "出店", "進出"]):
+                categories.append("新店・開店")
+        if categories:
+            return list(dict.fromkeys(categories)), "地域・店舗名・動向／要確認"
+
     # 本文のみで候補にする場合は、汎用語「店」「市場」では判定しない。
     # 「店舗がオープンしました」など、実際の動作が完了・予定した表現を要求する。
     if not categories and body:
@@ -453,10 +474,10 @@ def classify_text(title, body=""):
             "書店", "薬局", "コンビニ", "百貨店", "モール",
         ]
         body_patterns = [
-            ("閉店", r"(?:閉店|営業終了|閉業)(?:しました|します|することになりました|いたします)"),
-            ("移転", r"(?:移転|移転オープン)(?:しました|します|することになりました)"),
-            ("リニューアル", r"(?:リニューアルオープン|改装オープン)(?:しました|します)"),
-            ("新店・開店", r"(?:オープン|開店|開業|出店)(?:しました|します|いたしました|いたします)"),
+            ("閉店", r"(?:閉店|営業終了|営業を終了|閉業|廃業)(?:しました|します|することになりました|いたします|する予定です|予定です|へ)"),
+            ("移転", r"(?:移転|移転オープン)(?:しました|します|することになりました|する予定です|予定です)"),
+            ("リニューアル", r"(?:リニューアルオープン|改装オープン)(?:しました|します|する予定です|予定です)"),
+            ("新店・開店", r"(?:オープン|開店|開業|出店|営業開始|営業を開始|開設)(?:しました|します|いたしました|いたします|する予定です|予定です|予定|へ)"),
         ]
         body_sentences = [
             clean_text(part)
