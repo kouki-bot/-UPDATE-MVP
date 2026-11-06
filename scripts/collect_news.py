@@ -429,12 +429,17 @@ def classify_text(title, body=""):
         if title_has_business or "リニューアルオープン" in title:
             categories.append("リニューアル")
 
-    if any(word in title for word in [
-        "新店", "新規開店", "新規オープン",
+    explicit_new_store = bool(re.search(
+        r"新店(?:オープン|開店|が|を|、|「|『|：|:)",
+        title,
+    ))
+    if explicit_new_store or any(word in title for word in [
+        "新規開店", "新規オープン",
         "オープン", "開店", "出店", "開業",
     ]):
-        explicit_opening = any(
-            word in title for word in ["新店", "新規開店", "新規オープン"]
+        explicit_opening = (
+            explicit_new_store
+            or any(word in title for word in ["新規開店", "新規オープン"])
         )
         if (
             (explicit_opening or title_has_business)
