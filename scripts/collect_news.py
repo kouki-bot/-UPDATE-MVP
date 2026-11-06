@@ -31,6 +31,11 @@ SOURCES = [
         "domain": "www.seamall.jp",
         "kind": "shop_listing",
     },
+    {
+        "name": "イオンタウン防府公式",
+        "url": "https://www.aeontown.co.jp/hofu/",
+        "domain": "www.aeontown.co.jp",
+    },
 ]
 
 MAX_PAGES_PER_SOURCE = 30
@@ -90,7 +95,7 @@ KEYWORD_GROUPS = {
 PRIORITY_WORDS = [
     "news", "notice", "topics", "release",
     "oshirase", "koho", "お知らせ", "新着",
-    "報道", "press", "event", "event-info",
+    "報道", "press", "event", "event-info", "information",
 ]
 
 # 公開日として扱う可能性のあるメタ情報
@@ -331,6 +336,7 @@ def is_article_url(url):
     return bool(
         re.search(r"/press/\d+\.html$", path)
         or re.search(r"/site/topics/\d+\.html$", path)
+        or re.search(r"/information/detail/$", path)
     )
 
 
@@ -493,12 +499,17 @@ def classify_text(title, body=""):
         r"新店(?:オープン|開店|が|を|、|「|『|：|:)",
         title,
     ))
-    if explicit_new_store or any(word in title for word in [
+    english_new_open = bool(
+        re.search(r"\b(?:NEW\s+)?OPEN\b", title, flags=re.IGNORECASE)
+        and ("新店" in title or "NEW" in title.upper())
+    )
+    if explicit_new_store or english_new_open or any(word in title for word in [
         "新規開店", "新規オープン",
         "オープン", "開店", "出店", "開業",
     ]):
         explicit_opening = (
             explicit_new_store
+            or english_new_open
             or any(word in title for word in ["新規開店", "新規オープン"])
         )
         if (
