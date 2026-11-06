@@ -73,5 +73,22 @@ class DraftSortingTests(unittest.TestCase):
         self.assertEqual(drafts[0]["review_priority"], "基本項目あり・内容確認は必要")
         self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
 
+
+    def test_lodging_is_outside_store_scope(self):
+        item = {"title": "山口市に新しいホテルがオープン", "body_excerpt": ""}
+        self.assertFalse(module.is_in_store_scope(item))
+
+    def test_tourism_and_leisure_are_outside_store_scope(self):
+        item = {"title": "観光農園が新規オープン", "body_excerpt": ""}
+        self.assertFalse(module.is_in_store_scope(item))
+
+    def test_public_facility_is_outside_store_scope(self):
+        item = {"title": "新しい図書館が開館", "body_excerpt": ""}
+        self.assertFalse(module.is_in_store_scope(item))
+
+    def test_retail_shop_remains_in_store_scope(self):
+        item = {"title": "山口市に新しいカフェがオープン", "body_excerpt": ""}
+        self.assertTrue(module.is_in_store_scope(item))
+
 if __name__ == "__main__":
     unittest.main()
