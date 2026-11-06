@@ -1,4 +1,3 @@
-
 name: Yamaguchi Local Update
 
 on:
@@ -12,7 +11,6 @@ permissions:
 jobs:
   collect:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -28,22 +26,54 @@ jobs:
       - name: Collect RSS news candidates
         run: python scripts/collect_rss.py
 
-      - name: Generate article drafts
+      - name: Generate review-only drafts
         run: python scripts/generate_drafts.py
 
       - name: Run publication safety tests
         run: python -m unittest discover -s scripts/tests -v
 
-      - name: Build approved published data
+      - name: Validate all collected candidates remain unpublished
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for filename, key in [
+              ("data/source_checks.json", "candidates"),
+              ("data/rss_candidates.json", "candidates"),
+              ("data/drafts.json", "drafts"),
+          ]:
+              data = json.loads(Path(filename).read_text(encoding="utf-8"))
+              rows = data.get(key, [])
+              unsafe = [x for x in rows if x.get("status") != "未確認・公開禁止"]
+              if unsafe:
+                  raise SystemExit(f"{filename}: unpublished check failed ({len(unsafe)})")
+              print(f"{filename}: {len(rows)}件すべて未確認・公開禁止")
+          PY
+
+      - name: Upload private review package
+        uses: actions/upload-artifact@v4
+        with:
+          name: yamaguchi-review-candidates-${{ github.run_number }}
+          path: |
+            data/source_checks.json
+            data/rss_candidates.json
+            data/drafts.json
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Build public data from approved records only
         run: python scripts/publish_approved.py
 
-      - name: Save results
+      - name: Save public data only
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/source_checks.json data/rss_candidates.json data/drafts.json data/published.json data/publication_approvals.json
-          git diff --cached --quiet && exit 0
-          git commit -m "Update news candidates and drafts"
+          git add data/published.json data/publication_approvals.json
+          if git diff --cached --quiet; then
+            echo "No public data changes."
+            exit 0
+          fi
+          git commit -m "Update approved published articles"
           git fetch origin main
           git rebase origin/main
           git push origin main
