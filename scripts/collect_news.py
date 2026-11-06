@@ -280,45 +280,54 @@ def fetch_page(url):
         headers={
             "User-Agent": (
                 "Mozilla/5.0 "
-                "(compatible; YamaguchiLocalUpdate/2.0)"
+                "(compatible; YamaguchiLocalUpdate/2.1)"
             )
         },
     )
 
-    with urlopen(request, timeout=20) as response:
-        content_type = response.headers.get(
-            "Content-Type",
-            "",
-        )
-
-        if "html" not in content_type.lower():
-            return ""
-
-        raw = response.read(MAX_HTML_BYTES)
-
-        charset_match = re.search(
-            r"charset=([^\s;]+)",
-            content_type,
-            flags=re.IGNORECASE,
-        )
-
-        charset = (
-            charset_match.group(1).strip("\"'")
-            if charset_match
-            else "utf-8"
-        )
-
+    last_error = None
+    for attempt in range(2):
         try:
-            return raw.decode(
-                charset,
-                errors="replace",
-            )
-        except LookupError:
-            return raw.decode(
-                "utf-8",
-                errors="replace",
-            )
+            with urlopen(request, timeout=20) as response:
+                content_type = response.headers.get(
+                    "Content-Type",
+                    "",
+                )
 
+                if "html" not in content_type.lower():
+                    return ""
+
+                raw = response.read(MAX_HTML_BYTES)
+
+                charset_match = re.search(
+                    r"charset=([^\\s;]+)",
+                    content_type,
+                    flags=re.IGNORECASE,
+                )
+
+                charset = (
+                    charset_match.group(1).strip("\\"'")
+                    if charset_match
+                    else "utf-8"
+                )
+
+                try:
+                    return raw.decode(
+                        charset,
+                        errors="replace",
+                    )
+                except LookupError:
+                    return raw.decode(
+                        "utf-8",
+                        errors="replace",
+                    )
+        except (URLError, TimeoutError, OSError) as error:
+            last_error = error
+            if attempt == 0:
+                print("一時的な取得失敗、再試行:", url, str(error)[:120])
+                time.sleep(1)
+
+    raise last_error
 
 def extract_page_text(parser):
     """
@@ -513,12 +522,14 @@ def main():
             "checked_at": checked_at,
             "status": "check_needed",
             "pages_scanned": 0,
+            "fetch_errors": [],
             "note": "",
         }
 
         queue = [source["url"]]
         visited = set()
         queued = {source["url"]}
+        successful_pages = 0
 
         while queue and len(visited) < MAX_PAGES_PER_SOURCE:
             current_url = queue.pop(0)
@@ -541,6 +552,7 @@ def main():
                 if not html:
                     continue
 
+                successful_pages += 1
                 parser = PageParser()
                 parser.feed(html)
 
@@ -622,22 +634,29 @@ def main():
                 ValueError,
                 OSError,
             ) as error:
+                error_record = {
+                    "url": current_url,
+                    "error": str(error)[:180],
+                }
+                result["fetch_errors"].append(error_record)
                 print(
                     "取得失敗:",
                     current_url,
                     str(error)[:150],
                 )
 
-        result["pages_scanned"] = len(visited)
+        result["pages_scanned"] = successful_pages
 
-        result["status"] = (
-            "reachable"
-            if visited
-            else "check_needed"
-        )
+        if successful_pages and result["fetch_errors"]:
+            result["status"] = "partial"
+        elif successful_pages:
+            result["status"] = "reachable"
+        else:
+            result["status"] = "check_needed"
 
         result["note"] = (
-            "ページ本文・リンク・候補ページを確認。"
+            "成功ページ数と取得失敗を分けて記録。"
+            "一時的な通信・SSLエラーは1回再試行。"
             "公開日は明示的なメタ情報を優先。"
             "公開前に元記事を確認してください。"
         )
