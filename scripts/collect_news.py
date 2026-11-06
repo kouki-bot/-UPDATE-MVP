@@ -35,6 +35,19 @@ SOURCES = [
         "name": "イオンタウン防府公式",
         "url": "https://www.aeontown.co.jp/hofu/",
         "domain": "www.aeontown.co.jp",
+        "default_area": "防府市",
+    },
+    {
+        "name": "おのだサンパーク公式・新店情報",
+        "url": "https://www.sunpark.co.jp/",
+        "domain": "www.sunpark.co.jp",
+        "default_area": "山陽小野田市",
+    },
+    {
+        "name": "徳山デッキ公式・店舗オープン情報",
+        "url": "https://tokuyamadeck.com/",
+        "domain": "tokuyamadeck.com",
+        "default_area": "周南市",
     },
 ]
 
@@ -639,6 +652,7 @@ def inspect_candidate(
     link_title,
     source_name,
     source_page,
+    default_area="",
     audit_log=None,
 ):
     article_title = clean_text(link_title)
@@ -702,6 +716,8 @@ def inspect_candidate(
         area = extract_area(
             article_title + " " + body
         )
+        if not area and default_area:
+            area = [default_area]
 
         item_id = hashlib.sha256(
             target_url.encode("utf-8")
@@ -936,6 +952,7 @@ def main():
                         link_title=title,
                         source_name=source["name"],
                         source_page=current_url,
+                        default_area=source.get("default_area", ""),
                         audit_log=article_audit,
                     )
 
