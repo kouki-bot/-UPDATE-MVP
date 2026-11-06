@@ -290,12 +290,15 @@ def convert_candidate(item, method, source_priority):
     if not isinstance(area, list):
         area = [area] if area else []
     date_value = clean_text(item.get("published_date"))
-    if not parse_date(date_value):
+    event_date = clean_text(item.get("event_date") or item.get("opening_date"))
+    # 公式施設の店舗一覧にある開店日は、記事公開日へ流用しない。
+    if not parse_date(date_value) and not event_date:
         title_date = date_from_title(title)
         if title_date:
             date_value = title_date.isoformat()
     return {
         "title": title, "url": url, "normalized_url": normalize_url(url),
+        "event_date": event_date,
         "source_name": clean_text(item.get("source_name")), "category": categories,
         "published_date": date_value, "body_excerpt": body,
         "collection_method": method, "category_basis": clean_text(item.get("category_basis")),
@@ -508,7 +511,8 @@ def make_draft(item):
         "id": hashlib.sha256(normalize_url(url).encode("utf-8")).hexdigest()[:16],
         "title": item["title"], "suggested_headline": item["title"],
         "category": item["category"], "priority": get_priority(item["category"]),
-        "published_date": date_value, "freshness": freshness, "age_days": age,
+        "published_date": date_value, "event_date": clean_text(item.get("event_date")),
+        "freshness": freshness, "age_days": age,
         "area": item.get("area", []), "area_status": area_status,
         "municipality": municipality, "municipality_candidates": municipality_candidates,
         "municipality_group": municipality if municipality else "地域要確認",
@@ -634,6 +638,8 @@ def annotate_review_flags(drafts):
             flags.append("本文抜粋なし")
         if not draft.get("published_date"):
             flags.append("公開日未確認")
+        if not draft.get("event_date"):
+            flags.append("開店・閉店等の日付未確認")
         if len(draft.get("municipality_candidates", [])) > 1:
             flags.append("市町候補が複数")
         elif not draft.get("municipality"):
