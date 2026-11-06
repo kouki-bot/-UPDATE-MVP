@@ -368,6 +368,28 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         )
         self.assertEqual(entries, [])
 
+    def test_seamall_floor_excludes_descriptive_text(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年8月8日オープン 店名 福恩麻辣湯 "
+                "場所 地下1階 本場級の麻辣湯を提供します"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries[0]["floor"], "地下1階")
+
+    def test_seamall_excludes_litalico_welfare_support_center(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年10月1日オープン 店名 LITALICOワークス下関 "
+                "場所 4階"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries, [])
+
     def test_seamall_listing_without_store_name_is_ignored(self):
         entries = module.extract_shop_listing_entries(
             ["2026年11月21日オープン 場所 5階"],
