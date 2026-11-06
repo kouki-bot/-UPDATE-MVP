@@ -1,0 +1,65 @@
+name: Test official site collector (safe)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  collect-official-sites:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check Python syntax
+        run: python -m py_compile scripts/collect_news.py
+
+      - name: Run official site collector
+        run: python scripts/collect_news.py
+
+      - name: Validate collector output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("data/source_checks.json")
+          if not path.exists():
+              raise SystemExit("source_checks.json was not created")
+
+          data = json.loads(path.read_text(encoding="utf-8"))
+          sources = data.get("sources", [])
+          candidates = data.get("candidates", [])
+          print(f"公式情報源: {len(sources)}")
+          print(f"調査ページ: {len(data.get('scanned_pages', []))}")
+          print(f"候補記事: {len(candidates)}")
+          for source in sources:
+              print(
+                  f"- {source.get('name')}: "
+                  f"status={source.get('status')}, "
+                  f"pages={source.get('pages_scanned')}, "
+                  f"note={source.get('note', '')}"
+              )
+          for item in candidates[:20]:
+              print(
+                  f"  候補: {item.get('title')} | "
+                  f"{item.get('category')} | "
+                  f"{item.get('area')} | {item.get('url')}"
+              )
+          PY
+
+      - name: Upload official collector results
+        uses: actions/upload-artifact@v4
+        with:
+          name: official-site-collector-results
+          path: data/source_checks.json
+          if-no-files-found: error
+          retention-days: 7
