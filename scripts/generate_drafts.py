@@ -726,6 +726,14 @@ def duplicate_store_entity(title):
     value = clean_text(title)
     value = re.sub(r"^\s*20\d{2}[年/.-]\d{1,2}[月/.-]\d{1,2}[^ ]*\s*", "", value)
     value = re.sub(r"【[^】]*】|\[[^\]]*\]", " ", value)
+        # 見出し冒頭の動作表現を店舗名抽出前に除去
+    value = re.sub(
+        r"^\s*(?:(?:来夏|来年|今夏|今月|今週|今秋|今冬)?"
+        r"(?:閉店|開店|移転|閉業|営業終了|リニューアル)"
+        r"(?:予定|へ|の|する|となる)?)+\s*",
+        "",
+        value,
+    )
     generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
     matches = re.findall(r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24}?(?:店|スタジオ|専門店)", value)
     candidates = []
