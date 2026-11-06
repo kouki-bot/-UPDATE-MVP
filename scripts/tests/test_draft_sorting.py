@@ -47,6 +47,32 @@ class DraftSortingTests(unittest.TestCase):
         self.assertEqual(drafts[0]["review_priority"], "情報不足・保留")
         self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
 
+    def test_missing_date_is_separated_into_review_queue(self):
+        drafts = [{
+            "id": "unknown-date", "title": "宇部市にカフェがオープン",
+            "category": ["新店・開店"],
+            "source_url": "https://example.jp/article",
+            "source_urls": [{"source_name": "公式", "url": "https://example.jp/article"}],
+            "body_excerpt": "宇部市にカフェがオープンしました。",
+            "published_date": "", "event_date": "",
+            "municipality": "宇部市", "municipality_candidates": ["宇部市"],
+            "freshness": "日付確認が必要",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
+    def test_old_date_is_separated_into_review_queue(self):
+        draft = {
+            "freshness": "90日より前", "published_date": "2026-01-01",
+            "priority": 1, "review_flags": [],
+        }
+        # The generator excludes >90-day items from ordinary drafts;
+        # this asserts the sorting contract remains explicit.
+        self.assertGreater(module.sort_key(draft)[0], module.sort_key({
+            "freshness": "直近30日", "published_date": "2026-10-01", "priority": 5
+        })[0])
+
     def test_duplicate_candidate_gets_separate_review_priority(self):
         drafts = [{
             "id": "dup", "title": "宇部の新店オープン", "category": ["新店・開店"],
