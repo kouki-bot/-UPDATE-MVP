@@ -226,6 +226,37 @@ class ReviewFlagTests(unittest.TestCase):
         self.assertFalse(module.same_store_duplicate(a, b))
         self.assertFalse(module.same_store_duplicate(a, c))
 
+    def test_official_store_event_date_is_separate_from_publication_date(self):
+        item = {
+            "url": "https://example.com/new-shop",
+            "title": "店舗オープン情報",
+            "category": ["新店・開店"],
+            "published_date": "",
+            "event_date": "2026年11月21日",
+            "body_excerpt": "LUNA STUDIOが11月21日にオープン",
+            "source_name": "公式施設",
+        }
+        converted = module.convert_candidate(item, "公式サイト", 1)
+        self.assertIsNotNone(converted)
+        self.assertEqual(converted["published_date"], "")
+        self.assertEqual(converted["event_date"], "2026年11月21日")
+        draft = module.make_draft(converted)
+        self.assertEqual(draft["published_date"], "")
+        self.assertEqual(draft["event_date"], "2026年11月21日")
+        self.assertEqual(draft["freshness"], "日付確認が必要")
+
+    def test_missing_event_date_is_flagged_without_approving(self):
+        drafts = [{
+            "id": "event-missing", "title": "店舗", "category": ["新店・開店"],
+            "source_url": "https://example.com", "source_urls": [],
+            "body_excerpt": "抜粋", "published_date": "2026-11-01",
+            "event_date": "", "municipality": "山口市",
+            "municipality_candidates": ["山口市"], "freshness": "直近30日",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertIn("開店・閉店等の日付未確認", drafts[0]["review_flags"])
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
     def test_missing_data_flagged(self):
         drafts = [{"id":"x","title":"店舗","category":["閉店"],"source_url":"","source_urls":[],"body_excerpt":"","published_date":"","municipality":"","municipality_candidates":[],"freshness":"日付確認が必要","status":"x"}]
         module.annotate_review_flags(drafts)
