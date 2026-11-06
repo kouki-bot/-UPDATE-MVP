@@ -606,16 +606,27 @@ def classify_text(title, body=""):
     return [], "分類要確認"
 
 def extract_store_name_from_body(text):
-    """記事本文で引用符付きで明示された店舗名を抽出する。"""
+    """記事本文の引用符付き店舗名を抽出する。"""
     text = clean_text(text)
-    patterns = [
-        r"[「『]\\s*([^」』]{2,60}?)\\s*[」』](?:が|は)\\s*(?:リフレッシュ)?オープン",
-        r"[「『]\\s*([^」』]{2,60}?)\\s*[」』](?:が|は)\\s*営業を開始",
-    ]
-    for pattern in patterns:
-        match = re.search(pattern, text)
-        if match:
-            return clean_text(match.group(1))
+    quote_pairs = [("「", "」"), ("『", "』")]
+    movement_words = ("オープン", "営業を開始")
+    for opening_quote, closing_quote in quote_pairs:
+        start = 0
+        while True:
+            left = text.find(opening_quote, start)
+            if left < 0:
+                break
+            right = text.find(closing_quote, left + 1)
+            if right < 0:
+                break
+            name = clean_text(text[left + 1:right])
+            tail = text[right + 1:right + 30]
+            if 2 <= len(name) <= 60 and (
+                tail.lstrip().startswith(("が", "は"))
+                and any(word in tail for word in movement_words)
+            ):
+                return name
+            start = right + 1
     return ""
 
 
@@ -630,30 +641,31 @@ def build_candidate_title(title, body, source_name):
 
 
 def extract_opening_date(text):
-    """開店表現に結びついた日付だけを抽出し、掲載日との混同を防ぐ。"""
+    """同一文内で開店表現と結びついた日付だけを抽出する。"""
     text = clean_text(text)
-    patterns = [
-        r"(?<!\d)((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)"
+    sentences = re.split(r"(?<=[。！？])", text)
+    date_pattern = re.compile(
+        r"(?<!\\d)((?:20\\d{2}|\\d{2})年\\d{1,2}月\\d{1,2}日)"
         r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
-        r"(?:\s*(?:に|から|より))?\s*(?:新規)?(?:オープン|開店|営業開始|New\s+Open)",
-        r"(?<!\d)((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)"
-        r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
-        r".{0,100}?(?:オープンしました|オープンします|営業を開始)",
-    ]
-    match = None
-    for pattern in patterns:
-        match = re.search(pattern, text, flags=re.IGNORECASE)
-        if match:
-            break
-    if not match:
-        return ""
-    date_text = match.group(1)
-    year_match = re.match(r"(20\d{2}|\d{2})年", date_text)
-    year = int(year_match.group(1))
-    if year < 100:
-        year += 2000
-        date_text = re.sub(r"^\d{2}年", f"{year}年", date_text)
-    return date_text
+    )
+    movement_pattern = re.compile(
+        r"(?:オープン|開店|営業開始|営業を開始|New\\s+Open)",
+        flags=re.IGNORECASE,
+    )
+    for sentence in sentences:
+        if not movement_pattern.search(sentence):
+            continue
+        match = date_pattern.search(sentence)
+        if not match:
+            continue
+        date_text = match.group(1)
+        year_match = re.match(r"(20\\d{2}|\\d{2})年", date_text)
+        year = int(year_match.group(1))
+        if year < 100:
+            year += 2000
+            date_text = re.sub(r"^\\d{2}年", f"{year}年", date_text)
+        return date_text
+    return ""
 
 
 def extract_published_date(parser, body):
