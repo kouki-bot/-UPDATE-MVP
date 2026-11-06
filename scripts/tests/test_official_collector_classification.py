@@ -115,6 +115,29 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
             ["山口市"],
         )
 
+    def test_hoshi_plaza_source_has_kudamatsu_area(self):
+        source = next(
+            item for item in module.SOURCES
+            if item["name"] == "星プラザ公式"
+        )
+        self.assertEqual(source["default_area"], "下松市")
+
+    def test_public_childcare_center_is_not_a_shop_opening(self):
+        categories, _ = module.classify_text(
+            "子育て支援センター「あいあいキッズ 星プラザ」がオープン中",
+            "3階に子育て支援センターがオープン中です。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_publication_date_is_not_mistaken_for_opening_date(self):
+        self.assertEqual(
+            module.extract_opening_date(
+                "2024年10月24日(木) 店舗オープン情報。"
+                "10月24日(木)にファディーがオープンしました。"
+            ),
+            "",
+        )
+
     def test_store_opening_is_kept(self):
         categories, basis = module.classify_text(
             "山口市に新しいカフェがオープン"
