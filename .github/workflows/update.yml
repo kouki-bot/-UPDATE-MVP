@@ -6,7 +6,7 @@ on:
     - cron: "0 0 * * 1"
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   collect:
@@ -50,8 +50,10 @@ jobs:
               print(f"{filename}: {len(rows)}件すべて未確認・公開禁止")
           PY
 
-      - name: Build public data from approved records only
-        run: python scripts/publish_approved.py
+      - name: Upload candidates to private review repository
+        env:
+          PRIVATE_REVIEW_TOKEN: ${{ secrets.PRIVATE_REVIEW_TOKEN }}
+        run: python scripts/private_review_sync.py upload
 
       - name: Save public data only
         run: |
