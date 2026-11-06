@@ -89,7 +89,8 @@ return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0
 });
 rows.sort(function(a,b){
 var order={"要優先確認":0,"重複確認":1,"情報不足・保留":2,"確認推奨":3,"基本項目あり・内容確認は必要":4};
-return (order[a.review_priority||"確認推奨"]||9)-(order[b.review_priority||"確認推奨"]||9);
+var ap=order[a.review_priority||"確認推奨"],bp=order[b.review_priority||"確認推奨"];
+return (ap===undefined?9:ap)-(bp===undefined?9:bp);
 });
 el("shownCount").textContent=rows.length+"件";
 if(!rows.length){el("items").innerHTML='<div class="empty">条件に一致する記事はありません。</div>';return;}
