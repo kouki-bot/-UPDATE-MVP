@@ -64,13 +64,7 @@ shop:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&f
 plants:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=85"};
 function categoryText(value){if(Array.isArray(value))return value.join("・");return typeof value==="string"?value:"";}
 function categoryGroup(value){const categories=Array.isArray(value)?value:[value];if(categories.some(c=>allowedCategories.new.includes(c)))return"new";if(categories.some(c=>allowedCategories.closed.includes(c)))return"closed";if(categories.some(c=>allowedCategories.other.includes(c)))return"other";return"";}
-function isLodgingArticle(article){
-if(article.content_type==="宿泊施設")return true;
-const text=[article.title||"",categoryText(article.category)].join(" ");
-return /ホテル|旅館|宿泊施設|民宿|民泊|ゲストハウス|ペンション|コテージ|簡易宿所|東横イン/.test(text);
-}
 function articleBusiness(article){
-if(isLodgingArticle(article))return"宿泊施設";
 const text=[article.title||"",categoryText(article.category),article.summary||"",article.draft_summary||""].join(" ");
 const rules=[
 ["飲食店",/飲食店|レストラン|食堂|居酒屋|ラーメン|カフェ|喫茶|寿司|焼肉|うどん|そば|弁当|料理|グルメ/],
@@ -104,8 +98,7 @@ if(areas.includes(selectedArea))areaFilter.value=selectedArea;if(businesses.incl
 function renderArticles(){
 const filtered=allArticles.filter(article=>{
 const group=categoryGroup(article.category);
-const isLodging=isLodgingArticle(article);
-const matchesType=activeFilter==="lodging"?isLodging:!isLodging&&(activeFilter==="all"||group===activeFilter);
+const matchesType=activeFilter==="all"||group===activeFilter;
 const matchesArea=!activeArea||articleAreas(article).includes(activeArea);
 const matchesBusiness=!activeBusiness||articleBusiness(article)===activeBusiness;
 const searchText=[article.title||"",categoryText(article.category),article.summary||"",article.draft_summary||"",...articleAreas(article)].join(" ").toLocaleLowerCase("ja");
@@ -114,11 +107,11 @@ return matchesType&&matchesArea&&matchesBusiness&&matchesKeyword;});
 count.textContent=filtered.length?`${filtered.length} ARTICLES`:"";
 if(!filtered.length){list.innerHTML=`<div class="empty-state"><span class="empty-mark">LOCAL UPDATE</span><h3>条件に合う情報が見つかりません。</h3><p>検索条件を変更するか、新しい情報の掲載をお待ちください。</p></div>`;return;}
 list.innerHTML=filtered.map((article,index)=>{
-const group=categoryGroup(article.category),isLodging=isLodgingArticle(article),label=isLodging?"LODGING":group==="new"?"NEW OPEN":group==="closed"?"CLOSED":"UPDATE";
+const group=categoryGroup(article.category),label=group==="new"?"NEW OPEN":group==="closed"?"CLOSED":"UPDATE";
 const area=articleAreas(article).join("・"),source=escapeHtml(article.source_name||"情報提供元"),sourceUrl=safeUrl(article.source_url);
 const date=escapeHtml(article.event_date||article.published_date||""),title=escapeHtml(article.title||"店舗情報");
 const summary=escapeHtml(article.summary||article.draft_summary||"詳細は情報提供元をご確認ください。"),imageUrl=escapeHtml(imageForArticle(article,index));
-return `<article class="article-card reveal" style="--card-index:${index}"><div class="article-image"><img src="${imageUrl}" alt="店舗情報のイメージ写真" loading="lazy" onerror="this.style.display='none';"><span class="article-tag ${isLodging?"tag-lodging":"tag-"+group}">${label}</span><span class="image-caption">イメージ写真</span></div><div class="article-card-body"><p class="article-area">${escapeHtml(area||"山口県内")}</p><h3>${title}</h3><p class="article-category">${escapeHtml(categoryText(article.category))}</p><p class="article-summary">${summary}</p><p class="article-category">業種：${escapeHtml(articleBusiness(article))}</p>${article.business_status?'<p class="article-category">営業状態：'+escapeHtml(article.business_status)+'</p>':""}</div><div class="article-card-bottom"><span class="article-date">${date}</span>${sourceUrl?`<a class="article-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">情報元：${source} ↗</a>`:`<span class="article-source">情報元：${source}</span>`}</div></article>`;
+return `<article class="article-card reveal" style="--card-index:${index}"><div class="article-image"><img src="${imageUrl}" alt="店舗情報のイメージ写真" loading="lazy" onerror="this.style.display='none';"><span class="article-tag tag-${group}">${label}</span><span class="image-caption">イメージ写真</span></div><div class="article-card-body"><p class="article-area">${escapeHtml(area||"山口県内")}</p><h3>${title}</h3><p class="article-category">${escapeHtml(categoryText(article.category))}</p><p class="article-summary">${summary}</p><p class="article-category">業種：${escapeHtml(articleBusiness(article))}</p>${article.business_status?'<p class="article-category">営業状態：'+escapeHtml(article.business_status)+'</p>':""}</div><div class="article-card-bottom"><span class="article-date">${date}</span>${sourceUrl?`<a class="article-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">情報元：${source} ↗</a>`:`<span class="article-source">情報元：${source}</span>`}</div></article>`;
 }).join("");observeReveals();}
 document.querySelectorAll(".filter-button").forEach(button=>button.addEventListener("click",()=>{activeFilter=button.dataset.filter;document.querySelectorAll(".filter-button").forEach(item=>item.classList.toggle("active",item===button));renderArticles();}));
 keywordSearch.addEventListener("input",()=>{activeKeyword=keywordSearch.value.trim();renderArticles();});
