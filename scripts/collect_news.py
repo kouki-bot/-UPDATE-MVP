@@ -49,6 +49,12 @@ SOURCES = [
         "domain": "tokuyamadeck.com",
         "default_area": "周南市",
     },
+    {
+        "name": "星プラザ公式",
+        "url": "https://www.hoshiplaza.co.jp/",
+        "domain": "www.hoshiplaza.co.jp",
+        "default_area": "下松市",
+    },
 ]
 
 MAX_PAGES_PER_SOURCE = 30
@@ -596,18 +602,23 @@ def classify_text(title, body=""):
     return [], "分類要確認"
 
 def extract_opening_date(text):
-    """本文・見出しに明記された開店日を抽出する。2桁年は2000年代として正規化。"""
+    """開店・営業開始の語に近接する明示日付だけを抽出し、掲載日との混同を防ぐ。"""
     text = clean_text(text)
     match = re.search(
-        r"(?:(20\d{2})|(\d{2}))年(\d{1,2})月(\d{1,2})日",
+        r"(?<!\d)((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)"
+        r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
+        r"(?:\s*(?:に|から|より))?\s*(?:新規)?(?:オープン|開店|営業開始)",
         text,
     )
     if not match:
         return ""
-    year = int(match.group(1) or (2000 + int(match.group(2))))
-    month = int(match.group(3))
-    day = int(match.group(4))
-    return f"{year}年{month}月{day}日"
+    date_text = match.group(1)
+    year_match = re.match(r"(20\d{2}|\d{2})年", date_text)
+    year = int(year_match.group(1))
+    if year < 100:
+        year += 2000
+        date_text = re.sub(r"^\d{2}年", f"{year}年", date_text)
+    return date_text
 
 
 def extract_published_date(parser, body):
