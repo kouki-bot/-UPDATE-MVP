@@ -22,6 +22,9 @@ jobs:
       - name: Check Python syntax
         run: python -m py_compile scripts/collect_news.py
 
+      - name: Run official collector classification tests
+        run: python -m unittest scripts.tests.test_official_collector_classification -v
+
       - name: Run official site collector
         run: python scripts/collect_news.py
 
