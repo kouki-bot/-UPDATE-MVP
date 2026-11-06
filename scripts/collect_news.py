@@ -28,6 +28,7 @@ SOURCES = [
 ]
 
 MAX_PAGES_PER_SOURCE = 30
+MAX_ARTICLE_CHECKS_PER_SOURCE = 80
 MAX_HTML_BYTES = 2_000_000
 MAX_BODY_CHARS = 5000
 REQUEST_DELAY = 0.3
@@ -263,6 +264,14 @@ def normalize_url(base, href):
 
 def is_same_domain(url, domain):
     return urlparse(url).netloc.lower() == domain.lower()
+
+def is_article_url(url):
+    """公式サイトの個別記事URLだけを本文確認の対象にする。"""
+    path = urlparse(url).path.lower()
+    return bool(
+        re.search(r"/press/\\d+\\.html$", path)
+        or re.search(r"/site/topics/\\d+\\.html$", path)
+    )
 
 
 def fetch_page(url):
@@ -601,6 +610,7 @@ def main():
         visited = set()
         queued = {source["url"]}
         successful_pages = 0
+        article_checks = 0
 
         while queue and len(visited) < MAX_PAGES_PER_SOURCE:
             current_url = queue.pop(0)
@@ -681,8 +691,17 @@ def main():
                         "",
                     )
 
-                    if not categories:
+                    # 見出しだけでは判定できない記事もあるため、
+                    # 公式サイトの個別記事URLは本文を確認する。
+                    # 一覧・検索ページを大量取得しないよう上限を設ける。
+                    check_article_body = (
+                        is_article_url(target_url)
+                        and article_checks < MAX_ARTICLE_CHECKS_PER_SOURCE
+                    )
+                    if not categories and not check_article_body:
                         continue
+                    if check_article_body:
+                        article_checks += 1
 
                     candidate = inspect_candidate(
                         target_url=target_url,
