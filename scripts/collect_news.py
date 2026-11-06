@@ -553,6 +553,7 @@ def inspect_candidate(
     link_title,
     source_name,
     source_page,
+    audit_log=None,
 ):
     article_title = clean_text(link_title)
     body = ""
@@ -564,6 +565,14 @@ def inspect_candidate(
         html = fetch_page(target_url)
 
         if not html:
+            if audit_log is not None:
+                audit_log.append({
+                    "title": article_title,
+                    "url": target_url,
+                    "source_name": source_name,
+                    "result": "取得不可",
+                    "reason": "HTML本文を取得できませんでした",
+                })
             return None
 
         parser = PageParser()
@@ -584,7 +593,25 @@ def inspect_candidate(
         )
 
         if not categories:
+            if audit_log is not None:
+                audit_log.append({
+                    "title": article_title,
+                    "url": target_url,
+                    "source_name": source_name,
+                    "result": "除外",
+                    "reason": category_basis,
+                })
             return None
+
+        if audit_log is not None:
+            audit_log.append({
+                "title": article_title,
+                "url": target_url,
+                "source_name": source_name,
+                "result": "候補",
+                "reason": category_basis,
+                "category": categories,
+            })
 
         area = extract_area(
             article_title + " " + body
@@ -624,6 +651,14 @@ def inspect_candidate(
             target_url,
             str(error)[:120],
         )
+        if audit_log is not None:
+            audit_log.append({
+                "title": article_title,
+                "url": target_url,
+                "source_name": source_name,
+                "result": "取得失敗",
+                "reason": str(error)[:180],
+            })
 
         return None
 
@@ -642,6 +677,7 @@ def main():
     source_checks = []
     candidates = []
     scanned_pages = []
+    article_audit = []
 
     for source in SOURCES:
         print("調査開始:", source["name"])
@@ -758,6 +794,7 @@ def main():
                         link_title=title,
                         source_name=source["name"],
                         source_page=current_url,
+                        audit_log=article_audit,
                     )
 
                     if candidate:
@@ -836,6 +873,7 @@ def main():
         ),
         "sources": source_checks,
         "scanned_pages": scanned_pages,
+        "article_audit": article_audit,
         "candidates": list(unique.values()),
     }
 
