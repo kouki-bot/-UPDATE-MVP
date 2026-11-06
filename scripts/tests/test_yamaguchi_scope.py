@@ -240,6 +240,40 @@ class YamaguchiScopeTests(unittest.TestCase):
             "専門学校の在校生が調理・接客を学ぶ実習として、一日だけレストランを営業しました。",
         ))
 
+    def test_same_store_event_date_merges_reports_far_apart_in_publication_date(self):
+        a = {
+            "title": "大丸下関店が2027年8月末で閉店へ",
+            "category": ["閉店"],
+            "published_date": "2026-07-01",
+            "event_date": "2027-08-31",
+            "body_excerpt": "下関市の大丸下関店が閉店する。",
+        }
+        b = {
+            "title": "来夏閉店の大丸下関店 会見で語られたこと",
+            "category": ["閉店"],
+            "published_date": "2026-11-06",
+            "event_date": "2027-08-31",
+            "body_excerpt": "大丸下関店は2027年8月末に営業終了する。",
+        }
+        self.assertTrue(module.same_store_news_candidate(a, b))
+
+    def test_same_store_different_event_dates_are_not_merged(self):
+        a = {
+            "title": "大丸下関店が閉店へ",
+            "category": ["閉店"],
+            "published_date": "2026-07-01",
+            "event_date": "2027-08-31",
+            "body_excerpt": "下関市の大丸下関店。",
+        }
+        b = {
+            "title": "大丸下関店が一時休業",
+            "category": ["閉店"],
+            "published_date": "2026-07-02",
+            "event_date": "2026-07-10",
+            "body_excerpt": "下関市の大丸下関店。",
+        }
+        self.assertFalse(module.same_store_news_candidate(a, b))
+
     def test_different_store_names_at_same_location_are_not_merged(self):
         a = {"title": "しまむら宇部店が移転", "category": ["移転"],
              "published_date": "2026-10-28", "body_excerpt": "宇部市"}
