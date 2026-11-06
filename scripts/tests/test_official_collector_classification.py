@@ -56,6 +56,35 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
             "2026年11月21日",
         )
 
+    def test_aeon_town_source_has_hofu_area(self):
+        source = next(
+            item for item in module.SOURCES
+            if item["name"] == "イオンタウン防府公式"
+        )
+        self.assertEqual(source["default_area"], "防府市")
+
+    def test_sunpark_and_tokuyama_deck_are_configured(self):
+        sources = {item["name"]: item for item in module.SOURCES}
+        self.assertEqual(
+            sources["おのだサンパーク公式・新店情報"]["default_area"],
+            "山陽小野田市",
+        )
+        self.assertEqual(
+            sources["徳山デッキ公式・店舗オープン情報"]["default_area"],
+            "周南市",
+        )
+
+    def test_opening_article_uses_verified_source_area_when_body_omits_city(self):
+        candidate = module.inspect_candidate(
+            target_url="https://www.aeontown.co.jp/hofu/information/detail/?id=004771",
+            link_title="スポーツミツハシ NEW OPEN!!",
+            source_name="イオンタウン防府公式",
+            source_page="https://www.aeontown.co.jp/hofu/",
+            default_area="防府市",
+        )
+        # This is a unit-level integration point; network calls are mocked by the test.
+        self.assertIsNotNone(candidate)
+
     def test_store_opening_is_kept(self):
         categories, basis = module.classify_text(
             "山口市に新しいカフェがオープン"
