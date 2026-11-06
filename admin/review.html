@@ -62,7 +62,7 @@ var drafts=[],approvals={description:"人が元記事を確認した記事だけ
 var selectedId="",localKey="ylu_review_work_v1";
 var el=function(id){return document.getElementById(id);};
 var esc=function(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
-var dateOnly=function(v){return String(v||"").slice(0,10);};
+var dateOnly=function(v){var s=String(v||"");var m=s.match(/^(20\\d{2}|\\d{2})年(\\d{1,2})月(\\d{1,2})日/);if(m){var y=Number(m[1]);if(y<100)y+=2000;return String(y)+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[3]).padStart(2,"0");}return s.slice(0,10);};
 var safeHttpUrl=function(v){try{var u=new URL(String(v||""));return (u.protocol==="https:"||u.protocol==="http:")?u.href:"";}catch(e){return "";}};
 var statusOf=function(id){var r=approvals.reviewed_articles[id]||{};return r.review_status|| (approvals.approved_ids.indexOf(id)>=0?"確認済み":"未確認");};
 function saveLocal(){try{localStorage.setItem(localKey,JSON.stringify(approvals));}catch(e){alert("端末内に保存できませんでした。JSONを書き出して保存してください。");}}
