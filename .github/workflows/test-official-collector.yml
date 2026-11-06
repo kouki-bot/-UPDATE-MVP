@@ -42,6 +42,13 @@ jobs:
           sources = data.get("sources", [])
           candidates = data.get("candidates", [])
           audit = data.get("article_audit", [])
+          unsafe_candidates = [
+              item for item in candidates
+              if item.get("status") != "未確認・公開禁止"
+          ]
+          if unsafe_candidates:
+              raise SystemExit("候補に公開可能以外の状態が混在しています")
+          print(f"公開安全確認: {len(candidates)}件すべて未確認・公開禁止")
           print(f"公式情報源: {len(sources)}")
           print(f"調査ページ: {len(data.get('scanned_pages', []))}")
           print(f"本文確認記事: {len(audit)}")
@@ -63,7 +70,11 @@ jobs:
               print(
                   f"  候補: {item.get('title')} | "
                   f"{item.get('category')} | "
-                  f"{item.get('area')} | {item.get('url')}"
+                  f"{item.get('area')} | "
+                  f"開店日={item.get('opening_date', '')} | "
+                  f"業種={item.get('industry', '')} | "
+                  f"場所={item.get('floor', '')} | "
+                  f"状態={item.get('status')} | {item.get('url')}"
               )
           for item in [x for x in audit if x.get('result') == '除外'][:15]:
               print(
