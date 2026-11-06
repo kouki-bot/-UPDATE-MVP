@@ -23,11 +23,37 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
             )
         )
 
+    def test_aeon_town_information_detail_is_article_url(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://www.aeontown.co.jp/hofu/information/detail/?id=004278"
+            )
+        )
+
     def test_archive_page_is_not_article_url(self):
         self.assertFalse(
             module.is_article_url(
                 "https://www.pref.yamaguchi.lg.jp/press/search.php?search_ym=202611"
             )
+        )
+
+    def test_aeon_town_new_open_title_is_detected(self):
+        categories, _ = module.classify_text(
+            "〖新店〗26年7月10日「伊南麻辣燙」OPEN！",
+            "",
+        )
+        self.assertIn("新店・開店", categories)
+
+    def test_opening_date_extracts_two_digit_year(self):
+        self.assertEqual(
+            module.extract_opening_date("26年7月10日（金）にオープン"),
+            "2026年7月10日",
+        )
+
+    def test_opening_date_extracts_four_digit_year(self):
+        self.assertEqual(
+            module.extract_opening_date("2026年11月21日オープン"),
+            "2026年11月21日",
         )
 
     def test_store_opening_is_kept(self):
