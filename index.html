@@ -116,7 +116,7 @@ if(!filtered.length){list.innerHTML=`<div class="empty-state"><span class="empty
 list.innerHTML=filtered.map((article,index)=>{
 const group=categoryGroup(article.category),isLodging=isLodgingArticle(article),label=isLodging?"LODGING":group==="new"?"NEW OPEN":group==="closed"?"CLOSED":"UPDATE";
 const area=articleAreas(article).join("・"),source=escapeHtml(article.source_name||"情報提供元"),sourceUrl=safeUrl(article.source_url);
-const date=escapeHtml(article.published_date||""),title=escapeHtml(article.title||"店舗情報");
+const date=escapeHtml(article.event_date||article.published_date||""),title=escapeHtml(article.title||"店舗情報");
 const summary=escapeHtml(article.summary||article.draft_summary||"詳細は情報提供元をご確認ください。"),imageUrl=escapeHtml(imageForArticle(article,index));
 return `<article class="article-card reveal" style="--card-index:${index}"><div class="article-image"><img src="${imageUrl}" alt="店舗情報のイメージ写真" loading="lazy" onerror="this.style.display='none';"><span class="article-tag ${isLodging?"tag-lodging":"tag-"+group}">${label}</span><span class="image-caption">イメージ写真</span></div><div class="article-card-body"><p class="article-area">${escapeHtml(area||"山口県内")}</p><h3>${title}</h3><p class="article-category">${escapeHtml(categoryText(article.category))}</p><p class="article-summary">${summary}</p><p class="article-category">業種：${escapeHtml(articleBusiness(article))}</p></div><div class="article-card-bottom"><span class="article-date">${date}</span>${sourceUrl?`<a class="article-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">情報元：${source} ↗</a>`:`<span class="article-source">情報元：${source}</span>`}</div></article>`;
 }).join("");observeReveals();}
@@ -136,7 +136,7 @@ async function loadArticles(){
 try{
 const response=await fetch("data/published.json");if(!response.ok)throw new Error("記事データを取得できません");
 const data=await response.json();
-allArticles=(Array.isArray(data.articles)?data.articles:[]).filter(article=>(article.status==="公開"||article.status==="公開済み")&&article.title&&(isLodgingArticle(article)||categoryGroup(article.category))).sort((a,b)=>String(b.published_date||"").localeCompare(String(a.published_date||"")));
+allArticles=(Array.isArray(data.articles)?data.articles:[]).filter(article=>(article.status==="公開"||article.status==="公開済み")&&article.title&&(isLodgingArticle(article)||categoryGroup(article.category))).sort((a,b)=>String(b.event_date||b.published_date||"").localeCompare(String(a.event_date||a.published_date||"")));
 populateSearchOptions();renderArticles();
 }catch(error){list.innerHTML=`<div class="empty-state"><h3>情報を読み込めませんでした。</h3><p>時間をおいて、もう一度ご確認ください。</p></div>`;}}
 observeReveals();loadArticles();
