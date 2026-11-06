@@ -59,7 +59,7 @@ rows.forEach(o=>{
 const card=document.createElement('article');card.className='article-card';
 const h=document.createElement('h2'), title=text(o,['title','name']), detail=text(o,['detail_url','page_url','article_url','url']), titleA=link(detail,title);
 if(titleA)h.appendChild(titleA);else h.textContent=title;card.appendChild(h);
-const meta=[categoryText(o),(text(o,['municipality','city'])||(Array.isArray(o.area)?o.area.join('・'):text(o,['area','location','address']))),text(o,['published_date','date','opening_date','published_at','updated_at'])].filter(Boolean);
+const meta=[categoryText(o),(text(o,['municipality','city'])||(Array.isArray(o.area)?o.area.join('・'):text(o,['area','location','address']))),text(o,['event_date','opening_date','published_date','date','published_at','updated_at'])].filter(Boolean);
 if(meta.length){const p=document.createElement('p');p.className='article-meta';p.textContent=meta.join(' ｜ ');card.appendChild(p);}
 const summary=text(o,['summary','description','body','content']);if(summary){const p=document.createElement('p');p.className='article-summary';p.textContent=summary;card.appendChild(p);}
 const links=document.createElement('div');links.className='article-links';
