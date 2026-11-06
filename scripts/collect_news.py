@@ -578,6 +578,21 @@ def classify_text(title, body=""):
 
     return [], "分類要確認"
 
+def extract_opening_date(text):
+    """本文・見出しに明記された開店日を抽出する。2桁年は2000年代として正規化。"""
+    text = clean_text(text)
+    match = re.search(
+        r"(?:(20\\d{2})|(\\d{2}))年(\\d{1,2})月(\\d{1,2})日",
+        text,
+    )
+    if not match:
+        return ""
+    year = int(match.group(1) or (2000 + int(match.group(2))))
+    month = int(match.group(3))
+    day = int(match.group(4))
+    return f"{year}年{month}月{day}日"
+
+
 def extract_published_date(parser, body):
     """
     公開日として明示されたメタ情報を優先。
@@ -702,6 +717,8 @@ def inspect_candidate(
             "category_basis": category_basis,
             "published_date": published_date,
             "date_basis": date_basis,
+            "opening_date": extract_opening_date(article_title + " " + body),
+            "opening_date_basis": "本文・見出し記載／要確認",
             "area": area,
             "body_excerpt": body[:1000],
             "checked_at": datetime.now(
