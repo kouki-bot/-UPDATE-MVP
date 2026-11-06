@@ -34,5 +34,44 @@ class DraftSortingTests(unittest.TestCase):
         self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
 
 
+
+    def test_missing_core_information_is_put_on_hold(self):
+        drafts = [{
+            "id": "missing", "title": "宇部の新店", "category": ["新店・開店"],
+            "source_url": "https://example.jp/article", "source_urls": [],
+            "body_excerpt": "", "published_date": "", "event_date": "",
+            "municipality": "", "municipality_candidates": [],
+            "freshness": "日付確認が必要", "status": "公開可能",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertEqual(drafts[0]["review_priority"], "情報不足・保留")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
+    def test_duplicate_candidate_gets_separate_review_priority(self):
+        drafts = [{
+            "id": "dup", "title": "宇部の新店オープン", "category": ["新店・開店"],
+            "source_url": "https://example.jp/article", "source_urls": [],
+            "body_excerpt": "店舗が宇部市にオープンしました。", "published_date": "2026-11-01",
+            "event_date": "2026-11-01", "municipality": "宇部市",
+            "municipality_candidates": ["宇部市"], "freshness": "直近30日",
+            "duplicate_review": "重複の可能性・要確認", "status": "公開可能",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertEqual(drafts[0]["review_priority"], "重複確認")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
+    def test_complete_metadata_still_requires_human_review(self):
+        drafts = [{
+            "id": "complete", "title": "宇部の新店オープン", "category": ["新店・開店"],
+            "source_url": "https://example.jp/article", "source_urls": [],
+            "body_excerpt": "店舗が宇部市にオープンしました。", "published_date": "2026-11-01",
+            "event_date": "2026-11-01", "municipality": "宇部市",
+            "municipality_candidates": ["宇部市"], "freshness": "直近30日",
+            "status": "公開可能",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertEqual(drafts[0]["review_priority"], "基本項目あり・内容確認は必要")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
 if __name__ == "__main__":
     unittest.main()
