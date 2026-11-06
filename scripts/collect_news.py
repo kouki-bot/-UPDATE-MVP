@@ -678,6 +678,7 @@ def main():
     candidates = []
     scanned_pages = []
     article_audit = []
+    inspected_article_urls = set()
 
     for source in SOURCES:
         print("調査開始:", source["name"])
@@ -786,6 +787,13 @@ def main():
                     )
                     if not categories and not check_article_body:
                         continue
+
+                    # 同じ記事が複数の一覧ページに掲載されていても、
+                    # 本文取得・監査ログはURLごとに1回だけ行う。
+                    if target_url in inspected_article_urls:
+                        continue
+                    inspected_article_urls.add(target_url)
+
                     if check_article_body:
                         article_checks += 1
 
@@ -874,6 +882,11 @@ def main():
         "sources": source_checks,
         "scanned_pages": scanned_pages,
         "article_audit": article_audit,
+        "article_audit_count": len(article_audit),
+        "article_audit_unique_urls": len({
+            item.get("url") for item in article_audit
+            if item.get("url")
+        }),
         "candidates": list(unique.values()),
     }
 
