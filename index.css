@@ -466,6 +466,11 @@ button {
   background: #f3edcf;
 }
 
+.tag-lodging {
+  color: #78613c;
+  background: #eee7d8;
+}
+
 .article-category {
   color: var(--muted);
   font-size: 10px;

@@ -17,7 +17,7 @@ ALLOWED_CATEGORIES = {"新店・開店", "閉店", "移転", "リニューアル
 
 STORE_KEYWORDS = [
     "新店", "新店舗", "新規開店", "新規出店", "オープン", "開店", "開業", "出店",
-    "グランドオープン", "プレオープン", "閉店", "営業終了", "閉業", "店じまい",
+    "グランドオープン", "プレオープン", "閉店", "閉館", "営業終了", "閉業", "廃業", "店じまい",
     "移転", "移転オープン", "移転先", "リニューアル", "改装オープン", "リニューアルオープン",
     "営業再開", "改装",
 ]
@@ -42,6 +42,20 @@ YAMAGUCHI_MUNICIPALITIES = [
 def extract_municipality_candidates(title, body_excerpt):
     """タイトル・本文抜粋から市町名候補を抽出。所在地の確定や推測は行わない。"""
     text = clean_text(f"{title or ''} {body_excerpt or ''}")
+    # 「山口県山口市黒川」のような住所表記を優先する。
+    # 本文中の他市の比較情報・県内店舗数などを所在地候補に混ぜない。
+    municipality_pattern = "|".join(
+        re.escape(name) for name in YAMAGUCHI_MUNICIPALITIES
+    )
+    explicit_addresses = re.findall(
+        r"山口県\s*(" + municipality_pattern + r")", text
+    )
+    if explicit_addresses:
+        return sorted(
+            set(explicit_addresses),
+            key=lambda x: YAMAGUCHI_MUNICIPALITIES.index(x)
+        )
+
     found = []
     for name in YAMAGUCHI_MUNICIPALITIES:
         if name in text:
@@ -155,14 +169,38 @@ def normalize_categories(item):
 def detect_categories(title):
     mapping = {
         "新店・開店": ["新店", "新店舗", "新規開店", "新規出店", "オープン", "開店", "開業", "出店", "グランドオープン", "プレオープン"],
-        "閉店": ["閉店", "営業終了", "閉業", "店じまい"],
+        "閉店": ["閉店", "閉館", "営業終了", "閉業", "廃業", "店じまい"],
         "移転": ["移転"],
         "リニューアル": ["リニューアル", "改装オープン", "営業再開", "改装"],
     }
     return [cat for cat, words in mapping.items() if any(w in title for w in words)]
 
-def is_store_news(title):
-    if not title or not detect_categories(title):
+def has_body_movement_evidence(body_excerpt):
+    """RSS本文に実際の店舗移動アクションが明記されている場合だけ補完する。"""
+    body_excerpt = clean_text(body_excerpt)
+    # 既存店の周年紹介は新規開店の根拠にしない。
+    if re.search(r"(?:オープン|開店|開業)から.{0,12}\d+周年", body_excerpt):
+        return False
+    return bool(re.search(
+        r"(?:オープン|開店|開業|出店|移転|閉店|営業終了|リニューアル)"
+        r"(?:しました|していました|しています|した|している|します|する|を開始|予定|を予定)",
+        body_excerpt,
+    ))
+
+def is_store_news(title, body_excerpt=""):
+    # 学校行事・イベント告知の「オープン」は施設や店舗の開業を意味しない。
+    title_text = clean_text(title)
+    if "オープンキャンパス" in title_text:
+        return False
+    if any(word in title_text for word in ["イベント", "フェア", "説明会", "体験会"]):
+        actual_opening = re.search(
+            r"(?:オープン|開店|開業|開館|開園)(?:し(?:た|ます|ました)|する|しました|しました)",
+            title_text + " " + clean_text(body_excerpt),
+        )
+        if not actual_opening:
+            return False
+    # タイトルに動きがなくても、本文に明確な実施表現があれば候補化する。
+    if not title or (not detect_categories(title) and not has_body_movement_evidence(body_excerpt)):
         return False
     # 店舗の動きが明確なタイトルだけを対象にし、公共施設等は原則除外。
     if any(w in title for w in EXCLUDE_KEYWORDS):
@@ -175,12 +213,76 @@ def is_store_news(title):
         return False
     return True
 
+# Explicit non-Yamaguchi locations are excluded only when the title clearly ties
+# the place name to a store/location. Missing Yamaguchi evidence alone is not enough.
+FOREIGN_CITY_STORE_PATTERNS = [
+    r"伊勢崎(?:市)?(?:南店|店|市内)",
+    r"船橋市?(?:新船橋|船橋)(?:店|駅前|市内)",
+    r"中目黒(?:店|駅周辺|エリア)",
+    r"名古屋市?(?:ささしま|名駅|栄)(?:店|エリア)",
+]
+
+LISTING_URL_PARTS = ("/category/", "/tag/", "/page/", "/archive/", "/archives/")
+LISTING_TITLE_PATTERNS = (
+    "開店・閉店情報一覧", "開店閉店情報一覧", "新店・閉店一覧",
+    "オープン情報一覧", "閉店情報まとめ", "開店情報まとめ",
+    "閉店情報-業種別", "開店情報-業種別", "閉店情報 業種別", "開店情報 業種別",
+)
+
+def is_listing_candidate(title, url, source_url=""):
+    """明らかな一覧・カテゴリーページだけを除外する。"""
+    for candidate_url in (url, source_url):
+        path = urlsplit(clean_text(candidate_url)).path.lower()
+        if any(part in path for part in LISTING_URL_PARTS):
+            return True
+        # 開店閉店.com の業種別カテゴリーページなど、category パスを使わない一覧URL
+        if re.search(r"/(?:kaiten|heiten)-gyousyubetsu/?$", path):
+            return True
+    normalized_title = clean_text(title)
+    return any(pattern in normalized_title for pattern in LISTING_TITLE_PATTERNS)
+
+NON_YAMAGUCHI_PREFECTURES = [
+    "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
+    "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県",
+    "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県",
+    "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県",
+    "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県",
+    "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県",
+    "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県",
+]
+
+def is_clearly_outside_yamaguchi(title, body_excerpt=""):
+    """タイトルまたは記事冒頭の所在地表記から県外と確認できる場合のみ除外する。"""
+    title_text = clean_text(title)
+    body_text = clean_text(body_excerpt)
+
+    # 明示された山口県内の市町名は県外判定しない。
+    if any(name in title_text for name in YAMAGUCHI_MUNICIPALITIES) or "山口県" in title_text:
+        return False
+
+    # 店舗記事の冒頭にある所在地（例: 群馬県伊勢崎市、東京都目黒区）を確認。
+    # 配信元のareaメタデータは判定に使用しない。
+    location_prefix = body_text[:120]
+    if any(prefecture in location_prefix for prefecture in NON_YAMAGUCHI_PREFECTURES):
+        return True
+
+    combined = f"{title_text} {location_prefix}"
+    return any(re.search(pattern, combined) for pattern in FOREIGN_CITY_STORE_PATTERNS)
+
 def convert_candidate(item, method, source_priority):
     title, url = clean_text(item.get("title")), clean_text(item.get("url"))
-    if not title or not url or not is_store_news(title):
+    if not title or not url or not is_store_news(title, item.get("body_excerpt") or item.get("description", "")):
+        return None
+    if is_listing_candidate(title, url, item.get("source_url", "")) or is_clearly_outside_yamaguchi(title, item.get("body_excerpt") or item.get("description", "")):
         return None
     body = clean_text(item.get("body_excerpt") or item.get("description", ""))[:1500]
-    categories = list(dict.fromkeys(normalize_categories(item) + detect_categories(title)))
+    # 公共・行政施設は店舗ニュースの主対象外。ホテル・観光施設は別カテゴリで残す。
+    if classify_content_type(title, body) == "公共・地域施設":
+        return None
+    body_categories = detect_categories(body)
+    categories = list(dict.fromkeys(
+        normalize_categories(item) + detect_categories(title) + body_categories
+    ))
     categories = [c for c in categories if c in ALLOWED_CATEGORIES]
     if not categories:
         return None
@@ -188,12 +290,11 @@ def convert_candidate(item, method, source_priority):
     if not isinstance(area, list):
         area = [area] if area else []
     date_value = clean_text(item.get("published_date"))
-    if not parse_date(date_value):
-        title_date = date_from_title(title)
-        if title_date:
-            date_value = title_date.isoformat()
+    event_date = clean_text(item.get("event_date") or item.get("opening_date"))
+    # 記事公開日は取得元の明示情報だけを使用する。タイトル内の日付は店舗動作日かもしれないため流用しない。
     return {
         "title": title, "url": url, "normalized_url": normalize_url(url),
+        "event_date": event_date,
         "source_name": clean_text(item.get("source_name")), "category": categories,
         "published_date": date_value, "body_excerpt": body,
         "collection_method": method, "category_basis": clean_text(item.get("category_basis")),
@@ -342,6 +443,47 @@ def merge_candidates(items):
         merged_items[match_index] = combined
     return merged_items
 
+def classify_content_type(title, body_excerpt=''):
+    '''ニュース対象の施設・事業者タイプを分類。判断材料が弱い場合は要確認にする。'''
+    # 施設種別は原則タイトルで判定し、本文中に偶然登場したホテル等で誤分類しない。
+    title_text = clean_text(title)
+    text = title_text or clean_text(body_excerpt)
+    public = [
+        'ハローワーク', '郵便局', '市役所', '町役場', '村役場', '県庁', '図書館',
+        '公民館', '公共施設', '公共サービス', '行政窓口', '支所', '出張所',
+        '地域交流センター', 'コミュニティセンター', '税務署', '年金事務所',
+        '警察署', '交番', '消防署',
+    ]
+    if any(word in text for word in public):
+        return '公共・地域施設'
+    # 市民参加・地域発信を目的とする常設の共創拠点は、一般店舗と分ける。
+    # 「交流拠点」だけでは民間施設もあり得るため、目的語との組み合わせで判定する。
+    if '拠点' in text and any(word in text for word in ['市民共創', 'シティープロモーション', '市民自ら', '地域の魅力を発信']):
+        return '公共・地域施設'
+    lodging = ['ホテル', '旅館', '宿泊施設', '民宿', '民泊', 'ゲストハウス', 'ペンション', 'コテージ', '簡易宿所', '東横イン']
+    if any(word in text for word in lodging):
+        return '宿泊施設'
+    leisure = ['観光農園', 'キャンプ場', '遊園地', '観光施設', 'レジャー', 'テーマパーク', '観光牧場', '果樹園', '体験農園']
+    if any(word in text for word in leisure):
+        return '観光・レジャー'
+    commercial = ['店', '店舗', 'カフェ', '飲食店', 'レストラン', 'スーパー', 'ショッピング', '商業施設', '家電', '美容室', 'サロン', 'ドラッグストア', 'コンビニ', '書店', 'アパレル', '飲食', 'ピラティス', 'スタジオ', 'フィットネス', 'ジム']
+    if any(word in text for word in commercial):
+        return '店舗・商業施設'
+    return 'その他施設・サービス（要確認）'
+
+
+def is_in_store_scope(item):
+    """店舗情報サイトの対象外となる宿泊・観光・公共施設を除外する。"""
+    content_type = classify_content_type(
+        item.get("title", ""), item.get("body_excerpt", "")
+    )
+    excluded_types = {
+        "宿泊施設",
+        "観光・レジャー",
+        "公共・地域施設",
+    }
+    return content_type not in excluded_types
+
 def make_draft(item):
     date_value = item.get("published_date", "")
     freshness, age = get_freshness(date_value)
@@ -378,7 +520,8 @@ def make_draft(item):
         "id": hashlib.sha256(normalize_url(url).encode("utf-8")).hexdigest()[:16],
         "title": item["title"], "suggested_headline": item["title"],
         "category": item["category"], "priority": get_priority(item["category"]),
-        "published_date": date_value, "freshness": freshness, "age_days": age,
+        "published_date": date_value, "event_date": clean_text(item.get("event_date")),
+        "freshness": freshness, "age_days": age,
         "area": item.get("area", []), "area_status": area_status,
         "municipality": municipality, "municipality_candidates": municipality_candidates,
         "municipality_group": municipality if municipality else "地域要確認",
@@ -388,6 +531,7 @@ def make_draft(item):
         "duplicate_sources_count": item.get("duplicate_sources_count", 1),
         "body_excerpt": item.get("body_excerpt", ""), "body_excerpt_method": item.get("body_excerpt_method", ""), "draft_summary": summary,
         "relevance": "店舗ニュース候補・要確認",
+        "content_type": classify_content_type(item.get("title", ""), item.get("body_excerpt", "")),
         "collection_method": item.get("collection_method", ""),
         "status": "未確認・公開禁止", "created_at": now_jst().isoformat(),
     }
@@ -395,22 +539,56 @@ def make_draft(item):
 def sort_key(item):
     order = {"直近30日": 0, "31〜90日前": 1, "日付確認が必要": 2, "未来日付・要確認": 3, "90日より前": 4}
     date = parse_date(item.get("published_date", ""))
-    return (order.get(item.get("freshness", ""), 5), item.get("priority", 5),
-            -(date.timestamp() if date else 0), item.get("title", ""))
+    # Keep newer articles ahead of priority; priority only breaks date ties.
+    return (order.get(item.get("freshness", ""), 5),
+            -(date.timestamp() if date else 0),
+            item.get("priority", 5), item.get("title", ""))
 
 def duplicate_fingerprint(draft):
     """重複確認用のタイトル判定。記事は削除しない。"""
     title = (draft.get("title") or "").lower()
-    title = re.sub(r"^\\s*\\d{4}[年/.-]\\d{1,2}[月/.-]\\d{0,2}[^ ]*\\s*", "", title)
+    title = re.sub(r"^\s*\d{4}[年/.-]\d{1,2}[月/.-]\d{0,2}[^ ]*\s*", "", title)
     title = re.sub(r"【[^】]*】", " ", title)
-    title = re.sub(r"\\[[^\\]]*\\]", " ", title)
+    title = re.sub(r"\[[^\]]*\]", " ", title)
     title = re.sub(
         r"(開店|新店|閉店|移転|リニューアル|オープン|営業再開|営業終了|情報|まとめ)",
         " ",
         title,
     )
-    title = re.sub(r"[^\\wぁ-んァ-ヶ一-龠]", "", title)
+    title = re.sub(r"[^\wぁ-んァ-ヶ一-龠]", "", title)
     return title[:100]
+
+
+def duplicate_store_entity(title):
+    """記事タイトルから重複確認に使える固有の店舗名候補を抽出する。"""
+    value = clean_text(title)
+    value = re.sub(r"^\s*20\d{2}[年/.-]\d{1,2}[月/.-]\d{1,2}[^ ]*\s*", "", value)
+    value = re.sub(r"【[^】]*】|\[[^\]]*\]", " ", value)
+    generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
+    matches = re.findall(r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24}?(?:店|スタジオ|専門店)", value)
+    candidates = []
+    for match in matches:
+        name = re.sub(r"^(?:新しい|新たな|おしゃれな|話題の)", "", match)
+        if name not in generic and len(name) >= 4:
+            candidates.append(name)
+    return list(dict.fromkeys(candidates))
+
+
+def same_store_duplicate(a, b):
+    """同じ市町・同じ店舗名・同じ動き・近い掲載日の記事だけ重複候補にする。"""
+    municipality_a = clean_text(a.get("municipality"))
+    municipality_b = clean_text(b.get("municipality"))
+    if not municipality_a or municipality_a != municipality_b:
+        return False
+    if not (set(a.get("category", [])) & set(b.get("category", []))):
+        return False
+    date_a = parse_date(a.get("published_date", ""))
+    date_b = parse_date(b.get("published_date", ""))
+    if not date_a or not date_b or abs((date_a.date() - date_b.date()).days) > 21:
+        return False
+    names_a = set(duplicate_store_entity(a.get("title", "")))
+    names_b = set(duplicate_store_entity(b.get("title", "")))
+    return bool(names_a & names_b)
 
 
 def annotate_review_flags(drafts):
@@ -421,6 +599,23 @@ def annotate_review_flags(drafts):
         if len(fingerprint) >= 4:
             key = (fingerprint, tuple(sorted(draft.get("category", []))))
             groups.setdefault(key, []).append(draft)
+
+    # 見出しの表現が異なる同一店舗ニュースも、店舗名・市町・カテゴリ・日付で保守的に検知する。
+    entity_groups = []
+    for index, draft in enumerate(drafts):
+        for other in drafts[index + 1:]:
+            if same_store_duplicate(draft, other):
+                entity_groups.append([draft, other])
+
+    seen_group_ids = {
+        frozenset(x.get("id", "") for x in group)
+        for group in groups.values() if len(group) >= 2
+    }
+    for group in entity_groups:
+        key = frozenset(x.get("id", "") for x in group)
+        if key not in seen_group_ids:
+            groups[("store_entity", tuple(sorted(key)))] = group
+            seen_group_ids.add(key)
 
     duplicate_group_count = 0
     duplicate_candidate_count = 0
@@ -452,19 +647,33 @@ def annotate_review_flags(drafts):
             flags.append("本文抜粋なし")
         if not draft.get("published_date"):
             flags.append("公開日未確認")
+        if not draft.get("event_date"):
+            flags.append("開店・閉店等の日付未確認")
         if len(draft.get("municipality_candidates", [])) > 1:
             flags.append("市町候補が複数")
         elif not draft.get("municipality"):
             flags.append("市町未特定")
         if draft.get("freshness") == "未来日付・要確認":
             flags.append("未来日付")
+        if draft.get("duplicate_review"):
+            flags.append("重複の可能性・要確認")
 
-        draft["review_flags"] = flags
-        draft["review_priority"] = (
-            "要優先確認"
-            if any(x in flags for x in ["情報源URLなし", "未来日付", "市町候補が複数"])
-            else "確認推奨" if flags else "基本項目あり・内容確認は必要"
-        )
+        draft["review_flags"] = list(dict.fromkeys(flags))
+        critical_flags = {"情報源URLなし", "未来日付", "市町候補が複数"}
+        missing_information_flags = {
+            "本文抜粋なし", "公開日未確認",
+            "開店・閉店等の日付未確認", "市町未特定",
+        }
+        if any(flag in critical_flags for flag in flags):
+            draft["review_priority"] = "要優先確認"
+        elif "重複の可能性・要確認" in flags:
+            draft["review_priority"] = "重複確認"
+        elif any(flag in missing_information_flags for flag in flags):
+            draft["review_priority"] = "情報不足・保留"
+        elif flags:
+            draft["review_priority"] = "確認推奨"
+        else:
+            draft["review_priority"] = "基本項目あり・内容確認は必要"
         draft["status"] = "未確認・公開禁止"
 
         for flag in flags:
@@ -481,133 +690,47 @@ def main():
     official, rss = get_official_candidates(), get_rss_candidates()
     unique = merge_candidates(official + rss)
     all_drafts = [make_draft(x) for x in unique]
-    old_count = sum(1 for x in all_drafts if x["freshness"] == "90日より前")
-    # 古い記事は通常候補から除外。日付不明は確認用に残す。
-    drafts = [x for x in all_drafts if x["freshness"] != "90日より前"]
+    excluded_scope_count = sum(1 for x in all_drafts if not is_in_store_scope(x))
+    scoped_drafts = [x for x in all_drafts if is_in_store_scope(x)]
+    old_count = sum(1 for x in scoped_drafts if x["freshness"] == "90日より前")
+    # 宿泊・観光・公共施設は店舗サイトの対象外。古い記事も通常候補から除外。
+    drafts = [x for x in scoped_drafts if x["freshness"] != "90日より前"]
     drafts.sort(key=sort_key)
     
     review_summary = annotate_review_flags(drafts)
     
-    freshness_counts, category_counts, municipality_counts = {}, {}, {}
+    freshness_counts, category_counts, municipality_counts, content_type_counts = {}, {}, {}, {}
     for draft in drafts:
         f = draft["freshness"]
         freshness_counts[f] = freshness_counts.get(f, 0) + 1
         for cat in draft["category"]:
             category_counts[cat] = category_counts.get(cat, 0) + 1
+        content_type = draft.get("content_type", "その他施設・サービス（要確認）")
+        content_type_counts[content_type] = content_type_counts.get(content_type, 0) + 1
         municipality = draft.get("municipality_group") or "地域要確認"
         municipality_counts[municipality] = municipality_counts.get(municipality, 0) + 1
     municipality_counts = dict(sorted(municipality_counts.items(), key=lambda item: (item[0] == "地域要確認", item[0])))
     output = {
         "generated_at": now_jst().isoformat(), "draft_count": len(drafts),
         "recent_draft_count": freshness_counts.get("直近30日", 0),
-        "excluded_old_count": old_count, "freshness_counts": freshness_counts,
+        "excluded_old_count": old_count, "excluded_scope_count": excluded_scope_count, "freshness_counts": freshness_counts,
         "category_counts": category_counts,
+        "content_type_counts": dict(sorted(content_type_counts.items())),
         "municipality_counts": municipality_counts,
         **review_summary,
-        "note": "対象は新店・開店、閉店、移転、リニューアルです。90日より前の記事は通常の下書き候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。配信元の対象地域は店舗所在地を保証しません。",
+        "note": "対象は山口県内の店舗・商業サービスの新店・開店、閉店、移転、リニューアルです。宿泊施設・観光レジャー・公共地域施設は対象外。90日より前の記事は通常候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。",
         "drafts": drafts,
     }
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with OUTPUT_FILE.open("w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     print("公式サイト候補:", len(official), "RSS候補:", len(rss))
-    print("統合後:", len(unique), "下書き候補:", len(drafts), "90日より前の除外:", old_count)
+    print("統合後:", len(unique), "下書き候補:", len(drafts), "対象外施設の除外:", excluded_scope_count, "90日より前の除外:", old_count)
     print("直近30日:", output["recent_draft_count"], "カテゴリー:", category_counts)
     print("鮮度:", freshness_counts, "保存先:", OUTPUT_FILE)
+    print("施設タイプ別件数:", output["content_type_counts"])
     print("市町別件数:", municipality_counts)
+
 
 if __name__ == "__main__":
     main()
-    
-def duplicate_fingerprint(draft):
-    """類似タイトルを確認するための指紋を作成する。"""
-    title = (draft.get("title") or "").lower()
-    title = re.sub(r"^\s*\d{4}[年/.-]\d{1,2}[月/.-]\d{0,2}[^ ]*\s*", "", title)
-    title = re.sub(r"【[^】]*】", " ", title)
-    title = re.sub(r"\[[^\]]*\]", " ", title)
-    title = re.sub(
-        r"(開店|新店|閉店|移転|リニューアル|オープン|営業再開|営業終了|情報|まとめ)",
-        " ",
-        title,
-    )
-    title = re.sub(r"[^\wぁ-んァ-ヶ一-龠]", "", title)
-    return title[:100]
-
-
-def annotate_review_flags(drafts):
-    """不足情報と類似タイトルを検出し、確認項目を付与する。"""
-    groups = {}
-
-    for draft in drafts:
-        fingerprint = duplicate_fingerprint(draft)
-        if len(fingerprint) >= 4:
-            categories = draft.get("category", [])
-            if not isinstance(categories, list):
-                categories = [categories] if categories else []
-            key = (fingerprint, tuple(sorted(categories)))
-            groups.setdefault(key, []).append(draft)
-
-    duplicate_group_count = 0
-    duplicate_candidate_count = 0
-
-    for group in groups.values():
-        if len(group) < 2:
-            continue
-
-        duplicate_group_count += 1
-        group_id = hashlib.sha256(
-            "|".join(sorted(x.get("id", "") for x in group)).encode("utf-8")
-        ).hexdigest()[:10]
-
-        for draft in group:
-            draft["duplicate_review"] = "重複の可能性・要確認"
-            draft["duplicate_group_id"] = group_id
-            draft["duplicate_candidate_ids"] = [
-                x.get("id", "") for x in group if x is not draft
-            ]
-            duplicate_candidate_count += 1
-
-    quality_counts = {}
-
-    for draft in drafts:
-        flags = []
-
-        if not draft.get("source_url") and not draft.get("source_urls"):
-            flags.append("情報源URLなし")
-        if not draft.get("body_excerpt"):
-            flags.append("本文抜粋なし")
-        if not draft.get("published_date"):
-            flags.append("公開日未確認")
-        if len(draft.get("municipality_candidates", [])) > 1:
-            flags.append("市町候補が複数")
-        elif not draft.get("municipality"):
-            flags.append("市町未特定")
-        if draft.get("freshness") == "未来日付・要確認":
-            flags.append("未来日付")
-
-        draft["review_flags"] = flags
-        draft["review_priority"] = (
-            "要優先確認"
-            if any(flag in flags for flag in [
-                "情報源URLなし", "未来日付", "市町候補が複数"
-            ])
-            else "確認推奨"
-            if flags
-            else "基本項目あり・内容確認は必要"
-        )
-
-        for flag in flags:
-            quality_counts[flag] = quality_counts.get(flag, 0) + 1
-
-        draft["status"] = "未確認・公開禁止"
-
-    return {
-        "duplicate_group_count": duplicate_group_count,
-        "duplicate_candidate_count": duplicate_candidate_count,
-        "review_flag_counts": dict(sorted(quality_counts.items())),
-        "review_note": (
-            "類似記事は自動削除しません。"
-            "全記事は未確認・公開禁止です。"
-        ),
-    }
-

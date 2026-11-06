@@ -1,44 +1,91 @@
-name: Test RSS date quality improvement
+name: Refresh review candidates
 
 on:
   workflow_dispatch:
-    inputs:
-      target_ref:
-        description: "テスト対象ブランチ"
-        required: true
-        default: "improve/date-metadata-quality"
-        type: string
 
 permissions:
   contents: read
 
+concurrency:
+  group: refresh-yamaguchi-review-candidates
+  cancel-in-progress: false
+
 jobs:
-  test:
+  refresh:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout improvement branch
+      - name: Checkout the branch selected for this run
         uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.target_ref }}
+          fetch-depth: 0
+
+      - name: Verify the checkout target
+        run: |
+          EXPECTED_BRANCH="$GITHUB_REF_NAME"
+          ACTUAL_BRANCH="$(git branch --show-current)"
+          if [ "$ACTUAL_BRANCH" != "$EXPECTED_BRANCH" ]; then
+            echo "Unexpected checkout: $ACTUAL_BRANCH (expected $EXPECTED_BRANCH)"
+            exit 1
+          fi
+          if [ "$GITHUB_REPOSITORY" != "kouki-bot/-UPDATE-MVP" ]; then
+            echo "Unexpected repository."
+            exit 1
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+
       - name: Compile Python files
         run: |
           python -m py_compile scripts/collect_news.py scripts/collect_rss.py scripts/generate_drafts.py scripts/publish_approved.py
+
       - name: Run safety tests
         run: python -m unittest discover -s scripts/tests -v
+
+      - name: Collect official news candidates
+        run: python scripts/collect_news.py
+
       - name: Collect RSS candidates
         run: python scripts/collect_rss.py
+
       - name: Generate review-only drafts
         run: python scripts/generate_drafts.py
-      - name: Upload test results
+
+      - name: Validate review data is safe
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          for filename, key in [
+              ("data/source_checks.json", "candidates"),
+              ("data/rss_candidates.json", "candidates"),
+              ("data/drafts.json", "drafts"),
+          ]:
+              path = Path(filename)
+              if not path.exists():
+                  raise SystemExit(f"{filename} was not created")
+              data = json.loads(path.read_text(encoding="utf-8"))
+              records = data.get(key, [])
+              unsafe = [x for x in records if x.get("status") != "未確認・公開禁止"]
+              if unsafe:
+                  raise SystemExit(f"{filename}: unpublished status check failed ({len(unsafe)})")
+              print(f"{filename}: {len(records)}件すべて未確認・公開禁止")
+
+          drafts = json.loads(Path("data/drafts.json").read_text(encoding="utf-8")).get("drafts", [])
+          excluded_types = {"宿泊施設", "観光・レジャー", "公共・地域施設"}
+          out_of_scope = [x for x in drafts if x.get("content_type") in excluded_types]
+          if out_of_scope:
+              raise SystemExit(f"店舗対象外の候補が残っています: {len(out_of_scope)}件")
+          PY
+
+      - name: Save review candidates as downloadable artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rss-date-quality-test-results
-          path: |
-            data/rss_candidates.json
-            data/drafts.json
-          if-no-files-found: warn
+          name: yamaguchi-review-candidates
+          path: data/drafts.json
+          if-no-files-found: error
           retention-days: 7
+
