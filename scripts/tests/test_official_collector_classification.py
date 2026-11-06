@@ -196,5 +196,50 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         self.assertEqual(basis, "本文・要確認")
 
 
+    def test_known_chain_store_opening_without_industry_word_is_review_candidate(self):
+        categories, basis = module.classify_text(
+            "ケーズデンキ山口店がオープン",
+            "山口市内に新店舗がオープンします。",
+        )
+        self.assertIn("新店・開店", categories)
+        self.assertEqual(basis, "地域・店舗名・動向／要確認")
+
+    def test_named_restaurant_opening_with_area_is_review_candidate(self):
+        categories, basis = module.classify_text(
+            "サイゼリヤおのだサンパーク店オープン",
+            "山陽小野田市の商業施設に出店します。",
+        )
+        self.assertIn("新店・開店", categories)
+
+    def test_closure_word_haigyo_is_detected(self):
+        categories, basis = module.classify_text(
+            "山口県内の長寿製パンが廃業へ",
+            "長年営業してきた店舗を閉じる予定です。",
+        )
+        self.assertIn("閉店", categories)
+
+    def test_body_only_sales_start_planned_is_review_candidate(self):
+        categories, basis = module.classify_text(
+            "宇部市の新店舗について",
+            "新しい専門店が11月に営業を開始する予定です。",
+        )
+        self.assertIn("新店・開店", categories)
+        self.assertEqual(basis, "本文・要確認")
+
+    def test_area_and_generic_opening_without_store_name_is_not_enough(self):
+        categories, _ = module.classify_text(
+            "山口市で新しい取り組みがオープン",
+            "地域の活動を開始します。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_event_with_store_word_is_not_misclassified(self):
+        categories, _ = module.classify_text(
+            "山口市の店舗でマルシェイベントを開催",
+            "店舗でイベントを開催します。",
+        )
+        self.assertEqual(categories, [])
+
+
 if __name__ == "__main__":
     unittest.main()
