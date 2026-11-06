@@ -269,8 +269,8 @@ def is_article_url(url):
     """公式サイトの個別記事URLだけを本文確認の対象にする。"""
     path = urlparse(url).path.lower()
     return bool(
-        re.search(r"/press/\\d+\\.html$", path)
-        or re.search(r"/site/topics/\\d+\\.html$", path)
+        re.search(r"/press/\d+\.html$", path)
+        or re.search(r"/site/topics/\d+\.html$", path)
     )
 
 
