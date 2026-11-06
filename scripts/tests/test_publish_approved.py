@@ -37,6 +37,20 @@ class Tests(unittest.TestCase):
   self.assertEqual(article["published_date"],"2026-10-28")
   self.assertEqual(article["event_date"],"2026-10-29")
   self.assertEqual(article["business_status"],"営業中")
+ def test_duplicate_candidate_is_blocked_without_resolution(self):
+  self.setup(draft=self.draft(duplicate_review="重複の可能性・要確認"))
+  self.run_script()
+  self.assertEqual(self.published()["articles"],[])
+ def test_duplicate_candidate_can_publish_only_when_confirmed_distinct(self):
+  self.setup(draft=self.draft(duplicate_review="重複の可能性・要確認"),
+             review=self.review(duplicate_resolution="別記事として掲載"))
+  self.run_script()
+  self.assertEqual(len(self.published()["articles"]),1)
+ def test_same_news_duplicate_resolution_is_blocked(self):
+  self.setup(draft=self.draft(duplicate_review="重複の可能性・要確認"),
+             review=self.review(duplicate_resolution="同一ニュース・対象外"))
+  self.run_script()
+  self.assertEqual(self.published()["articles"],[])
  def test_missing_explicit_review_status_blocked(self):
   self.setup(review=self.review(review_status="未確認")); self.run_script(); self.assertEqual(self.published()["articles"],[])
  def test_unapproved_blocked(self):
