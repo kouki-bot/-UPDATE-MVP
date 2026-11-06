@@ -245,6 +245,20 @@ class ReviewFlagTests(unittest.TestCase):
         self.assertEqual(draft["event_date"], "2026年11月21日")
         self.assertEqual(draft["freshness"], "日付確認が必要")
 
+    def test_title_date_is_not_used_as_article_publication_date(self):
+        item = {
+            "url": "https://example.com/new-shop",
+            "title": "2026年11月21日 LUNA STUDIOオープン",
+            "category": ["新店・開店"],
+            "published_date": "",
+            "body_excerpt": "LUNA STUDIOが11月21日にオープンします。",
+            "source_name": "test",
+        }
+        converted = module.convert_candidate(item, "RSS", 2)
+        self.assertIsNotNone(converted)
+        self.assertEqual(converted["published_date"], "")
+        self.assertEqual(converted["event_date"], "")
+
     def test_missing_event_date_is_flagged_without_approving(self):
         drafts = [{
             "id": "event-missing", "title": "店舗", "category": ["新店・開店"],
