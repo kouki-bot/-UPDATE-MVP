@@ -319,19 +319,27 @@ def extract_event_date(title, body_excerpt, published_date=""):
         matches = []
         for pattern_index, pattern in enumerate(patterns):
             for match in pattern.finditer(text):
-                left = max(0, match.start() - 45)
-                right = min(len(text), match.end() + 45)
-                context = text[left:right]
-                actions = list(action_re.finditer(context))
+                # 日付と店舗動作語は同じ文の中にある場合だけ関連付ける。
+                separators = "。！？!?\\n"
+                sentence_left = max(
+                    [text.rfind(mark, 0, match.start()) for mark in separators] + [-1]
+                ) + 1
+                following = [
+                    pos for mark in separators
+                    if (pos := text.find(mark, match.end())) >= 0
+                ]
+                sentence_right = min(following) if following else len(text)
+                sentence = text[sentence_left:sentence_right]
+                actions = list(action_re.finditer(sentence))
                 if not actions:
                     continue
+                local_start = match.start() - sentence_left
+                local_end = match.end() - sentence_left
                 distance = min(
-                    0 if a.start() <= match.start() - left <= a.end() else
-                    min(abs((left + a.start()) - match.start()), abs((left + a.end()) - match.end()))
+                    0 if a.start() <= local_start <= a.end() else
+                    min(abs(a.start() - local_start), abs(a.end() - local_end))
                     for a in actions
                 )
-                if distance > 45:
-                    continue
                 year_text = match.groupdict().get("year")
                 month_text = match.groupdict().get("month")
                 day_text = match.groupdict().get("day")
