@@ -20,10 +20,10 @@ jobs:
           python-version: "3.12"
 
       - name: Check Python syntax
-        run: python -m py_compile scripts/collect_news.py
+        run: python -m py_compile scripts/collect_news.py scripts/generate_drafts.py scripts/publish_approved.py
 
-      - name: Run official collector classification tests
-        run: python -m unittest scripts.tests.test_official_collector_classification -v
+      - name: Run all safety and workflow tests
+        run: python -m unittest discover -s scripts/tests -v
 
       - name: Run official site collector
         run: python scripts/collect_news.py
