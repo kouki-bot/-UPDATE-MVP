@@ -9,6 +9,14 @@ JST=timezone(timedelta(hours=9))
 def load(name, default):
  p=DATA/name
  return json.loads(p.read_text(encoding="utf-8")) if p.exists() else default
+def valid_date(value):
+ try:
+  text=str(value or "").strip()
+  if not text: return False
+  datetime.fromisoformat(text.replace("Z","+00:00"))
+  return True
+ except (TypeError,ValueError):
+  return False
 def main():
  drafts=load("drafts.json",{"drafts":[]}).get("drafts",[])
  approvals=load("publication_approvals.json",{"approved_ids":[],"reviewed_articles":{}})
@@ -21,6 +29,9 @@ def main():
   aid=str(draft.get("id",""))
   if not aid or aid not in approved: continue
   review=reviews.get(aid,{})
+  # 下書き段階で明示された記事公開日が不正なら、承認データの上書きで隠さず公開を止める。
+  if draft.get("published_date") not in (None,"") and not valid_date(draft.get("published_date")):
+   print(f"公開保留 {aid}: 下書きの記事公開日が不正。元情報を再確認してください"); continue
   article=dict(draft)
   for key in ("municipality","body","published_date","event_date","business_status","source_url","title"):
    if review.get(key) not in (None,""): article[key]=review[key]
@@ -39,10 +50,7 @@ def main():
    print(f"公開保留 {aid}: review_status=確認済み が必要"); continue
   if not review.get("reviewed_at") or review.get("reviewer_checked_source") is not True:
    print(f"公開保留 {aid}: reviewed_at と reviewer_checked_source=true が必要"); continue
-  try:
-   datetime.fromisoformat(str(article.get("published_date","")).replace("Z","+00:00"))
-   datetime.fromisoformat(str(article.get("event_date",""))[:10])
-  except ValueError:
+  if not valid_date(article.get("published_date")) or not valid_date(str(article.get("event_date",""))[:10]):
    print(f"公開保留 {aid}: 記事公開日または店舗動作日の日付形式が不正"); continue
   if article.get("business_status") not in ("開店予定","営業中","閉店済み","移転済み","リニューアル済み"):
    print(f"公開保留 {aid}: 店舗の現在の状態が不正"); continue
