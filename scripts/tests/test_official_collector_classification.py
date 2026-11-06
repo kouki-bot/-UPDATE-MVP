@@ -155,6 +155,58 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         self.assertEqual(categories, [])
         self.assertEqual(basis, "公共・文化施設除外")
 
+    def test_extracts_store_name_from_tokuyama_deck_body(self):
+        body = (
+            "2026年10月19日(月) 10:00 D2商業棟2階に "
+            "体験型ショールーム「ハクジュプラザ徳山駅前店」がオープンしました。"
+        )
+        self.assertEqual(
+            module.extract_store_name_from_body(body),
+            "ハクジュプラザ徳山駅前店",
+        )
+
+    def test_builds_named_candidate_for_tokuyama_opening_article(self):
+        body = "「甘味処 しづくや」がオープンしました。"
+        title = module.build_candidate_title(
+            "店舗オープン情報🌟",
+            body,
+            "徳山デッキ",
+        )
+        self.assertEqual(title, "新店オープン：甘味処 しづくや（徳山デッキ）")
+
+    def test_builds_named_candidate_for_tokuyama_refresh_article(self):
+        body = "「DECK PLAZA」がリフレッシュオープンいたします。"
+        title = module.build_candidate_title(
+            "DECK PLAZA リフレッシュオープン",
+            body,
+            "徳山デッキ",
+        )
+        self.assertEqual(
+            title,
+            "リニューアルオープン：DECK PLAZA（徳山デッキ）",
+        )
+
+    def test_extracts_tokuyama_opening_date_from_article_body(self):
+        self.assertEqual(
+            module.extract_opening_date(
+                "2026年10月19日(月) 10:00 "
+                "「ハクジュプラザ徳山駅前店」がオープンしました。"
+            ),
+            "2026年10月19日",
+        )
+
+    def test_two_digit_year_date_is_normalized(self):
+        self.assertEqual(
+            module.extract_opening_date("26年7月10日に新規オープン"),
+            "2026年7月10日",
+        )
+
+    def test_new_open_english_date_is_extracted(self):
+        self.assertEqual(
+            module.extract_opening_date("2026年11月13日 New Open"),
+            "2026年11月13日",
+        )
+
     def test_store_opening_is_kept(self):
         categories, basis = module.classify_text(
             "山口市に新しいカフェがオープン"
