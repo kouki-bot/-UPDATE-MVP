@@ -26,6 +26,10 @@ class Tests(unittest.TestCase):
   self.setup(review=self.review(event_date=""))
   self.run_script()
   self.assertEqual(self.published()["articles"],[])
+ def test_invalid_event_date_is_blocked(self):
+  self.setup(review=self.review(event_date="2026-99-99"))
+  self.run_script()
+  self.assertEqual(self.published()["articles"],[])
  def test_business_status_is_required_before_publish(self):
   self.setup(review=self.review(business_status=""))
   self.run_script()
