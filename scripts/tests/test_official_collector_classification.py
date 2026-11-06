@@ -79,6 +79,12 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
             "2026年7月10日",
         )
 
+    def test_opening_information_headline_is_not_an_opening_date(self):
+        self.assertEqual(
+            module.extract_opening_date("2024年10月24日(木) 店舗オープン情報。"),
+            "",
+        )
+
     def test_opening_date_extracts_four_digit_year(self):
         self.assertEqual(
             module.extract_opening_date("2026年11月21日オープン"),
