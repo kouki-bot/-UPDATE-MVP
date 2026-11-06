@@ -110,7 +110,9 @@ el("detail").innerHTML=
 '<div class="excerpt"><b>自動取得した本文抜粋</b><br>'+esc(d.body_excerpt||"本文抜粋なし。元記事を直接確認してください。")+'</div>'+
 '<div class="field"><label for="headline">掲載タイトル（確認・必要なら修正）</label><input id="headline" value="'+esc(r.headline||d.suggested_headline||d.title||"")+'"></div>'+
 '<div class="field"><label for="municipality">店舗所在地の市町名 *</label><input id="municipality" placeholder="例：山口市" value="'+esc(r.municipality||d.municipality||"")+'"><small>記事配信元の地域ではなく、店舗の実際の所在地を入力。</small></div>'+
-'<div class="field"><label for="eventDate">開店・閉店・移転等の日付 *</label><input id="eventDate" type="date" value="'+esc(dateOnly(r.published_date||d.published_date))+'"><small>記事の公開日と店舗の実際の動作日が異なる場合は、確認できた日付を入力。</small></div>'+
+'<div class="field"><label for="publishedDate">記事の公開日 *</label><input id="publishedDate" type="date" value="'+esc(dateOnly(r.published_date||d.published_date))+'"><small>元記事が公開された日付。店舗の開店日とは別に確認。</small></div>'+
+'<div class="field"><label for="eventDate">店舗の実際の動作日 *</label><input id="eventDate" type="date" value="'+esc(dateOnly(r.event_date||d.event_date))+'"><small>開店・閉店・移転・リニューアルが実際に行われた日付。</small></div>'+
+'<div class="field"><label for="businessStatus">店舗の現在の状態 *</label><select id="businessStatus"><option value="">選択してください</option>'+["開店予定","営業中","閉店済み","移転済み","リニューアル済み","確認できない"].map(function(x){return \'<option value="'+x+'" '+((r.business_status||"")===x?"selected":"")+'>'+x+'</option>\';}).join("")+'</select></div>'+
 '<div class="field"><label for="bodyText">確認済みの説明文</label><textarea id="bodyText" placeholder="元記事で確認できた事実を簡潔に記入">'+esc(r.body||d.body_excerpt||"")+'</textarea><small>推測や未確認情報は書かない。記事本文の長文転載は避ける。</small></div>'+
 flagHtml+
 '<label class="checkline"><input type="checkbox" id="sourceChecked" '+(r.reviewer_checked_source===true?"checked":"")+'><span>元記事を開き、店舗名・所在地・日付・現在の状況を確認した *</span></label>'+
@@ -122,16 +124,16 @@ el("pendingBtn").addEventListener("click",function(){saveReview("未確認");});
 }
 function saveReview(status){
 var d=drafts.find(function(x){return String(x.id)===selectedId;});if(!d)return;
-var id=String(d.id),headline=el("headline").value.trim(),municipality=el("municipality").value.trim(),eventDate=el("eventDate").value,body=el("bodyText").value.trim(),checked=el("sourceChecked").checked;
+var id=String(d.id),headline=el("headline").value.trim(),municipality=el("municipality").value.trim(),publishedDate=el("publishedDate").value,eventDate=el("eventDate").value,businessStatus=el("businessStatus").value,body=el("bodyText").value.trim(),checked=el("sourceChecked").checked;
 var cleared=Array.prototype.map.call(document.querySelectorAll(".clearFlag:checked"),function(x){return x.value;});
 if(status==="確認済み"){
 if(!checked){alert("承認には「元記事を確認した」チェックが必要です。");return;}
-if(!headline||!municipality||!eventDate||!d.source_url){alert("タイトル・市町名・日付・元記事URLをすべて確認してください。");return;}
+if(!headline||!municipality||!publishedDate||!eventDate||!businessStatus||!d.source_url){alert("タイトル・市町名・記事公開日・店舗の動作日・現在の状態・元記事URLを確認してください。");return;}
 var remaining=flagsFor(d).filter(function(f){return cleared.indexOf(f)<0;});
 if(remaining.length){alert("未解消の確認フラグがあります。解消を確認できた項目だけチェックしてください。");return;}
 }
 var rec=approvals.reviewed_articles[id]||{};
-rec.review_status=status;rec.headline=headline;rec.municipality=municipality;rec.published_date=eventDate;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
+rec.review_status=status;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
 if(status==="確認済み"){rec.reviewed_at=new Date().toISOString();approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});approvals.approved_ids.push(id);}
 else{delete rec.reviewed_at;approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});}
 approvals.reviewed_articles[id]=rec;saveLocal();renderList();renderDetail();
