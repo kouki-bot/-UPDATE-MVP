@@ -646,11 +646,21 @@ def annotate_review_flags(drafts):
             flags.append("重複の可能性・要確認")
 
         draft["review_flags"] = list(dict.fromkeys(flags))
-        draft["review_priority"] = (
-            "要優先確認"
-            if any(x in flags for x in ["情報源URLなし", "未来日付", "市町候補が複数"])
-            else "確認推奨" if flags else "基本項目あり・内容確認は必要"
-        )
+        critical_flags = {"情報源URLなし", "未来日付", "市町候補が複数"}
+        missing_information_flags = {
+            "本文抜粋なし", "公開日未確認",
+            "開店・閉店等の日付未確認", "市町未特定",
+        }
+        if any(flag in critical_flags for flag in flags):
+            draft["review_priority"] = "要優先確認"
+        elif "重複の可能性・要確認" in flags:
+            draft["review_priority"] = "重複確認"
+        elif any(flag in missing_information_flags for flag in flags):
+            draft["review_priority"] = "情報不足・保留"
+        elif flags:
+            draft["review_priority"] = "確認推奨"
+        else:
+            draft["review_priority"] = "基本項目あり・内容確認は必要"
         draft["status"] = "未確認・公開禁止"
 
         for flag in flags:
