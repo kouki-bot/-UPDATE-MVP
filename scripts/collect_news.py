@@ -355,6 +355,22 @@ def classify_text(title, body=""):
     if any(word in title for word in navigation_words):
         return [], "一覧・ナビ除外"
 
+    # 公共・文化施設そのものの更新は店舗ニュースに含めない。
+    # 施設内の店舗が明示されている場合は通常の店舗判定に進める。
+    non_shop_facility_words = [
+        "公園", "郷土館", "資料館", "博物館", "美術館",
+        "ミュージアム", "道の駅", "交流スペース",
+    ]
+    explicit_shop_words = [
+        "店舗", "売店", "テナント", "カフェ", "飲食店",
+        "レストラン", "ショップ", "専門店",
+    ]
+    if (
+        any(word in title for word in non_shop_facility_words)
+        and not any(word in title for word in explicit_shop_words)
+    ):
+        return [], "公共・文化施設除外"
+
     business_words = [
         "店舗", "店", "飲食店", "商業施設", "テナント",
         "カフェ", "喫茶", "レストラン", "美容室", "理容室",
@@ -405,7 +421,10 @@ def classify_text(title, body=""):
         explicit_opening = any(
             word in title for word in ["新店", "新規開店", "新規オープン"]
         )
-        if explicit_opening or title_has_business:
+        if (
+            (explicit_opening or title_has_business)
+            and "リニューアル" not in categories
+        ):
             categories.append("新店・開店")
 
     if not categories and combined_has_business:
