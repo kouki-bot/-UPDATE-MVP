@@ -623,7 +623,9 @@ def build_candidate_title(title, body, source_name):
     title = clean_text(title)
     store_name = extract_store_name_from_body(body)
     if store_name and "店舗オープン情報" in title:
-        return f"{store_name}（{source_name}）"
+        return f"新店オープン：{store_name}（{source_name}）"
+    if store_name and "リフレッシュオープン" in title:
+        return f"リニューアルオープン：{store_name}（{source_name}）"
     return title
 
 
@@ -631,10 +633,10 @@ def extract_opening_date(text):
     """開店表現に結びついた日付だけを抽出し、掲載日との混同を防ぐ。"""
     text = clean_text(text)
     patterns = [
-        r"(?<!\\d)((?:20\\d{2}|\\d{2})年\\d{1,2}月\\d{1,2}日)"
+        r"(?<!\d)((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)"
         r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
-        r"(?:\\s*(?:に|から|より))?\\s*(?:新規)?(?:オープン|開店|営業開始|New\\s+Open)",
-        r"(?<!\\d)((?:20\\d{2}|\\d{2})年\\d{1,2}月\\d{1,2}日)"
+        r"(?:\s*(?:に|から|より))?\s*(?:新規)?(?:オープン|開店|営業開始|New\s+Open)",
+        r"(?<!\d)((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)"
         r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
         r".{0,100}?(?:オープンしました|オープンします|営業を開始)",
     ]
@@ -646,11 +648,11 @@ def extract_opening_date(text):
     if not match:
         return ""
     date_text = match.group(1)
-    year_match = re.match(r"(20\\d{2}|\\d{2})年", date_text)
+    year_match = re.match(r"(20\d{2}|\d{2})年", date_text)
     year = int(year_match.group(1))
     if year < 100:
         year += 2000
-        date_text = re.sub(r"^\\d{2}年", f"{year}年", date_text)
+        date_text = re.sub(r"^\d{2}年", f"{year}年", date_text)
     return date_text
 
 
