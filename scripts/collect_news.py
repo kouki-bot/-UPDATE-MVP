@@ -349,7 +349,7 @@ def extract_page_text(parser):
 def classify_text(title, body=""):
     """
     店舗の新規開店・閉店・移転・改装だけを抽出する。
-    「開催」「開設」など行政イベントに多い語だけでは候補にしない。
+    本文だけで候補にする場合は、店舗語と実際の動作表現を厳格に確認する。
     """
 
     title = clean_text(title)
@@ -364,8 +364,15 @@ def classify_text(title, body=""):
     if any(word in title for word in navigation_words):
         return [], "一覧・ナビ除外"
 
-    # 公共・文化施設そのものの更新は店舗ニュースに含めない。
-    # 施設内の店舗が明示されている場合は通常の店舗判定に進める。
+    # 行政発表・表敬訪問・任命などは店舗の開閉店情報ではない。
+    administrative_title_words = [
+        "委嘱", "表敬訪問", "キャンペーン", "アンバサダー",
+        "任命", "就任", "激励会", "贈呈", "寄贈",
+        "感謝状", "設立報告", "訪問されました",
+    ]
+    if any(word in title for word in administrative_title_words):
+        return [], "行政活動・表敬訪問除外"
+
     non_shop_facility_words = [
         "公園", "郷土館", "資料館", "博物館", "美術館",
         "ミュージアム", "道の駅", "交流スペース",
@@ -381,12 +388,12 @@ def classify_text(title, body=""):
         return [], "公共・文化施設除外"
 
     business_words = [
-        "店舗", "店", "飲食店", "商業施設", "テナント",
+        "店舗", "飲食店", "商業施設", "テナント",
         "カフェ", "喫茶", "レストラン", "美容室", "理容室",
         "サロン", "ジム", "フィットネス", "スタジオ",
         "専門店", "ショップ", "スーパー", "ドラッグストア",
         "書店", "薬局", "コンビニ", "百貨店", "ショッピング",
-        "モール", "市場", "売場", "小売", "物販",
+        "モール", "売場", "小売", "物販",
     ]
     event_words = [
         "イベント", "開催", "フェア", "祭り", "マルシェ",
@@ -401,7 +408,6 @@ def classify_text(title, body=""):
     ]
 
     title_has_business = any(word in title for word in business_words)
-    combined_has_business = any(word in combined for word in business_words)
     strong_movement = any(word in title for word in strong_movement_words)
     event_context = any(word in title for word in event_words)
 
@@ -436,32 +442,32 @@ def classify_text(title, body=""):
         ):
             categories.append("新店・開店")
 
-    # 本文全体に「店舗」「開店」などが別々に含まれるだけでは
-    # 誤検出しやすいため、同じ文の中に業種・店舗語と動きの語が
-    # 共存する場合だけ本文由来の候補として採用する。
+    # 本文のみで候補にする場合は、汎用語「店」「市場」では判定しない。
+    # 「店舗がオープンしました」など、実際の動作が完了・予定した表現を要求する。
     if not categories and body:
+        body_business_words = [
+            "店舗", "飲食店", "商業施設", "テナント",
+            "カフェ", "喫茶", "レストラン", "美容室", "理容室",
+            "サロン", "ジム", "フィットネス", "スタジオ",
+            "専門店", "ショップ", "スーパー", "ドラッグストア",
+            "書店", "薬局", "コンビニ", "百貨店", "モール",
+        ]
+        body_patterns = [
+            ("閉店", r"(?:閉店|営業終了|閉業)(?:しました|します|することになりました|いたします)"),
+            ("移転", r"(?:移転|移転オープン)(?:しました|します|することになりました)"),
+            ("リニューアル", r"(?:リニューアルオープン|改装オープン)(?:しました|します)"),
+            ("新店・開店", r"(?:オープン|開店|開業|出店)(?:しました|します|いたしました|いたします)"),
+        ]
         body_sentences = [
             clean_text(part)
             for part in re.split(r"[。.!?！？\n]+", body)
             if clean_text(part)
         ]
-        body_movement_rules = [
-            ("閉店", ["閉店", "営業終了", "閉業"]),
-            ("移転", ["移転", "店舗移転"]),
-            ("リニューアル", ["リニューアル", "改装"]),
-            ("新店・開店", [
-                "新店", "新規開店", "新規オープン",
-                "オープン", "開店", "出店", "開業",
-            ]),
-        ]
         for sentence in body_sentences:
-            sentence_has_business = any(
-                word in sentence for word in business_words
-            )
-            if not sentence_has_business:
+            if not any(word in sentence for word in body_business_words):
                 continue
-            for category, movement_words in body_movement_rules:
-                if any(word in sentence for word in movement_words):
+            for category, pattern in body_patterns:
+                if re.search(pattern, sentence):
                     categories.append(category)
                     break
             if categories:
