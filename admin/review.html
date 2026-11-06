@@ -35,7 +35,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <body>
 <header><div class="brand">YAMAGUCHI LOCAL UPDATE<small>EDITORIAL REVIEW DESK / 記事確認・承認管理</small></div></header>
 <main>
-<div class="notice"><b>管理用画面について</b><br>この画面の操作だけでは記事は公開されません。確認結果はこの端末に一時保存され、JSONを書き出してGitHubの data/publication_approvals.json に反映する必要があります。元記事を確認せずに承認しないでください。</div>
+<div class="notice"><b>管理用画面について</b><br>この画面の操作だけでは記事は公開されません。確認結果はこの端末に一時保存され、JSONを書き出してGitHubの data/publication_approvals.json に反映する必要があります。記事公開日と店舗動作日を分け、営業状態と重複候補も確認してください。</div>
 <h1>記事確認・承認管理</h1><div class="sub">収集された候補を確認し、公開可能な情報だけを承認します。</div>
 <div class="stats">
 <div class="stat"><b id="totalCount">-</b><span>候補記事</span></div>
@@ -53,7 +53,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <section class="list"><div class="list-head"><b>確認待ち・記事一覧</b><span class="sub" id="shownCount"></span></div><div class="list-items" id="items"><div class="empty">記事データを読み込んでいます。</div></div></section>
 <section class="detail"><div class="detail-head"><b>記事の確認</b><span class="sub" id="detailId"></span></div><div class="detail-body" id="detail"><div class="empty">左側の記事を選択してください。</div></div></section>
 </div>
-<p class="footer-note">承認条件：元記事確認チェック、市町名、日付、タイトル、情報元URL、確認日時、未解消フラグなし。重複・日付・鮮度の警告は公開処理側でも再検査されます。</p>
+<p class="footer-note">承認条件：元記事確認チェック、市町名、記事公開日、店舗動作日、現在の営業状態、タイトル、情報元URL、確認日時、未解消フラグなし。重複候補は別記事として掲載できることの確認が必要です。公開処理側でも再検査されます。</p>
 </main>
 <script>
 (function(){
