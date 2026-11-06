@@ -3,8 +3,10 @@
   "approved_ids": [],
   "reviewed_articles": {},
   "instructions": {
-    "required": "店舗所在地・開店/閉店日・現在の状況・情報源を元記事で確認する。",
+    "required": "店舗所在地・記事公開日・実際の開店/閉店/移転日・現在の営業状態・情報源を元記事で確認する。記事公開日と店舗動作日は別々に記録する。",
     "municipality": "確認した市町名を reviewed_articles[id].municipality に入力する。",
+    "dates": "記事公開日は published_date、店舗の実際の動作日は event_date に入力する。両者を同じ日付であると推測しない。",
+    "business_status": "business_status は 開店予定/営業中/閉店済み/移転済み/リニューアル済み/確認できない のいずれかを入力する。",
     "review_flags": "解消した確認フラグだけ cleared_review_flags に列挙する。未解消なら承認しない。",
     "review_record": "reviewed_at と reviewer_checked_source=true を記録する。",
     "body": "確認済みの説明文を reviewed_articles[id].body に入力する。"
