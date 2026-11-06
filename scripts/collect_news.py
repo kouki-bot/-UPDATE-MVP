@@ -347,6 +347,14 @@ def classify_text(title, body=""):
     body = clean_text(body)
     combined = title + " " + body
 
+    navigation_words = [
+        "カレンダーで探す", "情報一覧", "記事一覧",
+        "店舗一覧", "開店一覧", "閉店一覧",
+        "検索結果", "カテゴリ一覧", "サイトマップ",
+    ]
+    if any(word in title for word in navigation_words):
+        return [], "一覧・ナビ除外"
+
     business_words = [
         "店舗", "店", "飲食店", "商業施設", "テナント",
         "カフェ", "喫茶", "レストラン", "美容室", "理容室",
