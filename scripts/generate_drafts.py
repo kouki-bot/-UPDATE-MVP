@@ -317,7 +317,7 @@ def extract_event_date(title, body_excerpt, published_date=""):
             re.compile(r"(?<!\d)(?P<day>\d{1,2})日"),
         ]
         matches = []
-        for pattern in patterns:
+        for pattern_index, pattern in enumerate(patterns):
             for match in pattern.finditer(text):
                 left = max(0, match.start() - 45)
                 right = min(len(text), match.end() + 45)
@@ -360,13 +360,13 @@ def extract_event_date(title, body_excerpt, published_date=""):
                         if abs((candidate.date() - base.date()).days) > 31:
                             continue
                         value = candidate.date().isoformat()
-                    matches.append((distance, match.start(), value))
+                    matches.append((pattern_index, distance, match.start(), value))
                 except (ValueError, OverflowError):
                     continue
         if not matches:
             return ""
-        matches.sort(key=lambda x: (x[0], x[1]))
-        return matches[0][2]
+        matches.sort(key=lambda x: (x[0], x[1], x[2]))
+        return matches[0][3]
 
     # 本文の店舗動作日を最優先。タイトルは本文にない場合だけ調べる。
     return find_action_date(body) or find_action_date(title_text)
