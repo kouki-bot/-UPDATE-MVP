@@ -22,10 +22,10 @@ def main():
   if not aid or aid not in approved: continue
   review=reviews.get(aid,{})
   article=dict(draft)
-  for key in ("municipality","body","published_date","source_url","title"):
+  for key in ("municipality","body","published_date","event_date","business_status","source_url","title"):
    if review.get(key) not in (None,""): article[key]=review[key]
   if review.get("headline"): article["title"]=review["headline"]
-  missing=[k for k in ("title","source_url","published_date","municipality") if not str(article.get(k,"")).strip()]
+  missing=[k for k in ("title","source_url","published_date","event_date","business_status","municipality") if not str(article.get(k,"")).strip()]
   flags=set(draft.get("review_flags") or [])-set(review.get("cleared_review_flags") or [])
   if missing:
    print(f"公開保留 {aid}: 必須項目不足 {', '.join(missing)}"); continue
@@ -41,8 +41,11 @@ def main():
    print(f"公開保留 {aid}: reviewed_at と reviewer_checked_source=true が必要"); continue
   try:
    datetime.fromisoformat(str(article.get("published_date","")).replace("Z","+00:00"))
+   datetime.fromisoformat(str(article.get("event_date",""))[:10])
   except ValueError:
-   print(f"公開保留 {aid}: 日付形式が不正"); continue
+   print(f"公開保留 {aid}: 記事公開日または店舗動作日の日付形式が不正"); continue
+  if article.get("business_status") not in ("開店予定","営業中","閉店済み","移転済み","リニューアル済み","確認できない"):
+   print(f"公開保留 {aid}: 店舗の現在の状態が不正"); continue
   if not str(article.get("source_url","")).startswith(("https://","http://")):
    print(f"公開保留 {aid}: 元記事URLが不正"); continue
   article["status"]="公開済み"
