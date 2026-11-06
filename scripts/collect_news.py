@@ -582,7 +582,7 @@ def extract_opening_date(text):
     """本文・見出しに明記された開店日を抽出する。2桁年は2000年代として正規化。"""
     text = clean_text(text)
     match = re.search(
-        r"(?:(20\\d{2})|(\\d{2}))年(\\d{1,2})月(\\d{1,2})日",
+        r"(?:(20\d{2})|(\d{2}))年(\d{1,2})月(\d{1,2})日",
         text,
     )
     if not match:
