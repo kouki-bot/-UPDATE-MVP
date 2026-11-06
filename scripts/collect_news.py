@@ -436,18 +436,36 @@ def classify_text(title, body=""):
         ):
             categories.append("新店・開店")
 
-    if not categories and combined_has_business:
-        if any(word in body for word in ["閉店", "営業終了", "閉業"]):
-            categories.append("閉店")
-        elif any(word in body for word in ["移転", "店舗移転"]):
-            categories.append("移転")
-        elif any(word in body for word in ["リニューアル", "改装"]):
-            categories.append("リニューアル")
-        elif any(word in body for word in [
-            "新店", "新規開店", "新規オープン",
-            "オープン", "開店", "出店", "開業",
-        ]):
-            categories.append("新店・開店")
+    # 本文全体に「店舗」「開店」などが別々に含まれるだけでは
+    # 誤検出しやすいため、同じ文の中に業種・店舗語と動きの語が
+    # 共存する場合だけ本文由来の候補として採用する。
+    if not categories and body:
+        body_sentences = [
+            clean_text(part)
+            for part in re.split(r"[。.!?！？\n]+", body)
+            if clean_text(part)
+        ]
+        body_movement_rules = [
+            ("閉店", ["閉店", "営業終了", "閉業"]),
+            ("移転", ["移転", "店舗移転"]),
+            ("リニューアル", ["リニューアル", "改装"]),
+            ("新店・開店", [
+                "新店", "新規開店", "新規オープン",
+                "オープン", "開店", "出店", "開業",
+            ]),
+        ]
+        for sentence in body_sentences:
+            sentence_has_business = any(
+                word in sentence for word in business_words
+            )
+            if not sentence_has_business:
+                continue
+            for category, movement_words in body_movement_rules:
+                if any(word in sentence for word in movement_words):
+                    categories.append(category)
+                    break
+            if categories:
+                break
 
         if categories:
             return list(dict.fromkeys(categories)), "本文・要確認"
