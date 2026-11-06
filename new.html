@@ -45,19 +45,21 @@ const list=document.getElementById('article-list'), keywordInput=document.getEle
 let articles=[];
 const categories=['新店・開店','新店','開店','新施設・地域の動き','新店舗'];
 const text=(o,keys)=>{for(const k of keys)if(typeof o[k]==='string'&&o[k].trim())return o[k].trim();return '';};
+const categoryText=o=>Array.isArray(o.category)?o.category.join(' '):text(o,['category','type','genre']);
+const isLodging=o=>o&&((o.content_type==='宿泊施設')||/ホテル|旅館|宿泊施設|民宿|民泊|ゲストハウス|ペンション|コテージ|簡易宿所|東横イン/.test([text(o,['title','name']),text(o,['content_type'])].join(' ')));
 const safeUrl=value=>{if(typeof value!=='string'||!value.trim())return '';try{const u=new URL(value,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch(e){return '';}};
-const areaOf=o=>{const s=[text(o,['area','city','location','address']),text(o,['title','name']),text(o,['summary','description','body'])].join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(a=>s.includes(a))||'その他';};
+const areaOf=o=>{const s=[text(o,['municipality','city']),Array.isArray(o.area)?o.area.join(' '):text(o,['area','location','address']),text(o,['title','name']),text(o,['summary','description','body'])].join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(a=>s.includes(a))||'その他';};
 const link=(href,label)=>{const url=safeUrl(href);if(!url)return null;const a=document.createElement('a');a.href=url;a.textContent=label;a.target='_blank';a.rel='noopener noreferrer';return a;};
 function render(){
 const kw=keywordInput.value.trim().toLowerCase(), area=areaSelect.value;
-const rows=articles.filter(o=>{const s=[text(o,['title','name']),text(o,['area','city','location','address']),text(o,['summary','description','body']),text(o,['category','type','genre'])].join(' ').toLowerCase();return (!kw||s.includes(kw))&&(!area||areaOf(o)===area);});
+const rows=articles.filter(o=>{const s=[text(o,['title','name']),text(o,['area','city','location','address']),text(o,['summary','description','body']),categoryText(o)].join(' ').toLowerCase();return (!kw||s.includes(kw))&&(!area||areaOf(o)===area);});
 list.replaceChildren();count.textContent=rows.length+'件の情報';
 if(!rows.length){const p=document.createElement('p');p.className='empty-state';p.textContent=articles.length?'条件に合う情報はありません。キーワードや地域を変えて検索してください。':'現在、掲載できる新店・開店情報はありません。情報が確認でき次第、掲載します。';list.appendChild(p);return;}
 rows.forEach(o=>{
 const card=document.createElement('article');card.className='article-card';
 const h=document.createElement('h2'), title=text(o,['title','name']), detail=text(o,['detail_url','page_url','article_url','url']), titleA=link(detail,title);
 if(titleA)h.appendChild(titleA);else h.textContent=title;card.appendChild(h);
-const meta=[text(o,['category','type','genre']),text(o,['area','city','location','address']),text(o,['date','opening_date','published_at','updated_at'])].filter(Boolean);
+const meta=[categoryText(o),(text(o,['municipality','city'])||(Array.isArray(o.area)?o.area.join('・'):text(o,['area','location','address']))),text(o,['event_date','opening_date','business_status','published_date','date','published_at','updated_at'])].filter(Boolean);
 if(meta.length){const p=document.createElement('p');p.className='article-meta';p.textContent=meta.join(' ｜ ');card.appendChild(p);}
 const summary=text(o,['summary','description','body','content']);if(summary){const p=document.createElement('p');p.className='article-summary';p.textContent=summary;card.appendChild(p);}
 const links=document.createElement('div');links.className='article-links';
@@ -70,7 +72,7 @@ document.getElementById('reset-button').addEventListener('click',()=>{keywordInp
 keywordInput.addEventListener('keydown',e=>{if(e.key==='Enter')render();});areaSelect.addEventListener('change',render);
 fetch('data/published.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{
 const rows=Array.isArray(data)?data:(Array.isArray(data.articles)?data.articles:[]);
-articles=rows.filter(o=>o&&o.status==='公開'&&text(o,['title','name'])&&categories.some(c=>text(o,['category','type','genre']).includes(c))).slice(0,100);render();
+articles=rows.filter(o=>o&&(o.status==='公開'||o.status==='公開済み')&&!isLodging(o)&&text(o,['title','name'])&&categories.some(c=>categoryText(o).includes(c))).slice(0,100);render();
 }).catch(()=>{count.textContent='読み込みエラー';list.replaceChildren();const p=document.createElement('p');p.className='load-error';p.textContent='情報を読み込めませんでした。時間をおいて再読み込みしてください。';list.appendChild(p);});
 })();
 </script>
