@@ -721,35 +721,70 @@ def duplicate_fingerprint(draft):
     return title[:100]
 
 
-def duplicate_store_entity(title):
-    """記事タイトルから重複確認に使える固有の店舗名候補を抽出する。"""
-    value = clean_text(title)
-    value = re.sub(r"^\s*20\d{2}[年/.-]\d{1,2}[月/.-]\d{1,2}[^ ]*\s*", "", value)
-    value = re.sub(r"【[^】]*】|\[[^\]]*\]", " ", value)
-        # 見出し冒頭の動作表現を店舗名抽出前に除去
-    value = re.sub(
+def duplicate_store_entity(title, body_excerpt=""):
+    """タイトル・本文から重複確認に使える店舗名候補を抽出する。"""
+    title_text = unicodedata.normalize("NFKC", clean_text(title))
+    body_text = unicodedata.normalize("NFKC", clean_text(body_excerpt))
+
+    # タイトル先頭の公開日時を除去
+    title_text = re.sub(
+        r"^\s*20\d{2}[年/.-]\d{1,2}[月/.-]\d{1,2}日?"
+        r"(?:\s+\d{1,2}:\d{2})?\s*",
+        "",
+        title_text,
+    )
+
+    # 媒体ラベル・見出し冒頭の動作表現を除去
+    title_text = re.sub(r"【[^】]*】|\[[^\]]*\]", " ", title_text)
+    title_text = re.sub(
         r"^\s*(?:(?:来夏|来年|今夏|今月|今週|今秋|今冬)?"
         r"(?:閉店|開店|移転|閉業|営業終了|リニューアル)"
         r"(?:予定|へ|の|する|となる)?)+\s*",
         "",
-        value,
+        title_text,
     )
-    generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
-    matches = re.findall(r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24}?(?:店|スタジオ|専門店)", value)
+
+    generic = {
+        "店舗", "専門店", "衣料品店", "飲食店",
+        "小売店", "販売店", "雑貨店",
+    }
     candidates = []
-    for match in matches:
-        # 見出し先頭の時期・動作表現が店舗名に混ざるのを防ぐ。
-        # 例: 「来夏閉店の大丸下関店」→「大丸下関店」
-        name = re.sub(
-            r"^(?:(?:来夏|来年|今夏|今月|今週|今秋|今冬)?"
-            r"(?:閉店|開店|移転|閉業|営業終了|リニューアル)"
-            r"(?:予定|へ|の|する|となる)?)+",
-            "",
-            match,
+
+    # 「大丸下関店」「ケーズデンキ山口店」など
+    for text in (title_text, body_text):
+        matches = re.findall(
+            r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24}?"
+            r"(?:店|スタジオ|専門店)",
+            text,
         )
-        name = re.sub(r"^(?:新しい|新たな|おしゃれな|話題の)", "", name)
-        if name not in generic and len(name) >= 4:
-            candidates.append(name)
+        for name in matches:
+            name = re.sub(
+                r"^(?:新しい|新たな|おしゃれな|話題の)",
+                "",
+                name,
+            )
+            if name not in generic and len(name) >= 4:
+                candidates.append(name)
+
+    # 「ロフト」オープンなど、かぎ括弧内の店舗名
+    for match in re.finditer(r"[「『]([^」』]{2,20})[」』]", title_text):
+        following = title_text[match.end():match.end() + 12]
+        if re.search(
+            r"オープン|開店|開業|出店|閉店|移転|リニューアル",
+            following,
+        ):
+            name = match.group(1)
+            if name not in generic:
+                candidates.append(name)
+
+    # ロフト（東京都）のような本文中のブランド表記
+    brands = re.findall(
+        r"([A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,20})"
+        r"[（(]東京都",
+        body_text,
+    )
+    candidates.extend(brands)
+
     return list(dict.fromkeys(candidates))
 
 
@@ -765,8 +800,8 @@ def same_store_duplicate(a, b):
     date_b = parse_date(b.get("published_date", ""))
     if not date_a or not date_b or abs((date_a.date() - date_b.date()).days) > 21:
         return False
-    names_a = set(duplicate_store_entity(a.get("title", "")))
-    names_b = set(duplicate_store_entity(b.get("title", "")))
+    names_a = set(duplicate_store_entity(a.get("title", ""), a.get("body_excerpt", "")))
+    names_b = set(duplicate_store_entity(b.get("title", ""), b.get("body_excerpt", "")))
     return bool(names_a & names_b)
 
 
