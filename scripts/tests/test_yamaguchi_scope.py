@@ -176,6 +176,25 @@ class YamaguchiScopeTests(unittest.TestCase):
             "カフェが新規開店しました。"
         ))
 
+    def test_event_date_is_extracted_from_body(self):
+        self.assertEqual(
+            module.extract_event_date("宇部に新店", "カフェが2026年10月23日にオープンしました。", "2026-11-01"),
+            "2026-10-23",
+        )
+
+    def test_school_one_day_restaurant_is_excluded_from_body(self):
+        self.assertFalse(module.is_store_news(
+            "山口市で学生レストランがオープン",
+            "専門学校の在校生が調理・接客を学ぶ実習として、一日だけレストランを営業しました。",
+        ))
+
+    def test_different_store_names_at_same_location_are_not_merged(self):
+        a = {"title": "しまむら宇部店が移転", "category": ["移転"],
+             "published_date": "2026-10-28", "body_excerpt": "宇部市"}
+        b = {"title": "バースデイ宇部店がオープン", "category": ["新店・開店"],
+             "published_date": "2026-10-30", "body_excerpt": "宇部市"}
+        self.assertFalse(module.same_store_news_candidate(a, b))
+
     def test_same_store_news_with_different_headlines_is_merged(self):
         a = {
             "title": "【新店】ケーズデンキ山口店がオープン",
