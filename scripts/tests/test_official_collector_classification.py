@@ -30,6 +30,35 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
             )
         )
 
+    def test_tokuyama_deck_information_article_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://tokuyamadeck.com/information/店舗オープン情報-5/"
+            )
+        )
+
+    def test_sunpark_shop_news_detail_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://www.sunpark.co.jp/search/detail.html?id=12"
+            )
+        )
+
+    def test_sunpark_news_detail_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://sunpark.co.jp/sp/news/detail.html?id=886"
+            )
+        )
+
+    def test_seamall_listing_extracts_two_digit_year(self):
+        entries = module.extract_shop_listing_entries(
+            ["26年7月10日オープン 店名 テストショップ 場所 2階"],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries[0]["opening_date"], "26年7月10日")
+
     def test_archive_page_is_not_article_url(self):
         self.assertFalse(
             module.is_article_url(
