@@ -348,34 +348,87 @@ def extract_page_text(parser):
 
 def classify_text(title, body=""):
     """
-    タイトルの分類を優先し、本文は補助的に使う。
+    店舗の新規開店・閉店・移転・改装だけを抽出する。
+    「開催」「開設」など行政イベントに多い語だけでは候補にしない。
     """
 
     title = clean_text(title)
     body = clean_text(body)
+    combined = title + " " + body
 
-    title_categories = []
-    combined_categories = []
+    business_words = [
+        "店舗", "店", "飲食店", "商業施設", "テナント",
+        "カフェ", "喫茶", "レストラン", "美容室", "理容室",
+        "サロン", "ジム", "フィットネス", "スタジオ",
+        "専門店", "ショップ", "スーパー", "ドラッグストア",
+        "書店", "薬局", "コンビニ", "百貨店", "ショッピング",
+        "モール", "市場", "売場", "小売", "物販",
+    ]
+    event_words = [
+        "イベント", "開催", "フェア", "祭り", "マルシェ",
+        "講座", "体験会", "研修会", "審議会", "会議",
+        "大会", "式典", "表彰", "募集", "オープンキャンパス",
+        "ワークショップ", "説明会", "講演会",
+    ]
+    strong_movement_words = [
+        "新店", "新規開店", "新規オープン", "閉店",
+        "営業終了", "閉業", "店舗移転",
+        "リニューアルオープン", "改装オープン",
+    ]
 
-    for category, keywords in KEYWORD_GROUPS.items():
-        if any(keyword in title for keyword in keywords):
-            title_categories.append(category)
+    title_has_business = any(word in title for word in business_words)
+    combined_has_business = any(word in combined for word in business_words)
+    strong_movement = any(word in title for word in strong_movement_words)
+    event_context = any(word in title for word in event_words)
 
-        if any(
-            keyword in (title + " " + body)
-            for keyword in keywords
-        ):
-            combined_categories.append(category)
+    if event_context and not strong_movement:
+        return [], "イベント除外"
 
-    # タイトルで判断できた場合はタイトルを優先
-    if title_categories:
-        return title_categories, "タイトル"
+    categories = []
+    if any(word in title for word in ["閉店", "営業終了", "閉業"]):
+        categories.append("閉店")
 
-    if combined_categories:
-        return combined_categories, "概要・要確認"
+    if any(word in title for word in ["移転", "店舗移転"]):
+        if title_has_business or "店舗移転" in title:
+            categories.append("移転")
+
+    if any(word in title for word in [
+        "リニューアル", "改装オープン",
+        "リニューアルオープン", "改装",
+    ]):
+        if title_has_business or "リニューアルオープン" in title:
+            categories.append("リニューアル")
+
+    if any(word in title for word in [
+        "新店", "新規開店", "新規オープン",
+        "オープン", "開店", "出店", "開業",
+    ]):
+        explicit_opening = any(
+            word in title for word in ["新店", "新規開店", "新規オープン"]
+        )
+        if explicit_opening or title_has_business:
+            categories.append("新店・開店")
+
+    if not categories and combined_has_business:
+        if any(word in body for word in ["閉店", "営業終了", "閉業"]):
+            categories.append("閉店")
+        elif any(word in body for word in ["移転", "店舗移転"]):
+            categories.append("移転")
+        elif any(word in body for word in ["リニューアル", "改装"]):
+            categories.append("リニューアル")
+        elif any(word in body for word in [
+            "新店", "新規開店", "新規オープン",
+            "オープン", "開店", "出店", "開業",
+        ]):
+            categories.append("新店・開店")
+
+        if categories:
+            return list(dict.fromkeys(categories)), "本文・要確認"
+
+    if categories:
+        return list(dict.fromkeys(categories)), "タイトル"
 
     return [], "分類要確認"
-
 
 def extract_published_date(parser, body):
     """
