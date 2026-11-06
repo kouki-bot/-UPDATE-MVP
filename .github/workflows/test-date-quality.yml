@@ -16,18 +16,17 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout the fixed review branch
+      - name: Checkout the branch selected for this run
         uses: actions/checkout@v5
         with:
-          ref: fix/yamaguchi-scope-and-listing-filter
           fetch-depth: 0
 
       - name: Verify the checkout target
         run: |
-          EXPECTED_BRANCH="fix/yamaguchi-scope-and-listing-filter"
+          EXPECTED_BRANCH="$GITHUB_REF_NAME"
           ACTUAL_BRANCH="$(git branch --show-current)"
           if [ "$ACTUAL_BRANCH" != "$EXPECTED_BRANCH" ]; then
-            echo "Unexpected checkout: $ACTUAL_BRANCH"
+            echo "Unexpected checkout: $ACTUAL_BRANCH (expected $EXPECTED_BRANCH)"
             exit 1
           fi
           if [ "$GITHUB_REPOSITORY" != "kouki-bot/-UPDATE-MVP" ]; then
@@ -56,7 +55,35 @@ jobs:
       - name: Generate review-only drafts
         run: python scripts/generate_drafts.py
 
-      - name: Save refreshed review data to the fixed review branch
+      - name: Validate review data is safe
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          for filename, key in [
+              ("data/source_checks.json", "candidates"),
+              ("data/rss_candidates.json", "candidates"),
+              ("data/drafts.json", "drafts"),
+          ]:
+              path = Path(filename)
+              if not path.exists():
+                  raise SystemExit(f"{filename} was not created")
+              data = json.loads(path.read_text(encoding="utf-8"))
+              records = data.get(key, [])
+              unsafe = [x for x in records if x.get("status") != "未確認・公開禁止"]
+              if unsafe:
+                  raise SystemExit(f"{filename}: unpublished status check failed ({len(unsafe)})")
+              print(f"{filename}: {len(records)}件すべて未確認・公開禁止")
+
+          drafts = json.loads(Path("data/drafts.json").read_text(encoding="utf-8")).get("drafts", [])
+          excluded_types = {"宿泊施設", "観光・レジャー", "公共・地域施設"}
+          out_of_scope = [x for x in drafts if x.get("content_type") in excluded_types]
+          if out_of_scope:
+              raise SystemExit(f"店舗対象外の候補が残っています: {len(out_of_scope)}件")
+          PY
+
+      - name: Save refreshed review data to the selected branch
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -65,7 +92,7 @@ jobs:
             echo "No review data changes."
           else
             git commit -m "Refresh review candidates"
-            git push origin "HEAD:refs/heads/fix/yamaguchi-scope-and-listing-filter"
+            git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
           fi
 
       - name: Upload refreshed review data
