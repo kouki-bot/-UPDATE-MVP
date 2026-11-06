@@ -317,7 +317,7 @@ def extract_shop_listing_entries(text_parts, facility_name, area):
             section,
         )
         location_match = re.search(
-            r"場所\s*[:：]?\s*(.+?)\s*(?=(?:電話番号|$))",
+            r"場所\s*[:：]?\s*((?:地下)?[1-9]階|屋上|本館|別館)",
             section,
         )
         industry = clean_text(industry_match.group(1)) if industry_match else ""
@@ -327,6 +327,7 @@ def extract_shop_listing_entries(text_parts, facility_name, area):
         non_retail_terms = [
             "ハローワーク", "公共職業安定所",
             "就労移行支援", "障害福祉サービス",
+            "LITALICOワークス", "就労支援",
         ]
         if any(term in store_name + " " + industry for term in non_retail_terms):
             continue
