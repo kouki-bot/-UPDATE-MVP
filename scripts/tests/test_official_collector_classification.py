@@ -9,6 +9,27 @@ spec.loader.exec_module(module)
 
 
 class OfficialCollectorClassificationTests(unittest.TestCase):
+    def test_official_press_article_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://www.pref.yamaguchi.lg.jp/press/369077.html"
+            )
+        )
+
+    def test_city_topic_article_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://www.city.yamaguchi.lg.jp/site/topics/201713.html"
+            )
+        )
+
+    def test_archive_page_is_not_article_url(self):
+        self.assertFalse(
+            module.is_article_url(
+                "https://www.pref.yamaguchi.lg.jp/press/search.php?search_ym=202611"
+            )
+        )
+
     def test_store_opening_is_kept(self):
         categories, basis = module.classify_text(
             "山口市に新しいカフェがオープン"
