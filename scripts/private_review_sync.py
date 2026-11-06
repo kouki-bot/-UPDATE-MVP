@@ -62,17 +62,27 @@ def put_private(local_path, remote_path):
     request("PUT", api_path, payload)
     print(f"Uploaded private review data: {Path(local_path).name} ({len(rows)} records)")
 
-def download_approvals():
-    remote_path = "data/publication_approvals.json"
+def download_private_file(remote_path, local_path):
     result = request("GET", f"/repos/{PRIVATE_REPO}/contents/{remote_path}?ref=main")
     if result.get("encoding") != "base64" or not result.get("content"):
-        raise SystemExit("Private approval file is missing or has an unsupported encoding")
+        raise SystemExit(f"Private file is missing or has an unsupported encoding: {remote_path}")
     raw = base64.b64decode(result["content"])
-    data = json.loads(raw.decode("utf-8"))
+    parsed = json.loads(raw.decode("utf-8"))
+    (ROOT / local_path).parent.mkdir(parents=True, exist_ok=True)
+    (ROOT / local_path).write_bytes(raw)
+    return parsed
+
+def download_approvals():
+    data = download_private_file("data/publication_approvals.json", "data/publication_approvals.json")
     if not isinstance(data.get("approved_ids"), list) or not isinstance(data.get("reviewed_articles"), dict):
         raise SystemExit("Private approval JSON schema is invalid")
-    (ROOT / "data/publication_approvals.json").write_bytes(raw)
+    drafts = download_private_file("incoming/drafts.json", "data/drafts.json")
+    rows = drafts.get("drafts", [])
+    unsafe = [row for row in rows if row.get("status") != "未確認・公開禁止"]
+    if unsafe:
+        raise SystemExit(f"Private drafts contain {len(unsafe)} non-review-only record(s)")
     print(f"Loaded private approvals: {len(data['approved_ids'])} approved ID(s)")
+    print(f"Loaded private drafts: {len(rows)} review-only record(s)")
 
 def main():
     if len(sys.argv) != 2 or sys.argv[1] not in {"upload", "download"}:
