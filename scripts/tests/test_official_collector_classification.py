@@ -164,5 +164,37 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         self.assertEqual(basis, "本文・要確認")
 
 
+    def test_ambassador_appointment_article_is_excluded_even_if_body_mentions_store_opening(self):
+        categories, basis = module.classify_text(
+            "中村心さんに「やまぐち和牛燦アンバサダー」を委嘱します！",
+            "県内の店舗がオープンしました。アンバサダーの委嘱式を行います。",
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "行政活動・表敬訪問除外")
+
+    def test_campaign_mayor_visit_article_is_excluded_even_if_body_mentions_store_opening(self):
+        categories, basis = module.classify_text(
+            "旬の桃を届けに福島市副市長とミスピーチキャンペーンクルーが市長を表敬訪問されました",
+            "県内の店舗がオープンしました。キャンペーンクルーが市長を訪問しました。",
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "行政活動・表敬訪問除外")
+
+    def test_body_only_opening_requires_actual_business_predicate(self):
+        categories, _ = module.classify_text(
+            "地域の取り組みについて",
+            "県内の店舗の需要拡大に向けた取り組みを開始しました。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_body_only_store_opening_accepts_completed_action(self):
+        categories, basis = module.classify_text(
+            "宇部・恩田の新スポット",
+            "新しいピラティススタジオが10月1日にオープンしました。",
+        )
+        self.assertIn("新店・開店", categories)
+        self.assertEqual(basis, "本文・要確認")
+
+
 if __name__ == "__main__":
     unittest.main()
