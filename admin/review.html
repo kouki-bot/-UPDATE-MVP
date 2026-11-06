@@ -103,6 +103,11 @@ var sourceHtml=sources.map(function(s){var u=safeHttpUrl(s.url);return u?'<a hre
 var flags=flagsFor(d),cleared=Array.isArray(r.cleared_review_flags)?r.cleared_review_flags:[];
 var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消したものだけチェック）</b>'+flags.map(function(f){return '<label><input type="checkbox" class="clearFlag" value="'+esc(f)+'" '+(cleared.indexOf(f)>=0?"checked":"")+'><span>'+esc(f)+'</span></label>';}).join("")+'</div>':'<p class="sub">自動検出された確認フラグはありません。内容確認は必要です。</p>';
 var status=statusOf(id);
+var duplicateHtml="";
+if(d.duplicate_review){
+var related=(d.duplicate_candidate_ids||[]).map(function(otherId){var other=drafts.find(function(x){return String(x.id)===String(otherId);});return other?'<li>'+esc(other.title)+'</li>':'<li>関連候補ID：'+esc(otherId)+'</li>';}).join("");
+duplicateHtml='<div class="flags"><b>重複候補の確認</b><p>同じ店舗・同じ動きの別記事候補です。自動統合・削除はしていません。</p><ul>'+related+'</ul><label for="duplicateResolution">確認結果 *</label><select id="duplicateResolution"><option value="">選択してください</option><option value="別記事として掲載" '+(r.duplicate_resolution==="別記事として掲載"?"selected":"")+'>別記事として掲載する（別の情報・追加価値あり）</option><option value="同一ニュース・対象外" '+(r.duplicate_resolution==="同一ニュース・対象外"?"selected":"")+'>同一ニュースの重複として対象外にする</option></select></div>';
+}
 el("detailId").textContent="ID: "+id;
 el("detail").innerHTML=
 '<div class="sub">現在の状態：<b>'+esc(status)+'</b>　／　種別：'+esc(d.content_type||"要確認")+'　／　情報元：'+esc(d.source_name||"未設定")+'</div>'+
@@ -112,9 +117,9 @@ el("detail").innerHTML=
 '<div class="field"><label for="municipality">店舗所在地の市町名 *</label><input id="municipality" placeholder="例：山口市" value="'+esc(r.municipality||d.municipality||"")+'"><small>記事配信元の地域ではなく、店舗の実際の所在地を入力。</small></div>'+
 '<div class="field"><label for="publishedDate">記事の公開日 *</label><input id="publishedDate" type="date" value="'+esc(dateOnly(r.published_date||d.published_date))+'"><small>元記事が公開された日付。店舗の開店日とは別に確認。</small></div>'+
 '<div class="field"><label for="eventDate">店舗の実際の動作日 *</label><input id="eventDate" type="date" value="'+esc(dateOnly(r.event_date||d.event_date))+'"><small>開店・閉店・移転・リニューアルが実際に行われた日付。</small></div>'+
-'<div class="field"><label for="businessStatus">店舗の現在の状態 *</label><select id="businessStatus"><option value="">選択してください</option>'+["開店予定","営業中","閉店済み","移転済み","リニューアル済み","確認できない"].map(function(x){return '<option value="'+x+'" '+((r.business_status||"")===x?"selected":"")+'>'+x+'</option>';}).join("")+'</select></div>'+
+'<div class="field"><label for="businessStatus">店舗の現在の状態 *</label><select id="businessStatus"><option value="">選択してください</option>'+["開店予定","営業中","閉店済み","移転済み","リニューアル済み"].map(function(x){return '<option value="'+x+'" '+((r.business_status||"")===x?"selected":"")+'>'+x+'</option>';}).join("")+'</select></div>'+
 '<div class="field"><label for="bodyText">確認済みの説明文</label><textarea id="bodyText" placeholder="元記事で確認できた事実を簡潔に記入">'+esc(r.body||d.body_excerpt||"")+'</textarea><small>推測や未確認情報は書かない。記事本文の長文転載は避ける。</small></div>'+
-flagHtml+
+duplicateHtml+flagHtml+
 '<label class="checkline"><input type="checkbox" id="sourceChecked" '+(r.reviewer_checked_source===true?"checked":"")+'><span>元記事を開き、店舗名・所在地・日付・現在の状況を確認した *</span></label>'+
 '<div class="actions"><button class="approve" id="approveBtn">確認済みとして承認</button><button class="secondary" id="fixBtn">要修正として保存</button><button class="danger" id="excludeBtn">対象外として保存</button><button class="plain" id="pendingBtn">未確認に戻す</button></div>';
 el("approveBtn").addEventListener("click",function(){saveReview("確認済み");});
@@ -126,14 +131,16 @@ function saveReview(status){
 var d=drafts.find(function(x){return String(x.id)===selectedId;});if(!d)return;
 var id=String(d.id),headline=el("headline").value.trim(),municipality=el("municipality").value.trim(),publishedDate=el("publishedDate").value,eventDate=el("eventDate").value,businessStatus=el("businessStatus").value,body=el("bodyText").value.trim(),checked=el("sourceChecked").checked;
 var cleared=Array.prototype.map.call(document.querySelectorAll(".clearFlag:checked"),function(x){return x.value;});
+var duplicateResolution=el("duplicateResolution")?el("duplicateResolution").value:"";
 if(status==="確認済み"){
 if(!checked){alert("承認には「元記事を確認した」チェックが必要です。");return;}
 if(!headline||!municipality||!publishedDate||!eventDate||!businessStatus||!d.source_url){alert("タイトル・市町名・記事公開日・店舗の動作日・現在の状態・元記事URLを確認してください。");return;}
 var remaining=flagsFor(d).filter(function(f){return cleared.indexOf(f)<0;});
 if(remaining.length){alert("未解消の確認フラグがあります。解消を確認できた項目だけチェックしてください。");return;}
+if(d.duplicate_review&&duplicateResolution!=="別記事として掲載"){alert("重複候補です。別記事として掲載できると確認した場合だけ承認できます。同一ニュースなら対象外として保存してください。");return;}
 }
 var rec=approvals.reviewed_articles[id]||{};
-rec.review_status=status;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
+rec.review_status=status;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.duplicate_resolution=duplicateResolution;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
 if(status==="確認済み"){rec.reviewed_at=new Date().toISOString();approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});approvals.approved_ids.push(id);}
 else{delete rec.reviewed_at;approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});}
 approvals.reviewed_articles[id]=rec;saveLocal();renderList();renderDetail();
