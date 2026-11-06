@@ -295,11 +295,11 @@ def extract_shop_listing_entries(text_parts, facility_name, area):
             continue
 
         industry_match = re.search(
-            r"業種\\s*[:：]?\\s*(.+?)\\s*(?=(?:場所|電話番号|$))",
+            r"業種\s*[:：]?\s*(.+?)\s*(?=(?:場所|電話番号|$))",
             section,
         )
         location_match = re.search(
-            r"場所\\s*[:：]?\\s*(.+?)\\s*(?=(?:電話番号|$))",
+            r"場所\s*[:：]?\s*(.+?)\s*(?=(?:電話番号|$))",
             section,
         )
         industry = clean_text(industry_match.group(1)) if industry_match else ""
@@ -823,6 +823,8 @@ def main():
                             "date_basis": "掲載ページの更新日と開店日を区別して確認",
                             "opening_date": entry["opening_date"],
                             "area": entry["area"],
+                            "industry": entry.get("industry", ""),
+                            "floor": entry.get("floor", ""),
                             "body_excerpt": "",
                             "checked_at": checked_at,
                             "status": "未確認・公開禁止",
