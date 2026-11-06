@@ -53,6 +53,13 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         )
         self.assertEqual(categories, [])
 
+    def test_store_category_listing_page_is_excluded(self):
+        categories, basis = module.classify_text(
+            "山口県の新店・開店情報一覧"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "一覧・ナビ除外")
+
     def test_public_meeting_is_excluded(self):
         categories, _ = module.classify_text(
             "子育て文化審議会の開催について"
