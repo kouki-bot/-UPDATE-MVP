@@ -41,9 +41,13 @@ jobs:
           data = json.loads(path.read_text(encoding="utf-8"))
           sources = data.get("sources", [])
           candidates = data.get("candidates", [])
+          audit = data.get("article_audit", [])
           print(f"公式情報源: {len(sources)}")
           print(f"調査ページ: {len(data.get('scanned_pages', []))}")
+          print(f"本文確認記事: {len(audit)}")
           print(f"候補記事: {len(candidates)}")
+          print(f"除外記事: {sum(1 for item in audit if item.get('result') == '除外')}")
+          print(f"取得失敗記事: {sum(1 for item in audit if item.get('result') in ('取得不可', '取得失敗'))}")
           for source in sources:
               errors = source.get("fetch_errors", [])
               print(
@@ -60,6 +64,11 @@ jobs:
                   f"  候補: {item.get('title')} | "
                   f"{item.get('category')} | "
                   f"{item.get('area')} | {item.get('url')}"
+              )
+          for item in [x for x in audit if x.get('result') == '除外'][:15]:
+              print(
+                  f"  除外確認: {item.get('title')} | "
+                  f"{item.get('reason')} | {item.get('url')}"
               )
           PY
 
