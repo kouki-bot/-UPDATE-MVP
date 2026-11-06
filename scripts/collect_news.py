@@ -25,6 +25,12 @@ SOURCES = [
         "url": "https://www.city.yamaguchi.lg.jp/",
         "domain": "www.city.yamaguchi.lg.jp",
     },
+    {
+        "name": "シーモール下関公式・新店情報",
+        "url": "https://www.seamall.jp/info/new-shop/",
+        "domain": "www.seamall.jp",
+        "kind": "shop_listing",
+    },
 ]
 
 MAX_PAGES_PER_SOURCE = 30
@@ -264,6 +270,39 @@ def normalize_url(base, href):
 
 def is_same_domain(url, domain):
     return urlparse(url).netloc.lower() == domain.lower()
+
+def extract_shop_listing_entries(text_parts, facility_name, area):
+    """商業施設の公式新店一覧から、店舗名と開店日を抽出する。"""
+    text = clean_text(" ".join(text_parts))
+    date_pattern = re.compile(
+        r"(20\\d{2}年\\d{1,2}月\\d{1,2}日)\\s*オープン"
+    )
+    matches = list(date_pattern.finditer(text))
+    entries = []
+
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        section = text[match.end():end]
+        name_match = re.search(
+            r"店名\\s*[:：]?\\s*(.+?)\\s*(?=(?:業種|場所|電話番号|$))",
+            section,
+        )
+        if not name_match:
+            continue
+
+        store_name = clean_text(name_match.group(1)).strip(" ・|")
+        if not store_name or len(store_name) > 80:
+            continue
+
+        entries.append({
+            "store_name": store_name,
+            "opening_date": match.group(1),
+            "facility_name": facility_name,
+            "area": area,
+        })
+
+    return entries
+
 
 def is_article_url(url):
     """公式サイトの個別記事URLだけを本文確認の対象にする。"""
@@ -737,6 +776,50 @@ def main():
                     "checked_at": checked_at,
                 })
 
+                if source.get("kind") == "shop_listing":
+                    entries = extract_shop_listing_entries(
+                        parser.text_parts,
+                        facility_name="シーモール下関",
+                        area="下関市",
+                    )
+                    for entry in entries:
+                        title = (
+                            f"{entry['store_name']}（{entry['facility_name']}）"
+                            f"{entry['opening_date']}オープン"
+                        )
+                        item_id = hashlib.sha256(
+                            f"{current_url}|{entry['store_name']}|{entry['opening_date']}".encode("utf-8")
+                        ).hexdigest()[:16]
+                        candidate = {
+                            "id": item_id,
+                            "title": title,
+                            "url": current_url,
+                            "source_name": source["name"],
+                            "source_page": current_url,
+                            "category": ["新店・開店"],
+                            "category_basis": "商業施設公式・新店一覧／要確認",
+                            "published_date": "",
+                            "date_basis": "掲載ページの更新日と開店日を区別して確認",
+                            "opening_date": entry["opening_date"],
+                            "area": entry["area"],
+                            "body_excerpt": "",
+                            "checked_at": checked_at,
+                            "status": "未確認・公開禁止",
+                        }
+                        candidates.append(candidate)
+                        article_audit.append({
+                            "title": title,
+                            "url": current_url,
+                            "source_name": source["name"],
+                            "result": "候補",
+                            "reason": "商業施設公式・新店一覧／要確認",
+                            "category": ["新店・開店"],
+                            "opening_date": entry["opening_date"],
+                        })
+                    if entries:
+                        print("施設公式の新店掲載:", len(entries))
+                    continue
+
                 for link in parser.links:
                     title = clean_text(link["title"])
 
@@ -852,19 +935,19 @@ def main():
     unique = {}
 
     for item in candidates:
-        url = item["url"]
+        dedup_key = item.get("id") or item["url"]
 
-        if url not in unique:
-            unique[url] = item
+        if dedup_key not in unique:
+            unique[dedup_key] = item
             continue
 
-        existing = unique[url]
+        existing = unique[dedup_key]
 
         if (
             len(item.get("body_excerpt", ""))
             > len(existing.get("body_excerpt", ""))
         ):
-            unique[url] = item
+            unique[dedup_key] = item
 
     output = {
         "generated_at": checked_at,
