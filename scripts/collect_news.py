@@ -605,23 +605,52 @@ def classify_text(title, body=""):
 
     return [], "分類要確認"
 
-def extract_opening_date(text):
-    """開店・営業開始の語に近接する明示日付だけを抽出し、掲載日との混同を防ぐ。"""
+def extract_store_name_from_body(text):
+    """記事本文で引用符付きで明示された店舗名を抽出する。"""
     text = clean_text(text)
-    match = re.search(
-        r"(?<!\d)((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)"
+    patterns = [
+        r"[「『]\\s*([^」』]{2,60}?)\\s*[」』](?:が|は)\\s*(?:リフレッシュ)?オープン",
+        r"[「『]\\s*([^」』]{2,60}?)\\s*[」』](?:が|は)\\s*営業を開始",
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            return clean_text(match.group(1))
+    return ""
+
+
+def build_candidate_title(title, body, source_name):
+    title = clean_text(title)
+    store_name = extract_store_name_from_body(body)
+    if store_name and "店舗オープン情報" in title:
+        return f"{store_name}（{source_name}）"
+    return title
+
+
+def extract_opening_date(text):
+    """開店表現に結びついた日付だけを抽出し、掲載日との混同を防ぐ。"""
+    text = clean_text(text)
+    patterns = [
+        r"(?<!\\d)((?:20\\d{2}|\\d{2})年\\d{1,2}月\\d{1,2}日)"
         r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
-        r"(?:\s*(?:に|から|より))?\s*(?:新規)?(?:オープン|開店|営業開始)",
-        text,
-    )
+        r"(?:\\s*(?:に|から|より))?\\s*(?:新規)?(?:オープン|開店|営業開始|New\\s+Open)",
+        r"(?<!\\d)((?:20\\d{2}|\\d{2})年\\d{1,2}月\\d{1,2}日)"
+        r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
+        r".{0,100}?(?:オープンしました|オープンします|営業を開始)",
+    ]
+    match = None
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        if match:
+            break
     if not match:
         return ""
     date_text = match.group(1)
-    year_match = re.match(r"(20\d{2}|\d{2})年", date_text)
+    year_match = re.match(r"(20\\d{2}|\\d{2})年", date_text)
     year = int(year_match.group(1))
     if year < 100:
         year += 2000
-        date_text = re.sub(r"^\d{2}年", f"{year}年", date_text)
+        date_text = re.sub(r"^\\d{2}年", f"{year}年", date_text)
     return date_text
 
 
@@ -710,6 +739,11 @@ def inspect_candidate(
         body = extract_page_text(parser)
         published_date, date_basis = (
             extract_published_date(parser, body)
+        )
+        article_title = build_candidate_title(
+            article_title,
+            body,
+            source_name,
         )
 
         categories, category_basis = classify_text(
