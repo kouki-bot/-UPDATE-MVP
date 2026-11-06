@@ -1,0 +1,49 @@
+name: Publish Manually Approved Articles
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-approved-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main only
+        uses: actions/checkout@v5
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run publication safety tests
+        run: python -m unittest discover -s scripts/tests -v
+
+      - name: Load private approvals and review-only drafts
+        env:
+          PRIVATE_REVIEW_TOKEN: ${{ secrets.PRIVATE_REVIEW_TOKEN }}
+        run: python scripts/private_review_sync.py download
+
+      - name: Build public data from approved records only
+        run: python scripts/publish_approved.py
+
+      - name: Commit approved public data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/published.json
+          if git diff --cached --quiet; then
+            echo "No approved public data changes."
+            exit 0
+          fi
+          git commit -m "Publish manually approved store articles"
+          git push origin main
