@@ -25,9 +25,40 @@ SOURCES = [
         "url": "https://www.city.yamaguchi.lg.jp/",
         "domain": "www.city.yamaguchi.lg.jp",
     },
+    {
+        "name": "シーモール下関公式・新店情報",
+        "url": "https://www.seamall.jp/info/new-shop/",
+        "domain": "www.seamall.jp",
+        "kind": "shop_listing",
+    },
+    {
+        "name": "イオンタウン防府公式",
+        "url": "https://www.aeontown.co.jp/hofu/",
+        "domain": "www.aeontown.co.jp",
+        "default_area": "防府市",
+    },
+    {
+        "name": "おのだサンパーク公式・新店情報",
+        "url": "https://www.sunpark.co.jp/",
+        "domain": "www.sunpark.co.jp",
+        "default_area": "山陽小野田市",
+    },
+    {
+        "name": "徳山デッキ公式・店舗オープン情報",
+        "url": "https://tokuyamadeck.com/",
+        "domain": "tokuyamadeck.com",
+        "default_area": "周南市",
+    },
+    {
+        "name": "星プラザ公式",
+        "url": "https://www.hoshiplaza.co.jp/",
+        "domain": "www.hoshiplaza.co.jp",
+        "default_area": "下松市",
+    },
 ]
 
 MAX_PAGES_PER_SOURCE = 30
+MAX_ARTICLE_CHECKS_PER_SOURCE = 80
 MAX_HTML_BYTES = 2_000_000
 MAX_BODY_CHARS = 5000
 REQUEST_DELAY = 0.3
@@ -75,16 +106,7 @@ KEYWORD_GROUPS = {
     ],
     "リニューアル": [
         "リニューアル", "改装オープン",
-        "リニューアルオープン",
-    ],
-    "イベント": [
-        "イベント", "開催", "フェア",
-        "祭り", "マルシェ", "講座",
-        "体験会", "リユース会",
-    ],
-    "新施設・地域の動き": [
-        "新施設", "供用開始", "開館",
-        "開設", "完成", "地域交流",
+        "リニューアルオープン", "改装",
     ],
 }
 
@@ -92,7 +114,7 @@ KEYWORD_GROUPS = {
 PRIORITY_WORDS = [
     "news", "notice", "topics", "release",
     "oshirase", "koho", "お知らせ", "新着",
-    "報道", "press", "event", "event-info",
+    "報道", "press", "event", "event-info", "information", "search", "news",
 ]
 
 # 公開日として扱う可能性のあるメタ情報
@@ -273,6 +295,73 @@ def normalize_url(base, href):
 def is_same_domain(url, domain):
     return urlparse(url).netloc.lower() == domain.lower()
 
+def extract_shop_listing_entries(text_parts, facility_name, area):
+    """商業施設の公式新店一覧から、店舗名と開店日を抽出する。"""
+    text = clean_text(" ".join(text_parts))
+    date_pattern = re.compile(
+        r"((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)\s*オープン"
+    )
+    matches = list(date_pattern.finditer(text))
+    entries = []
+
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        section = text[match.end():end]
+        name_match = re.search(
+            r"店名\s*[:：]?\s*(.+?)\s*(?=(?:業種|場所|電話番号|$))",
+            section,
+        )
+        if not name_match:
+            continue
+
+        store_name = clean_text(name_match.group(1)).strip(" ・|")
+        if not store_name or len(store_name) > 80:
+            continue
+
+        industry_match = re.search(
+            r"業種\s*[:：]?\s*(.+?)\s*(?=(?:場所|電話番号|$))",
+            section,
+        )
+        location_match = re.search(
+            r"場所\s*[:：]?\s*((?:地下)?[1-9]階|屋上|本館|別館)",
+            section,
+        )
+        industry = clean_text(industry_match.group(1)) if industry_match else ""
+        floor = clean_text(location_match.group(1)) if location_match else ""
+
+        # 店舗情報サイトの対象外となる公共窓口・福祉支援拠点は除外する。
+        non_retail_terms = [
+            "ハローワーク", "公共職業安定所",
+            "就労移行支援", "障害福祉サービス",
+            "LITALICOワークス", "就労支援",
+        ]
+        if any(term in store_name + " " + industry for term in non_retail_terms):
+            continue
+
+        entries.append({
+            "store_name": store_name,
+            "opening_date": match.group(1),
+            "facility_name": facility_name,
+            "area": area,
+            "industry": industry,
+            "floor": floor,
+        })
+
+    return entries
+
+
+def is_article_url(url):
+    """対応する公式サイトの個別記事URLを判定する。"""
+    path = urlparse(url).path.lower()
+    return bool(
+        re.search(r"/press/\d+\.html$", path)
+        or re.search(r"/site/topics/\d+\.html$", path)
+        or re.search(r"/information/detail/$", path)
+        or re.search(r"/information/[^/]+/?$", path)
+        or re.search(r"/(?:sp/)?news/detail\.html$", path)
+        or re.search(r"/search/detail\.html$", path)
+    )
+
 
 def fetch_page(url):
     request = Request(
@@ -280,45 +369,54 @@ def fetch_page(url):
         headers={
             "User-Agent": (
                 "Mozilla/5.0 "
-                "(compatible; YamaguchiLocalUpdate/2.0)"
+                "(compatible; YamaguchiLocalUpdate/2.1)"
             )
         },
     )
 
-    with urlopen(request, timeout=20) as response:
-        content_type = response.headers.get(
-            "Content-Type",
-            "",
-        )
-
-        if "html" not in content_type.lower():
-            return ""
-
-        raw = response.read(MAX_HTML_BYTES)
-
-        charset_match = re.search(
-            r"charset=([^\s;]+)",
-            content_type,
-            flags=re.IGNORECASE,
-        )
-
-        charset = (
-            charset_match.group(1).strip("\"'")
-            if charset_match
-            else "utf-8"
-        )
-
+    last_error = None
+    for attempt in range(2):
         try:
-            return raw.decode(
-                charset,
-                errors="replace",
-            )
-        except LookupError:
-            return raw.decode(
-                "utf-8",
-                errors="replace",
-            )
+            with urlopen(request, timeout=20) as response:
+                content_type = response.headers.get(
+                    "Content-Type",
+                    "",
+                )
 
+                if "html" not in content_type.lower():
+                    return ""
+
+                raw = response.read(MAX_HTML_BYTES)
+
+                charset_match = re.search(
+                    r"charset=([^\s;]+)",
+                    content_type,
+                    flags=re.IGNORECASE,
+                )
+
+                charset = (
+                    charset_match.group(1).strip("\"\'")
+                    if charset_match
+                    else "utf-8"
+                )
+
+                try:
+                    return raw.decode(
+                        charset,
+                        errors="replace",
+                    )
+                except LookupError:
+                    return raw.decode(
+                        "utf-8",
+                        errors="replace",
+                    )
+        except (URLError, TimeoutError, OSError) as error:
+            last_error = error
+            if attempt == 0:
+                print("一時的な取得失敗、再試行:", url, str(error)[:120])
+                time.sleep(1)
+
+    raise last_error
 
 def extract_page_text(parser):
     """
@@ -339,33 +437,235 @@ def extract_page_text(parser):
 
 def classify_text(title, body=""):
     """
-    タイトルの分類を優先し、本文は補助的に使う。
+    店舗の新規開店・閉店・移転・改装だけを抽出する。
+    本文だけで候補にする場合は、店舗語と実際の動作表現を厳格に確認する。
     """
 
     title = clean_text(title)
     body = clean_text(body)
+    combined = title + " " + body
 
-    title_categories = []
-    combined_categories = []
+    navigation_words = [
+        "カレンダーで探す", "情報一覧", "記事一覧",
+        "店舗一覧", "開店一覧", "閉店一覧",
+        "検索結果", "カテゴリ一覧", "サイトマップ",
+    ]
+    if any(word in title for word in navigation_words):
+        return [], "一覧・ナビ除外"
 
-    for category, keywords in KEYWORD_GROUPS.items():
-        if any(keyword in title for keyword in keywords):
-            title_categories.append(category)
+    # 行政発表・表敬訪問・任命などは店舗の開閉店情報ではない。
+    administrative_title_words = [
+        "委嘱", "表敬訪問", "キャンペーン", "アンバサダー",
+        "任命", "就任", "激励会", "贈呈", "寄贈",
+        "感謝状", "設立報告", "訪問されました",
+    ]
+    if any(word in title for word in administrative_title_words):
+        return [], "行政活動・表敬訪問除外"
 
-        if any(
-            keyword in (title + " " + body)
-            for keyword in keywords
+    non_shop_facility_words = [
+        "公園", "郷土館", "資料館", "博物館", "美術館",
+        "ミュージアム", "道の駅", "交流スペース",
+        "子育て支援センター", "地域包括支援センター",
+        "福祉センター", "ハローワーク", "公共職業安定所",
+        "就労移行支援", "障害福祉サービス",
+        "ホテル", "旅館", "宿泊施設", "民泊", "ゲストハウス",
+    ]
+    explicit_shop_words = [
+        "店舗", "売店", "テナント", "カフェ", "飲食店",
+        "レストラン", "ショップ", "専門店",
+    ]
+    if (
+        any(word in title for word in non_shop_facility_words)
+        and not any(word in title for word in explicit_shop_words)
+    ):
+        return [], "公共・文化施設除外"
+
+    business_words = [
+        "店舗", "飲食店", "商業施設", "テナント",
+        "カフェ", "喫茶", "レストラン", "美容室", "理容室",
+        "サロン", "ジム", "フィットネス", "スタジオ",
+        "専門店", "ショップ", "スーパー", "ドラッグストア",
+        "書店", "薬局", "コンビニ", "百貨店", "ショッピング",
+        "モール", "売場", "小売", "物販",
+    ]
+    event_words = [
+        "イベント", "開催", "フェア", "祭り", "マルシェ",
+        "講座", "体験会", "研修会", "審議会", "会議",
+        "大会", "式典", "表彰", "募集", "オープンキャンパス",
+        "ワークショップ", "説明会", "講演会",
+    ]
+    strong_movement_words = [
+        "新店", "新規開店", "新規オープン", "閉店",
+        "営業終了", "閉業", "廃業", "店舗移転",
+        "リニューアルオープン", "改装オープン",
+    ]
+
+    title_has_business = any(word in title for word in business_words)
+    strong_movement = any(word in title for word in strong_movement_words)
+    event_context = any(word in title for word in event_words)
+
+    if event_context and not strong_movement:
+        return [], "イベント除外"
+
+    categories = []
+    if any(word in title for word in ["閉店", "営業終了", "閉業", "廃業", "営業を終了"]):
+        categories.append("閉店")
+
+    if any(word in title for word in ["移転", "店舗移転"]):
+        if title_has_business or "店舗移転" in title:
+            categories.append("移転")
+
+    if any(word in title for word in [
+        "リニューアル", "改装オープン",
+        "リニューアルオープン", "改装",
+    ]):
+        if title_has_business or "リニューアルオープン" in title:
+            categories.append("リニューアル")
+
+    explicit_new_store = bool(re.search(
+        r"新店(?:オープン|開店|が|を|、|「|『|：|:)",
+        title,
+    ))
+    english_new_open = bool(
+        re.search(r"\b(?:NEW\s+)?OPEN\b", title, flags=re.IGNORECASE)
+        and ("新店" in title or "NEW" in title.upper())
+    )
+    if explicit_new_store or english_new_open or any(word in title for word in [
+        "新規開店", "新規オープン",
+        "オープン", "開店", "出店", "開業",
+    ]):
+        explicit_opening = (
+            explicit_new_store
+            or english_new_open
+            or any(word in title for word in ["新規開店", "新規オープン"])
+        )
+        if (
+            (explicit_opening or title_has_business)
+            and "リニューアル" not in categories
         ):
-            combined_categories.append(category)
+            categories.append("新店・開店")
 
-    # タイトルで判断できた場合はタイトルを優先
-    if title_categories:
-        return title_categories, "タイトル"
+    # 地域名と店舗の動きがタイトルに明記されている場合は、
+    # 店名に業種語がなくても「要確認候補」として拾う。
+    # 例:「ケーズデンキ山口店オープン」「サイゼリヤ...山陽小野田市...オープン」
+    local_context = any(area in combined for area in JAPAN_AREAS) or "山口県内" in combined
+    if not categories and local_context:
+        title_has_shop_name = bool(re.search(
+            r"(?:[一-龥ぁ-んァ-ヶA-Za-z0-9ー・]{2,}(?:店|店舗)|県内初(?:出店|進出))",
+            title,
+        ))
+        if title_has_shop_name:
+            if any(word in title for word in ["閉店", "営業終了", "営業を終了", "閉業", "廃業"]):
+                categories.append("閉店")
+            elif any(word in title for word in ["移転", "移転オープン"]):
+                categories.append("移転")
+            elif any(word in title for word in ["リニューアル", "改装オープン"]):
+                categories.append("リニューアル")
+            elif any(word in title for word in ["オープン", "開店", "開業", "出店", "進出"]):
+                categories.append("新店・開店")
+        if categories:
+            return list(dict.fromkeys(categories)), "地域・店舗名・動向／要確認"
 
-    if combined_categories:
-        return combined_categories, "概要・要確認"
+    # 本文のみで候補にする場合は、汎用語「店」「市場」では判定しない。
+    # 「店舗がオープンしました」など、実際の動作が完了・予定した表現を要求する。
+    if not categories and body:
+        body_business_words = [
+            "店舗", "飲食店", "商業施設", "テナント",
+            "カフェ", "喫茶", "レストラン", "美容室", "理容室",
+            "サロン", "ジム", "フィットネス", "スタジオ",
+            "専門店", "ショップ", "スーパー", "ドラッグストア",
+            "書店", "薬局", "コンビニ", "百貨店", "モール",
+        ]
+        body_patterns = [
+            ("閉店", r"(?:閉店|営業終了|営業を終了|閉業|廃業)(?:しました|します|することになりました|いたします|する予定です|予定です|へ)"),
+            ("移転", r"(?:移転|移転オープン)(?:しました|します|することになりました|する予定です|予定です)"),
+            ("リニューアル", r"(?:リニューアルオープン|改装オープン)(?:しました|します|する予定です|予定です)"),
+            ("新店・開店", r"(?:オープン|開店|開業|出店|営業開始|営業を開始|開設)(?:しました|します|いたしました|いたします|する予定です|予定です|予定|へ)"),
+        ]
+        body_sentences = [
+            clean_text(part)
+            for part in re.split(r"[。.!?！？\n]+", body)
+            if clean_text(part)
+        ]
+        for sentence in body_sentences:
+            if not any(word in sentence for word in body_business_words):
+                continue
+            for category, pattern in body_patterns:
+                if re.search(pattern, sentence):
+                    categories.append(category)
+                    break
+            if categories:
+                break
+
+        if categories:
+            return list(dict.fromkeys(categories)), "本文・要確認"
+
+    if categories:
+        return list(dict.fromkeys(categories)), "タイトル"
 
     return [], "分類要確認"
+
+def extract_store_name_from_body(text):
+    """記事本文の引用符付き店舗名を抽出する。"""
+    text = clean_text(text)
+    quote_pairs = [("「", "」"), ("『", "』")]
+    movement_words = ("オープン", "営業を開始")
+    for opening_quote, closing_quote in quote_pairs:
+        start = 0
+        while True:
+            left = text.find(opening_quote, start)
+            if left < 0:
+                break
+            right = text.find(closing_quote, left + 1)
+            if right < 0:
+                break
+            name = clean_text(text[left + 1:right])
+            tail = text[right + 1:right + 30]
+            if 2 <= len(name) <= 60 and (
+                tail.lstrip().startswith(("が", "は"))
+                and any(word in tail for word in movement_words)
+            ):
+                return name
+            start = right + 1
+    return ""
+
+
+def build_candidate_title(title, body, source_name):
+    title = clean_text(title)
+    store_name = extract_store_name_from_body(body)
+    if store_name and "店舗オープン情報" in title:
+        return f"新店オープン：{store_name}（{source_name}）"
+    if store_name and "リフレッシュオープン" in title:
+        return f"リニューアルオープン：{store_name}（{source_name}）"
+    return title
+
+
+def extract_opening_date(text):
+    """同一文内で開店表現と結びついた日付だけを抽出する。"""
+    text = clean_text(text)
+    sentences = re.split(r"(?<=[。！？])", text)
+    date_pattern = re.compile(
+        r"(?<!\d)((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)"
+        r"(?:[（(][月火水木金土日](?:曜)?[）)])?"
+    )
+    movement_pattern = re.compile(
+        r"(?:オープン(?!情報)|開店しました|開店します|営業開始|営業を開始|New\s+Open|新規オープン)",
+        flags=re.IGNORECASE,
+    )
+    for sentence in sentences:
+        if not movement_pattern.search(sentence):
+            continue
+        match = date_pattern.search(sentence)
+        if not match:
+            continue
+        date_text = match.group(1)
+        year_match = re.match(r"(20\d{2}|\d{2})年", date_text)
+        year = int(year_match.group(1))
+        if year < 100:
+            year += 2000
+            date_text = re.sub(r"^\d{2}年", f"{year}年", date_text)
+        return date_text
+    return ""
 
 
 def extract_published_date(parser, body):
@@ -396,6 +696,12 @@ def extract_area(text):
     return found
 
 
+def resolve_area(text, default_area=""):
+    """記事本文に地域があれば優先し、公式施設の所在地は補完情報として使う。"""
+    areas = extract_area(text)
+    return areas if areas else ([default_area] if default_area else [])
+
+
 def is_relevant_page(title, body):
     categories, basis = classify_text(
         title,
@@ -414,6 +720,8 @@ def inspect_candidate(
     link_title,
     source_name,
     source_page,
+    default_area="",
+    audit_log=None,
 ):
     article_title = clean_text(link_title)
     body = ""
@@ -425,6 +733,14 @@ def inspect_candidate(
         html = fetch_page(target_url)
 
         if not html:
+            if audit_log is not None:
+                audit_log.append({
+                    "title": article_title,
+                    "url": target_url,
+                    "source_name": source_name,
+                    "result": "取得不可",
+                    "reason": "HTML本文を取得できませんでした",
+                })
             return None
 
         parser = PageParser()
@@ -438,6 +754,11 @@ def inspect_candidate(
         published_date, date_basis = (
             extract_published_date(parser, body)
         )
+        article_title = build_candidate_title(
+            article_title,
+            body,
+            source_name,
+        )
 
         categories, category_basis = classify_text(
             article_title,
@@ -445,10 +766,29 @@ def inspect_candidate(
         )
 
         if not categories:
+            if audit_log is not None:
+                audit_log.append({
+                    "title": article_title,
+                    "url": target_url,
+                    "source_name": source_name,
+                    "result": "除外",
+                    "reason": category_basis,
+                })
             return None
 
-        area = extract_area(
-            article_title + " " + body
+        if audit_log is not None:
+            audit_log.append({
+                "title": article_title,
+                "url": target_url,
+                "source_name": source_name,
+                "result": "候補",
+                "reason": category_basis,
+                "category": categories,
+            })
+
+        area = resolve_area(
+            article_title + " " + body,
+            default_area,
         )
 
         item_id = hashlib.sha256(
@@ -465,6 +805,8 @@ def inspect_candidate(
             "category_basis": category_basis,
             "published_date": published_date,
             "date_basis": date_basis,
+            "opening_date": extract_opening_date(article_title + " " + body),
+            "opening_date_basis": "本文・見出し記載／要確認",
             "area": area,
             "body_excerpt": body[:1000],
             "checked_at": datetime.now(
@@ -485,6 +827,14 @@ def inspect_candidate(
             target_url,
             str(error)[:120],
         )
+        if audit_log is not None:
+            audit_log.append({
+                "title": article_title,
+                "url": target_url,
+                "source_name": source_name,
+                "result": "取得失敗",
+                "reason": str(error)[:180],
+            })
 
         return None
 
@@ -503,6 +853,8 @@ def main():
     source_checks = []
     candidates = []
     scanned_pages = []
+    article_audit = []
+    inspected_article_urls = set()
 
     for source in SOURCES:
         print("調査開始:", source["name"])
@@ -513,12 +865,15 @@ def main():
             "checked_at": checked_at,
             "status": "check_needed",
             "pages_scanned": 0,
+            "fetch_errors": [],
             "note": "",
         }
 
         queue = [source["url"]]
         visited = set()
         queued = {source["url"]}
+        successful_pages = 0
+        article_checks = 0
 
         while queue and len(visited) < MAX_PAGES_PER_SOURCE:
             current_url = queue.pop(0)
@@ -541,6 +896,7 @@ def main():
                 if not html:
                     continue
 
+                successful_pages += 1
                 parser = PageParser()
                 parser.feed(html)
 
@@ -556,6 +912,52 @@ def main():
                     "url": current_url,
                     "checked_at": checked_at,
                 })
+
+                if source.get("kind") == "shop_listing":
+                    entries = extract_shop_listing_entries(
+                        parser.text_parts,
+                        facility_name="シーモール下関",
+                        area="下関市",
+                    )
+                    for entry in entries:
+                        title = (
+                            f"{entry['store_name']}（{entry['facility_name']}）"
+                            f"{entry['opening_date']}オープン"
+                        )
+                        item_id = hashlib.sha256(
+                            f"{current_url}|{entry['store_name']}|{entry['opening_date']}".encode("utf-8")
+                        ).hexdigest()[:16]
+                        candidate = {
+                            "id": item_id,
+                            "title": title,
+                            "url": current_url,
+                            "source_name": source["name"],
+                            "source_page": current_url,
+                            "category": ["新店・開店"],
+                            "category_basis": "商業施設公式・新店一覧／要確認",
+                            "published_date": "",
+                            "date_basis": "掲載ページの更新日と開店日を区別して確認",
+                            "opening_date": entry["opening_date"],
+                            "area": entry["area"],
+                            "industry": entry.get("industry", ""),
+                            "floor": entry.get("floor", ""),
+                            "body_excerpt": "",
+                            "checked_at": checked_at,
+                            "status": "未確認・公開禁止",
+                        }
+                        candidates.append(candidate)
+                        article_audit.append({
+                            "title": title,
+                            "url": current_url,
+                            "source_name": source["name"],
+                            "result": "候補",
+                            "reason": "商業施設公式・新店一覧／要確認",
+                            "category": ["新店・開店"],
+                            "opening_date": entry["opening_date"],
+                        })
+                    if entries:
+                        print("施設公式の新店掲載:", len(entries))
+                    continue
 
                 for link in parser.links:
                     title = clean_text(link["title"])
@@ -598,14 +1000,32 @@ def main():
                         "",
                     )
 
-                    if not categories:
+                    # 見出しだけでは判定できない記事もあるため、
+                    # 公式サイトの個別記事URLは本文を確認する。
+                    # 一覧・検索ページを大量取得しないよう上限を設ける。
+                    check_article_body = (
+                        is_article_url(target_url)
+                        and article_checks < MAX_ARTICLE_CHECKS_PER_SOURCE
+                    )
+                    if not categories and not check_article_body:
                         continue
+
+                    # 同じ記事が複数の一覧ページに掲載されていても、
+                    # 本文取得・監査ログはURLごとに1回だけ行う。
+                    if target_url in inspected_article_urls:
+                        continue
+                    inspected_article_urls.add(target_url)
+
+                    if check_article_body:
+                        article_checks += 1
 
                     candidate = inspect_candidate(
                         target_url=target_url,
                         link_title=title,
                         source_name=source["name"],
                         source_page=current_url,
+                        default_area=source.get("default_area", ""),
+                        audit_log=article_audit,
                     )
 
                     if candidate:
@@ -622,22 +1042,29 @@ def main():
                 ValueError,
                 OSError,
             ) as error:
+                error_record = {
+                    "url": current_url,
+                    "error": str(error)[:180],
+                }
+                result["fetch_errors"].append(error_record)
                 print(
                     "取得失敗:",
                     current_url,
                     str(error)[:150],
                 )
 
-        result["pages_scanned"] = len(visited)
+        result["pages_scanned"] = successful_pages
 
-        result["status"] = (
-            "reachable"
-            if visited
-            else "check_needed"
-        )
+        if successful_pages and result["fetch_errors"]:
+            result["status"] = "partial"
+        elif successful_pages:
+            result["status"] = "reachable"
+        else:
+            result["status"] = "check_needed"
 
         result["note"] = (
-            "ページ本文・リンク・候補ページを確認。"
+            "成功ページ数と取得失敗を分けて記録。"
+            "一時的な通信・SSLエラーは1回再試行。"
             "公開日は明示的なメタ情報を優先。"
             "公開前に元記事を確認してください。"
         )
@@ -648,19 +1075,19 @@ def main():
     unique = {}
 
     for item in candidates:
-        url = item["url"]
+        dedup_key = item.get("id") or item["url"]
 
-        if url not in unique:
-            unique[url] = item
+        if dedup_key not in unique:
+            unique[dedup_key] = item
             continue
 
-        existing = unique[url]
+        existing = unique[dedup_key]
 
         if (
             len(item.get("body_excerpt", ""))
             > len(existing.get("body_excerpt", ""))
         ):
-            unique[url] = item
+            unique[dedup_key] = item
 
     output = {
         "generated_at": checked_at,
@@ -677,6 +1104,12 @@ def main():
         ),
         "sources": source_checks,
         "scanned_pages": scanned_pages,
+        "article_audit": article_audit,
+        "article_audit_count": len(article_audit),
+        "article_audit_unique_urls": len({
+            item.get("url") for item in article_audit
+            if item.get("url")
+        }),
         "candidates": list(unique.values()),
     }
 
