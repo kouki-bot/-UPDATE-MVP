@@ -1,6 +1,7 @@
 import hashlib
 import json
 import re
+import unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
@@ -297,53 +298,78 @@ def is_clearly_outside_yamaguchi(title, body_excerpt=""):
     return any(re.search(pattern, combined) for pattern in FOREIGN_CITY_STORE_PATTERNS)
 
 def extract_event_date(title, body_excerpt, published_date=""):
-    """本文中の店舗動作日を優先して抽出。公開日しかない場合は動作日と誤認しない。"""
-    body = clean_text(body_excerpt)
-    title_text = clean_text(title)
+    """店舗の動作語に近接する日付だけを抽出。記事公開日や無関係な日付は転用しない。"""
+    body = unicodedata.normalize("NFKC", clean_text(body_excerpt))
+    title_text = unicodedata.normalize("NFKC", clean_text(title))
     base = parse_date(published_date)
+    action_words = (
+        "オープン", "開店", "開業", "出店", "閉店", "閉業",
+        "営業終了", "営業を終了", "移転", "リニューアル", "営業再開",
+    )
+    action_re = re.compile("|".join(map(re.escape, action_words)))
+    # URL内やリンク先の年月日は、本文の店舗動作日と誤認しない。
+    body = re.sub(r"https?://\S+", " ", body)
 
-    # 本文中の年付き日付を最優先する。
-    explicit = re.search(r"(20\\d{2})[年./-](\\d{1,2})[月./-](\\d{1,2})日?", body)
-    if explicit:
-        try:
-            return datetime(int(explicit.group(1)), int(explicit.group(2)), int(explicit.group(3)), tzinfo=JST).date().isoformat()
-        except ValueError:
-            pass
+    def find_action_date(text):
+        patterns = [
+            re.compile(r"(?P<year>20\d{2})年(?P<month>\d{1,2})月(?:(?P<day>\d{1,2})日|(?P<end>末))"),
+            re.compile(r"(?P<month>\d{1,2})月(?P<day>\d{1,2})日"),
+            re.compile(r"(?<!\d)(?P<day>\d{1,2})日"),
+        ]
+        matches = []
+        for pattern in patterns:
+            for match in pattern.finditer(text):
+                left = max(0, match.start() - 45)
+                right = min(len(text), match.end() + 45)
+                context = text[left:right]
+                actions = list(action_re.finditer(context))
+                if not actions:
+                    continue
+                distance = min(
+                    0 if a.start() <= match.start() - left <= a.end() else
+                    min(abs((left + a.start()) - match.start()), abs((left + a.end()) - match.end()))
+                    for a in actions
+                )
+                if distance > 45:
+                    continue
+                year_text = match.groupdict().get("year")
+                month_text = match.groupdict().get("month")
+                day_text = match.groupdict().get("day")
+                is_month_end = bool(match.groupdict().get("end"))
+                try:
+                    if year_text:
+                        year = int(year_text)
+                        month = int(month_text)
+                        if is_month_end:
+                            next_month = datetime(year + (month == 12), month % 12 + 1, 1, tzinfo=JST)
+                            value = (next_month.date() - timedelta(days=1)).isoformat()
+                        else:
+                            value = datetime(year, month, int(day_text), tzinfo=JST).date().isoformat()
+                    elif month_text and day_text:
+                        if not base:
+                            continue
+                        year = base.year
+                        candidate = datetime(year, int(month_text), int(day_text), tzinfo=JST)
+                        if abs((candidate.date() - base.date()).days) > 120:
+                            continue
+                        value = candidate.date().isoformat()
+                    else:
+                        if not base:
+                            continue
+                        candidate = datetime(base.year, base.month, int(match.group("day")), tzinfo=JST)
+                        if abs((candidate.date() - base.date()).days) > 31:
+                            continue
+                        value = candidate.date().isoformat()
+                    matches.append((distance, match.start(), value))
+                except (ValueError, OverflowError):
+                    continue
+        if not matches:
+            return ""
+        matches.sort(key=lambda x: (x[0], x[1]))
+        return matches[0][2]
 
-    # 「2027年8月末で閉店」のような月単位の予定日。
-    month_end = re.search(r"(20\\d{2})年(\\d{1,2})月末", body)
-    if month_end:
-        try:
-            year, month = int(month_end.group(1)), int(month_end.group(2))
-            next_month = datetime(year + (month == 12), month % 12 + 1, 1, tzinfo=JST)
-            return (next_month.date() - timedelta(days=1)).isoformat()
-        except ValueError:
-            pass
-
-    # 本文の「10月23日」「29日」など。公開日から120日以内だけ採用。
-    if base:
-        month_day = re.search(r"(\\d{1,2})月(\\d{1,2})日", body)
-        day_only = re.search(r"(?<!月)(?<!\\d)(\\d{1,2})日", body) if not month_day else None
-        try:
-            if month_day:
-                candidate = datetime(base.year, int(month_day.group(1)), int(month_day.group(2)), tzinfo=JST)
-            elif day_only:
-                candidate = datetime(base.year, base.month, int(day_only.group(1)), tzinfo=JST)
-            else:
-                candidate = None
-            if candidate and abs((candidate.date() - base.date()).days) <= 120:
-                return candidate.date().isoformat()
-        except ValueError:
-            pass
-
-    # 本文に動作日がない場合のみ、タイトル内の年付き日付を採用。
-    explicit_title = re.search(r"(20\\d{2})[年./-](\\d{1,2})[月./-](\\d{1,2})日?", title_text)
-    if explicit_title:
-        try:
-            return datetime(int(explicit_title.group(1)), int(explicit_title.group(2)), int(explicit_title.group(3)), tzinfo=JST).date().isoformat()
-        except ValueError:
-            pass
-    return ""
+    # 本文の店舗動作日を最優先。タイトルは本文にない場合だけ調べる。
+    return find_action_date(body) or find_action_date(title_text)
 
 
 def convert_candidate(item, method, source_priority):
@@ -367,7 +393,7 @@ def convert_candidate(item, method, source_priority):
     if not isinstance(area, list):
         area = [area] if area else []
     date_value = clean_text(item.get("published_date"))
-    event_date = clean_text(item.get("event_date") or item.get("opening_date")) or extract_event_date(title, body, date_value)
+    event_date = extract_event_date(title, body, date_value)
     # 記事公開日は取得元の明示情報だけを使用する。タイトル内の日付は店舗動作日かもしれないため流用しない。
     return {
         "title": title, "url": url, "normalized_url": normalize_url(url),
