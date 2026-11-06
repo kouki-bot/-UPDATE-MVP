@@ -37,7 +37,35 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         categories, _ = module.classify_text(
             "山口市の商業施設がリニューアルオープン"
         )
-        self.assertIn("リニューアル", categories)
+        self.assertEqual(categories, ["リニューアル"])
+
+    def test_public_park_renovation_is_excluded(self):
+        categories, basis = module.classify_text(
+            "重源の郷体験交流公園がリニューアルオープンしました"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
+
+    def test_local_history_museum_event_is_excluded(self):
+        categories, basis = module.classify_text(
+            "鋳銭司郷土館展示リニューアルオープン式典を行いました"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
+
+    def test_roadside_station_renovation_is_excluded(self):
+        categories, basis = module.classify_text(
+            "道の駅「きらら あじす」がリニューアルオープンしました"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
+
+    def test_community_exchange_space_opening_is_excluded(self):
+        categories, basis = module.classify_text(
+            "中心商店街に地域の魅力発信・交流スペース「コトサイト」がオープンしました"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
 
     def test_open_campus_is_excluded(self):
         categories, basis = module.classify_text(
