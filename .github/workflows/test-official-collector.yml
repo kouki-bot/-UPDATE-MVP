@@ -45,12 +45,16 @@ jobs:
           print(f"調査ページ: {len(data.get('scanned_pages', []))}")
           print(f"候補記事: {len(candidates)}")
           for source in sources:
+              errors = source.get("fetch_errors", [])
               print(
                   f"- {source.get('name')}: "
                   f"status={source.get('status')}, "
                   f"pages={source.get('pages_scanned')}, "
+                  f"errors={len(errors)}, "
                   f"note={source.get('note', '')}"
               )
+              for error in errors[:5]:
+                  print(f"  取得失敗: {error.get('url')} | {error.get('error')}")
           for item in candidates[:20]:
               print(
                   f"  候補: {item.get('title')} | "
