@@ -81,13 +81,3 @@ jobs:
               raise SystemExit(f"店舗対象外の候補が残っています: {len(out_of_scope)}件")
           PY
 
-      - name: Upload refreshed review data
-        uses: actions/upload-artifact@v4
-        with:
-          name: yamaguchi-review-candidates
-          path: |
-            data/source_checks.json
-            data/rss_candidates.json
-            data/drafts.json
-          if-no-files-found: error
-          retention-days: 14
