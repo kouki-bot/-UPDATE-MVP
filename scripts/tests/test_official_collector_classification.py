@@ -277,6 +277,41 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         self.assertEqual(entries[0]["opening_date"], "2026年11月21日")
         self.assertEqual(entries[1]["store_name"], "ナイスネイル")
 
+    def test_seamall_extracts_industry_and_floor(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年11月21日オープン 店名 LUNA STUDIO "
+                "業種 キッズスクール 場所 5階 電話番号 083-000-0000"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0]["industry"], "キッズスクール")
+        self.assertEqual(entries[0]["floor"], "5階")
+
+    def test_seamall_excludes_public_employment_office(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年9月29日オープン 店名 ハローワークプラザ下関 "
+                "業種 公共職業安定所 場所 2階"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries, [])
+
+    def test_seamall_excludes_welfare_support_facility(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年10月1日オープン 店名 LITALICOワークス下関 "
+                "業種 就労移行支援事業所 場所 2階"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries, [])
+
     def test_seamall_listing_without_store_name_is_ignored(self):
         entries = module.extract_shop_listing_entries(
             ["2026年11月21日オープン 場所 5階"],
