@@ -22,6 +22,21 @@ jobs:
       - name: Check Python syntax
         run: python -m py_compile scripts/collect_news.py scripts/generate_drafts.py scripts/publish_approved.py
 
+      - name: Check review and public page JavaScript syntax
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          for source in ["admin/review.html", "index.html", "new.html", "closed.html"]:
+              html = Path(source).read_text(encoding="utf-8")
+              scripts = re.findall(r"<script(?:\\s[^>]*)?>(.*?)</script>", html, re.I | re.S)
+              for number, script in enumerate(scripts):
+                  Path(f"/tmp/{Path(source).stem}-{number}.js").write_text(script, encoding="utf-8")
+          PY
+          for file in /tmp/review-*.js /tmp/index-*.js /tmp/new-*.js /tmp/closed-*.js; do
+            [ -f "$file" ] && node --check "$file"
+          done
+
       - name: Run all safety and workflow tests
         run: python -m unittest discover -s scripts/tests -v
 
