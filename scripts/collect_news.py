@@ -108,7 +108,7 @@ KEYWORD_GROUPS = {
 PRIORITY_WORDS = [
     "news", "notice", "topics", "release",
     "oshirase", "koho", "お知らせ", "新着",
-    "報道", "press", "event", "event-info", "information",
+    "報道", "press", "event", "event-info", "information", "search", "news",
 ]
 
 # 公開日として扱う可能性のあるメタ情報
@@ -293,7 +293,7 @@ def extract_shop_listing_entries(text_parts, facility_name, area):
     """商業施設の公式新店一覧から、店舗名と開店日を抽出する。"""
     text = clean_text(" ".join(text_parts))
     date_pattern = re.compile(
-        r"(20\d{2}年\d{1,2}月\d{1,2}日)\s*オープン"
+        r"((?:20\d{2}|\d{2})年\d{1,2}月\d{1,2}日)\s*オープン"
     )
     matches = list(date_pattern.finditer(text))
     entries = []
@@ -345,12 +345,15 @@ def extract_shop_listing_entries(text_parts, facility_name, area):
 
 
 def is_article_url(url):
-    """公式サイトの個別記事URLだけを本文確認の対象にする。"""
+    """対応する公式サイトの個別記事URLを判定する。"""
     path = urlparse(url).path.lower()
     return bool(
         re.search(r"/press/\d+\.html$", path)
         or re.search(r"/site/topics/\d+\.html$", path)
         or re.search(r"/information/detail/$", path)
+        or re.search(r"/information/[^/]+/?$", path)
+        or re.search(r"/(?:sp/)?news/detail\.html$", path)
+        or re.search(r"/search/detail\.html$", path)
     )
 
 
