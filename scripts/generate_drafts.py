@@ -609,7 +609,7 @@ def is_in_store_scope(item):
 
 def make_draft(item):
     date_value = item.get("published_date", "")
-    freshness_basis = date_value or item.get("event_date", "")
+    freshness_basis = item.get("event_date", "") or date_value
     freshness, age = get_freshness(freshness_basis)
     if freshness == "直近30日":
         note = "直近30日の記事です。掲載前に現在の営業状況を確認してください。"
