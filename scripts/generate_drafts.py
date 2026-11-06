@@ -306,7 +306,10 @@ def extract_event_date(title, body_excerpt, published_date=""):
         "オープン", "開店", "開業", "出店", "閉店", "閉業",
         "営業終了", "営業を終了", "移転", "リニューアル", "営業再開",
     )
-    action_re = re.compile("|".join(map(re.escape, action_words)))
+    action_re = re.compile(
+        r"オープン(?!セール|場所|情報|記念|キャンペーン)|"
+        r"開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|リニューアル|営業再開"
+    )
     # URL内やリンク先の年月日は、本文の店舗動作日と誤認しない。
     body = re.sub(r"https?://\S+", " ", body)
 
@@ -335,10 +338,22 @@ def extract_event_date(title, body_excerpt, published_date=""):
                     continue
                 local_start = match.start() - sentence_left
                 local_end = match.end() - sentence_left
+                # 「閉店した翌日」の日付は閉店日ではないため採用しない。
+                valid_actions = []
+                for action in actions:
+                    action_start = sentence_left + action.start()
+                    action_end = sentence_left + action.end()
+                    date_start = match.start()
+                    gap = text[min(action_end, date_start):max(action_start, date_start)]
+                    if re.search(r"翌日|翌週|翌月|翌年", gap):
+                        continue
+                    valid_actions.append(action)
+                if not valid_actions:
+                    continue
                 distance = min(
                     0 if a.start() <= local_start <= a.end() else
                     min(abs(a.start() - local_start), abs(a.end() - local_end))
-                    for a in actions
+                    for a in valid_actions
                 )
                 year_text = match.groupdict().get("year")
                 month_text = match.groupdict().get("month")
