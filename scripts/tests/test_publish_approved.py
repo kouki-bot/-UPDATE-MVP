@@ -51,6 +51,10 @@ class Tests(unittest.TestCase):
              review=self.review(duplicate_resolution="同一ニュース・対象外"))
   self.run_script()
   self.assertEqual(self.published()["articles"],[])
+ def test_unknown_business_status_is_blocked(self):
+  self.setup(review=self.review(business_status="確認できない"))
+  self.run_script()
+  self.assertEqual(self.published()["articles"],[])
  def test_missing_explicit_review_status_blocked(self):
   self.setup(review=self.review(review_status="未確認")); self.run_script(); self.assertEqual(self.published()["articles"],[])
  def test_unapproved_blocked(self):
