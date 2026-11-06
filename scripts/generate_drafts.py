@@ -471,6 +471,19 @@ def classify_content_type(title, body_excerpt=''):
         return '店舗・商業施設'
     return 'その他施設・サービス（要確認）'
 
+
+def is_in_store_scope(item):
+    """店舗情報サイトの対象外となる宿泊・観光・公共施設を除外する。"""
+    content_type = classify_content_type(
+        item.get("title", ""), item.get("body_excerpt", "")
+    )
+    excluded_types = {
+        "宿泊施設",
+        "観光・レジャー",
+        "公共・地域施設",
+    }
+    return content_type not in excluded_types
+
 def make_draft(item):
     date_value = item.get("published_date", "")
     freshness, age = get_freshness(date_value)
@@ -677,9 +690,11 @@ def main():
     official, rss = get_official_candidates(), get_rss_candidates()
     unique = merge_candidates(official + rss)
     all_drafts = [make_draft(x) for x in unique]
-    old_count = sum(1 for x in all_drafts if x["freshness"] == "90日より前")
-    # 古い記事は通常候補から除外。日付不明は確認用に残す。
-    drafts = [x for x in all_drafts if x["freshness"] != "90日より前"]
+    excluded_scope_count = sum(1 for x in all_drafts if not is_in_store_scope(x))
+    scoped_drafts = [x for x in all_drafts if is_in_store_scope(x)]
+    old_count = sum(1 for x in scoped_drafts if x["freshness"] == "90日より前")
+    # 宿泊・観光・公共施設は店舗サイトの対象外。古い記事も通常候補から除外。
+    drafts = [x for x in scoped_drafts if x["freshness"] != "90日より前"]
     drafts.sort(key=sort_key)
     
     review_summary = annotate_review_flags(drafts)
@@ -698,19 +713,19 @@ def main():
     output = {
         "generated_at": now_jst().isoformat(), "draft_count": len(drafts),
         "recent_draft_count": freshness_counts.get("直近30日", 0),
-        "excluded_old_count": old_count, "freshness_counts": freshness_counts,
+        "excluded_old_count": old_count, "excluded_scope_count": excluded_scope_count, "freshness_counts": freshness_counts,
         "category_counts": category_counts,
         "content_type_counts": dict(sorted(content_type_counts.items())),
         "municipality_counts": municipality_counts,
         **review_summary,
-        "note": "対象は新店・開店、閉店、移転、リニューアルです。90日より前の記事は通常の下書き候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。配信元の対象地域は店舗所在地を保証しません。",
+        "note": "対象は山口県内の店舗・商業サービスの新店・開店、閉店、移転、リニューアルです。宿泊施設・観光レジャー・公共地域施設は対象外。90日より前の記事は通常候補から除外。日付不明は確認用に保持。すべて未確認・公開禁止です。",
         "drafts": drafts,
     }
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with OUTPUT_FILE.open("w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     print("公式サイト候補:", len(official), "RSS候補:", len(rss))
-    print("統合後:", len(unique), "下書き候補:", len(drafts), "90日より前の除外:", old_count)
+    print("統合後:", len(unique), "下書き候補:", len(drafts), "対象外施設の除外:", excluded_scope_count, "90日より前の除外:", old_count)
     print("直近30日:", output["recent_draft_count"], "カテゴリー:", category_counts)
     print("鮮度:", freshness_counts, "保存先:", OUTPUT_FILE)
     print("施設タイプ別件数:", output["content_type_counts"])
