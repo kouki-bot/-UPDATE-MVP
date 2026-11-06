@@ -294,11 +294,32 @@ def extract_shop_listing_entries(text_parts, facility_name, area):
         if not store_name or len(store_name) > 80:
             continue
 
+        industry_match = re.search(
+            r"業種\\s*[:：]?\\s*(.+?)\\s*(?=(?:場所|電話番号|$))",
+            section,
+        )
+        location_match = re.search(
+            r"場所\\s*[:：]?\\s*(.+?)\\s*(?=(?:電話番号|$))",
+            section,
+        )
+        industry = clean_text(industry_match.group(1)) if industry_match else ""
+        floor = clean_text(location_match.group(1)) if location_match else ""
+
+        # 店舗情報サイトの対象外となる公共窓口・福祉支援拠点は除外する。
+        non_retail_terms = [
+            "ハローワーク", "公共職業安定所",
+            "就労移行支援", "障害福祉サービス",
+        ]
+        if any(term in store_name + " " + industry for term in non_retail_terms):
+            continue
+
         entries.append({
             "store_name": store_name,
             "opening_date": match.group(1),
             "facility_name": facility_name,
             "area": area,
+            "industry": industry,
+            "floor": floor,
         })
 
     return entries
