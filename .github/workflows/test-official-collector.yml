@@ -43,6 +43,38 @@ jobs:
       - name: Run official site collector
         run: python scripts/collect_news.py
 
+      - name: Generate draft candidates (no publishing)
+        run: python scripts/generate_drafts.py
+
+      - name: Validate generated drafts remain unpublished
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("data/drafts.json")
+          if not path.exists():
+              raise SystemExit("drafts.json was not created")
+          data = json.loads(path.read_text(encoding="utf-8"))
+          drafts = data.get("drafts", [])
+          unsafe = [
+              item for item in drafts
+              if item.get("status") != "未確認・公開禁止"
+          ]
+          if unsafe:
+              raise SystemExit(f"公開禁止状態でない下書きが {len(unsafe)} 件あります")
+          invalid_urls = [
+              item for item in drafts
+              if item.get("source_url") and not str(item["source_url"]).startswith(("https://", "http://"))
+          ]
+          if invalid_urls:
+              raise SystemExit(f"不正な情報源URLが {len(invalid_urls)} 件あります")
+          print(f"下書き生成確認: {len(drafts)}件")
+          print(f"全件未確認・公開禁止: {len(drafts)}件")
+          print(f"90日より前の除外: {data.get('excluded_old_count', 0)}件")
+          print(f"確認フラグ集計: {data.get('review_flag_counts', {})}")
+          PY
+
       - name: Validate collector output
         run: |
           python - <<'PY'
@@ -102,6 +134,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: official-site-collector-results
-          path: data/source_checks.json
+          path: |\n            data/source_checks.json\n            data/drafts.json
           if-no-files-found: error
           retention-days: 7
