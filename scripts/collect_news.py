@@ -275,7 +275,7 @@ def extract_shop_listing_entries(text_parts, facility_name, area):
     """商業施設の公式新店一覧から、店舗名と開店日を抽出する。"""
     text = clean_text(" ".join(text_parts))
     date_pattern = re.compile(
-        r"(20\\d{2}年\\d{1,2}月\\d{1,2}日)\\s*オープン"
+        r"(20\d{2}年\d{1,2}月\d{1,2}日)\s*オープン"
     )
     matches = list(date_pattern.finditer(text))
     entries = []
@@ -284,7 +284,7 @@ def extract_shop_listing_entries(text_parts, facility_name, area):
         end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
         section = text[match.end():end]
         name_match = re.search(
-            r"店名\\s*[:：]?\\s*(.+?)\\s*(?=(?:業種|場所|電話番号|$))",
+            r"店名\s*[:：]?\s*(.+?)\s*(?=(?:業種|場所|電話番号|$))",
             section,
         )
         if not name_match:
