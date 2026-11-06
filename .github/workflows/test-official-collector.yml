@@ -29,7 +29,7 @@ jobs:
           from pathlib import Path
           for source in ["admin/review.html", "index.html", "new.html", "closed.html"]:
               html = Path(source).read_text(encoding="utf-8")
-              scripts = re.findall(r"<script(?:\\s[^>]*)?>(.*?)</script>", html, re.I | re.S)
+              scripts = re.findall(r"<script(?:\s[^>]*)?>(.*?)</script>", html, re.I | re.S)
               for number, script in enumerate(scripts):
                   Path(f"/tmp/{Path(source).stem}-{number}.js").write_text(script, encoding="utf-8")
           PY
