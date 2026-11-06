@@ -74,16 +74,17 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
             "周南市",
         )
 
-    def test_opening_article_uses_verified_source_area_when_body_omits_city(self):
-        candidate = module.inspect_candidate(
-            target_url="https://www.aeontown.co.jp/hofu/information/detail/?id=004771",
-            link_title="スポーツミツハシ NEW OPEN!!",
-            source_name="イオンタウン防府公式",
-            source_page="https://www.aeontown.co.jp/hofu/",
-            default_area="防府市",
+    def test_area_resolution_uses_default_facility_area(self):
+        self.assertEqual(
+            module.resolve_area("スポーツミツハシ NEW OPEN", "防府市"),
+            ["防府市"],
         )
-        # This is a unit-level integration point; network calls are mocked by the test.
-        self.assertIsNotNone(candidate)
+
+    def test_area_resolution_prefers_article_area(self):
+        self.assertEqual(
+            module.resolve_area("山口市に新店オープン", "防府市"),
+            ["山口市"],
+        )
 
     def test_store_opening_is_kept(self):
         categories, basis = module.classify_text(
