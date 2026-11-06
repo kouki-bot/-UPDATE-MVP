@@ -241,5 +241,27 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         self.assertEqual(categories, [])
 
 
+    def test_generic_new_store_title_without_movement_is_not_opening(self):
+        categories, _ = module.classify_text(
+            "宇部市の新店舗について",
+            "新しい専門店の出店に向けて準備を進めています。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_new_store_opening_phrase_is_detected(self):
+        categories, _ = module.classify_text(
+            "山口市に新店オープン",
+            "",
+        )
+        self.assertIn("新店・開店", categories)
+
+    def test_store_closure_with_haigyo_word_is_detected(self):
+        categories, _ = module.classify_text(
+            "山口県内のパン店が廃業へ",
+            "",
+        )
+        self.assertIn("閉店", categories)
+
+
 if __name__ == "__main__":
     unittest.main()
