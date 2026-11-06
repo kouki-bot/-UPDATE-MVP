@@ -129,7 +129,7 @@ async function loadArticles(){
 try{
 const response=await fetch("data/published.json");if(!response.ok)throw new Error("記事データを取得できません");
 const data=await response.json();
-allArticles=(Array.isArray(data.articles)?data.articles:[]).filter(article=>(article.status==="公開"||article.status==="公開済み")&&article.title&&(isLodgingArticle(article)||categoryGroup(article.category))).sort((a,b)=>String(b.event_date||b.published_date||"").localeCompare(String(a.event_date||a.published_date||"")));
+allArticles=(Array.isArray(data.articles)?data.articles:[]).filter(article=>(article.status==="公開"||article.status==="公開済み")&&article.title&&categoryGroup(article.category)).sort((a,b)=>String(b.event_date||b.published_date||"").localeCompare(String(a.event_date||a.published_date||"")));
 populateSearchOptions();renderArticles();
 }catch(error){list.innerHTML=`<div class="empty-state"><h3>情報を読み込めませんでした。</h3><p>時間をおいて、もう一度ご確認ください。</p></div>`;}}
 observeReveals();loadArticles();
