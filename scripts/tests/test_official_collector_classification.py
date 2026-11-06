@@ -141,6 +141,28 @@ class OfficialCollectorClassificationTests(unittest.TestCase):
         self.assertIn("新店・開店", categories)
         self.assertEqual(basis, "本文・要確認")
 
+    def test_unrelated_body_keywords_in_separate_sentences_are_excluded(self):
+        categories, _ = module.classify_text(
+            "中村心さんにアンバサダーを委嘱します",
+            "県内の店舗を紹介します。アンバサダーを委嘱しました。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_campaign_visit_is_not_store_opening(self):
+        categories, _ = module.classify_text(
+            "旬の桃を届けに関係者が市長を表敬訪問",
+            "キャンペーンクルーが市長を表敬訪問されました。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_business_and_opening_in_same_body_sentence_is_kept(self):
+        categories, basis = module.classify_text(
+            "宇部・恩田の新スポット",
+            "宇部市に新しいピラティススタジオが10月1日にオープンしました。",
+        )
+        self.assertIn("新店・開店", categories)
+        self.assertEqual(basis, "本文・要確認")
+
 
 if __name__ == "__main__":
     unittest.main()
