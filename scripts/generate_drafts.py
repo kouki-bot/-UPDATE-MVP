@@ -804,10 +804,6 @@ def annotate_review_flags(drafts):
 
     # 見出しの表現が異なる同一店舗ニュースも、店舗名・市町・カテゴリ・日付で保守的に検知する。
     entity_groups = []
-    for index, draft in enumerate(drafts):
-        for other in drafts[index + 1:]:
-            if same_store_duplicate(draft, other):
-    entity_groups = []
     adjacency = {i: set() for i in range(len(drafts))}
 
     for i in range(len(drafts)):
