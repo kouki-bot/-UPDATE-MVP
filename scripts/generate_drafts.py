@@ -789,20 +789,8 @@ def duplicate_store_entity(title, body_excerpt=""):
 
 
 def same_store_duplicate(a, b):
-    """同じ市町・同じ店舗名・同じ動き・近い掲載日の記事だけ重複候補にする。"""
-    municipality_a = clean_text(a.get("municipality"))
-    municipality_b = clean_text(b.get("municipality"))
-    if not municipality_a or municipality_a != municipality_b:
-        return False
-    if not (set(a.get("category", [])) & set(b.get("category", []))):
-        return False
-    date_a = parse_date(a.get("published_date", ""))
-    date_b = parse_date(b.get("published_date", ""))
-    if not date_a or not date_b or abs((date_a.date() - date_b.date()).days) > 21:
-        return False
-    names_a = set(duplicate_store_entity(a.get("title", ""), a.get("body_excerpt", "")))
-    names_b = set(duplicate_store_entity(b.get("title", ""), b.get("body_excerpt", "")))
-    return bool(names_a & names_b)
+    """同じ店舗・同じ動作日・同じ市町の重複候補を検出する。"""
+    return same_store_news_candidate(a, b)
 
 
 def annotate_review_flags(drafts):
