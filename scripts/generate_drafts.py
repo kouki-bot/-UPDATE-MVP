@@ -486,8 +486,8 @@ def same_store_news_candidate(a, b):
     """同じ店舗・同じ動作日を報じる別媒体記事を統合する。"""
     if not (set(a.get("category", [])) & set(b.get("category", []))):
         return False
-    names_a = set(duplicate_store_entity(a.get("title", "")))
-    names_b = set(duplicate_store_entity(b.get("title", "")))
+    names_a = set(duplicate_store_entity(a.get("title", ""), a.get("body_excerpt", "")))
+    names_b = set(duplicate_store_entity(b.get("title", ""), b.get("body_excerpt", "")))
     if not names_a or not (names_a & names_b):
         return False
 
