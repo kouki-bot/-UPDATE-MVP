@@ -807,7 +807,36 @@ def annotate_review_flags(drafts):
     for index, draft in enumerate(drafts):
         for other in drafts[index + 1:]:
             if same_store_duplicate(draft, other):
-                entity_groups.append([draft, other])
+    entity_groups = []
+    adjacency = {i: set() for i in range(len(drafts))}
+
+    for i in range(len(drafts)):
+        for j in range(i + 1, len(drafts)):
+            if same_store_duplicate(drafts[i], drafts[j]):
+                adjacency[i].add(j)
+                adjacency[j].add(i)
+
+    visited = set()
+
+    for i in range(len(drafts)):
+        if i in visited or not adjacency[i]:
+            continue
+
+        stack = [i]
+        component = []
+        visited.add(i)
+
+        while stack:
+            current = stack.pop()
+            component.append(drafts[current])
+
+            for neighbor in adjacency[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    stack.append(neighbor)
+
+        if len(component) >= 2:
+            entity_groups.append(component)
 
     seen_group_ids = {
         frozenset(x.get("id", "") for x in group)
