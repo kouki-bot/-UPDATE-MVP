@@ -307,7 +307,7 @@ def extract_approximate_event_date_text(title, body_excerpt):
         if any(target in sentence for target in targets)
     ] if targets else []
     search_text = " ".join(relevant_sentences) if relevant_sentences else body_text
-    pattern = re.compile(r"(?P<date>\d{1,2}月(?:上旬|中旬|下旬|末))")
+    pattern = re.compile(r"(?P<date>\d{1,2}月(?:上旬|中旬|下旬))")
     action = re.compile(r"オープン|開店|開業|出店|閉店|営業終了|移転|リニューアル|営業再開")
     for sentence in re.split(r"(?<=[。！？!?])", search_text):
         if not action.search(sentence):
@@ -855,7 +855,7 @@ def duplicate_store_entity(title, body_excerpt=""):
         if len(token) >= 2:
             candidates.append(token)
 
-    # 記号・空白を正規化し、短すぎる候補や一般語を除外
+    # 文の形が異なる記事でも、本文・見出しに同じ店名が明記されていれば候補に含める。\n    for text in (title_text, body_text):\n        for match in re.finditer(r"([A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,20}店)", text):\n            candidates.append(match.group(1))\n\n    # 記号・空白を正規化し、短すぎる候補や一般語を除外
     generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
     normalized = []
     for name in candidates:
