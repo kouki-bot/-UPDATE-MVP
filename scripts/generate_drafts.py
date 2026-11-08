@@ -784,7 +784,7 @@ def duplicate_store_entity(title, body_excerpt=""):
     for text in (title_text, body_text):
         for match in re.finditer(
             rf"(?:生活雑貨|雑貨|家具|家電|衣料品|紳士服|婦人服|インテリア|スポーツ用品)?専門店"
-            rf"([{store_chars}]{{2,12}}?)(?=が|は|（|\\(|[、。\\s　])",
+            rf"([{store_chars}]{{2,12}}?)(?=が|は|（|\(|[、。\s　])",
             text,
         ):
             brand = match.group(1).strip()
