@@ -297,6 +297,27 @@ def is_clearly_outside_yamaguchi(title, body_excerpt=""):
     combined = f"{title_text} {location_prefix}"
     return any(re.search(pattern, combined) for pattern in FOREIGN_CITY_STORE_PATTERNS)
 
+def extract_approximate_event_date_text(title, body_excerpt):
+    """店舗名に結び付く「11月中旬」等の曖昧な予定日を記録。日付には変換しない。"""
+    title_text = unicodedata.normalize("NFKC", clean_text(title))
+    body_text = unicodedata.normalize("NFKC", clean_text(body_excerpt))
+    targets = re.findall(r"[「『]([^」』]{2,24})[」』]", title_text)
+    relevant_sentences = [
+        sentence for sentence in re.split(r"(?<=[。！？!?])", body_text)
+        if any(target in sentence for target in targets)
+    ] if targets else []
+    search_text = " ".join(relevant_sentences) if relevant_sentences else body_text
+    pattern = re.compile(r"(?P<date>\d{1,2}月(?:上旬|中旬|下旬|末))")
+    action = re.compile(r"オープン|開店|開業|出店|閉店|営業終了|移転|リニューアル|営業再開")
+    for sentence in re.split(r"(?<=[。！？!?])", search_text):
+        if not action.search(sentence):
+            continue
+        match = pattern.search(sentence)
+        if match:
+            return match.group("date")
+    return ""
+
+
 def extract_event_date(title, body_excerpt, published_date=""):
     """店舗の動作語に近接する日付だけを抽出。記事公開日や無関係な日付は転用しない。"""
     body = unicodedata.normalize("NFKC", clean_text(body_excerpt))
@@ -310,6 +331,16 @@ def extract_event_date(title, body_excerpt, published_date=""):
         r"オープン(?!セール|場所|情報|記念|キャンペーン)|"
         r"開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|リニューアル|営業再開"
     )
+    # タイトルで特定できる店舗名が本文にある場合、その店舗に関係する文を優先する。
+    # 商業施設自体のリニューアル日を、入居テナントの開店日として誤採用しない。
+    title_targets = re.findall(r"[「『]([^」』]{2,24})[」』]", title_text)
+    if title_targets:
+        target_sentences = [
+            sentence for sentence in re.split(r"(?<=[。！？!?])", body)
+            if any(target in sentence for target in title_targets)
+        ]
+        if target_sentences:
+            body = " ".join(target_sentences)
     # URL内やリンク先の年月日は、本文の店舗動作日と誤認しない。
     body = re.sub(r"https?://\S+", " ", body)
 
@@ -391,6 +422,9 @@ def extract_event_date(title, body_excerpt, published_date=""):
         matches.sort(key=lambda x: (x[0], x[1], x[2]))
         return matches[0][3]
 
+    # 店舗名に結び付く曖昧な日付がある場合、別施設の正確な日付を流用しない。
+    if extract_approximate_event_date_text(title_text, body):
+        return ""
     # 本文の店舗動作日を最優先。タイトルは本文にない場合だけ調べる。
     return find_action_date(body) or find_action_date(title_text)
 
@@ -417,10 +451,11 @@ def convert_candidate(item, method, source_priority):
         area = [area] if area else []
     date_value = clean_text(item.get("published_date"))
     event_date = extract_event_date(title, body, date_value)
+    event_date_text = extract_approximate_event_date_text(title, body)
     # 記事公開日は取得元の明示情報だけを使用する。タイトル内の日付は店舗動作日かもしれないため流用しない。
     return {
         "title": title, "url": url, "normalized_url": normalize_url(url),
-        "event_date": event_date,
+        "event_date": event_date, "event_date_text": event_date_text,
         "source_name": clean_text(item.get("source_name")), "category": categories,
         "published_date": date_value, "body_excerpt": body,
         "collection_method": method, "category_basis": clean_text(item.get("category_basis")),
@@ -660,6 +695,8 @@ def make_draft(item):
     summary = "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。" + note
     if not date_value and item.get("event_date"):
         summary += " 鮮度は記事公開日ではなく、本文から抽出した店舗動作日を基準にしています。"
+    if item.get("event_date_text"):
+        summary += f" 店舗動作日は「{item['event_date_text']}」と記載されていますが、正確な日付は未確認です。"
     if not item.get("body_excerpt"):
         summary += " 元記事の概要を取得できていないため、本文の確認が必要です。"
     url = item["url"]
@@ -683,6 +720,7 @@ def make_draft(item):
         "title": item["title"], "suggested_headline": item["title"],
         "category": item["category"], "priority": get_priority(item["category"]),
         "published_date": date_value, "event_date": clean_text(item.get("event_date")),
+        "event_date_text": clean_text(item.get("event_date_text")),
         "freshness": freshness, "age_days": age,
         "area": item.get("area", []), "area_status": area_status,
         "municipality": municipality, "municipality_candidates": municipality_candidates,
