@@ -123,7 +123,7 @@ el("detail").innerHTML=
 '<div class="field"><label for="municipality">店舗所在地の市町名 *</label><input id="municipality" placeholder="例：山口市" value="'+esc(r.municipality||d.municipality||"")+'"><small>記事配信元の地域ではなく、店舗の実際の所在地を入力。</small></div>'+
 '<div class="field"><label for="publishedDate">記事の公開日 *</label><input id="publishedDate" type="date" value="'+esc(dateOnly(r.published_date||d.published_date))+'"><small>元記事が公開された日付。店舗の開店日とは別に確認。</small></div>'+
 '<div class="field"><label for="eventDate">店舗の実際の動作日 *</label><input id="eventDate" type="date" value="'+esc(dateOnly(r.event_date||d.event_date))+'"><small>開店・閉店・移転・リニューアルが実際に行われた日付。</small></div>'+
-'<div class="field"><label for="businessStatus">店舗の現在の状態 *</label><select id="businessStatus"><option value="">選択してください</option>'+["開店予定","営業中","閉店済み","移転済み","リニューアル済み"].map(function(x){return '<option value="'+x+'" '+((r.business_status||"")===x?"selected":"")+'>'+x+'</option>';}).join("")+'</select></div>'+
+'<div class="field"><label for="businessStatus">店舗の現在の状態 *</label><select id="businessStatus"><option value="">選択してください</option>'+["開店予定","営業中","閉店予定","閉店済み","移転予定","移転済み","リニューアル予定","リニューアル済み"].map(function(x){return '<option value="'+x+'" '+((r.business_status||"")===x?"selected":"")+'>'+x+'</option>';}).join("")+'</select></div>'+
 '<div class="field"><label for="bodyText">確認済みの説明文</label><textarea id="bodyText" placeholder="元記事で確認できた事実を簡潔に記入">'+esc(r.body||d.body_excerpt||"")+'</textarea><small>推測や未確認情報は書かない。記事本文の長文転載は避ける。</small></div>'+
 duplicateHtml+flagHtml+
 '<label class="checkline"><input type="checkbox" id="sourceChecked" '+(r.reviewer_checked_source===true?"checked":"")+'><span>元記事を開き、店舗名・所在地・日付・現在の状況を確認した *</span></label>'+
