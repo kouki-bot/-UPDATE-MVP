@@ -1,6 +1,8 @@
 name: Review approval safety tests
 
 on:
+  push:
+    branches: [feat/review-checklist-gate]
   pull_request:
     branches: [main]
     paths:
