@@ -117,6 +117,7 @@ var id=String(d.id),r=approvals.reviewed_articles[id]||{},sources=Array.isArray(
 var sourceHtml=sources.map(function(s){var u=safeHttpUrl(s.url);return u?'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(s.source_name||"元記事")+'：'+esc(u)+'</a>':'<span>'+esc(s.source_name||"元記事")+'：URL未設定または不正</span>';}).join("");
 var flags=flagsFor(d),cleared=Array.isArray(r.cleared_review_flags)?r.cleared_review_flags:[];
 var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消したものだけチェック）</b>'+flags.map(function(f){return '<label><input type="checkbox" class="clearFlag" value="'+esc(f)+'" '+(cleared.indexOf(f)>=0?"checked":"")+'><span>'+esc(f)+'</span></label>';}).join("")+'</div>':'<p class="sub">自動検出された確認フラグはありません。内容確認は必要です。</p>';
+var reviewChecks=r.review_checks||{};
 var status=statusOf(id);
 var duplicateHtml="";
 if(d.duplicate_review){
