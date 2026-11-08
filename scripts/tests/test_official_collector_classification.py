@@ -1,0 +1,530 @@
+import importlib.util
+import unittest
+from pathlib import Path
+
+SCRIPT = Path(__file__).resolve().parents[1] / "collect_news.py"
+spec = importlib.util.spec_from_file_location("collect_news", SCRIPT)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+
+
+class OfficialCollectorClassificationTests(unittest.TestCase):
+    def test_official_press_article_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://www.pref.yamaguchi.lg.jp/press/369077.html"
+            )
+        )
+
+    def test_city_topic_article_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://www.city.yamaguchi.lg.jp/site/topics/201713.html"
+            )
+        )
+
+    def test_aeon_town_information_detail_is_article_url(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://www.aeontown.co.jp/hofu/information/detail/?id=004278"
+            )
+        )
+
+    def test_tokuyama_deck_information_article_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://tokuyamadeck.com/information/店舗オープン情報-5/"
+            )
+        )
+
+    def test_sunpark_shop_news_detail_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://www.sunpark.co.jp/search/detail.html?id=12"
+            )
+        )
+
+    def test_sunpark_news_detail_url_is_detected(self):
+        self.assertTrue(
+            module.is_article_url(
+                "https://sunpark.co.jp/sp/news/detail.html?id=886"
+            )
+        )
+
+    def test_seamall_listing_extracts_two_digit_year(self):
+        entries = module.extract_shop_listing_entries(
+            ["26年7月10日オープン 店名 テストショップ 場所 2階"],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries[0]["opening_date"], "26年7月10日")
+
+    def test_archive_page_is_not_article_url(self):
+        self.assertFalse(
+            module.is_article_url(
+                "https://www.pref.yamaguchi.lg.jp/press/search.php?search_ym=202611"
+            )
+        )
+
+    def test_aeon_town_new_open_title_is_detected(self):
+        categories, _ = module.classify_text(
+            "〖新店〗26年7月10日「伊南麻辣燙」OPEN！",
+            "",
+        )
+        self.assertIn("新店・開店", categories)
+
+    def test_opening_date_extracts_two_digit_year(self):
+        self.assertEqual(
+            module.extract_opening_date("26年7月10日（金）にオープン"),
+            "2026年7月10日",
+        )
+
+    def test_opening_information_headline_is_not_an_opening_date(self):
+        self.assertEqual(
+            module.extract_opening_date("2024年10月24日(木) 店舗オープン情報。"),
+            "",
+        )
+
+    def test_opening_date_extracts_four_digit_year(self):
+        self.assertEqual(
+            module.extract_opening_date("2026年11月21日オープン"),
+            "2026年11月21日",
+        )
+
+    def test_aeon_town_source_has_hofu_area(self):
+        source = next(
+            item for item in module.SOURCES
+            if item["name"] == "イオンタウン防府公式"
+        )
+        self.assertEqual(source["default_area"], "防府市")
+
+    def test_sunpark_and_tokuyama_deck_are_configured(self):
+        sources = {item["name"]: item for item in module.SOURCES}
+        self.assertEqual(
+            sources["おのだサンパーク公式・新店情報"]["default_area"],
+            "山陽小野田市",
+        )
+        self.assertEqual(
+            sources["徳山デッキ公式・店舗オープン情報"]["default_area"],
+            "周南市",
+        )
+
+    def test_area_resolution_uses_default_facility_area(self):
+        self.assertEqual(
+            module.resolve_area("スポーツミツハシ NEW OPEN", "防府市"),
+            ["防府市"],
+        )
+
+    def test_area_resolution_prefers_article_area(self):
+        self.assertEqual(
+            module.resolve_area("山口市に新店オープン", "防府市"),
+            ["山口市"],
+        )
+
+    def test_hoshi_plaza_source_has_kudamatsu_area(self):
+        source = next(
+            item for item in module.SOURCES
+            if item["name"] == "星プラザ公式"
+        )
+        self.assertEqual(source["default_area"], "下松市")
+
+    def test_public_childcare_center_is_not_a_shop_opening(self):
+        categories, _ = module.classify_text(
+            "子育て支援センター「あいあいキッズ 星プラザ」がオープン中",
+            "3階に子育て支援センターがオープン中です。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_publication_date_is_not_mistaken_for_opening_date(self):
+        self.assertEqual(
+            module.extract_opening_date(
+                "2024年10月24日(木) 店舗オープン情報。"
+                "10月24日(木)にファディーがオープンしました。"
+            ),
+            "",
+        )
+
+    def test_lodging_facility_is_excluded_from_shop_feed(self):
+        for title in [
+            "山口市に新しいホテルがオープン",
+            "下関市の旅館がリニューアルオープン",
+            "周南市にゲストハウスが開業",
+        ]:
+            with self.subTest(title=title):
+                categories, _ = module.classify_text(title)
+                self.assertEqual(categories, [])
+
+    def test_public_support_center_is_excluded_from_shop_feed(self):
+        categories, basis = module.classify_text(
+            "子育て支援センター「あいあいキッズ 星プラザ」がオープン中"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
+
+    def test_extracts_store_name_from_tokuyama_deck_body(self):
+        body = (
+            "2026年10月19日(月) 10:00 D2商業棟2階に "
+            "体験型ショールーム「ハクジュプラザ徳山駅前店」がオープンしました。"
+        )
+        self.assertEqual(
+            module.extract_store_name_from_body(body),
+            "ハクジュプラザ徳山駅前店",
+        )
+
+    def test_builds_named_candidate_for_tokuyama_opening_article(self):
+        body = "「甘味処 しづくや」がオープンしました。"
+        title = module.build_candidate_title(
+            "店舗オープン情報🌟",
+            body,
+            "徳山デッキ",
+        )
+        self.assertEqual(title, "新店オープン：甘味処 しづくや（徳山デッキ）")
+
+    def test_builds_named_candidate_for_tokuyama_refresh_article(self):
+        body = "「DECK PLAZA」がリフレッシュオープンいたします。"
+        title = module.build_candidate_title(
+            "DECK PLAZA リフレッシュオープン",
+            body,
+            "徳山デッキ",
+        )
+        self.assertEqual(
+            title,
+            "リニューアルオープン：DECK PLAZA（徳山デッキ）",
+        )
+
+    def test_extracts_tokuyama_opening_date_from_article_body(self):
+        self.assertEqual(
+            module.extract_opening_date(
+                "2026年10月19日(月) 10:00 "
+                "「ハクジュプラザ徳山駅前店」がオープンしました。"
+            ),
+            "2026年10月19日",
+        )
+
+    def test_two_digit_year_date_is_normalized(self):
+        self.assertEqual(
+            module.extract_opening_date("26年7月10日に新規オープン"),
+            "2026年7月10日",
+        )
+
+    def test_new_open_english_date_is_extracted(self):
+        self.assertEqual(
+            module.extract_opening_date("2026年11月13日 New Open"),
+            "2026年11月13日",
+        )
+
+    def test_store_opening_is_kept(self):
+        categories, basis = module.classify_text(
+            "山口市に新しいカフェがオープン"
+        )
+        self.assertIn("新店・開店", categories)
+
+    def test_named_store_opening_is_kept(self):
+        categories, _ = module.classify_text(
+            "宇部市にドラッグストア新規オープン"
+        )
+        self.assertIn("新店・開店", categories)
+
+    def test_closure_is_kept(self):
+        categories, _ = module.classify_text(
+            "山口市のスーパーが閉店"
+        )
+        self.assertIn("閉店", categories)
+
+    def test_store_relocation_is_kept(self):
+        categories, _ = module.classify_text(
+            "山口市の美容室が移転"
+        )
+        self.assertIn("移転", categories)
+
+    def test_store_renovation_is_kept(self):
+        categories, _ = module.classify_text(
+            "山口市の商業施設がリニューアルオープン"
+        )
+        self.assertEqual(categories, ["リニューアル"])
+
+    def test_public_park_renovation_is_excluded(self):
+        categories, basis = module.classify_text(
+            "重源の郷体験交流公園がリニューアルオープンしました"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
+
+    def test_local_history_museum_event_is_excluded(self):
+        categories, basis = module.classify_text(
+            "鋳銭司郷土館展示リニューアルオープン式典を行いました"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
+
+    def test_roadside_station_renovation_is_excluded(self):
+        categories, basis = module.classify_text(
+            "道の駅「きらら あじす」がリニューアルオープンしました"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
+
+    def test_community_exchange_space_opening_is_excluded(self):
+        categories, basis = module.classify_text(
+            "中心商店街に地域の魅力発信・交流スペース「コトサイト」がオープンしました"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "公共・文化施設除外")
+
+    def test_open_campus_is_excluded(self):
+        categories, basis = module.classify_text(
+            "山口県立農業大学校 夏のオープンキャンパス"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "イベント除外")
+
+    def test_calendar_page_is_excluded(self):
+        categories, _ = module.classify_text(
+            "カレンダーで探す",
+            "イベント検索、開催日、講座一覧",
+        )
+        self.assertEqual(categories, [])
+
+    def test_store_category_listing_page_is_excluded(self):
+        categories, basis = module.classify_text(
+            "山口県の新店・開店情報一覧"
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "一覧・ナビ除外")
+
+    def test_public_meeting_is_excluded(self):
+        categories, _ = module.classify_text(
+            "子育て文化審議会の開催について"
+        )
+        self.assertEqual(categories, [])
+
+    def test_museum_renovation_is_not_shop_feed(self):
+        categories, _ = module.classify_text(
+            "秋吉台エコ・ミュージアムのリニューアル工事について"
+        )
+        self.assertEqual(categories, [])
+
+    def test_market_event_is_not_store_opening(self):
+        categories, _ = module.classify_text(
+            "ノウフクマルシェを開催します"
+        )
+        self.assertEqual(categories, [])
+
+    def test_open_word_without_business_context_is_excluded(self):
+        categories, _ = module.classify_text(
+            "新しい取り組みがオープンします"
+        )
+        self.assertEqual(categories, [])
+
+    def test_body_only_store_opening_is_review_candidate(self):
+        categories, basis = module.classify_text(
+            "宇部・恩田の新スポット",
+            "新しいピラティススタジオが10月1日にオープンしました。",
+        )
+        self.assertIn("新店・開店", categories)
+        self.assertEqual(basis, "本文・要確認")
+
+    def test_unrelated_body_keywords_in_separate_sentences_are_excluded(self):
+        categories, _ = module.classify_text(
+            "中村心さんにアンバサダーを委嘱します",
+            "県内の店舗を紹介します。アンバサダーを委嘱しました。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_campaign_visit_is_not_store_opening(self):
+        categories, _ = module.classify_text(
+            "旬の桃を届けに関係者が市長を表敬訪問",
+            "キャンペーンクルーが市長を表敬訪問されました。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_business_and_opening_in_same_body_sentence_is_kept(self):
+        categories, basis = module.classify_text(
+            "宇部・恩田の新スポット",
+            "宇部市に新しいピラティススタジオが10月1日にオープンしました。",
+        )
+        self.assertIn("新店・開店", categories)
+        self.assertEqual(basis, "本文・要確認")
+
+
+    def test_ambassador_appointment_article_is_excluded_even_if_body_mentions_store_opening(self):
+        categories, basis = module.classify_text(
+            "中村心さんに「やまぐち和牛燦アンバサダー」を委嘱します！",
+            "県内の店舗がオープンしました。アンバサダーの委嘱式を行います。",
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "行政活動・表敬訪問除外")
+
+    def test_campaign_mayor_visit_article_is_excluded_even_if_body_mentions_store_opening(self):
+        categories, basis = module.classify_text(
+            "旬の桃を届けに福島市副市長とミスピーチキャンペーンクルーが市長を表敬訪問されました",
+            "県内の店舗がオープンしました。キャンペーンクルーが市長を訪問しました。",
+        )
+        self.assertEqual(categories, [])
+        self.assertEqual(basis, "行政活動・表敬訪問除外")
+
+    def test_body_only_opening_requires_actual_business_predicate(self):
+        categories, _ = module.classify_text(
+            "地域の取り組みについて",
+            "県内の店舗の需要拡大に向けた取り組みを開始しました。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_body_only_store_opening_accepts_completed_action(self):
+        categories, basis = module.classify_text(
+            "宇部・恩田の新スポット",
+            "新しいピラティススタジオが10月1日にオープンしました。",
+        )
+        self.assertIn("新店・開店", categories)
+        self.assertEqual(basis, "本文・要確認")
+
+
+    def test_known_chain_store_opening_without_industry_word_is_review_candidate(self):
+        categories, basis = module.classify_text(
+            "ケーズデンキ山口店がオープン",
+            "山口市内に新店舗がオープンします。",
+        )
+        self.assertIn("新店・開店", categories)
+        self.assertEqual(basis, "地域・店舗名・動向／要確認")
+
+    def test_named_restaurant_opening_with_area_is_review_candidate(self):
+        categories, basis = module.classify_text(
+            "サイゼリヤおのだサンパーク店オープン",
+            "山陽小野田市の商業施設に出店します。",
+        )
+        self.assertIn("新店・開店", categories)
+
+    def test_closure_word_haigyo_is_detected(self):
+        categories, basis = module.classify_text(
+            "山口県内の長寿製パンが廃業へ",
+            "長年営業してきた店舗を閉じる予定です。",
+        )
+        self.assertIn("閉店", categories)
+
+    def test_body_only_sales_start_planned_is_review_candidate(self):
+        categories, basis = module.classify_text(
+            "宇部市の新店舗について",
+            "新しい専門店が11月に営業を開始する予定です。",
+        )
+        self.assertIn("新店・開店", categories)
+        self.assertEqual(basis, "本文・要確認")
+
+    def test_area_and_generic_opening_without_store_name_is_not_enough(self):
+        categories, _ = module.classify_text(
+            "山口市で新しい取り組みがオープン",
+            "地域の活動を開始します。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_event_with_store_word_is_not_misclassified(self):
+        categories, _ = module.classify_text(
+            "山口市の店舗でマルシェイベントを開催",
+            "店舗でイベントを開催します。",
+        )
+        self.assertEqual(categories, [])
+
+
+    def test_generic_new_store_title_without_movement_is_not_opening(self):
+        categories, _ = module.classify_text(
+            "宇部市の新店舗について",
+            "新しい専門店の出店に向けて準備を進めています。",
+        )
+        self.assertEqual(categories, [])
+
+    def test_new_store_opening_phrase_is_detected(self):
+        categories, _ = module.classify_text(
+            "山口市に新店オープン",
+            "",
+        )
+        self.assertIn("新店・開店", categories)
+
+    def test_store_closure_with_haigyo_word_is_detected(self):
+        categories, _ = module.classify_text(
+            "山口県内のパン店が廃業へ",
+            "",
+        )
+        self.assertIn("閉店", categories)
+
+
+    def test_seamall_new_store_listing_extracts_name_and_opening_date(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年11月21日オープン 店名 LUNA STUDIO 場所 5階 "
+                "2026年11月3日オープン 店名 ナイスネイル 場所 3階"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(len(entries), 2)
+        self.assertEqual(entries[0]["store_name"], "LUNA STUDIO")
+        self.assertEqual(entries[0]["opening_date"], "2026年11月21日")
+        self.assertEqual(entries[1]["store_name"], "ナイスネイル")
+
+    def test_seamall_extracts_industry_and_floor(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年11月21日オープン 店名 LUNA STUDIO "
+                "業種 キッズスクール 場所 5階 電話番号 083-000-0000"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(entries[0]["industry"], "キッズスクール")
+        self.assertEqual(entries[0]["floor"], "5階")
+
+    def test_seamall_excludes_public_employment_office(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年9月29日オープン 店名 ハローワークプラザ下関 "
+                "業種 公共職業安定所 場所 2階"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries, [])
+
+    def test_seamall_excludes_welfare_support_facility(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年10月1日オープン 店名 LITALICOワークス下関 "
+                "業種 就労移行支援事業所 場所 2階"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries, [])
+
+    def test_seamall_floor_excludes_descriptive_text(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年8月8日オープン 店名 福恩麻辣湯 "
+                "場所 地下1階 本場級の麻辣湯を提供します"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries[0]["floor"], "地下1階")
+
+    def test_seamall_excludes_litalico_welfare_support_center(self):
+        entries = module.extract_shop_listing_entries(
+            [
+                "2026年10月1日オープン 店名 LITALICOワークス下関 "
+                "場所 4階"
+            ],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries, [])
+
+    def test_seamall_listing_without_store_name_is_ignored(self):
+        entries = module.extract_shop_listing_entries(
+            ["2026年11月21日オープン 場所 5階"],
+            facility_name="シーモール下関",
+            area="下関市",
+        )
+        self.assertEqual(entries, [])
+
+
+if __name__ == "__main__":
+    unittest.main()

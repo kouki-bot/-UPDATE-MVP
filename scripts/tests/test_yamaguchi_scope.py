@@ -1,0 +1,327 @@
+import importlib.util
+import unittest
+from pathlib import Path
+
+SCRIPT = Path(__file__).resolve().parents[1] / "generate_drafts.py"
+spec = importlib.util.spec_from_file_location("generate_drafts", SCRIPT)
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+
+
+class YamaguchiScopeTests(unittest.TestCase):
+    def test_clear_foreign_city_is_excluded(self):
+        self.assertTrue(module.is_clearly_outside_yamaguchi("【開店】伊勢崎南店がオープン"))
+
+    def test_yamaguchi_city_is_not_excluded(self):
+        self.assertFalse(module.is_clearly_outside_yamaguchi("【開店】宇部市に新店舗"))
+
+    def test_unknown_location_is_not_excluded(self):
+        self.assertFalse(module.is_clearly_outside_yamaguchi("【開店】新しいカフェがオープン"))
+
+    def test_explicit_address_wins_over_other_city_mentions(self):
+        candidates = module.extract_municipality_candidates(
+            "ケーズデンキ山口店オープン",
+            "山口県山口市黒川にオープン。県内では宇部、岩国市に次いで3店目。"
+        )
+        self.assertEqual(candidates, ["山口市"])
+
+    def test_multiple_explicit_addresses_remain_uncertain(self):
+        candidates = module.extract_municipality_candidates(
+            "県内2店舗の話題",
+            "山口県山口市に新店、山口県岩国市にも新店がオープン。"
+        )
+        self.assertEqual(set(candidates), {"山口市", "岩国市"})
+
+    def test_listing_path_is_excluded(self):
+        self.assertTrue(module.is_listing_candidate(
+            "山口県の開店・閉店情報一覧",
+            "https://example.com/category/yamaguchi"
+        ))
+
+    def test_article_path_is_kept(self):
+        self.assertFalse(module.is_listing_candidate(
+            "【開店】山口市に新しいカフェ",
+            "https://example.com/2026/11/04/cafe-open"
+        ))
+
+    def test_industry_category_pages_are_excluded_by_url(self):
+        cases = [
+            ("閉店情報-業種別", "https://kaiten-heiten-24.com/heiten-gyousyubetsu/"),
+            ("開店情報-業種別", "https://kaiten-heiten-24.com/kaiten-gyousyubetsu/"),
+        ]
+        for title, url in cases:
+            with self.subTest(title=title):
+                self.assertTrue(module.is_listing_candidate(title, url))
+
+    def test_industry_category_page_is_excluded_via_source_url(self):
+        item = {
+            "title": "【閉店】山口県の店舗が閉店",
+            "url": "https://example.com/feed/item/123",
+            "source_url": "https://kaiten-heiten-24.com/heiten-gyousyubetsu/",
+            "description": "閉店情報を業種別にまとめたページ",
+            "categories": ["閉店"],
+        }
+        self.assertIsNone(module.convert_candidate(item, "RSS", 2))
+
+    def test_individual_article_with_industry_word_is_kept(self):
+        self.assertFalse(module.is_listing_candidate(
+            "【開店】山口市に新しい美容室がオープン",
+            "https://example.com/2026/11/04/new-salon"
+        ))
+
+    def test_foreign_filter_does_not_use_publisher_area(self):
+        item = {
+            "title": "【開店】伊勢崎南店がオープン",
+            "url": "https://example.com/2026/11/04/store",
+            "description": "新店舗の情報",
+            "categories": ["新店・開店"],
+            "area": ["山口県"],
+        }
+        self.assertIsNone(module.convert_candidate(item, "RSS", 2))
+
+    def test_uncertain_candidate_is_not_removed_by_scope_filter(self):
+        item = {
+            "title": "【開店】新しいカフェがオープン",
+            "url": "https://example.com/2026/11/04/cafe",
+            "description": "詳細は公式サイトで確認",
+            "categories": ["新店・開店"],
+        }
+        # Geographic uncertainty is not itself a rejection condition.
+        self.assertFalse(module.is_clearly_outside_yamaguchi(item["title"], item["description"]))
+
+    def test_three_observed_foreign_articles_are_excluded(self):
+        cases = [
+            ("【閉店】A&Fカントリーささしま店",
+             "愛知県名古屋市中村区 2026年10月31日閉店 住所 愛知県名古屋市中村区名駅1丁目"),
+            ("【閉店】GEO ゲオ 伊勢崎南店",
+             "群馬県伊勢崎市 2026年11月29日閉店 住所 群馬県伊勢崎市富塚町"),
+            ("【閉店】グラフィカリー中目黒",
+             "東京都目黒区 2026年11月30日閉店 住所 東京都目黒区青葉台"),
+            ("【閉店】東武ストア 新船橋店",
+             "千葉県船橋市 2026年11月5日閉店 住所 千葉県船橋市山手"),
+        ]
+        for title, body in cases:
+            with self.subTest(title=title):
+                self.assertTrue(module.is_clearly_outside_yamaguchi(title, body))
+
+    def test_foreign_article_is_rejected_even_when_feed_area_says_yamaguchi(self):
+        item = {
+            "title": "【閉店】東武ストア 新船橋店",
+            "url": "https://example.com/tobustore-shinfunabashi/",
+            "body_excerpt": "千葉県船橋市 2026年11月5日閉店",
+            "categories": ["閉店"],
+            "area": ["山口県内"],
+        }
+        self.assertIsNone(module.convert_candidate(item, "RSS", 2))
+
+    def test_apparel_and_general_goods_store_is_classified_as_commercial(self):
+        title = "【防府市】ゆめタウン防府に衣料・雑貨の「地球文化屋」がオープン"
+        body = "衣料・雑貨の専門店がゆめタウン防府2階に出店します。"
+        self.assertEqual(module.classify_content_type(title, body), "店舗・商業施設")
+        self.assertTrue(module.is_in_store_scope({"title": title, "body_excerpt": body}))
+
+    def test_english_named_gymnastics_school_is_classified_as_commercial(self):
+        title = "LUNA STUDIO（シーモール下関）2026年11月21日オープン"
+        body = "子ども向け体操教室がシーモール下関5階に開校します。"
+        self.assertEqual(module.classify_content_type(title, body), "店舗・商業施設")
+        self.assertTrue(module.is_in_store_scope({"title": title, "body_excerpt": body}))
+
+    def test_body_only_pilates_opening_is_kept(self):
+        item = {
+            "title": "宇部・恩田にピラティススタジオ「UNO」 マシン完備で個別ケア提供",
+            "url": "https://example.com/uno",
+            "body_excerpt": "女性専用のピラティススタジオが宇部市に10月1日オープンしました。",
+        }
+        converted = module.convert_candidate(item, "RSS", 2)
+        self.assertIsNotNone(converted)
+        self.assertIn("新店・開店", converted["category"])
+
+    def test_body_only_cafe_opening_is_kept(self):
+        item = {
+            "title": "宇部にカフェ＆デリ「にくとはな」 肉料理メインに、キッチンカーも継続",
+            "url": "https://example.com/niku-to-hana",
+            "body_excerpt": "カフェ＆デリ「にくとはな」が10月23日にオープンしました。",
+        }
+        converted = module.convert_candidate(item, "RSS", 2)
+        self.assertIsNotNone(converted)
+        self.assertIn("新店・開店", converted["category"])
+
+    def test_body_only_specialty_store_opening_is_kept(self):
+        item = {
+            "title": "防府駅前に解体専門店「ブラスト」 来店相談で空き家問題解決へ",
+            "url": "https://example.com/blast",
+            "body_excerpt": "解体専門店「ブラスト」が防府駅前に10月22日オープンしました。",
+        }
+        converted = module.convert_candidate(item, "RSS", 2)
+        self.assertIsNotNone(converted)
+        self.assertIn("新店・開店", converted["category"])
+
+    def test_anniversary_mention_is_not_body_movement_evidence(self):
+        self.assertFalse(module.has_body_movement_evidence(
+            "同店はオープンから10周年を迎えました。"
+        ))
+
+    def test_event_venue_mention_is_not_body_movement_evidence(self):
+        self.assertFalse(module.has_body_movement_evidence(
+            "既存カフェを会場にマルシェを開催します。新店の紹介ではありません。"
+        ))
+
+    def test_unknown_location_remains_reviewable(self):
+        item = {
+            "title": "【閉店】所在地不明の店舗",
+            "url": "https://example.com/unknown-store/",
+            "body_excerpt": "閉店のお知らせ。所在地の記載なし。",
+            "categories": ["閉店"],
+            "area": ["山口県内"],
+        }
+        self.assertIsNotNone(module.convert_candidate(item, "RSS", 2))
+
+    def test_one_day_event_is_excluded(self):
+        self.assertFalse(module.is_store_news(
+            "山口市で一日限定イベント開催・マルシェ出店者募集",
+            "地域イベントの案内です。"
+        ))
+
+    def test_store_opening_with_event_word_is_kept(self):
+        self.assertTrue(module.is_store_news(
+            "宇部市に新しいカフェがオープン、記念イベント開催",
+            "カフェが新規開店しました。"
+        ))
+
+    def test_future_store_event_date_is_treated_as_scheduled(self):
+        status, age = module.get_freshness("2026-11-21", is_event_date=True)
+        self.assertEqual(status, "予定日・要確認")
+        self.assertLess(age, 0)
+
+    def test_future_publication_date_remains_an_anomaly(self):
+        status, age = module.get_freshness("2026-11-21", is_event_date=False)
+        self.assertEqual(status, "未来日付・要確認")
+        self.assertLess(age, 0)
+
+    def test_event_date_is_extracted_from_body(self):
+        self.assertEqual(
+            module.extract_event_date("宇部に新店", "カフェが2026年10月23日にオープンしました。", "2026-11-01"),
+            "2026-10-23",
+        )
+
+    def test_event_date_prefers_date_near_opening_action(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "ラ・ムーが下関市に出店",
+                "ラ・ムー山の田店が27日、オープンする。関連まとめは2026年6月7日から7月29日。",
+                "2026-08-24",
+            ),
+            "2026-08-27",
+        )
+
+    def test_opening_sale_end_date_is_not_used_as_opening_date(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "ケーズデンキ山口店オープン開店前２００人が列",
+                "家電量販店「ケーズデンキ山口店」が２９日、山口市にオープンした。"
+                "１１月１３日までのオープンセールが始まり、初日の店内はにぎわった。",
+                "2026-10-30",
+            ),
+            "2026-10-29",
+        )
+
+    def test_next_day_after_closure_is_not_closure_date(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "宇部の新店舗",
+                "しまむら宇部店は、店舗移転に伴い閉店しました。"
+                "閉店した翌日(2026年10月26日)から作業が行われました。",
+                "2026-10-30",
+            ),
+            "",
+        )
+
+    def test_future_month_end_closure_date_is_extracted(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "来夏閉店の大丸下関店",
+                "２０２７年８月末で閉店することを発表した大丸下関店。",
+                "2026-11-06",
+            ),
+            "2027-08-31",
+        )
+
+    def test_unrelated_date_without_store_action_is_not_used(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "宇部の店舗ニュース",
+                "関連まとめは2026年6月7日から7月29日。記事を更新しました。",
+                "2026-08-24",
+            ),
+            "",
+        )
+
+    def test_school_one_day_restaurant_is_excluded_from_body(self):
+        self.assertFalse(module.is_store_news(
+            "山口市で学生レストランがオープン",
+            "専門学校の在校生が調理・接客を学ぶ実習として、一日だけレストランを営業しました。",
+        ))
+
+    def test_same_store_event_date_merges_reports_far_apart_in_publication_date(self):
+        a = {
+            "title": "大丸下関店が2027年8月末で閉店へ",
+            "category": ["閉店"],
+            "published_date": "2026-07-01",
+            "event_date": "2027-08-31",
+            "body_excerpt": "下関市の大丸下関店が閉店する。",
+        }
+        b = {
+            "title": "来夏閉店の大丸下関店 会見で語られたこと",
+            "category": ["閉店"],
+            "published_date": "2026-11-06",
+            "event_date": "2027-08-31",
+            "body_excerpt": "大丸下関店は2027年8月末に営業終了する。",
+        }
+        self.assertTrue(module.same_store_news_candidate(a, b))
+
+    def test_same_store_different_event_dates_are_not_merged(self):
+        a = {
+            "title": "大丸下関店が閉店へ",
+            "category": ["閉店"],
+            "published_date": "2026-07-01",
+            "event_date": "2027-08-31",
+            "body_excerpt": "下関市の大丸下関店。",
+        }
+        b = {
+            "title": "大丸下関店が一時休業",
+            "category": ["閉店"],
+            "published_date": "2026-07-02",
+            "event_date": "2026-07-10",
+            "body_excerpt": "下関市の大丸下関店。",
+        }
+        self.assertFalse(module.same_store_news_candidate(a, b))
+
+    def test_different_store_names_at_same_location_are_not_merged(self):
+        a = {"title": "しまむら宇部店が移転", "category": ["移転"],
+             "published_date": "2026-10-28", "body_excerpt": "宇部市"}
+        b = {"title": "バースデイ宇部店がオープン", "category": ["新店・開店"],
+             "published_date": "2026-10-30", "body_excerpt": "宇部市"}
+        self.assertFalse(module.same_store_news_candidate(a, b))
+
+    def test_same_store_news_with_different_headlines_is_merged(self):
+        a = {
+            "title": "【新店】ケーズデンキ山口店がオープン",
+            "url": "https://example.com/news/a",
+            "normalized_url": "https://example.com/news/a",
+            "category": ["新店・開店"], "source_name": "媒体A",
+            "source_priority": 2, "body_excerpt": "山口店が開店しました。",
+        }
+        b = {
+            "title": "ケーズデンキ山口店 新規開店のお知らせ",
+            "url": "https://example.net/news/b",
+            "normalized_url": "https://example.net/news/b",
+            "category": ["新店・開店"], "source_name": "媒体B",
+            "source_priority": 2, "body_excerpt": "山口店が新規開店しました。",
+        }
+        merged = module.merge_candidates([a, b])
+        self.assertEqual(len(merged), 1)
+        self.assertEqual(merged[0]["duplicate_sources_count"], 2)
+
+
+if __name__ == "__main__":
+    unittest.main()
