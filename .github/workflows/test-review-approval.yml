@@ -1,0 +1,49 @@
+name: Review approval safety tests
+
+on:
+  push:
+    branches: [feat/review-checklist-gate]
+  pull_request:
+    branches: [main]
+    paths:
+      - "admin/review.html"
+      - "scripts/publish_approved.py"
+      - "scripts/tests/**"
+      - ".github/workflows/test-review-approval.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review-approval-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Compile publication script
+        run: python -m py_compile scripts/publish_approved.py
+      - name: Run publication safety tests
+        run: python -m unittest discover -s scripts/tests -v
+      - name: Check review UI checklist gate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          page = Path("admin/review.html").read_text(encoding="utf-8")
+          required = [
+              "store_name_verified",
+              "municipality_verified",
+              "published_date_verified",
+              "event_date_verified",
+              "business_status_verified",
+              "source_url_verified",
+          ]
+          missing = [key for key in required if key not in page]
+          assert not missing, f"Missing review checklist keys: {missing}"
+          assert 'button.disabled=done!==REVIEW_CHECKS.length' in page
+          print("All six review checks and disabled-until-complete UI gate are present.")
+          PY

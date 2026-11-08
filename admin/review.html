@@ -25,7 +25,8 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 .field{margin:13px 0}.field label{display:block;font-weight:700;font-size:12px;margin-bottom:5px}.field textarea{min-height:100px;resize:vertical}.field small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
 .source-box,.excerpt{background:#f7f7f3;border-radius:8px;padding:11px;margin:10px 0;font-size:12px;overflow-wrap:anywhere}.source-box a{color:#315b43;display:block;margin:4px 0}
 .flags{display:grid;gap:7px;background:#fff8e9;border:1px solid #eee0c2;padding:11px;border-radius:8px}.flags label{display:flex;gap:8px;align-items:flex-start;font-size:12px}
-.checkline{display:flex;gap:9px;align-items:flex-start;background:#edf2ec;padding:12px;border-radius:8px;margin:14px 0;font-weight:700}.checkline input,.flags input{width:18px;height:18px;flex:none}
+.checkline{display:flex;gap:9px;align-items:flex-start;background:#edf2ec;padding:12px;border-radius:8px;margin:14px 0;font-weight:700}.checkline input,.flags input,.review-check input{width:18px;height:18px;flex:none}
+.review-checks{display:grid;gap:8px;background:#edf2ec;border:1px solid #d8e3d7;padding:12px;border-radius:9px;margin:14px 0}.review-checks-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.review-check{display:flex;gap:9px;align-items:flex-start;font-size:12px;font-weight:600}.review-checks small{color:var(--muted);font-size:11px}.approve:disabled{opacity:.42;cursor:not-allowed}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.actions .approve{grid-column:1/-1;background:#315b43;color:white;min-height:50px}
 .exportbar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.exportbar button{flex:1;min-width:130px}
 .footer-note{font-size:11px;color:var(--muted);margin-top:16px}
@@ -61,6 +62,14 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 "use strict";
 var drafts=[],approvals={description:"人が元記事を確認した記事だけ公開許可する。",approved_ids:[],reviewed_articles:{},instructions:{}};
 var selectedId="",localKey="ylu_review_work_v1";
+var REVIEW_CHECKS=[
+ {key:"store_name_verified",label:"店舗名が元記事・公式情報と一致"},
+ {key:"municipality_verified",label:"店舗所在地（市町名）が一致"},
+ {key:"published_date_verified",label:"記事そのものの公開日を確認"},
+ {key:"event_date_verified",label:"開店・閉店など実際の動作日を確認"},
+ {key:"business_status_verified",label:"現在の営業状態・予定状態を確認"},
+ {key:"source_url_verified",label:"情報元URLを開き、根拠となる記載を確認"}
+];
 var el=function(id){return document.getElementById(id);};
 var esc=function(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});};
 var dateOnly=function(v){var s=String(v||"");var m=s.match(/^(20\d{2}|\d{2})年(\d{1,2})月(\d{1,2})日/);if(m){var y=Number(m[1]);if(y<100)y+=2000;return String(y)+"-"+String(m[2]).padStart(2,"0")+"-"+String(m[3]).padStart(2,"0");}return s.slice(0,10);};
@@ -108,6 +117,7 @@ var id=String(d.id),r=approvals.reviewed_articles[id]||{},sources=Array.isArray(
 var sourceHtml=sources.map(function(s){var u=safeHttpUrl(s.url);return u?'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(s.source_name||"元記事")+'：'+esc(u)+'</a>':'<span>'+esc(s.source_name||"元記事")+'：URL未設定または不正</span>';}).join("");
 var flags=flagsFor(d),cleared=Array.isArray(r.cleared_review_flags)?r.cleared_review_flags:[];
 var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消したものだけチェック）</b>'+flags.map(function(f){return '<label><input type="checkbox" class="clearFlag" value="'+esc(f)+'" '+(cleared.indexOf(f)>=0?"checked":"")+'><span>'+esc(f)+'</span></label>';}).join("")+'</div>':'<p class="sub">自動検出された確認フラグはありません。内容確認は必要です。</p>';
+var reviewChecks=r.review_checks||{};
 var status=statusOf(id);
 var duplicateHtml="";
 if(d.duplicate_review){
@@ -126,27 +136,39 @@ el("detail").innerHTML=
 '<div class="field"><label for="businessStatus">店舗の現在の状態 *</label><select id="businessStatus"><option value="">選択してください</option>'+["開店予定","営業中","閉店予定","閉店済み","移転予定","移転済み","リニューアル予定","リニューアル済み"].map(function(x){return '<option value="'+x+'" '+((r.business_status||"")===x?"selected":"")+'>'+x+'</option>';}).join("")+'</select></div>'+
 '<div class="field"><label for="bodyText">確認済みの説明文</label><textarea id="bodyText" placeholder="元記事で確認できた事実を簡潔に記入">'+esc(r.body||d.body_excerpt||"")+'</textarea><small>推測や未確認情報は書かない。記事本文の長文転載は避ける。</small></div>'+
 duplicateHtml+flagHtml+
-'<label class="checkline"><input type="checkbox" id="sourceChecked" '+(r.reviewer_checked_source===true?"checked":"")+'><span>元記事を開き、店舗名・所在地・日付・現在の状況を確認した *</span></label>'+
-'<div class="actions"><button class="approve" id="approveBtn">確認済みとして承認</button><button class="secondary" id="fixBtn">要修正として保存</button><button class="danger" id="excludeBtn">対象外として保存</button><button class="plain" id="pendingBtn">未確認に戻す</button></div>';
+'<div class="review-checks"><div class="review-checks-head"><b>公開前の照合チェック（全6項目必須）</b><span class="sub" id="reviewCheckCount"></span></div>'+
+REVIEW_CHECKS.map(function(c){return '<label class="review-check"><input type="checkbox" class="reviewCheck" data-check="'+c.key+'" '+(reviewChecks[c.key]===true?"checked":"")+'><span>'+c.label+'</span></label>';}).join("")+
+'<small>各項目を元記事・公式情報と照合してからチェックしてください。6項目すべて完了するまで承認できません。</small></div>'+
+'<div class="actions"><button class="approve" id="approveBtn" disabled>確認済みとして承認</button><button class="secondary" id="fixBtn">要修正として保存</button><button class="danger" id="excludeBtn">対象外として保存</button><button class="plain" id="pendingBtn">未確認に戻す</button></div>';
+Array.prototype.forEach.call(document.querySelectorAll(".reviewCheck"),function(box){box.addEventListener("change",updateApproveButton);});
+updateApproveButton();
 el("approveBtn").addEventListener("click",function(){saveReview("確認済み");});
 el("fixBtn").addEventListener("click",function(){saveReview("要修正");});
 el("excludeBtn").addEventListener("click",function(){if(confirm("この記事を対象外として記録しますか？"))saveReview("対象外");});
 el("pendingBtn").addEventListener("click",function(){saveReview("未確認");});
 }
+function currentReviewChecks(){
+var out={};REVIEW_CHECKS.forEach(function(c){var node=document.querySelector('.reviewCheck[data-check="'+c.key+'"]');out[c.key]=!!(node&&node.checked);});return out;
+}
+function updateApproveButton(){
+var checks=currentReviewChecks(),done=REVIEW_CHECKS.filter(function(c){return checks[c.key]===true;}).length;
+var button=el("approveBtn");if(button)button.disabled=done!==REVIEW_CHECKS.length;
+var count=el("reviewCheckCount");if(count)count.textContent=done+"/"+REVIEW_CHECKS.length+" 完了";
+}
 function saveReview(status){
 var d=drafts.find(function(x){return String(x.id)===selectedId;});if(!d)return;
-var id=String(d.id),headline=el("headline").value.trim(),municipality=el("municipality").value.trim(),publishedDate=el("publishedDate").value,eventDate=el("eventDate").value,businessStatus=el("businessStatus").value,body=el("bodyText").value.trim(),checked=el("sourceChecked").checked;
+var id=String(d.id),headline=el("headline").value.trim(),municipality=el("municipality").value.trim(),publishedDate=el("publishedDate").value,eventDate=el("eventDate").value,businessStatus=el("businessStatus").value,body=el("bodyText").value.trim(),reviewChecks=currentReviewChecks(),checked=REVIEW_CHECKS.every(function(c){return reviewChecks[c.key]===true;});
 var cleared=Array.prototype.map.call(document.querySelectorAll(".clearFlag:checked"),function(x){return x.value;});
 var duplicateResolution=el("duplicateResolution")?el("duplicateResolution").value:"";
 if(status==="確認済み"){
-if(!checked){alert("承認には「元記事を確認した」チェックが必要です。");return;}
+if(!checked){alert("6項目すべての照合チェックが必要です。未確認項目を確認してください。");return;}
 if(!headline||!municipality||!publishedDate||!eventDate||!businessStatus||!d.source_url){alert("タイトル・市町名・記事公開日・店舗の動作日・現在の状態・元記事URLを確認してください。");return;}
 var remaining=flagsFor(d).filter(function(f){return cleared.indexOf(f)<0;});
 if(remaining.length){alert("未解消の確認フラグがあります。解消を確認できた項目だけチェックしてください。");return;}
 if(d.duplicate_review&&duplicateResolution!=="別記事として掲載"){alert("重複候補です。別記事として掲載できると確認した場合だけ承認できます。同一ニュースなら対象外として保存してください。");return;}
 }
 var rec=approvals.reviewed_articles[id]||{};
-rec.review_status=status;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.duplicate_resolution=duplicateResolution;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
+rec.review_status=status;rec.review_checks=reviewChecks;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.duplicate_resolution=duplicateResolution;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
 if(status==="確認済み"){rec.reviewed_at=new Date().toISOString();approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});approvals.approved_ids.push(id);}
 else{delete rec.reviewed_at;approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});}
 approvals.reviewed_articles[id]=rec;saveLocal();renderList();renderDetail();
