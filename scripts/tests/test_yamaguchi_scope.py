@@ -188,6 +188,16 @@ class YamaguchiScopeTests(unittest.TestCase):
             "カフェが新規開店しました。"
         ))
 
+    def test_future_store_event_date_is_treated_as_scheduled(self):
+        status, age = module.get_freshness("2026-11-21", is_event_date=True)
+        self.assertEqual(status, "予定日・要確認")
+        self.assertLess(age, 0)
+
+    def test_future_publication_date_remains_an_anomaly(self):
+        status, age = module.get_freshness("2026-11-21", is_event_date=False)
+        self.assertEqual(status, "未来日付・要確認")
+        self.assertLess(age, 0)
+
     def test_event_date_is_extracted_from_body(self):
         self.assertEqual(
             module.extract_event_date("宇部に新店", "カフェが2026年10月23日にオープンしました。", "2026-11-01"),
