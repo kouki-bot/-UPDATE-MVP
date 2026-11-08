@@ -96,6 +96,37 @@ class StoreDuplicateRegressionTests(unittest.TestCase):
         )
         self.assertFalse(module.same_store_news_candidate(article_a, article_b))
 
+
+    def test_tenant_opening_does_not_use_shopping_mall_renovation_date(self):
+        title = "【防府市】ゆめタウン防府に「地球文化屋」が11月中旬オープン予定"
+        body = (
+            "防府市八王子のゆめタウン防府2階に、専門店「地球文化屋」が11月中旬にオープンする予定です。"
+            "2026年10月15日にリニューアルオープンしたゆめタウン防府に加わる店舗です。"
+        )
+        self.assertEqual(module.extract_event_date(title, body, "2026-11-07"), "")
+        self.assertEqual(module.extract_approximate_event_date_text(title, body), "11月中旬")
+
+    def test_real_daimaru_shimonoseki_articles_are_duplicate_candidates(self):
+        articles = [
+            self.make_item(
+                "2026/11/06 【まとめ】来夏閉店の大丸下関店 最近の話題",
+                "大丸下関店は2027年8月末に営業終了することを発表した。下関市役所で会見した。",
+                "2027-08-31", "下関市",
+            ),
+            self.make_item(
+                "2026/07/03 大丸下関店閉店で利用客から惜しむ声",
+                "2027年8月末で営業を終了することを発表した大丸下関店（山口県下関市）。",
+                "2027-08-31", "下関市",
+            ),
+            self.make_item(
+                "2026/07/01 大丸閉店「下関の象徴が」市民衝撃",
+                "大丸下関店（下関市竹崎町）が2027年8月末で閉店する。",
+                "2027-08-31", "下関市",
+            ),
+        ]
+        self.assertTrue(module.same_store_news_candidate(articles[0], articles[1]))
+        self.assertTrue(module.same_store_news_candidate(articles[0], articles[2]))
+
     def test_duplicate_review_never_removes_or_publishes_candidates(self):
         drafts = [
             {
