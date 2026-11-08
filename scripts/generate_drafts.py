@@ -791,6 +791,16 @@ def duplicate_store_entity(title, body_excerpt=""):
             if len(brand) >= 2:
                 candidates.append(brand)
 
+    # 「にロフトがオープン」など、ブランド名＋動作表現を抽出する。
+    for text in (title_text, body_text):
+        for match in re.finditer(
+            rf"(?:に|で)\\s*([{store_chars}]{{2,12}}?)(?:が|は)(?:新規)?(?:オープン|開店|開業|出店)",
+            text,
+        ):
+            brand = match.group(1).strip()
+            if len(brand) >= 2:
+                candidates.append(brand)
+
     # 「生活雑貨専門店ロフト（東京都）」等は業態語を除いてブランド名を取る。
     for match in re.finditer(
         rf"([{store_chars}]{{2,24}})[（(]東京都",
