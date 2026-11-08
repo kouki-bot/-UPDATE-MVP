@@ -151,7 +151,7 @@ if(remaining.length){alert("未解消の確認フラグがあります。解消�
 if(d.duplicate_review&&duplicateResolution!=="別記事として掲載"){alert("重複候補です。別記事として掲載できると確認した場合だけ承認できます。同一ニュースなら対象外として保存してください。");return;}
 }
 var rec=approvals.reviewed_articles[id]||{};
-rec.review_status=status;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.duplicate_resolution=duplicateResolution;rec.body=body;rec.cleared_review_flags=cleared;rec.field_checks=fieldChecks;rec.reviewer_checked_source=requiredChecks.every(function(k){return fieldChecks[k]===true;});
+rec.review_status=status;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.duplicate_resolution=duplicateResolution;rec.body=body;rec.cleared_review_flags=cleared;if(status==="確認済み")rec.field_checks=fieldChecks;rec.reviewer_checked_source=status==="確認済み"&&requiredChecks.every(function(k){return fieldChecks[k]===true;});
 if(status==="確認済み"){rec.reviewed_at=new Date().toISOString();approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});approvals.approved_ids.push(id);}
 else{delete rec.reviewed_at;approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});}
 approvals.reviewed_articles[id]=rec;saveLocal();renderList();renderDetail();
