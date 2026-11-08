@@ -722,66 +722,86 @@ def duplicate_fingerprint(draft):
 
 
 def duplicate_store_entity(title, body_excerpt=""):
-    """タイトル・本文から重複確認に使える店舗名候補を抽出する。"""
+    """タイトル・本文から重複確認に使う店舗名候補を抽出する。"""
     title_text = unicodedata.normalize("NFKC", clean_text(title))
     body_text = unicodedata.normalize("NFKC", clean_text(body_excerpt))
 
-    # タイトル先頭の公開日時・媒体ラベルを除去
     title_text = re.sub(
-        r"^\\s*20\\d{2}[年/.-]\\d{1,2}[月/.-]\\d{1,2}日?"
-        r"(?:\\s+\\d{1,2}:\\d{2})?\\s*",
+        r"^\s*20\d{2}[年/.-]\d{1,2}[月/.-]\d{1,2}日?"
+        r"(?:\s+\d{1,2}:\d{2})?\s*",
         "",
         title_text,
     )
-    title_text = re.sub(r"【[^】]*】|\\[[^\\]]*\\]", " ", title_text)
+    title_text = re.sub(r"【[^】]*】|\[[^\]]*\]", " ", title_text)
 
-    generic = {
-        "店舗", "専門店", "衣料品店", "飲食店",
-        "小売店", "販売店", "雑貨店",
-    }
     candidates = []
 
     # 「ロフト」オープンなど、動作表現に隣接する引用店舗名
     for match in re.finditer(r"[「『]([^」』]{2,20})[」』]", title_text):
-        following = title_text[match.end():match.end() + 15]
-        preceding = title_text[max(0, match.start() - 10):match.start()]
+        nearby = title_text[max(0, match.start() - 12):match.end() + 18]
         if re.search(
             r"オープン|開店|開業|出店|閉店|移転|リニューアル",
-            following + preceding,
+            nearby,
         ):
             candidates.append(match.group(1))
 
-    # 「大丸下関店」など、店で終わる名称を末尾側から抽出する。
-    # 記事ごとに前置きの語句が異なっても、同じ店舗名の部分候補が一致する。
-    allowed = re.compile(r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]")
+    # 店名の直後に所在地が続く本文表現を優先して抽出
+    store_chars = r"A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&"
+    municipality_pattern = "|".join(
+        re.escape(name) for name in YAMAGUCHI_MUNICIPALITIES
+    )
     for text in (title_text, body_text):
-        for end_match in re.finditer("店", text):
-            end = end_match.end()
-            begin = end - 1
-            while begin > 0 and end - begin < 24 and allowed.fullmatch(text[begin - 1]):
-                begin -= 1
-            token = text[begin:end]
-            for size in range(4, min(12, len(token)) + 1):
-                name = token[-size:]
-                if name not in generic:
-                    candidates.append(name)
+        for match in re.finditer(
+            rf"([{store_chars}]{{2,20}}店)[（(](?:山口県)?(?:{municipality_pattern})",
+            text,
+        ):
+            token = match.group(1)
+            for town in YAMAGUCHI_MUNICIPALITIES:
+                if token.endswith(town + "店"):
+                    token = token[:-(len(town) + 1)]
+                    break
+            if len(token) >= 2:
+                candidates.append(token)
 
-    # 「生活雑貨専門店ロフト（東京都）」など、本文中のブランド表記
+    # 助詞・句読点で区切った短い語句から「○○店」を抽出する。
+    # 文全体を店舗名として扱わず、記事ごとの前置き表現を避ける。
+    separators = r"[、。！？!?（）()\[\]「」『』\s　はがをにでとのへもや]"
+    for text in (title_text, body_text):
+        for segment in re.split(separators, text):
+            segment = segment.strip("・：:／/｜|—―-〜～…")
+            match = re.search(rf"([{store_chars}]{{2,20}}店)$", segment)
+            if not match:
+                continue
+            token = match.group(1)
+            for town in YAMAGUCHI_MUNICIPALITIES:
+                if token.endswith(town + "店"):
+                    token = token[:-(len(town) + 1)]
+                    break
+            if len(token) >= 2:
+                candidates.append(token)
+
+    # 「生活雑貨専門店ロフト（東京都）」等は業態語を除いてブランド名を取る。
     for match in re.finditer(
-        r"([A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24})[（(]東京都",
+        rf"([{store_chars}]{{2,24}})[（(]東京都",
         body_text,
     ):
         token = match.group(1)
-        for size in range(3, min(12, len(token)) + 1):
-            name = token[-size:]
-            if name not in generic:
-                candidates.append(name)
+        token = re.sub(
+            r"^(?:生活雑貨|雑貨|家具|家電|衣料品|紳士服|婦人服|"
+            r"インテリア|スポーツ用品)?専門店",
+            "",
+            token,
+        )
+        token = token.strip()
+        if len(token) >= 2:
+            candidates.append(token)
 
-    # 空白や表記揺れを除き、出現順を保って重複を除去
+    # 記号・空白を正規化し、短すぎる候補や一般語を除外
+    generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
     normalized = []
     for name in candidates:
-        name = re.sub(r"\\s+", "", name).strip("・、。")
-        if len(name) >= 3 and name not in generic and name not in normalized:
+        name = re.sub(r"\s+", "", name).strip("・、。")
+        if len(name) >= 2 and name not in generic and name not in normalized:
             normalized.append(name)
 
     return normalized
