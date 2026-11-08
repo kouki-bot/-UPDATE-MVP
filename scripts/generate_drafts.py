@@ -1,6 +1,7 @@
 import hashlib
 import json
 import re
+import unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
@@ -196,6 +197,12 @@ def is_event_only_content(title, body_excerpt=""):
         "祭り開催", "ワークショップ", "参加者募集", "出店者募集",
         "説明会", "体験会",
     )
+    body_text = clean_text(body_excerpt)
+    # 学校の授業・実習として一日だけ営業するレストランは新規店舗ではない。
+    if re.search(r"(?:専門学校|高校|大学).{0,40}(?:在校生|学生).{0,30}(?:調理|接客).{0,30}(?:レストラン|飲食)", body_text):
+        return True
+    if re.search(r"(?:一日限り|1日限り|一日だけ|1日だけ|一日限定|1日限定).{0,30}(?:営業|開店|レストラン|飲食店)", body_text):
+        return True
     if not any(marker in title_text for marker in event_markers):
         return False
     store_movement = re.search(
@@ -290,6 +297,138 @@ def is_clearly_outside_yamaguchi(title, body_excerpt=""):
     combined = f"{title_text} {location_prefix}"
     return any(re.search(pattern, combined) for pattern in FOREIGN_CITY_STORE_PATTERNS)
 
+def extract_approximate_event_date_text(title, body_excerpt):
+    """店舗名に結び付く「11月中旬」等の曖昧な予定日を記録。日付には変換しない。"""
+    title_text = unicodedata.normalize("NFKC", clean_text(title))
+    body_text = unicodedata.normalize("NFKC", clean_text(body_excerpt))
+    targets = re.findall(r"[「『]([^」』]{2,24})[」』]", title_text)
+    relevant_sentences = [
+        sentence for sentence in re.split(r"(?<=[。！？!?])", body_text)
+        if any(target in sentence for target in targets)
+    ] if targets else []
+    search_text = " ".join(relevant_sentences) if relevant_sentences else body_text
+    pattern = re.compile(r"(?P<date>\d{1,2}月(?:上旬|中旬|下旬))")
+    action = re.compile(r"オープン|開店|開業|出店|閉店|営業終了|移転|リニューアル|営業再開")
+    for sentence in re.split(r"(?<=[。！？!?])", search_text):
+        if not action.search(sentence):
+            continue
+        match = pattern.search(sentence)
+        if match:
+            return match.group("date")
+    return ""
+
+
+def extract_event_date(title, body_excerpt, published_date=""):
+    """店舗の動作語に近接する日付だけを抽出。記事公開日や無関係な日付は転用しない。"""
+    body = unicodedata.normalize("NFKC", clean_text(body_excerpt))
+    title_text = unicodedata.normalize("NFKC", clean_text(title))
+    base = parse_date(published_date)
+    action_words = (
+        "オープン", "開店", "開業", "出店", "閉店", "閉業",
+        "営業終了", "営業を終了", "移転", "リニューアル", "営業再開",
+    )
+    action_re = re.compile(
+        r"オープン(?!セール|場所|情報|記念|キャンペーン)|"
+        r"開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|リニューアル|営業再開"
+    )
+    # タイトルで特定できる店舗名が本文にある場合、その店舗に関係する文を優先する。
+    # 商業施設自体のリニューアル日を、入居テナントの開店日として誤採用しない。
+    title_targets = re.findall(r"[「『]([^」』]{2,24})[」』]", title_text)
+    if title_targets:
+        target_sentences = [
+            sentence for sentence in re.split(r"(?<=[。！？!?])", body)
+            if any(target in sentence for target in title_targets)
+        ]
+        if target_sentences:
+            body = " ".join(target_sentences)
+    # URL内やリンク先の年月日は、本文の店舗動作日と誤認しない。
+    body = re.sub(r"https?://\S+", " ", body)
+
+    def find_action_date(text):
+        patterns = [
+            re.compile(r"(?P<year>20\d{2})年(?P<month>\d{1,2})月(?:(?P<day>\d{1,2})日|(?P<end>末))"),
+            re.compile(r"(?P<month>\d{1,2})月(?P<day>\d{1,2})日"),
+            re.compile(r"(?<!\d)(?P<day>\d{1,2})日"),
+        ]
+        matches = []
+        for pattern_index, pattern in enumerate(patterns):
+            for match in pattern.finditer(text):
+                # 日付と店舗動作語は同じ文の中にある場合だけ関連付ける。
+                separators = "。！？!?\\n"
+                sentence_left = max(
+                    [text.rfind(mark, 0, match.start()) for mark in separators] + [-1]
+                ) + 1
+                following = [
+                    pos for mark in separators
+                    if (pos := text.find(mark, match.end())) >= 0
+                ]
+                sentence_right = min(following) if following else len(text)
+                sentence = text[sentence_left:sentence_right]
+                actions = list(action_re.finditer(sentence))
+                if not actions:
+                    continue
+                local_start = match.start() - sentence_left
+                local_end = match.end() - sentence_left
+                # 「閉店した翌日」の日付は閉店日ではないため採用しない。
+                valid_actions = []
+                for action in actions:
+                    action_start = sentence_left + action.start()
+                    action_end = sentence_left + action.end()
+                    date_start = match.start()
+                    gap = text[min(action_end, date_start):max(action_start, date_start)]
+                    if re.search(r"翌日|翌週|翌月|翌年", gap):
+                        continue
+                    valid_actions.append(action)
+                if not valid_actions:
+                    continue
+                distance = min(
+                    0 if a.start() <= local_start <= a.end() else
+                    min(abs(a.start() - local_start), abs(a.end() - local_end))
+                    for a in valid_actions
+                )
+                year_text = match.groupdict().get("year")
+                month_text = match.groupdict().get("month")
+                day_text = match.groupdict().get("day")
+                is_month_end = bool(match.groupdict().get("end"))
+                try:
+                    if year_text:
+                        year = int(year_text)
+                        month = int(month_text)
+                        if is_month_end:
+                            next_month = datetime(year + (month == 12), month % 12 + 1, 1, tzinfo=JST)
+                            value = (next_month.date() - timedelta(days=1)).isoformat()
+                        else:
+                            value = datetime(year, month, int(day_text), tzinfo=JST).date().isoformat()
+                    elif month_text and day_text:
+                        if not base:
+                            continue
+                        year = base.year
+                        candidate = datetime(year, int(month_text), int(day_text), tzinfo=JST)
+                        if abs((candidate.date() - base.date()).days) > 120:
+                            continue
+                        value = candidate.date().isoformat()
+                    else:
+                        if not base:
+                            continue
+                        candidate = datetime(base.year, base.month, int(match.group("day")), tzinfo=JST)
+                        if abs((candidate.date() - base.date()).days) > 31:
+                            continue
+                        value = candidate.date().isoformat()
+                    matches.append((pattern_index, distance, match.start(), value))
+                except (ValueError, OverflowError):
+                    continue
+        if not matches:
+            return ""
+        matches.sort(key=lambda x: (x[0], x[1], x[2]))
+        return matches[0][3]
+
+    # 店舗名に結び付く曖昧な日付がある場合、別施設の正確な日付を流用しない。
+    if extract_approximate_event_date_text(title_text, body):
+        return ""
+    # 本文の店舗動作日を最優先。タイトルは本文にない場合だけ調べる。
+    return find_action_date(body) or find_action_date(title_text)
+
+
 def convert_candidate(item, method, source_priority):
     title, url = clean_text(item.get("title")), clean_text(item.get("url"))
     if not title or not url or not is_store_news(title, item.get("body_excerpt") or item.get("description", "")):
@@ -311,11 +450,12 @@ def convert_candidate(item, method, source_priority):
     if not isinstance(area, list):
         area = [area] if area else []
     date_value = clean_text(item.get("published_date"))
-    event_date = clean_text(item.get("event_date") or item.get("opening_date"))
+    event_date = extract_event_date(title, body, date_value)
+    event_date_text = extract_approximate_event_date_text(title, body)
     # 記事公開日は取得元の明示情報だけを使用する。タイトル内の日付は店舗動作日かもしれないため流用しない。
     return {
         "title": title, "url": url, "normalized_url": normalize_url(url),
-        "event_date": event_date,
+        "event_date": event_date, "event_date_text": event_date_text,
         "source_name": clean_text(item.get("source_name")), "category": categories,
         "published_date": date_value, "body_excerpt": body,
         "collection_method": method, "category_basis": clean_text(item.get("category_basis")),
@@ -334,13 +474,14 @@ def get_rss_candidates():
     return [x for item in data.get("candidates", [])
             if (x := convert_candidate(item, "RSS", 2))]
 
-def get_freshness(date_value):
+def get_freshness(date_value, is_event_date=False):
     parsed = parse_date(date_value)
     if parsed is None:
         return "日付確認が必要", None
     age = (now_jst().date() - parsed.date()).days
     if age < -1:
-        return "未来日付・要確認", age
+        # 店舗動作日として本文・タイトルから抽出した未来日は、誤日付ではなく予定情報として扱う。
+        return ("予定日・要確認" if is_event_date else "未来日付・要確認"), age
     age = max(age, 0)
     if age <= RECENT_DAYS:
         return "直近30日", age
@@ -376,6 +517,51 @@ def event_terms(item):
     for word in stop_words:
         title = title.replace(word, " ")
     return re.sub(r"\s+", " ", title).strip()
+
+def same_store_news_candidate(a, b):
+    """同じ店舗・同じ動作日を報じる別媒体記事を統合する。"""
+    if not (set(a.get("category", [])) & set(b.get("category", []))):
+        return False
+    names_a = set(duplicate_store_entity(a.get("title", ""), a.get("body_excerpt", "")))
+    names_b = set(duplicate_store_entity(b.get("title", ""), b.get("body_excerpt", "")))
+    if not names_a or not (names_a & names_b):
+        return False
+
+    # 公開日が離れていても、店舗動作日が同一なら同じ案件として扱う。
+    event_a = clean_text(a.get("event_date", "")) or extract_event_date(
+        a.get("title", ""), a.get("body_excerpt", ""), a.get("published_date", "")
+    )
+    event_b = clean_text(b.get("event_date", "")) or extract_event_date(
+        b.get("title", ""), b.get("body_excerpt", ""), b.get("published_date", "")
+    )
+    if event_a and event_b:
+        if event_a != event_b:
+            return False
+    else:
+        date_a = parse_date(a.get("published_date", ""))
+        date_b = parse_date(b.get("published_date", ""))
+        if not date_a or not date_b or abs((date_a.date() - date_b.date()).days) > 21:
+            return False
+
+    # 下書きに市町が確定候補として格納されている場合は、その値を優先する。
+    # 記事本文に会見場所・比較対象など別市町が登場しても、店舗所在地の誤抽出で
+    # 同一店舗の記事が重複判定から漏れないようにする。
+    municipality_a = clean_text(a.get("municipality", ""))
+    municipality_b = clean_text(b.get("municipality", ""))
+    if municipality_a and municipality_b:
+        if municipality_a != municipality_b:
+            return False
+    else:
+        towns_a = set(a.get("municipality_candidates", [])) or set(
+            extract_municipality_candidates(a.get("title", ""), a.get("body_excerpt", ""))
+        )
+        towns_b = set(b.get("municipality_candidates", [])) or set(
+            extract_municipality_candidates(b.get("title", ""), b.get("body_excerpt", ""))
+        )
+        if towns_a and towns_b and not (towns_a & towns_b):
+            return False
+    return True
+
 
 def same_event(a, b):
     """誤統合を避け、明確に同じニュースと判断できる場合だけ統合する。"""
@@ -431,7 +617,7 @@ def merge_candidates(items):
                 normalize_url(s.get("url", ""))
                 for s in old.get("source_urls", [])
             )
-            if normalized in old_urls or same_event(candidate, old):
+            if normalized in old_urls or same_event(candidate, old) or same_store_news_candidate(candidate, old):
                 match_index = index
                 break
         if match_index is None:
@@ -487,7 +673,7 @@ def classify_content_type(title, body_excerpt=''):
     leisure = ['観光農園', 'キャンプ場', '遊園地', '観光施設', 'レジャー', 'テーマパーク', '観光牧場', '果樹園', '体験農園']
     if any(word in text for word in leisure):
         return '観光・レジャー'
-    commercial = ['店', '店舗', 'カフェ', '飲食店', 'レストラン', 'スーパー', 'ショッピング', '商業施設', '家電', '美容室', 'サロン', 'ドラッグストア', 'コンビニ', '書店', 'アパレル', '飲食', 'ピラティス', 'スタジオ', 'フィットネス', 'ジム']
+    commercial = ['店', '店舗', 'カフェ', '飲食店', 'レストラン', 'スーパー', 'ショッピング', '商業施設', '家電', '美容室', 'サロン', 'ドラッグストア', 'コンビニ', '書店', 'アパレル', '衣料', '雑貨', '専門店', '飲食', 'ピラティス', 'スタジオ', 'STUDIO', 'studio', 'フィットネス', 'ジム', '教室', 'スクール', '体操']
     if any(word in text for word in commercial):
         return '店舗・商業施設'
     return 'その他施設・サービス（要確認）'
@@ -507,18 +693,25 @@ def is_in_store_scope(item):
 
 def make_draft(item):
     date_value = item.get("published_date", "")
-    freshness, age = get_freshness(date_value)
+    freshness_basis = item.get("event_date", "") or date_value
+    freshness, age = get_freshness(freshness_basis, is_event_date=bool(item.get("event_date")))
     if freshness == "直近30日":
         note = "直近30日の記事です。掲載前に現在の営業状況を確認してください。"
     elif freshness == "31〜90日前":
         note = "公開から31〜90日経過しています。現在も有効か確認してください。"
     elif freshness == "90日より前":
         note = "90日より前の記事です。新着候補から除外し、必要な場合のみ別途確認してください。"
+    elif freshness == "予定日・要確認":
+        note = "開店・閉店等の予定日です。予定変更・中止の有無を元記事と公式情報で確認してください。"
     elif freshness == "未来日付・要確認":
-        note = "日付が未来になっています。元記事の日付を確認してください。"
+        note = "記事公開日などが未来になっています。元記事の日付を確認してください。"
     else:
         note = "公開日を確認できていません。元記事で確認してください。"
     summary = "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。" + note
+    if not date_value and item.get("event_date"):
+        summary += " 鮮度は記事公開日ではなく、本文から抽出した店舗動作日を基準にしています。"
+    if item.get("event_date_text"):
+        summary += f" 店舗動作日は「{item['event_date_text']}」と記載されていますが、正確な日付は未確認です。"
     if not item.get("body_excerpt"):
         summary += " 元記事の概要を取得できていないため、本文の確認が必要です。"
     url = item["url"]
@@ -542,6 +735,7 @@ def make_draft(item):
         "title": item["title"], "suggested_headline": item["title"],
         "category": item["category"], "priority": get_priority(item["category"]),
         "published_date": date_value, "event_date": clean_text(item.get("event_date")),
+        "event_date_text": clean_text(item.get("event_date_text")),
         "freshness": freshness, "age_days": age,
         "area": item.get("area", []), "area_status": area_status,
         "municipality": municipality, "municipality_candidates": municipality_candidates,
@@ -558,7 +752,7 @@ def make_draft(item):
     }
 
 def sort_key(item):
-    order = {"直近30日": 0, "31〜90日前": 1, "日付確認が必要": 2, "未来日付・要確認": 3, "90日より前": 4}
+    order = {"直近30日": 0, "31〜90日前": 1, "予定日・要確認": 2, "日付確認が必要": 3, "未来日付・要確認": 4, "90日より前": 5}
     date = parse_date(item.get("published_date", ""))
     # Keep newer articles ahead of priority; priority only breaks date ties.
     return (order.get(item.get("freshness", ""), 5),
@@ -580,36 +774,138 @@ def duplicate_fingerprint(draft):
     return title[:100]
 
 
-def duplicate_store_entity(title):
-    """記事タイトルから重複確認に使える固有の店舗名候補を抽出する。"""
-    value = clean_text(title)
-    value = re.sub(r"^\s*20\d{2}[年/.-]\d{1,2}[月/.-]\d{1,2}[^ ]*\s*", "", value)
-    value = re.sub(r"【[^】]*】|\[[^\]]*\]", " ", value)
-    generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
-    matches = re.findall(r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24}?(?:店|スタジオ|専門店)", value)
+def duplicate_store_entity(title, body_excerpt=""):
+    """タイトル・本文から重複確認に使う店舗名候補を抽出する。"""
+    title_text = unicodedata.normalize("NFKC", clean_text(title))
+    body_text = unicodedata.normalize("NFKC", clean_text(body_excerpt))
+
+    title_text = re.sub(
+        r"^\s*20\d{2}[年/.-]\d{1,2}[月/.-]\d{1,2}日?"
+        r"(?:\s+\d{1,2}:\d{2})?\s*",
+        "",
+        title_text,
+    )
+    title_text = re.sub(r"【[^】]*】|\[[^\]]*\]", " ", title_text)
+
     candidates = []
-    for match in matches:
-        name = re.sub(r"^(?:新しい|新たな|おしゃれな|話題の)", "", match)
-        if name not in generic and len(name) >= 4:
-            candidates.append(name)
-    return list(dict.fromkeys(candidates))
+
+    # 「ロフト」オープンなど、動作表現に隣接する引用店舗名
+    for match in re.finditer(r"[「『]([^」』]{2,20})[」』]", title_text):
+        nearby = title_text[max(0, match.start() - 12):match.end() + 18]
+        if re.search(
+            r"オープン|開店|開業|出店|閉店|移転|リニューアル",
+            nearby,
+        ):
+            candidates.append(match.group(1))
+
+    # 店名の直後に所在地が続く本文表現を優先して抽出
+    store_chars = r"A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&"
+    municipality_pattern = "|".join(
+        re.escape(name) for name in YAMAGUCHI_MUNICIPALITIES
+    )
+    for text in (title_text, body_text):
+        for match in re.finditer(
+            rf"([{store_chars}]{{2,20}}店)[（(](?:山口県)?(?:{municipality_pattern})",
+            text,
+        ):
+            token = match.group(1)
+            for town in YAMAGUCHI_MUNICIPALITIES:
+                if token.endswith(town + "店"):
+                    token = token[:-(len(town) + 1)]
+                    break
+            if len(token) >= 2:
+                candidates.append(token)
+
+    # 助詞・句読点で区切った短い語句から「○○店」を抽出する。
+    # 文全体を店舗名として扱わず、記事ごとの前置き表現を避ける。
+    separators = r"[、。！？!?（）()\[\]「」『』\s　はがをにでとのへもや]"
+    for text in (title_text, body_text):
+        for segment in re.split(separators, text):
+            segment = segment.strip("・：:／/｜|—―-〜～…")
+            match = re.search(rf"([{store_chars}]{{2,20}}店)$", segment)
+            if not match:
+                continue
+            token = match.group(1)
+            for town in YAMAGUCHI_MUNICIPALITIES:
+                if token.endswith(town + "店"):
+                    token = token[:-(len(town) + 1)]
+                    break
+            if len(token) >= 2:
+                candidates.append(token)
+
+    # 「生活雑貨専門店ロフトが開店」など、業態語＋ブランド名の見出しを扱う。
+    for text in (title_text, body_text):
+        for match in re.finditer(
+            rf"(?:生活雑貨|雑貨|家具|家電|衣料品|紳士服|婦人服|インテリア|スポーツ用品)?専門店"
+            rf"([{store_chars}]{{2,12}}?)(?=が|は|（|\(|[、。\s　])",
+            text,
+        ):
+            brand = match.group(1).strip()
+            if len(brand) >= 2:
+                candidates.append(brand)
+
+    # 「にロフトがオープン」など、ブランド名＋動作表現を抽出する。
+    for text in (title_text, body_text):
+        for match in re.finditer(
+            rf"(?:に|で)\s*([{store_chars}]{{2,12}}?)(?:が|は)(?:新規)?(?:オープン|開店|開業|出店)",
+            text,
+        ):
+            brand = match.group(1).strip()
+            if len(brand) >= 2:
+                candidates.append(brand)
+
+    # 「生活雑貨専門店ロフト（東京都）」等は業態語を除いてブランド名を取る。
+    for match in re.finditer(
+        rf"([{store_chars}]{{2,24}})[（(]東京都",
+        body_text,
+    ):
+        token = match.group(1)
+        token = re.sub(
+            r"^(?:生活雑貨|雑貨|家具|家電|衣料品|紳士服|婦人服|"
+            r"インテリア|スポーツ用品)?専門店",
+            "",
+            token,
+        )
+        token = token.strip()
+        if len(token) >= 2:
+            candidates.append(token)
+
+    # 文の形が異なる記事でも、本文・見出しに同じ店名が明記されていれば候補に含める。
+    # 「大丸下関店（下関市…）」のような所在地併記を優先し、店名本体を抽出する。
+    for text in (title_text, body_text):
+        for match in re.finditer(
+            rf"([{store_chars}]{{2,20}}店)(?=[（(]|は|が|を|に|で|、|。|\s|$)",
+            text,
+        ):
+            token = match.group(1)
+            # 「来夏閉店の大丸下関店」「発表した大丸下関店」のような
+            # 前置きが店名に混入しないよう、直近の述語・助詞以降を採用する。
+            token = re.split(
+                r"(?:発表した|発表|営業終了する|営業終了|閉店する|閉店|閉館|"
+                r"位置する|所在する|立地する|来夏|今夏|来年|今年|の|を|は|が|で|に)",
+                token,
+            )[-1]
+            for town in YAMAGUCHI_MUNICIPALITIES:
+                if token.endswith(town + "店"):
+                    token = token[:-(len(town) + 1)]
+                    break
+            if len(token) >= 2:
+                candidates.append(token)
+
+    # 記号・空白を正規化し、短すぎる候補や一般語を除外
+    generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
+    normalized = []
+    for name in candidates:
+        name = re.sub(r"\s+", "", name).strip("・、。")
+        if len(name) >= 2 and name not in generic and name not in normalized:
+            normalized.append(name)
+
+    return normalized
 
 
 def same_store_duplicate(a, b):
-    """同じ市町・同じ店舗名・同じ動き・近い掲載日の記事だけ重複候補にする。"""
-    municipality_a = clean_text(a.get("municipality"))
-    municipality_b = clean_text(b.get("municipality"))
-    if not municipality_a or municipality_a != municipality_b:
-        return False
-    if not (set(a.get("category", [])) & set(b.get("category", []))):
-        return False
-    date_a = parse_date(a.get("published_date", ""))
-    date_b = parse_date(b.get("published_date", ""))
-    if not date_a or not date_b or abs((date_a.date() - date_b.date()).days) > 21:
-        return False
-    names_a = set(duplicate_store_entity(a.get("title", "")))
-    names_b = set(duplicate_store_entity(b.get("title", "")))
-    return bool(names_a & names_b)
+    """同じ店舗・同じ動作日・同じ市町の重複候補を検出する。"""
+    return same_store_news_candidate(a, b)
 
 
 def annotate_review_flags(drafts):
@@ -623,10 +919,35 @@ def annotate_review_flags(drafts):
 
     # 見出しの表現が異なる同一店舗ニュースも、店舗名・市町・カテゴリ・日付で保守的に検知する。
     entity_groups = []
-    for index, draft in enumerate(drafts):
-        for other in drafts[index + 1:]:
-            if same_store_duplicate(draft, other):
-                entity_groups.append([draft, other])
+    adjacency = {i: set() for i in range(len(drafts))}
+
+    for i in range(len(drafts)):
+        for j in range(i + 1, len(drafts)):
+            if same_store_duplicate(drafts[i], drafts[j]):
+                adjacency[i].add(j)
+                adjacency[j].add(i)
+
+    visited = set()
+
+    for i in range(len(drafts)):
+        if i in visited or not adjacency[i]:
+            continue
+
+        stack = [i]
+        component = []
+        visited.add(i)
+
+        while stack:
+            current = stack.pop()
+            component.append(drafts[current])
+
+            for neighbor in adjacency[current]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    stack.append(neighbor)
+
+        if len(component) >= 2:
+            entity_groups.append(component)
 
     seen_group_ids = {
         frozenset(x.get("id", "") for x in group)
@@ -699,7 +1020,7 @@ def annotate_review_flags(drafts):
         hold_flags = {
             "情報源URLなし", "本文抜粋なし", "公開日未確認",
             "開店・閉店等の日付未確認", "市町候補が複数",
-            "市町未特定", "未来日付", "重複の可能性・要確認",
+            "市町未特定", "未来日付", "予定情報・要確認", "重複の可能性・要確認",
         }
         if draft.get("freshness") not in {"直近30日", "31〜90日前"}:
             draft["review_bucket"] = "確認待ち"

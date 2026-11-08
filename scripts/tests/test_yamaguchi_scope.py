@@ -114,6 +114,18 @@ class YamaguchiScopeTests(unittest.TestCase):
         }
         self.assertIsNone(module.convert_candidate(item, "RSS", 2))
 
+    def test_apparel_and_general_goods_store_is_classified_as_commercial(self):
+        title = "【防府市】ゆめタウン防府に衣料・雑貨の「地球文化屋」がオープン"
+        body = "衣料・雑貨の専門店がゆめタウン防府2階に出店します。"
+        self.assertEqual(module.classify_content_type(title, body), "店舗・商業施設")
+        self.assertTrue(module.is_in_store_scope({"title": title, "body_excerpt": body}))
+
+    def test_english_named_gymnastics_school_is_classified_as_commercial(self):
+        title = "LUNA STUDIO（シーモール下関）2026年11月21日オープン"
+        body = "子ども向け体操教室がシーモール下関5階に開校します。"
+        self.assertEqual(module.classify_content_type(title, body), "店舗・商業施設")
+        self.assertTrue(module.is_in_store_scope({"title": title, "body_excerpt": body}))
+
     def test_body_only_pilates_opening_is_kept(self):
         item = {
             "title": "宇部・恩田にピラティススタジオ「UNO」 マシン完備で個別ケア提供",
@@ -175,6 +187,121 @@ class YamaguchiScopeTests(unittest.TestCase):
             "宇部市に新しいカフェがオープン、記念イベント開催",
             "カフェが新規開店しました。"
         ))
+
+    def test_future_store_event_date_is_treated_as_scheduled(self):
+        status, age = module.get_freshness("2026-11-21", is_event_date=True)
+        self.assertEqual(status, "予定日・要確認")
+        self.assertLess(age, 0)
+
+    def test_future_publication_date_remains_an_anomaly(self):
+        status, age = module.get_freshness("2026-11-21", is_event_date=False)
+        self.assertEqual(status, "未来日付・要確認")
+        self.assertLess(age, 0)
+
+    def test_event_date_is_extracted_from_body(self):
+        self.assertEqual(
+            module.extract_event_date("宇部に新店", "カフェが2026年10月23日にオープンしました。", "2026-11-01"),
+            "2026-10-23",
+        )
+
+    def test_event_date_prefers_date_near_opening_action(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "ラ・ムーが下関市に出店",
+                "ラ・ムー山の田店が27日、オープンする。関連まとめは2026年6月7日から7月29日。",
+                "2026-08-24",
+            ),
+            "2026-08-27",
+        )
+
+    def test_opening_sale_end_date_is_not_used_as_opening_date(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "ケーズデンキ山口店オープン開店前２００人が列",
+                "家電量販店「ケーズデンキ山口店」が２９日、山口市にオープンした。"
+                "１１月１３日までのオープンセールが始まり、初日の店内はにぎわった。",
+                "2026-10-30",
+            ),
+            "2026-10-29",
+        )
+
+    def test_next_day_after_closure_is_not_closure_date(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "宇部の新店舗",
+                "しまむら宇部店は、店舗移転に伴い閉店しました。"
+                "閉店した翌日(2026年10月26日)から作業が行われました。",
+                "2026-10-30",
+            ),
+            "",
+        )
+
+    def test_future_month_end_closure_date_is_extracted(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "来夏閉店の大丸下関店",
+                "２０２７年８月末で閉店することを発表した大丸下関店。",
+                "2026-11-06",
+            ),
+            "2027-08-31",
+        )
+
+    def test_unrelated_date_without_store_action_is_not_used(self):
+        self.assertEqual(
+            module.extract_event_date(
+                "宇部の店舗ニュース",
+                "関連まとめは2026年6月7日から7月29日。記事を更新しました。",
+                "2026-08-24",
+            ),
+            "",
+        )
+
+    def test_school_one_day_restaurant_is_excluded_from_body(self):
+        self.assertFalse(module.is_store_news(
+            "山口市で学生レストランがオープン",
+            "専門学校の在校生が調理・接客を学ぶ実習として、一日だけレストランを営業しました。",
+        ))
+
+    def test_same_store_event_date_merges_reports_far_apart_in_publication_date(self):
+        a = {
+            "title": "大丸下関店が2027年8月末で閉店へ",
+            "category": ["閉店"],
+            "published_date": "2026-07-01",
+            "event_date": "2027-08-31",
+            "body_excerpt": "下関市の大丸下関店が閉店する。",
+        }
+        b = {
+            "title": "来夏閉店の大丸下関店 会見で語られたこと",
+            "category": ["閉店"],
+            "published_date": "2026-11-06",
+            "event_date": "2027-08-31",
+            "body_excerpt": "大丸下関店は2027年8月末に営業終了する。",
+        }
+        self.assertTrue(module.same_store_news_candidate(a, b))
+
+    def test_same_store_different_event_dates_are_not_merged(self):
+        a = {
+            "title": "大丸下関店が閉店へ",
+            "category": ["閉店"],
+            "published_date": "2026-07-01",
+            "event_date": "2027-08-31",
+            "body_excerpt": "下関市の大丸下関店。",
+        }
+        b = {
+            "title": "大丸下関店が一時休業",
+            "category": ["閉店"],
+            "published_date": "2026-07-02",
+            "event_date": "2026-07-10",
+            "body_excerpt": "下関市の大丸下関店。",
+        }
+        self.assertFalse(module.same_store_news_candidate(a, b))
+
+    def test_different_store_names_at_same_location_are_not_merged(self):
+        a = {"title": "しまむら宇部店が移転", "category": ["移転"],
+             "published_date": "2026-10-28", "body_excerpt": "宇部市"}
+        b = {"title": "バースデイ宇部店がオープン", "category": ["新店・開店"],
+             "published_date": "2026-10-30", "body_excerpt": "宇部市"}
+        self.assertFalse(module.same_store_news_candidate(a, b))
 
     def test_same_store_news_with_different_headlines_is_merged(self):
         a = {

@@ -22,6 +22,21 @@ class Tests(unittest.TestCase):
  def published(self): return json.loads((self.base/"data/published.json").read_text(encoding="utf-8"))
  def test_approved_reviewed_publishes_even_status_unverified(self):
   self.setup(); result=self.run_script(); self.assertEqual(result.returncode,0,result.stderr); self.assertEqual(len(self.published()["articles"]),1); self.assertEqual(self.published()["articles"][0]["municipality"],"山口市"); self.assertEqual(self.published()["articles"][0]["event_date"],"2026-10-30"); self.assertEqual(self.published()["articles"][0]["business_status"],"営業中")
+ def test_future_closure_can_publish_as_planned(self):
+  self.setup(review=self.review(event_date="2027-08-31",business_status="閉店予定"))
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertEqual(self.published()["articles"][0]["business_status"],"閉店予定")
+ def test_future_relocation_can_publish_as_planned(self):
+  self.setup(review=self.review(event_date="2026-12-15",business_status="移転予定"))
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertEqual(self.published()["articles"][0]["business_status"],"移転予定")
+ def test_future_renovation_can_publish_as_planned(self):
+  self.setup(review=self.review(event_date="2026-12-15",business_status="リニューアル予定"))
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertEqual(self.published()["articles"][0]["business_status"],"リニューアル予定")
  def test_lodging_is_blocked_even_if_approved(self):
   self.setup(draft=self.draft(content_type="宿泊施設"))
   self.run_script()
