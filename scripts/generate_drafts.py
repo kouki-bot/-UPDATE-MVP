@@ -867,7 +867,7 @@ def duplicate_store_entity(title, body_excerpt=""):
             # 前置きが店名に混入しないよう、直近の述語・助詞以降を採用する。
             token = re.split(
                 r"(?:発表した|発表|営業終了する|営業終了|閉店する|閉店|閉館|"
-                r"来夏|今夏|来年|今年|の|を|は|が|で|に)",
+                r"位置する|所在する|立地する|来夏|今夏|来年|今年|の|を|は|が|で|に)",
                 token,
             )[-1]
             for town in YAMAGUCHI_MUNICIPALITIES:
