@@ -855,7 +855,22 @@ def duplicate_store_entity(title, body_excerpt=""):
         if len(token) >= 2:
             candidates.append(token)
 
-    # 文の形が異なる記事でも、本文・見出しに同じ店名が明記されていれば候補に含める。\n    for text in (title_text, body_text):\n        for match in re.finditer(r"([A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,20}店)", text):\n            candidates.append(match.group(1))\n\n    # 記号・空白を正規化し、短すぎる候補や一般語を除外
+    # 文の形が異なる記事でも、本文・見出しに同じ店名が明記されていれば候補に含める。
+    # 「大丸下関店（下関市…）」のような所在地併記を優先し、店名本体を抽出する。
+    for text in (title_text, body_text):
+        for match in re.finditer(
+            rf"([{store_chars}]{{2,20}}店)(?=[（(]|は|が|を|に|で|、|。|\s|$)",
+            text,
+        ):
+            token = match.group(1)
+            for town in YAMAGUCHI_MUNICIPALITIES:
+                if token.endswith(town + "店"):
+                    token = token[:-(len(town) + 1)]
+                    break
+            if len(token) >= 2:
+                candidates.append(token)
+
+    # 記号・空白を正規化し、短すぎる候補や一般語を除外
     generic = {"店舗", "専門店", "衣料品店", "飲食店", "小売店", "販売店", "雑貨店"}
     normalized = []
     for name in candidates:
