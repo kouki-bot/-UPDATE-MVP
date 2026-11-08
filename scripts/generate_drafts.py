@@ -474,13 +474,14 @@ def get_rss_candidates():
     return [x for item in data.get("candidates", [])
             if (x := convert_candidate(item, "RSS", 2))]
 
-def get_freshness(date_value):
+def get_freshness(date_value, is_event_date=False):
     parsed = parse_date(date_value)
     if parsed is None:
         return "日付確認が必要", None
     age = (now_jst().date() - parsed.date()).days
     if age < -1:
-        return "未来日付・要確認", age
+        # 店舗動作日として本文・タイトルから抽出した未来日は、誤日付ではなく予定情報として扱う。
+        return ("予定日・要確認" if is_event_date else "未来日付・要確認"), age
     age = max(age, 0)
     if age <= RECENT_DAYS:
         return "直近30日", age
@@ -693,15 +694,17 @@ def is_in_store_scope(item):
 def make_draft(item):
     date_value = item.get("published_date", "")
     freshness_basis = item.get("event_date", "") or date_value
-    freshness, age = get_freshness(freshness_basis)
+    freshness, age = get_freshness(freshness_basis, is_event_date=bool(item.get("event_date")))
     if freshness == "直近30日":
         note = "直近30日の記事です。掲載前に現在の営業状況を確認してください。"
     elif freshness == "31〜90日前":
         note = "公開から31〜90日経過しています。現在も有効か確認してください。"
     elif freshness == "90日より前":
         note = "90日より前の記事です。新着候補から除外し、必要な場合のみ別途確認してください。"
+    elif freshness == "予定日・要確認":
+        note = "開店・閉店等の予定日です。予定変更・中止の有無を元記事と公式情報で確認してください。"
     elif freshness == "未来日付・要確認":
-        note = "日付が未来になっています。元記事の日付を確認してください。"
+        note = "記事公開日などが未来になっています。元記事の日付を確認してください。"
     else:
         note = "公開日を確認できていません。元記事で確認してください。"
     summary = "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。" + note
@@ -749,7 +752,7 @@ def make_draft(item):
     }
 
 def sort_key(item):
-    order = {"直近30日": 0, "31〜90日前": 1, "日付確認が必要": 2, "未来日付・要確認": 3, "90日より前": 4}
+    order = {"直近30日": 0, "31〜90日前": 1, "予定日・要確認": 2, "日付確認が必要": 3, "未来日付・要確認": 4, "90日より前": 5}
     date = parse_date(item.get("published_date", ""))
     # Keep newer articles ahead of priority; priority only breaks date ties.
     return (order.get(item.get("freshness", ""), 5),
@@ -1017,7 +1020,7 @@ def annotate_review_flags(drafts):
         hold_flags = {
             "情報源URLなし", "本文抜粋なし", "公開日未確認",
             "開店・閉店等の日付未確認", "市町候補が複数",
-            "市町未特定", "未来日付", "重複の可能性・要確認",
+            "市町未特定", "未来日付", "予定情報・要確認", "重複の可能性・要確認",
         }
         if draft.get("freshness") not in {"直近30日", "31〜90日前"}:
             draft["review_bucket"] = "確認待ち"
