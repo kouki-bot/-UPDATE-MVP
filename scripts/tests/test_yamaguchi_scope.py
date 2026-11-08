@@ -114,6 +114,18 @@ class YamaguchiScopeTests(unittest.TestCase):
         }
         self.assertIsNone(module.convert_candidate(item, "RSS", 2))
 
+    def test_apparel_and_general_goods_store_is_classified_as_commercial(self):
+        title = "【防府市】ゆめタウン防府に衣料・雑貨の「地球文化屋」がオープン"
+        body = "衣料・雑貨の専門店がゆめタウン防府2階に出店します。"
+        self.assertEqual(module.classify_content_type(title, body), "店舗・商業施設")
+        self.assertTrue(module.is_in_store_scope({"title": title, "body_excerpt": body}))
+
+    def test_english_named_gymnastics_school_is_classified_as_commercial(self):
+        title = "LUNA STUDIO（シーモール下関）2026年11月21日オープン"
+        body = "子ども向け体操教室がシーモール下関5階に開校します。"
+        self.assertEqual(module.classify_content_type(title, body), "店舗・商業施設")
+        self.assertTrue(module.is_in_store_scope({"title": title, "body_excerpt": body}))
+
     def test_body_only_pilates_opening_is_kept(self):
         item = {
             "title": "宇部・恩田にピラティススタジオ「UNO」 マシン完備で個別ケア提供",
