@@ -726,23 +726,14 @@ def duplicate_store_entity(title, body_excerpt=""):
     title_text = unicodedata.normalize("NFKC", clean_text(title))
     body_text = unicodedata.normalize("NFKC", clean_text(body_excerpt))
 
-    # タイトル先頭の公開日時を除去
+    # タイトル先頭の公開日時・媒体ラベルを除去
     title_text = re.sub(
-        r"^\s*20\d{2}[年/.-]\d{1,2}[月/.-]\d{1,2}日?"
-        r"(?:\s+\d{1,2}:\d{2})?\s*",
+        r"^\\s*20\\d{2}[年/.-]\\d{1,2}[月/.-]\\d{1,2}日?"
+        r"(?:\\s+\\d{1,2}:\\d{2})?\\s*",
         "",
         title_text,
     )
-
-    # 媒体ラベル・見出し冒頭の動作表現を除去
-    title_text = re.sub(r"【[^】]*】|\[[^\]]*\]", " ", title_text)
-    title_text = re.sub(
-        r"^\s*(?:(?:来夏|来年|今夏|今月|今週|今秋|今冬)?"
-        r"(?:閉店|開店|移転|閉業|営業終了|リニューアル)"
-        r"(?:予定|へ|の|する|となる)?)+\s*",
-        "",
-        title_text,
-    )
+    title_text = re.sub(r"【[^】]*】|\\[[^\\]]*\\]", " ", title_text)
 
     generic = {
         "店舗", "専門店", "衣料品店", "飲食店",
@@ -750,42 +741,50 @@ def duplicate_store_entity(title, body_excerpt=""):
     }
     candidates = []
 
-    # 「大丸下関店」「ケーズデンキ山口店」など
-    for text in (title_text, body_text):
-        matches = re.findall(
-            r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24}?"
-            r"(?:店|スタジオ|専門店)",
-            text,
-        )
-        for name in matches:
-            name = re.sub(
-                r"^(?:新しい|新たな|おしゃれな|話題の)",
-                "",
-                name,
-            )
-            if name not in generic and len(name) >= 4:
-                candidates.append(name)
-
-    # 「ロフト」オープンなど、かぎ括弧内の店舗名
+    # 「ロフト」オープンなど、動作表現に隣接する引用店舗名
     for match in re.finditer(r"[「『]([^」』]{2,20})[」』]", title_text):
-        following = title_text[match.end():match.end() + 12]
+        following = title_text[match.end():match.end() + 15]
+        preceding = title_text[max(0, match.start() - 10):match.start()]
         if re.search(
             r"オープン|開店|開業|出店|閉店|移転|リニューアル",
-            following,
+            following + preceding,
         ):
-            name = match.group(1)
+            candidates.append(match.group(1))
+
+    # 「大丸下関店」など、店で終わる名称を末尾側から抽出する。
+    # 記事ごとに前置きの語句が異なっても、同じ店舗名の部分候補が一致する。
+    allowed = re.compile(r"[A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]")
+    for text in (title_text, body_text):
+        for end_match in re.finditer("店", text):
+            end = end_match.end()
+            begin = end - 1
+            while begin > 0 and end - begin < 24 and allowed.fullmatch(text[begin - 1]):
+                begin -= 1
+            token = text[begin:end]
+            for size in range(4, min(12, len(token)) + 1):
+                name = token[-size:]
+                if name not in generic:
+                    candidates.append(name)
+
+    # 「生活雑貨専門店ロフト（東京都）」など、本文中のブランド表記
+    for match in re.finditer(
+        r"([A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,24})[（(]東京都",
+        body_text,
+    ):
+        token = match.group(1)
+        for size in range(3, min(12, len(token)) + 1):
+            name = token[-size:]
             if name not in generic:
                 candidates.append(name)
 
-    # ロフト（東京都）のような本文中のブランド表記
-    brands = re.findall(
-        r"([A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&]{2,20})"
-        r"[（(]東京都",
-        body_text,
-    )
-    candidates.extend(brands)
+    # 空白や表記揺れを除き、出現順を保って重複を除去
+    normalized = []
+    for name in candidates:
+        name = re.sub(r"\\s+", "", name).strip("・、。")
+        if len(name) >= 3 and name not in generic and name not in normalized:
+            normalized.append(name)
 
-    return list(dict.fromkeys(candidates))
+    return normalized
 
 
 def same_store_duplicate(a, b):
