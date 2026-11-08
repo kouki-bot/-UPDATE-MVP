@@ -780,6 +780,17 @@ def duplicate_store_entity(title, body_excerpt=""):
             if len(token) >= 2:
                 candidates.append(token)
 
+    # 「生活雑貨専門店ロフトが開店」など、業態語＋ブランド名の見出しを扱う。
+    for text in (title_text, body_text):
+        for match in re.finditer(
+            rf"(?:生活雑貨|雑貨|家具|家電|衣料品|紳士服|婦人服|インテリア|スポーツ用品)?専門店"
+            rf"([{store_chars}]{{2,12}}?)(?=が|は|（|\\(|[、。\\s　])",
+            text,
+        ):
+            brand = match.group(1).strip()
+            if len(brand) >= 2:
+                candidates.append(brand)
+
     # 「生活雑貨専門店ロフト（東京都）」等は業態語を除いてブランド名を取る。
     for match in re.finditer(
         rf"([{store_chars}]{{2,24}})[（(]東京都",
