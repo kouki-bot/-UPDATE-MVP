@@ -52,6 +52,10 @@ def main():
    print(f"公開保留 {aid}: 日付・鮮度の確認が必要"); continue
   if review.get("review_status") != "確認済み":
    print(f"公開保留 {aid}: review_status=確認済み が必要"); continue
+  required_checks=("store_name","municipality","published_date","event_date","business_status","source_url")
+  field_checks=review.get("field_checks") if isinstance(review.get("field_checks"),dict) else {}
+  if any(field_checks.get(key) is not True for key in required_checks):
+   print(f"公開保留 {aid}: 照合チェック6項目が未完了"); continue
   if not review.get("reviewed_at") or review.get("reviewer_checked_source") is not True:
    print(f"公開保留 {aid}: reviewed_at と reviewer_checked_source=true が必要"); continue
   if not valid_date(article.get("published_date")) or not valid_date(str(article.get("event_date",""))[:10]):
