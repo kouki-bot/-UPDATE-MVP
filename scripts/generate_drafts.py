@@ -542,11 +542,23 @@ def same_store_news_candidate(a, b):
         if not date_a or not date_b or abs((date_a.date() - date_b.date()).days) > 21:
             return False
 
-    # 同名チェーンでも別市町なら統合しない。
-    towns_a = set(extract_municipality_candidates(a.get("title", ""), a.get("body_excerpt", "")))
-    towns_b = set(extract_municipality_candidates(b.get("title", ""), b.get("body_excerpt", "")))
-    if towns_a and towns_b and not (towns_a & towns_b):
-        return False
+    # 下書きに市町が確定候補として格納されている場合は、その値を優先する。
+    # 記事本文に会見場所・比較対象など別市町が登場しても、店舗所在地の誤抽出で
+    # 同一店舗の記事が重複判定から漏れないようにする。
+    municipality_a = clean_text(a.get("municipality", ""))
+    municipality_b = clean_text(b.get("municipality", ""))
+    if municipality_a and municipality_b:
+        if municipality_a != municipality_b:
+            return False
+    else:
+        towns_a = set(a.get("municipality_candidates", [])) or set(
+            extract_municipality_candidates(a.get("title", ""), a.get("body_excerpt", ""))
+        )
+        towns_b = set(b.get("municipality_candidates", [])) or set(
+            extract_municipality_candidates(b.get("title", ""), b.get("body_excerpt", ""))
+        )
+        if towns_a and towns_b and not (towns_a & towns_b):
+            return False
     return True
 
 
