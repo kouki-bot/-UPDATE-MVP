@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kouki-bot.github.io/-UPDATE-MVP/sitemap.xml
