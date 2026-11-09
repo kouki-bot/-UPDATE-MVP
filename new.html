@@ -3,78 +3,105 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f6f0">
 <title>新店・開店情報｜山口ローカルUPDATE</title>
-<meta name="description" content="山口県内の新店・開店情報を紹介。公開情報を確認しながら掲載しています。">
+<meta name="description" content="山口県内の新店舗・開店情報を紹介。公式情報などを確認し、公開可能な情報を掲載しています。">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="detail.css">
 <style>
-.page-wrap{max-width:1000px;margin:auto;padding:24px 16px 48px}.page-lead{line-height:1.8;color:#555}
-.notice{padding:14px 16px;margin:18px 0;border-radius:10px;background:#f7f1e8;line-height:1.7}
-.filters{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
-.filters label{display:block;font-weight:700;margin-bottom:6px}.filters input,.filters select{box-sizing:border-box;width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;background:#fff;font:inherit}
-.filter-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.filter-actions button{padding:10px 16px;border:0;border-radius:8px;background:#5d4636;color:#fff;font:inherit;cursor:pointer}.filter-actions .reset{background:#eee;color:#333}
-#result-count{color:#555;font-size:.92rem}.article-list{display:grid;gap:14px}.article-card{border:1px solid #e5e0da;border-radius:12px;padding:18px;background:#fff}
-.article-card h2{font-size:1.15rem;margin:0 0 8px;line-height:1.5}.article-card h2 a{color:inherit;text-decoration:none}.article-meta{font-size:.88rem;color:#666;line-height:1.7;margin:0 0 10px}.article-summary{line-height:1.8;margin:0 0 12px}
-.article-links{display:flex;gap:14px;flex-wrap:wrap;font-size:.92rem}.article-links a{color:#72523d}.empty-state,.load-error{padding:22px;text-align:center;background:#faf8f5;border-radius:10px;line-height:1.8}
-@media(max-width:600px){.filters{grid-template-columns:1fr}.page-wrap{padding:18px 14px 36px}.article-card{padding:15px}}
+.detail-page .filters{display:grid;grid-template-columns:1.5fr 1fr;gap:14px;margin:24px 0 16px;padding:22px;border:1px solid #e4e0d6;border-radius:12px;background:rgba(255,255,255,.78)}
+.detail-page .filters label{display:block;margin-bottom:7px;color:var(--detail-green);font-size:12px;font-weight:800}
+.detail-page .filters input,.detail-page .filters select{box-sizing:border-box;width:100%;min-height:46px;padding:11px 13px;border:1px solid #dedfd5;border-radius:6px;background:#fff;color:var(--detail-ink);font:inherit;font-size:13px}
+.detail-page .filters input:focus,.detail-page .filters select:focus{outline:2px solid #78977c;outline-offset:2px}
+.detail-page .actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 22px}
+.detail-page .actions button{min-height:42px;padding:10px 18px;border:1px solid var(--detail-green);border-radius:3px;background:var(--detail-green);color:#fff;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.detail-page .actions .reset{background:transparent;color:var(--detail-green)}
+.detail-page #result-count{margin-left:auto;color:var(--detail-muted);font-size:12px}
+.detail-page .article-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:22px}
+.detail-page .article-card{min-width:0;padding:24px;border:1px solid #e4e0d6;border-radius:12px;background:rgba(255,255,255,.86);box-shadow:0 12px 30px rgba(47,48,37,.045);transition:transform .2s ease,box-shadow .2s ease}
+.detail-page .article-card:hover{transform:translateY(-3px);box-shadow:0 18px 34px rgba(47,48,37,.09)}
+.detail-page .article-card h3{margin:13px 0 9px;font-size:18px;line-height:1.65;letter-spacing:.02em}
+.detail-page .article-card .summary{margin:0 0 16px;color:#64695f;font-size:13px;line-height:2}
+.detail-page .article-card .meta{display:flex;gap:8px;align-items:baseline;margin:7px 0;color:#72776d;font-size:11px;line-height:1.8}
+.detail-page .article-card .meta strong{flex:0 0 86px;color:var(--detail-green);font-weight:700}
+.detail-page .article-card .links{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid #eeece5}
+.detail-page .article-card .links a{color:var(--detail-green);font-size:12px;font-weight:700;text-decoration:none;border-bottom:1px solid #9eae9d;padding-bottom:3px}
+.detail-page .empty-state,.detail-page .load-error{grid-column:1/-1;padding:28px 20px;border:1px solid #e4e0d6;border-radius:12px;background:rgba(255,255,255,.7);color:var(--detail-muted);text-align:center;line-height:2}
+@media(max-width:760px){.detail-page .filters{grid-template-columns:1fr;padding:17px}.detail-page .article-list{grid-template-columns:1fr;gap:13px}.detail-page .article-card{padding:20px}.detail-page #result-count{width:100%;margin:4px 0 0}}
 </style>
 </head>
-<body>
-<header class="site-header"><div class="header-inner">
-<a class="site-logo" href="index.html">山口ローカルUPDATE</a>
-<nav class="site-nav" aria-label="メインメニュー"><a href="index.html">トップ</a><a href="new.html" aria-current="page">新店・開店</a><a href="closed.html">閉店情報</a></nav>
-</div></header>
-<main class="page-wrap">
+<body class="detail-page">
+<header class="site-header">
+<a class="brand" href="index.html" aria-label="トップページ"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a>
+<nav class="header-nav" aria-label="メインメニュー"><a href="index.html">トップ</a><a href="new.html" aria-current="page">新店情報</a><a href="closed.html">閉店情報</a><a href="listing.html">掲載依頼</a><a href="contact.html">お問い合わせ</a></nav>
+</header>
+<main>
+<section class="detail-hero"><div class="container">
+<span class="eyebrow">NEW OPENING</span>
 <h1>新店・開店情報</h1>
-<p class="page-lead">山口県内の新しいお店・施設の情報を掲載しています。公開情報をもとに確認し、未確認の情報は掲載しません。</p>
-<div class="notice"><strong>掲載について</strong><br>開店日や所在地などは、記事内の情報源もあわせてご確認ください。未確認の候補はこのページには表示されません。</div>
+<p>山口県内に新しくオープンするお店や、開店したお店の情報を紹介します。公式発表などで確認できた情報から掲載しています。</p>
+</div></section>
+<section class="section"><div class="container">
+<div class="section-head"><div><h2>新店・開店情報一覧</h2><p>開店日や所在地など、確認できた情報を掲載しています。</p></div></div>
+<div class="notice"><strong>掲載情報について</strong><p>開店日・所在地・営業状況は変更される場合があります。お出かけ前に店舗や施設の公式情報もあわせてご確認ください。未確認の情報は掲載しません。</p></div>
 <section aria-label="情報を検索">
 <div class="filters">
 <div><label for="keyword">キーワード</label><input id="keyword" type="search" placeholder="店名・地域・内容で検索"></div>
-<div><label for="area">地域</label><select id="area">
-<option value="">すべての地域</option><option>山口市</option><option>宇部市</option><option>山陽小野田市</option><option>下関市</option><option>防府市</option><option>周南市</option><option>岩国市</option><option>萩市</option><option>その他</option>
-</select></div></div>
-<div class="filter-actions"><button id="search-button" type="button">検索</button><button id="reset-button" class="reset" type="button">リセット</button><span id="result-count" aria-live="polite">情報を読み込んでいます…</span></div>
+<div><label for="area">地域</label><select id="area"><option value="">すべての地域</option><option>山口市</option><option>宇部市</option><option>山陽小野田市</option><option>下関市</option><option>防府市</option><option>周南市</option><option>岩国市</option><option>萩市</option><option>その他</option></select></div>
+</div>
+<div class="actions"><button id="search-button" type="button">検索する</button><button id="reset-button" class="reset" type="button">条件をリセット</button><span id="result-count" aria-live="polite">情報を読み込んでいます…</span></div>
 </section>
-<section id="article-list" class="article-list" aria-live="polite"><p class="empty-state">公開情報を読み込んでいます…</p></section>
+<div class="article-list" id="published-new-stores" aria-live="polite"><p class="empty-state">公開中の新店・開店情報を読み込んでいます…</p></div>
+<div class="notice"><strong>新しいお店の情報をお持ちの方へ</strong><p>山口県内の開店情報をお寄せください。公式発表や確認できる情報源とあわせてお知らせいただけると、確認がスムーズです。</p><a class="btn" href="contact.html">情報を提供する</a></div>
+<div class="notice"><strong>閉店・移転情報はこちら</strong><p>閉店・移転・リニューアルなどの情報も掲載しています。</p><a class="btn" href="closed.html">閉店情報を見る</a></div>
+</div></section>
 </main>
-<footer class="site-footer"><p>山口ローカルUPDATE｜掲載情報は公開情報をもとに確認しています。</p></footer>
+<footer class="footer"><div class="container"><div class="footer-links"><a href="index.html">トップ</a><a href="new.html">新店情報</a><a href="closed.html">閉店情報</a><a href="listing.html">掲載依頼</a><a href="contact.html">お問い合わせ</a></div><small>© 2026 山口ローカルUPDATE</small></div></footer>
 <script>
-(() => {
-const list=document.getElementById('article-list'), keywordInput=document.getElementById('keyword'), areaSelect=document.getElementById('area'), count=document.getElementById('result-count');
+(async function(){
+const container=document.getElementById('published-new-stores');
+const keywordInput=document.getElementById('keyword'),areaSelect=document.getElementById('area'),count=document.getElementById('result-count');
 let articles=[];
+const txt=v=>String(v??'');
 const categories=['新店・開店','新店','開店','新施設・地域の動き','新店舗'];
-const text=(o,keys)=>{for(const k of keys)if(typeof o[k]==='string'&&o[k].trim())return o[k].trim();return '';};
-const categoryText=o=>Array.isArray(o.category)?o.category.join(' '):text(o,['category','type','genre']);
-const isLodging=o=>o&&((o.content_type==='宿泊施設')||/ホテル|旅館|宿泊施設|民宿|民泊|ゲストハウス|ペンション|コテージ|簡易宿所|東横イン/.test([text(o,['title','name']),text(o,['content_type'])].join(' ')));
-const safeUrl=value=>{if(typeof value!=='string'||!value.trim())return '';try{const u=new URL(value,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch(e){return '';}};
-const areaOf=o=>{const s=[text(o,['municipality','city']),Array.isArray(o.area)?o.area.join(' '):text(o,['area','location','address']),text(o,['title','name']),text(o,['summary','description','body'])].join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(a=>s.includes(a))||'その他';};
-const link=(href,label)=>{const url=safeUrl(href);if(!url)return null;const a=document.createElement('a');a.href=url;a.textContent=label;a.target='_blank';a.rel='noopener noreferrer';return a;};
+const categoryList=a=>Array.isArray(a.category)?a.category.map(String):(typeof a.category==='string'?[a.category]:[]);
+const categoryText=a=>categoryList(a).join('・');
+const isNew=a=>categoryList(a).some(c=>categories.includes(c));
+const isLodging=a=>a&&((a.content_type==='宿泊施設')||/ホテル|旅館|宿泊施設|民宿|民泊|ゲストハウス|ペンション|コテージ|簡易宿所|東横イン/.test(txt(a.title)+' '+txt(a.content_type)));
+const safeURL=v=>{try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:'';}catch(e){return '';}};
+const areaOf=a=>{const s=[a.municipality,a.city,Array.isArray(a.area)?a.area.join(' '):a.area,a.location,a.address,a.title,a.summary].map(txt).join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(x=>s.includes(x))||'その他';};
+function addMeta(card,label,value){if(!value)return;const p=document.createElement('p');p.className='meta';const strong=document.createElement('strong');strong.textContent=label;const span=document.createElement('span');span.textContent=txt(value);p.append(strong,span);card.appendChild(p);}
 function render(){
-const kw=keywordInput.value.trim().toLowerCase(), area=areaSelect.value;
-const rows=articles.filter(o=>{const s=[text(o,['title','name']),text(o,['area','city','location','address']),text(o,['summary','description','body']),categoryText(o)].join(' ').toLowerCase();return (!kw||s.includes(kw))&&(!area||areaOf(o)===area);});
-list.replaceChildren();count.textContent=rows.length+'件の情報';
-if(!rows.length){const p=document.createElement('p');p.className='empty-state';p.textContent=articles.length?'条件に合う情報はありません。キーワードや地域を変えて検索してください。':'現在、掲載できる新店・開店情報はありません。情報が確認でき次第、掲載します。';list.appendChild(p);return;}
-rows.forEach(o=>{
+const kw=keywordInput.value.trim().toLocaleLowerCase('ja'),area=areaSelect.value;
+const rows=articles.filter(a=>{const searchable=[a.title,a.name,a.area,a.municipality,a.city,a.location,a.address,a.summary,a.draft_summary,a.business_status,categoryText(a)].map(txt).join(' ').toLocaleLowerCase('ja');return (!kw||searchable.includes(kw))&&(!area||areaOf(a)===area);});
+container.replaceChildren();count.textContent=rows.length+'件の情報';
+if(!rows.length){const p=document.createElement('p');p.className='empty-state';p.textContent=articles.length?'条件に合う情報はありません。検索条件を変えてください。':'現在、公開中の新店・開店情報はありません。確認できた情報から順次掲載します。';container.appendChild(p);return;}
+rows.forEach(a=>{
 const card=document.createElement('article');card.className='article-card';
-const h=document.createElement('h2'), title=text(o,['title','name']), detail=text(o,['detail_url','page_url','article_url','url']), titleA=link(detail,title);
-if(titleA)h.appendChild(titleA);else h.textContent=title;card.appendChild(h);
-const meta=[categoryText(o),(text(o,['municipality','city'])||(Array.isArray(o.area)?o.area.join('・'):text(o,['area','location','address']))),text(o,['event_date','opening_date','business_status','published_date','date','published_at','updated_at'])].filter(Boolean);
-if(meta.length){const p=document.createElement('p');p.className='article-meta';p.textContent=meta.join(' ｜ ');card.appendChild(p);}
-const summary=text(o,['summary','description','body','content']);if(summary){const p=document.createElement('p');p.className='article-summary';p.textContent=summary;card.appendChild(p);}
-const links=document.createElement('div');links.className='article-links';
-const src=link(text(o,['source_url','source','official_url','reference_url']),'情報源を確認する'), det=link(detail,'詳細を見る');
-if(src)links.appendChild(src);if(det)links.appendChild(det);if(links.childNodes.length)card.appendChild(links);list.appendChild(card);
+const tag=document.createElement('span');tag.className='badge';tag.textContent='NEW OPEN';card.appendChild(tag);
+const h=document.createElement('h3');h.textContent=txt(a.title||a.name||'店舗情報');card.appendChild(h);
+const summary=document.createElement('p');summary.className='summary';summary.textContent=txt(a.summary||a.draft_summary||a.description||'詳細は情報源をご確認ください。');card.appendChild(summary);
+addMeta(card,'地域',a.municipality||a.city||a.area||a.location||areaOf(a));
+addMeta(card,'開店日',a.event_date||a.opening_date||'日付確認中');
+addMeta(card,'記事公開日',a.published_date||'未確認');
+addMeta(card,'営業状況',a.business_status||'確認済み情報');
+addMeta(card,'情報源',a.source_name||'公式・報道情報');
+const links=document.createElement('div');links.className='links';
+const source=safeURL(a.source_url||a.official_url||a.reference_url);
+if(source){const link=document.createElement('a');link.href=source;link.target='_blank';link.rel='noopener noreferrer';link.textContent='情報源を確認する ↗';links.appendChild(link);}
+if(links.childNodes.length)card.appendChild(links);
+container.appendChild(card);
 });
 }
 document.getElementById('search-button').addEventListener('click',render);
 document.getElementById('reset-button').addEventListener('click',()=>{keywordInput.value='';areaSelect.value='';render();});
-keywordInput.addEventListener('keydown',e=>{if(e.key==='Enter')render();});areaSelect.addEventListener('change',render);
-fetch('data/published.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{
-const rows=Array.isArray(data)?data:(Array.isArray(data.articles)?data.articles:[]);
-articles=rows.filter(o=>o&&(o.status==='公開'||o.status==='公開済み')&&!isLodging(o)&&text(o,['title','name'])&&categories.some(c=>categoryText(o).includes(c))).slice(0,100);render();
-}).catch(()=>{count.textContent='読み込みエラー';list.replaceChildren();const p=document.createElement('p');p.className='load-error';p.textContent='情報を読み込めませんでした。時間をおいて再読み込みしてください。';list.appendChild(p);});
+keywordInput.addEventListener('keydown',e=>{if(e.key==='Enter')render();});
+areaSelect.addEventListener('change',render);
+try{
+const response=await fetch('data/published.json',{cache:'no-store'});if(!response.ok)throw new Error('公開データの読み込みに失敗');
+const data=await response.json();const rows=Array.isArray(data.articles)?data.articles:(Array.isArray(data)?data:[]);
+articles=rows.filter(a=>a&&(a.status==='公開'||a.status==='公開済み')&&!isLodging(a)&&a.title&&isNew(a)).slice(0,100);render();
+}catch(e){count.textContent='読み込みエラー';container.replaceChildren();const p=document.createElement('p');p.className='load-error';p.textContent='情報を読み込めませんでした。時間をおいて再読み込みしてください。';container.appendChild(p);}
 })();
 </script>
-</body>
-</html>
+</body></html>
