@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#f7f6f0">
+<meta name="theme-color" content="#f7f6f0">
 <title>新店・開店情報｜山口ローカルUPDATE</title>
 <meta name="description" content="山口県内の新店舗・開店情報を紹介。公式情報などを確認し、公開可能な情報を掲載しています。">
 <link rel="stylesheet" href="index.css">
@@ -26,7 +27,7 @@
 </div></section>
 <section class="section"><div class="container">
 <div class="section-head"><div><h2>新店・開店情報一覧</h2><p>開店日や所在地など、確認できた情報を掲載しています。</p></div></div>
-<div class="notice"><strong>掲載情報について</strong><p>開店日・所在地・営業状況は変更される場合があります。お出かけ前に店舗や施設の公式情報もあわせてご確認ください。未確認の情報は掲載しません。</p></div>
+<div class="notice"><div><strong>掲載情報について</strong><p>開店日・所在地・営業状況は変更される場合があります。お出かけ前に公式情報もご確認ください。未確認の情報は掲載しません。</p></div></div>
 <section aria-label="情報を検索">
 <div class="filters">
 <div><label for="keyword">キーワード</label><input id="keyword" type="search" placeholder="店名・地域・内容で検索"></div>
@@ -35,8 +36,8 @@
 <div class="actions"><button id="search-button" type="button">検索する</button><button id="reset-button" class="reset" type="button">条件をリセット</button><span id="result-count" aria-live="polite">情報を読み込んでいます…</span></div>
 </section>
 <div class="article-list" id="published-new-stores" aria-live="polite"><p class="empty-state">公開中の新店・開店情報を読み込んでいます…</p></div>
-<div class="notice"><strong>新しいお店の情報をお持ちの方へ</strong><p>山口県内の開店情報をお寄せください。公式発表や確認できる情報源とあわせてお知らせいただけると、確認がスムーズです。</p><a class="btn" href="contact.html">情報を提供する</a></div>
-<div class="notice"><strong>閉店・移転情報はこちら</strong><p>閉店・移転・リニューアルなどの情報も掲載しています。</p><a class="btn" href="closed.html">閉店情報を見る</a></div>
+<div class="notice"><div><strong>新しいお店の情報をお持ちの方へ</strong><p>山口県内の開店情報を、確認できる情報源とあわせてお寄せください。</p></div><a class="btn" href="contact.html">情報を提供する</a></div>
+<div class="notice"><div><strong>閉店・移転情報も掲載しています</strong><p>街のお店の変化をあわせてご確認いただけます。</p></div><a class="btn" href="closed.html">閉店情報を見る</a></div>
 </div></section>
 </main>
 <footer class="footer"><div class="container"><div class="footer-links"><a href="index.html">トップ</a><a href="new.html">新店情報</a><a href="closed.html">閉店情報</a><a href="listing.html">掲載依頼</a><a href="contact.html">お問い合わせ</a></div><small>© 2026 山口ローカルUPDATE</small></div></footer>
@@ -66,9 +67,8 @@ const h=document.createElement('h3');h.textContent=txt(a.title||a.name||'店舗�
 const summary=document.createElement('p');summary.className='summary';summary.textContent=txt(a.summary||a.draft_summary||a.description||'詳細は情報源をご確認ください。');card.appendChild(summary);
 addMeta(card,'地域',a.municipality||a.city||a.area||a.location||areaOf(a));
 addMeta(card,'開店日',a.event_date||a.opening_date||'日付確認中');
-addMeta(card,'記事公開日',a.published_date||'未確認');
-addMeta(card,'営業状況',a.business_status||'確認済み情報');
-addMeta(card,'情報源',a.source_name||'公式・報道情報');
+if(a.published_date)addMeta(card,'掲載日',a.published_date);
+if(a.business_status)addMeta(card,'営業状況',a.business_status);
 const links=document.createElement('div');links.className='links';
 const source=safeURL(a.source_url||a.official_url||a.reference_url);
 if(source){const link=document.createElement('a');link.href=source;link.target='_blank';link.rel='noopener noreferrer';link.textContent='情報源を確認する ↗';links.appendChild(link);}
