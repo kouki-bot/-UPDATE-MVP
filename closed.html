@@ -53,6 +53,11 @@ const isLodging=a=>a&&((a.content_type==='宿泊施設')||/ホテル|旅館|宿�
 const badge=a=>{const c=cats(a);if(c.includes('閉店')||c.includes('閉店・営業終了'))return '閉店情報';if(c.includes('移転'))return '移転情報';if(c.includes('リニューアル'))return 'リニューアル';if(c.includes('長期休業'))return '長期休業';return '営業情報';};
 const safeURL=v=>{try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:'';}catch(e){return '';}};
 const areaOf=a=>{const s=[a.area,a.municipality,a.city,a.location,a.address,a.title,a.summary].map(txt).join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(x=>s.includes(x))||'その他';};
+
+function articleShareId(value){let hash=0;for(let i=0;i<value.length;i++){hash=((hash<<5)-hash)+value.charCodeAt(i);hash|=0;}return "story-"+Math.abs(hash).toString(36);}
+function addShareTools(card,title,date){const id=articleShareId(String(title)+"|"+String(date||""));card.id=id;const url=window.location.origin+window.location.pathname+"#"+id;const box=document.createElement("div");box.className="article-share";box.setAttribute("aria-label","この記事を共有");const label=document.createElement("span");label.textContent="SHARE";box.appendChild(label);const button=document.createElement("button");button.type="button";button.className="share-native";button.dataset.shareTitle=title;button.dataset.shareUrl=url;button.textContent="共有";box.appendChild(button);const line=document.createElement("a");line.href="https://line.me/R/msg/text/?"+encodeURIComponent(title+" "+url);line.target="_blank";line.rel="noopener noreferrer";line.textContent="LINE";box.appendChild(line);const x=document.createElement("a");x.href="https://twitter.com/intent/tweet?text="+encodeURIComponent(title+"｜山口ローカルUPDATE")+"&url="+encodeURIComponent(url);x.target="_blank";x.rel="noopener noreferrer";x.textContent="X";box.appendChild(x);const copy=document.createElement("button");copy.type="button";copy.className="share-copy";copy.dataset.copyUrl=url;copy.textContent="URLコピー";box.appendChild(copy);card.appendChild(box);}
+async function copyShareUrl(url,button){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(url);}else{const area=document.createElement("textarea");area.value=url;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove();}const old=button.textContent;button.textContent="コピーしました";setTimeout(()=>button.textContent=old,1600);}catch(e){window.prompt("URLをコピーしてください",url);}}
+
 function render(){
 const kw=keywordInput.value.trim().toLowerCase(),area=areaSelect.value,kind=kindSelect.value;
 const rows=articles.filter(a=>{const search=[a.title,a.area,a.municipality,a.city,a.location,a.address,a.summary,a.draft_summary,a.source_name,...cats(a)].map(txt).join(' ').toLowerCase();return (!kw||search.includes(kw))&&(!area||areaOf(a)===area)&&(!kind||cats(a).some(c=>c.includes(kind)));});
@@ -66,9 +71,11 @@ const summary=document.createElement('p');summary.className='summary';summary.te
 const fields=[['地域',a.area||a.municipality||a.city||'地域確認中'],['閉店・移転日',a.event_date||'日付確認中'],['掲載日',a.published_date],['現在の状態',a.business_status]];
 fields.forEach(([label,value])=>{if(!value)return;const p=document.createElement('p');p.className='meta';const strong=document.createElement('strong');strong.textContent=label;const span=document.createElement('span');span.textContent=txt(value);p.append(strong,span);card.appendChild(p);});
 const source=safeURL(a.source_url||a.official_url||a.reference_url);if(source){const links=document.createElement('div');links.className='links';const l=document.createElement('a');l.href=source;l.target='_blank';l.rel='noopener noreferrer';l.textContent='情報源を確認する ↗';links.appendChild(l);card.appendChild(links);}
+addShareTools(card,txt(a.title||'店舗情報'),a.event_date||a.published_date);
 container.appendChild(card);
 });
 }
+container.addEventListener('click',async event=>{const copy=event.target.closest('[data-copy-url]');if(copy){await copyShareUrl(copy.dataset.copyUrl,copy);return;}const share=event.target.closest('[data-share-title]');if(share){const data={title:share.dataset.shareTitle,text:'山口ローカルUPDATEの記事',url:share.dataset.shareUrl};if(navigator.share){try{await navigator.share(data);}catch(e){if(e.name!=='AbortError')await copyShareUrl(data.url,share);}}else{await copyShareUrl(data.url,share);}}});
 document.getElementById('search-button').addEventListener('click',render);
 document.getElementById('reset-button').addEventListener('click',()=>{keywordInput.value='';areaSelect.value='';kindSelect.value='';render();});
 keywordInput.addEventListener('keydown',e=>{if(e.key==='Enter')render();});areaSelect.addEventListener('change',render);kindSelect.addEventListener('change',render);
