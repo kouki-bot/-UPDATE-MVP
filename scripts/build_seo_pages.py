@@ -38,7 +38,7 @@ def main():
             continue
         keep.add(slug + ".html")
         title = str(a.get("title", "山口のお店情報")).strip()
-        municipality = str(a.get("municipality") or (a.get("area") or ["山口県"])[0])
+        area = a.get("area") or ["山口県"]\n        if isinstance(area, str): area = [area]\n        municipality = str(a.get("municipality") or area[0])
         category = "・".join(cats if isinstance(cats, list) else [str(cats)])
         summary = str(a.get("body") or a.get("body_excerpt") or a.get("draft_summary") or "詳細は情報提供元をご確認ください。").strip()
         source_name = str(a.get("source_name") or "情報提供元")
