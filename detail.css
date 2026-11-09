@@ -62,3 +62,52 @@
  .detail-page .section-head{align-items:flex-start;flex-direction:column}
  .detail-page .notice{padding:18px}
 }
+
+
+/* Shared editorial layout for opening and closing pages */
+.detail-page{font-family:var(--sans);background:radial-gradient(ellipse at 5% 12%,rgba(220,229,211,.5),transparent 28rem),radial-gradient(ellipse at 100% 45%,rgba(238,218,197,.22),transparent 30rem),var(--paper);color:var(--ink)}
+.detail-page .site-header{width:min(1200px,calc(100% - 48px));min-height:88px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:24px;border-bottom:1px solid var(--line)}
+.detail-page .brand{display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none}
+.detail-page .brand-mark{font-family:var(--serif);font-size:34px;font-weight:700;letter-spacing:-3px;line-height:1}
+.detail-page .brand-mark span{color:var(--orange)}
+.detail-page .brand-name{font-size:9px;font-weight:800;letter-spacing:1.3px;line-height:1.5}
+.detail-page .header-nav{display:flex;align-items:center;gap:clamp(12px,2vw,28px);font-size:11px;font-weight:700}
+.detail-page .header-nav a{color:var(--ink);text-decoration:none;transition:color .2s}
+.detail-page .header-nav a:hover{color:var(--orange)}
+.detail-page .detail-hero{position:relative;overflow:hidden;background:linear-gradient(115deg,rgba(32,41,31,.94),rgba(53,91,69,.87)),radial-gradient(circle at 80% 20%,rgba(233,134,85,.5),transparent 25rem);color:#fff;padding:76px 0 82px}
+.detail-page .detail-hero .container,.detail-page .section .container{width:min(1100px,calc(100% - 48px));margin-inline:auto}
+.detail-page .detail-hero .eyebrow{color:#dce5d3;font-family:var(--serif);letter-spacing:2px}
+.detail-page .detail-hero h1{margin:0;font-size:clamp(32px,5vw,52px);line-height:1.35;letter-spacing:.04em}
+.detail-page .detail-hero p{max-width:680px;margin:18px 0 0;color:rgba(255,255,255,.82);font-size:13px;line-height:2.1}
+.detail-page .section{padding:58px 0 86px}
+.detail-page .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin:0 0 26px}
+.detail-page .section-head h2{margin:0;font-size:clamp(23px,3.2vw,34px);line-height:1.5;letter-spacing:.03em}
+.detail-page .section-head p{margin:8px 0 0;color:var(--muted);font-size:12px}
+.detail-page .notice{margin:20px 0;padding:20px 22px;border:1px solid #e4e0d6;border-left:3px solid var(--orange);border-radius:8px;background:rgba(255,254,250,.8);color:var(--ink);font-size:12px;line-height:2}
+.detail-page .notice p{margin:5px 0 0;color:#656b60}
+.detail-page .filters{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:14px;margin:24px 0 16px;padding:22px;border:1px solid #e4e0d6;border-radius:12px;background:rgba(255,255,255,.82)}
+.detail-page .filters label{display:block;margin-bottom:7px;color:var(--green);font-size:12px;font-weight:700}
+.detail-page .filters input,.detail-page .filters select{box-sizing:border-box;width:100%;min-height:46px;padding:11px 13px;border:1px solid #dedfd5;border-radius:6px;background:#fff;color:var(--ink);font:inherit;font-size:13px}
+.detail-page .actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 22px}
+.detail-page .actions button{min-height:42px;padding:10px 18px;border:1px solid var(--green);border-radius:4px;background:var(--green);color:#fff;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.detail-page .actions .reset{background:transparent;color:var(--green)}
+.detail-page #result-count{margin-left:auto;color:var(--muted);font-size:12px}
+.detail-page .article-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:22px 0 36px}
+.detail-page .article-card{min-width:0;padding:24px;border:1px solid #e4e0d6;border-radius:12px;background:rgba(255,254,250,.88);box-shadow:0 10px 28px rgba(34,46,33,.045);transition:transform .2s ease,box-shadow .2s ease}
+.detail-page .article-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(34,46,33,.085)}
+.detail-page .article-card h2,.detail-page .article-card h3{margin:13px 0 9px;color:var(--ink);font-size:18px;line-height:1.65;letter-spacing:.02em}
+.detail-page .badge{display:inline-block;padding:5px 11px;border-radius:3px;background:var(--green-light);color:var(--green);font-size:10px;font-weight:800;letter-spacing:.06em}
+.detail-page .summary{margin:0 0 15px;color:#646b61;font-size:13px;line-height:2}
+.detail-page .meta{display:flex;gap:8px;align-items:baseline;margin:7px 0;color:var(--muted);font-size:11px;line-height:1.8}
+.detail-page .meta strong{flex:0 0 92px;color:var(--green);font-weight:700}
+.detail-page .links{display:flex;gap:16px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid #eeece5}
+.detail-page .links a{color:var(--green);font-size:12px;font-weight:700;text-decoration:none;border-bottom:1px solid #9eae9d;padding-bottom:3px}
+.detail-page .empty-state,.detail-page .load-error{grid-column:1/-1;padding:38px 20px;border:1px dashed #d7d9ce;border-radius:10px;background:rgba(255,254,250,.7);color:var(--muted);text-align:center;line-height:2}
+.detail-page .footer{padding:42px 16px 24px;border-top:1px solid var(--line);text-align:center;color:var(--muted);font-size:11px}
+.detail-page .footer .container{width:min(1100px,100%);margin:auto}
+.detail-page .footer-links{display:flex;justify-content:center;flex-wrap:wrap;gap:22px;margin:0 0 18px}
+.detail-page .footer-links a{color:var(--ink);text-decoration:none}
+.detail-page .footer small{color:#969a90;font-size:9px;letter-spacing:1px}
+.detail-page .btn{display:inline-block;margin-top:12px;padding:10px 17px;border:1px solid var(--green);border-radius:4px;background:var(--green);color:white;font-size:12px;font-weight:700;text-decoration:none}
+@media(max-width:760px){.detail-page .site-header{width:calc(100% - 32px);min-height:75px}.detail-page .brand-mark{font-size:29px}.detail-page .brand-name{font-size:8px}.detail-page .header-nav{gap:11px;font-size:9px}.detail-page .detail-hero{padding:55px 0 60px}.detail-page .detail-hero .container,.detail-page .section .container{width:calc(100% - 32px)}.detail-page .section{padding:42px 0 60px}.detail-page .filters{grid-template-columns:1fr;padding:16px}.detail-page .article-list{grid-template-columns:1fr;gap:13px}.detail-page .article-card{padding:20px}.detail-page #result-count{width:100%;margin:4px 0 0}}
+@media(max-width:420px){.detail-page .header-nav{gap:8px;font-size:8px}.detail-page .brand{gap:7px}.detail-page .brand-name{letter-spacing:.7px}}
