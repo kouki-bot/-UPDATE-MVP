@@ -1363,3 +1363,15 @@ button {
 .article-share button:hover,.article-share a:hover{border-color:#355b45;background:#355b45;color:#fff}
 .article-share button:focus-visible,.article-share a:focus-visible{outline:2px solid #e98655;outline-offset:2px}
 @media(max-width:420px){.article-share{gap:6px}.article-share button,.article-share a{min-height:34px;padding:6px 11px;font-size:11px}}
+
+
+/* Prominent listing and information contribution CTA */
+.about-section{border:1px solid #dce2d7;border-radius:14px;box-shadow:0 12px 34px rgba(32,41,31,.045)}
+.about-section .section-kicker{margin:0 0 10px;color:#7a8376;font-size:10px;font-weight:800;letter-spacing:1.8px}
+.about-content h2{max-width:600px;color:#203b2d}
+.about-actions{display:flex;align-items:center;flex-wrap:wrap;gap:18px;margin-top:24px}
+.about-button{display:inline-flex;align-items:center;justify-content:center;gap:22px;min-height:48px;padding:12px 20px;border:1px solid var(--green);border-radius:4px;background:var(--green);color:#fff;font-size:12px;font-weight:800;transition:background .2s,transform .2s}
+.about-button:hover{background:#294a37;transform:translateY(-2px)}
+.about-button span{font-size:17px}
+.about-secondary{color:var(--green);font-size:11px;font-weight:800;border-bottom:1px solid #9baa98;padding-bottom:4px}
+@media(max-width:800px){.about-section{margin:0 auto 64px}.about-actions{gap:14px}.about-button{min-height:46px}}
