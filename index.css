@@ -1355,3 +1355,11 @@ button {
  .about-section{padding:29px 20px}
  .site-footer{padding-top:36px}
 }
+
+/* Per-article sharing */
+.article-share{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-top:13px;padding-top:12px;border-top:1px solid rgba(110,125,105,.18)}
+.article-share>span{margin-right:3px;color:#8a9185;font-family:var(--serif);font-size:9px;letter-spacing:1.2px}
+.article-share button,.article-share a{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:5px 10px;border:1px solid #d8ded4;border-radius:4px;background:#fff;color:#355b45;font:inherit;font-size:10px;font-weight:700;text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.article-share button:hover,.article-share a:hover{border-color:#355b45;background:#355b45;color:#fff}
+.article-share button:focus-visible,.article-share a:focus-visible{outline:2px solid #e98655;outline-offset:2px}
+@media(max-width:420px){.article-share{gap:6px}.article-share button,.article-share a{min-height:34px;padding:6px 11px;font-size:11px}}
