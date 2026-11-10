@@ -32,6 +32,9 @@ jobs:
       - name: Run publication safety tests
         run: python -m unittest discover -s scripts/tests -v
 
+      - name: Summarize collection health and enforce review-only status
+        run: python scripts/collection_report.py
+
       - name: Validate all collected candidates remain unpublished
         run: |
           python - <<'PY'
