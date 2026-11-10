@@ -19,7 +19,7 @@ button{font:inherit;cursor:pointer;border:0;border-radius:7px;padding:11px 14px;
 .layout{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(0,1.4fr);gap:14px;align-items:start}
 .list,.detail{background:white;border:1px solid var(--line);border-radius:11px;overflow:hidden}.list-head,.detail-head{padding:14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}.list-items{max-height:70vh;overflow:auto}
 .item{display:block;width:100%;text-align:left;background:white;border-radius:0;border-bottom:1px solid var(--line);padding:13px 14px;color:var(--ink)}.item.active{background:#edf2ec;box-shadow:inset 3px 0 var(--green)}.item-title{font-weight:700;font-size:13px;display:block;line-height:1.5}.item-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px;color:var(--muted);font-size:11px}
-.pill{display:inline-block;border-radius:99px;padding:2px 8px;background:#eee;color:#4d554d;font-size:10px}.pill.ok{background:#e4efe5;color:#28583a}.pill.fix{background:#fff0d9;color:#825718}.pill.out{background:#f6e7e5;color:#93433d}.pill.change{background:#f8e8dc;color:#914516}.change-alert{background:#fff4e8;border:1px solid #edcfad;border-left:4px solid #bd7131;border-radius:9px;padding:12px;margin:12px 0}.change-alert b{display:block;color:#80451c;margin-bottom:5px}.change-alert p{margin:4px 0;font-size:12px}
+.pill{display:inline-block;border-radius:99px;padding:2px 8px;background:#eee;color:#4d554d;font-size:10px}.pill.ok{background:#e4efe5;color:#28583a}.pill.fix{background:#fff0d9;color:#825718}.pill.out{background:#f6e7e5;color:#93433d}.pill.change{background:#f8e8dc;color:#914516}.change-alert{background:#fff4e8;border:1px solid #edcfad;border-left:4px solid #bd7131;border-radius:9px;padding:12px;margin:12px 0}.change-alert b{display:block;color:#80451c;margin-bottom:5px}.change-alert p{margin:4px 0;font-size:12px}.change-review-row{background:#fff;border:1px solid #eadbc9;border-radius:8px;padding:10px;margin:10px 0}.change-review-row select,.change-review-row textarea{width:100%;border:1px solid #d8d9d0;border-radius:6px;padding:9px;font:inherit;background:#fff;margin:5px 0}.change-review-row textarea{min-height:58px}.change-review-row button{width:100%;background:#315b43;color:#fff;margin-top:5px}.change-history{font-size:11px;color:#59635a;background:#f5f6f2;padding:7px;border-radius:6px;margin-top:6px}.change-history li{margin:3px 0}
 .detail-body{padding:16px}.empty{padding:35px 18px;text-align:center;color:var(--muted)}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;color:var(--muted)}
 .field{margin:13px 0}.field label{display:block;font-weight:700;font-size:12px;margin-bottom:5px}.field textarea{min-height:100px;resize:vertical}.field small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
@@ -79,6 +79,14 @@ function saveLocal(){try{localStorage.setItem(localKey,JSON.stringify(approvals)
 function loadLocal(){try{var raw=localStorage.getItem(localKey);if(raw){var x=JSON.parse(raw);if(x&&Array.isArray(x.approved_ids)&&x.reviewed_articles)approvals=x;}}catch(e){}}
 function flagsFor(d){return Array.isArray(d.review_flags)?d.review_flags:[];}
 function changeCandidates(d){return Array.isArray(d.published_change_candidates)?d.published_change_candidates:[];}
+function changeReviewKey(x){return String(x.published_id||"unknown")+"::"+String(x.possible_change||"status");}
+function changeReviewRecord(id,key){var rec=approvals.reviewed_articles[id]||{},all=rec.published_change_reviews||{};return all[key]||{history:[]};}
+function renderChangeReviewRow(x,index,id){
+var key=changeReviewKey(x),record=changeReviewRecord(id,key),history=Array.isArray(record.history)?record.history:[];
+var latest=history.length?history[history.length-1]:null;
+var historyHtml=history.length?'<div class="change-history"><b>記録履歴</b><ul>'+history.slice(-3).reverse().map(function(h){return '<li>'+esc(h.outcome)+' ／ '+esc(String(h.recorded_at||"").replace("T"," ").slice(0,16))+(h.note?' — '+esc(h.note):"")+'</li>';}).join("")+'</ul></div>':'<div class="sub">まだ確認結果は記録されていません。</div>';
+return '<div class="change-review-row" data-change-row="'+index+'"><b>確認結果を記録</b><select class="change-outcome" data-index="'+index+'"><option value="">結果を選択してください</option>'+["状態更新済み","誤検出","追加調査"].map(function(v){return '<option value="'+v+'" '+(latest&&latest.outcome===v?"selected":"")+'>'+v+'</option>';}).join("")+'</select><textarea class="change-note" data-index="'+index+'" placeholder="確認した公式情報・状態・追加調査の内容など">'+esc(latest&&latest.note||"")+'</textarea><button type="button" class="save-change-review" data-index="'+index+'">この結果を記録</button>'+historyHtml+'</div>';
+}
 function updateStats(){
 var counts={"未確認":0,"確認済み":0,"要修正":0,"対象外":0};
 drafts.forEach(function(d){var s=statusOf(String(d.id));counts[counts.hasOwnProperty(s)?s:"未確認"]++;});
@@ -121,7 +129,7 @@ var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消した�
 var reviewChecks=r.review_checks||{};
 var status=statusOf(id);
 var changeRows=changeCandidates(d);
-var changeHtml=changeRows.length?'<div class="change-alert"><b>要確認：掲載済み店舗の状態変化候補</b>'+changeRows.map(function(x){var oldUrl=safeHttpUrl(x.published_source_url);return '<p><strong>'+esc(x.possible_change||"状態変化")+'</strong> — 掲載済み：'+esc(x.published_title||("ID "+(x.published_id||"不明")))+'（'+esc(x.published_status||"状態記載なし")+'）'+(oldUrl?'　<a href="'+esc(oldUrl)+'" target="_blank" rel="noopener noreferrer">掲載済み店舗の元情報を開く</a>':'')+'</p>';}).join("")+'<p>自動では記事を変更しません。掲載済み店舗の元情報と、下の新着候補の元記事を開き、店舗名・所在地・日付・公式情報を照合してください。</p></div>':"";
+var changeHtml=changeRows.length?'<div class="change-alert"><b>要確認：掲載済み店舗の状態変化候補</b>'+changeRows.map(function(x,index){var oldUrl=safeHttpUrl(x.published_source_url);return '<p><strong>'+esc(x.possible_change||"状態変化")+'</strong> — 掲載済み：'+esc(x.published_title||("ID "+(x.published_id||"不明")))+'（'+esc(x.published_status||"状態記載なし")+'）'+(oldUrl?'　<a href="'+esc(oldUrl)+'" target="_blank" rel="noopener noreferrer">掲載済み店舗の元情報を開く</a>':'')+'</p>'+renderChangeReviewRow(x,index,id);}).join("")+'<p>「状態更新済み」は確認結果の記録であり、公開記事は自動変更されません。公式情報などの根拠をメモし、必要な記事修正は別途承認してください。</p></div>':"";
 var duplicateHtml="";
 if(d.duplicate_review){
 var related=(d.duplicate_candidate_ids||[]).map(function(otherId){var other=drafts.find(function(x){return String(x.id)===String(otherId);});return other?'<li>'+esc(other.title)+'</li>':'<li>関連候補ID：'+esc(otherId)+'</li>';}).join("");
@@ -149,6 +157,23 @@ el("approveBtn").addEventListener("click",function(){saveReview("確認済み");
 el("fixBtn").addEventListener("click",function(){saveReview("要修正");});
 el("excludeBtn").addEventListener("click",function(){if(confirm("この記事を対象外として記録しますか？"))saveReview("対象外");});
 el("pendingBtn").addEventListener("click",function(){saveReview("未確認");});
+Array.prototype.forEach.call(document.querySelectorAll(".save-change-review"),function(button){button.addEventListener("click",function(){saveChangeReview(button.getAttribute("data-index"));});});
+}
+function saveChangeReview(index){
+var d=drafts.find(function(x){return String(x.id)===selectedId;});if(!d)return;
+var row=changeCandidates(d)[Number(index)];if(!row)return;
+var select=document.querySelector('.change-outcome[data-index="'+index+'"]');
+var noteNode=document.querySelector('.change-note[data-index="'+index+'"]');
+var outcome=select?select.value:"",note=noteNode?noteNode.value.trim():"";
+if(!outcome){alert("確認結果を選択してください。");return;}
+if((outcome==="状態更新済み"||outcome==="追加調査")&&!note){alert("根拠や次に確認する内容をメモしてください。");return;}
+var id=String(d.id),rec=approvals.reviewed_articles[id]||{},all=rec.published_change_reviews||{},key=changeReviewKey(row),entry=all[key]||{history:[]};
+if(!Array.isArray(entry.history))entry.history=[];
+entry.history.push({outcome:outcome,note:note,recorded_at:new Date().toISOString(),published_id:row.published_id||"",possible_change:row.possible_change||""});
+entry.published_title=row.published_title||"";
+entry.published_source_url=safeHttpUrl(row.published_source_url);
+all[key]=entry;rec.published_change_reviews=all;approvals.reviewed_articles[id]=rec;
+saveLocal();renderDetail();
 }
 function currentReviewChecks(){
 var out={};REVIEW_CHECKS.forEach(function(c){var node=document.querySelector('.reviewCheck[data-check="'+c.key+'"]');out[c.key]=!!(node&&node.checked);});return out;
