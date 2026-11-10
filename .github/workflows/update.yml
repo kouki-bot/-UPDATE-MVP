@@ -35,6 +35,9 @@ jobs:
       - name: Summarize collection health and enforce review-only status
         run: python scripts/collection_report.py
 
+      - name: Check candidate source links
+        run: python scripts/check_source_links.py
+
       - name: Validate all collected candidates remain unpublished
         run: |
           python - <<'PY'
