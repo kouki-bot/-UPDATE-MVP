@@ -19,7 +19,7 @@ class PublishedStoreChangeTests(unittest.TestCase):
 
     def test_closure_for_published_opening_is_flagged(self):
         published = [self.article("old", "カフェ青空店が宇部市にオープン", ["新店・開店"])]
-        drafts = [self.article("new", "宇部市のカフェ青空店が閉店", ["閉店"],
+        drafts = [self.article("new", "カフェ青空店が閉店", ["閉店"],
                                url="https://example.jp/b", status="未確認・公開禁止")]
         alerts = module.find_status_changes(drafts, published)
         self.assertEqual(len(alerts), 1)
