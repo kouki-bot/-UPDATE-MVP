@@ -29,6 +29,27 @@ jobs:
         run: python -m py_compile scripts/publish_approved.py
       - name: Run publication safety tests
         run: python -m unittest discover -s scripts/tests -v
+      - name: Check review UI JavaScript syntax and change outcome history
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          page = Path("admin/review.html").read_text(encoding="utf-8")
+          scripts = page.split("<script>", 1)
+          assert len(scripts) == 2, "Review page script tag missing"
+          js = scripts[1].split("</script>", 1)[0]
+          Path("/tmp/review-ui.js").write_text(js, encoding="utf-8")
+          required = [
+              "function saveChangeReview(index)",
+              '"状態更新済み","誤検出","追加調査"',
+              "published_change_reviews",
+              "recorded_at",
+              "save-change-review",
+          ]
+          missing = [item for item in required if item not in js]
+          assert not missing, f"Missing change-review features: {missing}"
+          print("Change outcome recording and history fields are present.")
+          PY
+          node --check /tmp/review-ui.js
       - name: Check review UI checklist gate
         run: |
           python - <<'PY'
