@@ -2,6 +2,7 @@
 """Flag possible status changes to already published stores; never edits public records."""
 import json
 import os
+import re
 import sys
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
