@@ -60,7 +60,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <script>
 (function(){
 "use strict";
-var drafts=[],approvals={description:"人が元記事を確認した記事だけ公開許可する。",approved_ids:[],reviewed_articles:{},instructions:{}};
+var drafts=[],approvals={description:"人が元記事を確認した記事だけ公開許可する。",approved_ids:[],reviewed_articles:{},published_change_reviews:{},instructions:{}};
 var selectedId="",localKey="ylu_review_work_v1";
 var REVIEW_CHECKS=[
  {key:"store_name_verified",label:"店舗名が元記事・公式情報と一致"},
@@ -76,11 +76,11 @@ var dateOnly=function(v){var s=String(v||"");var m=s.match(/^(20\d{2}|\d{2})年(
 var safeHttpUrl=function(v){try{var u=new URL(String(v||""));return (u.protocol==="https:"||u.protocol==="http:")?u.href:"";}catch(e){return "";}};
 var statusOf=function(id){var r=approvals.reviewed_articles[id]||{};return r.review_status|| (approvals.approved_ids.indexOf(id)>=0?"確認済み":"未確認");};
 function saveLocal(){try{localStorage.setItem(localKey,JSON.stringify(approvals));}catch(e){alert("端末内に保存できませんでした。JSONを書き出して保存してください。");}}
-function loadLocal(){try{var raw=localStorage.getItem(localKey);if(raw){var x=JSON.parse(raw);if(x&&Array.isArray(x.approved_ids)&&x.reviewed_articles)approvals=x;}}catch(e){}}
+function normalizeChangeReviewStore(data){data.published_change_reviews=data.published_change_reviews||{};data.reviewed_articles=data.reviewed_articles||{};Object.keys(data.reviewed_articles).forEach(function(id){var old=data.reviewed_articles[id]&&data.reviewed_articles[id].published_change_reviews;if(!old)return;Object.keys(old).forEach(function(key){var current=data.published_change_reviews[key]||{history:[]},incoming=old[key]||{history:[]};current.history=(Array.isArray(current.history)?current.history:[]).concat(Array.isArray(incoming.history)?incoming.history:[]);current.history.sort(function(a,b){return String(a.recorded_at||"").localeCompare(String(b.recorded_at||""));});if(!current.published_title)current.published_title=incoming.published_title||"";if(!current.published_source_url)current.published_source_url=incoming.published_source_url||"";data.published_change_reviews[key]=current;});delete data.reviewed_articles[id].published_change_reviews;});return data;}\nfunction loadLocal(){try{var raw=localStorage.getItem(localKey);if(raw){var x=JSON.parse(raw);if(x&&Array.isArray(x.approved_ids)&&x.reviewed_articles)approvals=normalizeChangeReviewStore(x);}}catch(e){}}
 function flagsFor(d){return Array.isArray(d.review_flags)?d.review_flags:[];}
 function changeCandidates(d){return Array.isArray(d.published_change_candidates)?d.published_change_candidates:[];}
-function changeReviewKey(x){return String(x.published_id||"unknown")+"::"+String(x.possible_change||"status");}
-function changeReviewRecord(id,key){var rec=approvals.reviewed_articles[id]||{},all=rec.published_change_reviews||{};return all[key]||{history:[]};}
+function changeReviewKey(x){var identity=x.published_id?String(x.published_id):[x.published_title||"unknown",x.municipality||""].join("@");return identity+"::"+String(x.possible_change||"status");}
+function changeReviewRecord(id,key){var all=approvals.published_change_reviews||{};return all[key]||{history:[]};}
 function renderChangeReviewRow(x,index,id){
 var key=changeReviewKey(x),record=changeReviewRecord(id,key),history=Array.isArray(record.history)?record.history:[];
 var latest=history.length?history[history.length-1]:null;
@@ -167,12 +167,12 @@ var noteNode=document.querySelector('.change-note[data-index="'+index+'"]');
 var outcome=select?select.value:"",note=noteNode?noteNode.value.trim():"";
 if(!outcome){alert("確認結果を選択してください。");return;}
 if((outcome==="状態更新済み"||outcome==="追加調査")&&!note){alert("根拠や次に確認する内容をメモしてください。");return;}
-var id=String(d.id),rec=approvals.reviewed_articles[id]||{},all=rec.published_change_reviews||{},key=changeReviewKey(row),entry=all[key]||{history:[]};
+var all=approvals.published_change_reviews||(approvals.published_change_reviews={}),key=changeReviewKey(row),entry=all[key]||{history:[]};
 if(!Array.isArray(entry.history))entry.history=[];
 entry.history.push({outcome:outcome,note:note,recorded_at:new Date().toISOString(),published_id:row.published_id||"",possible_change:row.possible_change||""});
 entry.published_title=row.published_title||"";
 entry.published_source_url=safeHttpUrl(row.published_source_url);
-all[key]=entry;rec.published_change_reviews=all;approvals.reviewed_articles[id]=rec;
+all[key]=entry;entry.municipality=row.municipality||d.municipality||"";approvals.published_change_reviews=all;
 saveLocal();renderDetail();
 }
 function currentReviewChecks(){
@@ -211,7 +211,7 @@ alert("JSONを書き出しました。非公開リポジトリ kouki-bot/yamaguc
 el("draftImportBtn").addEventListener("click",function(){el("draftFile").click();});
 el("draftFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.drafts))throw new Error("drafts配列がありません");var unsafe=x.drafts.filter(function(d){return d.status!=="未確認・公開禁止";});if(unsafe.length)throw new Error("未確認・公開禁止ではない候補が含まれています");drafts=x.drafts;populateAreas();renderList();if(drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}else{selectedId="";renderDetail();}alert("候補データ "+drafts.length+"件を読み込みました。");}catch(err){alert("候補データを読み込めませんでした："+err.message);} };reader.readAsText(f);e.target.value="";});
 el("importBtn").addEventListener("click",function(){el("importFile").click();});
-el("importFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.approved_ids)||!x.reviewed_articles)throw new Error("形式が違います");approvals=x;saveLocal();renderList();renderDetail();alert("承認データを読み込みました。");}catch(err){alert("JSONを読み込めませんでした。ファイル形式を確認してください。");}};reader.readAsText(f);e.target.value="";});
+approvals=normalizeChangeReviewStore(x);saveLocal();renderList();renderDetail();alert("承認データを読み込みました。");
 el("resetBtn").addEventListener("click",function(){if(!confirm("この端末に保存した編集内容を破棄し、リポジトリの承認データを再読み込みしますか？"))return;localStorage.removeItem(localKey);location.reload();});
 ["search","statusFilter","areaFilter","priorityFilter"].forEach(function(id){el(id).addEventListener("input",renderList);el(id).addEventListener("change",renderList);});
 function init(){
