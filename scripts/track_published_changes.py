@@ -30,9 +30,17 @@ def normalize_url(value):
 
 
 def store_names(article):
-    return set(duplicate_store_entity(
-        article.get("title", ""), article.get("body_excerpt", "") or article.get("body", "")
-    ))
+    title = article.get("title", "")
+    body = article.get("body_excerpt", "") or article.get("body", "")
+    names = set(duplicate_store_entity(title, body))
+    # Explicitly quoted shop names are a reliable additional signal when headlines
+    # include municipality or editorial wording that the generic extractor retains.
+    for text in (title, body):
+        for match in re.findall(r"[「『]([^」』]{2,30})[」』]", str(text or "")):
+            value = re.sub(r"\\s+", "", match).strip("・、。")
+            if len(value) >= 2:
+                names.add(value)
+    return names
 
 
 def municipality(article):
