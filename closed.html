@@ -110,7 +110,7 @@ rows.forEach(a=>{
 const card=document.createElement('article');card.className='article-card';
 const tag=document.createElement('span');tag.className='badge';tag.textContent=badge(a);card.appendChild(tag);
 const h=document.createElement('h2');h.textContent=txt(a.title);card.appendChild(h);
-const summary=document.createElement('p');summary.className='summary';summary.textContent=txt(a.summary||a.draft_summary||'詳細は情報源をご確認ください。');card.appendChild(summary);
+const summary=document.createElement('p');summary.className='summary';summary.textContent=txt(a.summary||a.body||a.draft_summary||'詳細は情報源をご確認ください。');card.appendChild(summary);
 const fields=[['地域',a.area||a.municipality||a.city||'地域確認中'],['閉店・移転日',a.event_date||'日付確認中'],['掲載日',a.published_date],['現在の状態',a.business_status]];
 fields.forEach(([label,value])=>{if(!value)return;const p=document.createElement('p');p.className='meta';const strong=document.createElement('strong');strong.textContent=label;const span=document.createElement('span');span.textContent=txt(value);p.append(strong,span);card.appendChild(p);});
 const source=safeURL(a.source_url||a.official_url||a.reference_url);if(source){const links=document.createElement('div');links.className='links';const l=document.createElement('a');l.href=source;l.target='_blank';l.rel='noopener noreferrer';l.textContent='情報源を確認する ↗';links.appendChild(l);card.appendChild(links);}
