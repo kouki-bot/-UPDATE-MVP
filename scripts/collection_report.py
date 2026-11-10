@@ -78,6 +78,18 @@ def audit_duplicates(official_candidates, rss_candidates):
         output.append({"match": match_type, "entries": entries})
     return output
 
+def count_draft_values(rows, field, allow_lists=False):
+    counts = {}
+    for row in rows:
+        value = row.get(field)
+        values = value if allow_lists and isinstance(value, list) else [value]
+        for item in values:
+            label = str(item or "").strip()
+            if label:
+                counts[label] = counts.get(label, 0) + 1
+    return dict(sorted(counts.items(), key=lambda item: (-item[1], item[0])))
+
+
 def build_report(official, rss, drafts):
     official_sources = official.get("sources", [])
     rss_sources = rss.get("sources", [])
@@ -97,6 +109,11 @@ def build_report(official, rss, drafts):
     flagged = sum(1 for x in draft_rows if x.get("review_flags"))
     unpublished = sum(1 for x in draft_rows if x.get("status") == "未確認・公開禁止")
     unsafe = len(draft_rows) - unpublished
+    category_counts = count_draft_values(draft_rows, "category", allow_lists=True)
+    municipality_counts = count_draft_values(draft_rows, "municipality_group")
+    freshness_counts = count_draft_values(draft_rows, "freshness")
+    review_bucket_counts = count_draft_values(draft_rows, "review_bucket")
+    content_type_counts = count_draft_values(draft_rows, "content_type")
 
     now = datetime.now(timezone.utc)
     freshness = {}
@@ -125,6 +142,11 @@ def build_report(official, rss, drafts):
         "rss_items_read": rss_items,
         "rss_candidates": len(rss_candidates),
         "draft_count": len(draft_rows),
+        "category_counts": category_counts,
+        "municipality_counts": municipality_counts,
+        "freshness_counts": freshness_counts,
+        "review_bucket_counts": review_bucket_counts,
+        "content_type_counts": content_type_counts,
         "flagged_drafts": flagged,
         "review_only_drafts": unpublished,
         "unsafe_drafts": unsafe,
@@ -161,6 +183,18 @@ def render_markdown(report):
         f"| 重複候補（要確認） | {report['duplicate_count']}組 |",
         "",
     ]
+    for key, heading in (
+        ("category_counts", "カテゴリー別の審査候補"),
+        ("municipality_counts", "市町別の審査候補"),
+        ("freshness_counts", "情報の鮮度別"),
+        ("review_bucket_counts", "審査優先度別"),
+        ("content_type_counts", "施設・サービス種別"),
+    ):
+        counts = report.get(key, {})
+        if counts:
+            lines += [f"### {heading}", ""]
+            lines += [f"- {name}: {count}件" for name, count in counts.items()]
+            lines.append("")
     if report.get("rss_issues"):
         lines += ["### RSS取得に問題がある情報源", ""]
         lines += [f"- {x['name']}: HTTP {x['http_status']}" for x in report["rss_issues"]]
