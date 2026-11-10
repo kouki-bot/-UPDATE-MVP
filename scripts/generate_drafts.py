@@ -10,6 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 OFFICIAL_FILE = BASE_DIR / "data" / "source_checks.json"
 RSS_FILE = BASE_DIR / "data" / "rss_candidates.json"
 OUTPUT_FILE = BASE_DIR / "data" / "drafts.json"
+MANUAL_FILE = BASE_DIR / "data" / "manual_candidates.json"
 JST = timezone(timedelta(hours=9))
 UTC = timezone.utc
 RECENT_DAYS = 30
@@ -1043,6 +1044,56 @@ def annotate_review_flags(drafts):
         "review_note": "重複は候補表示のみで自動削除しません。全記事は未確認・公開禁止です。",
     }
 
+def add_manual_candidates(drafts, manual_candidates, published_articles=None):
+    """手動調査候補を審査専用データへ追加。公開済み・重複・期限切れは除外する。"""
+    published_articles = published_articles or []
+    seen_ids = {str(row.get("id", "")) for row in drafts}
+    seen_urls = {normalize_url(row.get("source_url", "")) for row in drafts}
+    published_urls = {
+        normalize_url(row.get("source_url", ""))
+        for row in published_articles if row.get("source_url")
+    }
+    added = 0
+    for original in manual_candidates:
+        if not isinstance(original, dict):
+            continue
+        candidate = dict(original)
+        candidate_id = str(candidate.get("id", "")).strip()
+        source_url = normalize_url(candidate.get("source_url", ""))
+        if not candidate_id or not source_url:
+            continue
+        if candidate.get("status") != "未確認・公開禁止":
+            raise ValueError(f"Manual candidate must remain unpublished: {candidate_id}")
+        if candidate_id in seen_ids or source_url in seen_urls or source_url in published_urls:
+            continue
+        if not normalize_categories(candidate):
+            continue
+        published_date = parse_date(candidate.get("published_date", ""))
+        if published_date:
+            age_days = (now_jst().date() - published_date.date()).days
+            if age_days > MAX_DRAFT_AGE_DAYS:
+                continue
+            candidate["age_days"] = age_days
+            candidate["freshness"] = (
+                "直近30日" if age_days <= RECENT_DAYS else "31〜90日前"
+            )
+        candidate["source_url"] = source_url
+        candidate["status"] = "未確認・公開禁止"
+        candidate.pop("approved_at", None)
+        candidate.pop("published_at", None)
+        drafts.append(candidate)
+        seen_ids.add(candidate_id)
+        seen_urls.add(source_url)
+        added += 1
+    return added
+
+
+def load_manual_candidates():
+    data = load_json(MANUAL_FILE)
+    rows = data.get("candidates", [])
+    return rows if isinstance(rows, list) else []
+
+
 def main():
     official, rss = get_official_candidates(), get_rss_candidates()
     unique = merge_candidates(official + rss)
@@ -1052,6 +1103,9 @@ def main():
     old_count = sum(1 for x in scoped_drafts if x["freshness"] == "90日より前")
     # 宿泊・観光・公共施設は店舗サイトの対象外。古い記事も通常候補から除外。
     drafts = [x for x in scoped_drafts if x["freshness"] != "90日より前"]
+    published_data = load_json(BASE_DIR / "data" / "published.json")
+    published_articles = published_data.get("articles", []) if isinstance(published_data, dict) else []
+    manual_added = add_manual_candidates(drafts, load_manual_candidates(), published_articles)
     drafts.sort(key=sort_key)
     
     review_summary = annotate_review_flags(drafts)
@@ -1086,7 +1140,7 @@ def main():
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with OUTPUT_FILE.open("w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print("公式サイト候補:", len(official), "RSS候補:", len(rss))
+    print("公式サイト候補:", len(official), "RSS候補:", len(rss), "手動調査候補:", manual_added)
     print("統合後:", len(unique), "下書き候補:", len(drafts), "対象外施設の除外:", excluded_scope_count, "90日より前の除外:", old_count)
     print("直近30日:", output["recent_draft_count"], "カテゴリー:", category_counts)
     print("鮮度:", freshness_counts, "保存先:", OUTPUT_FILE)

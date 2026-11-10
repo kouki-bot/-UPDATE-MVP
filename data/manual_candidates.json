@@ -1,0 +1,202 @@
+{
+  "generated_at": "2026-11-10T09:00:00+09:00",
+  "description": "公式情報を中心に手動調査した候補。すべて審査専用であり、自動公開しない。",
+  "candidates": [
+    {
+      "id": "a9c4016b7e2d4f81",
+      "title": "【山口市】明屋書店小郡店2階に「gashacoco 明屋書店 小郡」が11月6日オープン",
+      "suggested_headline": "【山口市】明屋書店小郡店2階に「gashacoco 明屋書店 小郡」が11月6日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-10-23",
+      "event_date": "2026-11-06",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 18,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "運営会社の発表で所在地を確認",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "公式発表で確認",
+      "source_name": "株式会社ハピネット公式プレスリリース",
+      "source_url": "https://tohakusha.com/main/html/rd/p/000002922.000031422.html",
+      "source_urls": [
+        {
+          "source_name": "株式会社ハピネット公式プレスリリース",
+          "url": "https://tohakusha.com/main/html/rd/p/000002922.000031422.html"
+        },
+        {
+          "source_name": "gashacoco公式ニュース",
+          "url": "https://gashacoco.jp/news/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "株式会社ハピネットと株式会社明屋書店は、2026年11月6日に「gashacoco 明屋書店 小郡」をオープンすると発表。所在地は山口県山口市小郡津市2-11 2F。営業時間10:00～22:00。",
+      "body_excerpt_method": "公式発表を確認",
+      "draft_summary": "公式プレスリリースで店舗名・所在地・開店日を確認。現在の営業状況と掲載前の6項目照合は審査画面で実施。",
+      "relevance": "店舗ニュース候補・公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-10T09:00:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要",
+      "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "b8d3027a6c1e5f94",
+      "title": "【山口市】「ワッツウィズ 山口黒川ウォンツ店」が10月22日オープン",
+      "suggested_headline": "【山口市】「ワッツウィズ 山口黒川ウォンツ店」が10月22日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-10-22",
+      "event_date": "2026-10-22",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 19,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "運営会社の発表で所在地を確認",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "運営会社公式発表で確認",
+      "source_name": "株式会社ワッツ公式プレスリリース",
+      "source_url": "https://prtimes.jp/main/html/rd/p/000000413.000084599.html",
+      "source_urls": [
+        {
+          "source_name": "株式会社ワッツ公式プレスリリース",
+          "url": "https://prtimes.jp/main/html/rd/p/000000413.000084599.html"
+        },
+        {
+          "source_name": "株式会社ワッツ公式店舗情報",
+          "url": "https://www.watts-jp.com/shop/54009/"
+        },
+        {
+          "source_name": "ウォンツ公式ニュース",
+          "url": "https://www.wants.co.jp/news/"
+        }
+      ],
+      "duplicate_sources_count": 3,
+      "body_excerpt": "株式会社ワッツは2026年10月22日に「ワッツウィズ 山口黒川ウォンツ店」を山口県山口市黒川2260-1、ウォンツ山口黒川店内にオープンしたと発表。ワッツ公式店舗情報にも同住所の店舗情報を掲載。",
+      "body_excerpt_method": "運営会社プレスリリース・公式店舗情報を確認",
+      "draft_summary": "運営会社の発表で店舗名・開店日・所在地を確認。現在の営業状況と掲載前の6項目照合は審査画面で実施。",
+      "relevance": "店舗ニュース候補・公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-10T09:00:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要",
+      "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "c7e1038d5a2f6b90",
+      "title": "【山口市】猫カフェGATOが11月30日をもって閉店予定",
+      "suggested_headline": "【山口市】猫カフェGATOが11月30日をもって閉店予定",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "2026-10-11",
+      "event_date": "2026-11-30",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 30,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "店舗公式案内および公的資料で住所を照合",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "公式告知・公的資料で確認",
+      "source_name": "猫カフェGATO公式サイト",
+      "source_url": "https://www.cafe-gato.com/",
+      "source_urls": [
+        {
+          "source_name": "猫カフェGATO公式サイト・閉店のお知らせ",
+          "url": "https://www.cafe-gato.com/"
+        },
+        {
+          "source_name": "山口県公式・第一種動物取扱業登録状況",
+          "url": "https://www.pref.yamaguchi.lg.jp/uploaded/attachment/210162.pdf"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "店舗公式サイトは2026年10月11日付で閉店を告知。猫スタッフの健康と今後の暮らしを考慮し、2026年11月30日（月）を最終営業日として閉店する旨を掲載。住所は山口市宮野上1227-1（県の動物取扱業登録資料で照合）。",
+      "body_excerpt_method": "店舗公式告知・山口県公的資料を確認",
+      "draft_summary": "閉店日と閉店告知は店舗公式サイトで確認。所在地は県の公的資料で確認。最終営業日まで営業予定の状態を確認し、6項目照合後に承認。",
+      "relevance": "店舗ニュース候補・公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-10T09:00:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要",
+      "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "d6f2049e8b3a7c15",
+      "title": "【防府市】DCM三田尻店が11月23日をもって閉店予定",
+      "suggested_headline": "【防府市】DCM三田尻店が11月23日をもって閉店予定",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "2026-10-19",
+      "event_date": "2026-11-23",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 22,
+      "area": [
+        "防府市"
+      ],
+      "area_status": "DCM公式店舗ページで所在地を確認",
+      "municipality": "防府市",
+      "municipality_candidates": [
+        "防府市"
+      ],
+      "municipality_group": "防府市",
+      "municipality_status": "DCM公式店舗情報で確認",
+      "source_name": "DCMホールディングス公式発表",
+      "source_url": "https://www.dcm-hldgs.co.jp/grp/news/shop/20261013141521.html",
+      "source_urls": [
+        {
+          "source_name": "DCMホールディングス公式・閉店のお知らせ",
+          "url": "https://www.dcm-hldgs.co.jp/grp/news/shop/20261013141521.html"
+        },
+        {
+          "source_name": "DCM公式店舗情報",
+          "url": "https://www.dcm-hc.co.jp/shop/detail/02_4052.html"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "DCMホールディングスは2026年10月19日付で、DCM三田尻店を2026年11月23日（月）をもって閉店すると発表。公式店舗情報の住所は山口県防府市大字新田字切貫72番地。",
+      "body_excerpt_method": "運営会社公式発表・公式店舗情報を確認",
+      "draft_summary": "閉店日と所在地をDCM公式発表・公式店舗ページで確認。最終営業日までの営業状況と掲載前の6項目照合は審査画面で実施。",
+      "relevance": "店舗ニュース候補・公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-10T09:00:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要",
+      "review_bucket": "通常候補（要確認）"
+    }
+  ]
+}
