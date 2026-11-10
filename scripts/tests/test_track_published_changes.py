@@ -14,12 +14,12 @@ class PublishedStoreChangeTests(unittest.TestCase):
             "id": id, "title": title, "category": category,
             "municipality": town, "municipality_candidates": [town],
             "source_url": url, "business_status": status,
-            "body_excerpt": f"{town}にある{title}",
+            "body_excerpt": f"{town}の「カフェ青空店」",
         }
 
     def test_closure_for_published_opening_is_flagged(self):
-        published = [self.article("old", "カフェ青空店が宇部市にオープン", ["新店・開店"])]
-        drafts = [self.article("new", "カフェ青空店が閉店", ["閉店"],
+        published = [self.article("old", "「カフェ青空店」が宇部市にオープン", ["新店・開店"])]
+        drafts = [self.article("new", "宇部市の「カフェ青空店」が閉店", ["閉店"],
                                url="https://example.jp/b", status="未確認・公開禁止")]
         alerts = module.find_status_changes(drafts, published)
         self.assertEqual(len(alerts), 1)
