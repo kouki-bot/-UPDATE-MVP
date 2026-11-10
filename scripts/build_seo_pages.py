@@ -75,6 +75,9 @@ def build_article_page(article):
     event = str(article.get("event_date") or "")
     status = str(article.get("business_status") or "")
     canonical = f"{BASE}/articles/{slug}.html"
+    is_closed = any(category in ("閉店", "閉店・営業終了") for category in categories)
+    section_label = "閉店情報" if is_closed else "新店舗・更新情報"
+    section_url = f"{BASE}/closed.html" if is_closed else f"{BASE}/new.html"
 
     structured = {
         "@context": "https://schema.org",
@@ -85,6 +88,14 @@ def build_article_page(article):
         "author": {"@type": "Organization", "name": "山口ローカルUPDATE"},
         "publisher": {"@type": "Organization", "name": "山口ローカルUPDATE"},
         "about": {"@type": "Thing", "name": title},
+        "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "トップ", "item": BASE + "/"},
+                {"@type": "ListItem", "position": 2, "name": section_label, "item": section_url},
+                {"@type": "ListItem", "position": 3, "name": title, "item": canonical},
+            ],
+        },
     }
     if published:
         structured["datePublished"] = published
@@ -107,7 +118,7 @@ def build_article_page(article):
 <script type="application/ld+json">{safe_json}</script>
 <style>.story-wrap{{max-width:820px;margin:0 auto;padding:64px 22px 90px}}.story-label{{color:#8a7258;font-size:.78rem;letter-spacing:.14em}}.story-wrap h1{{font-size:clamp(1.65rem,4vw,2.5rem);line-height:1.5;margin:16px 0 22px}}.story-meta{{display:flex;flex-wrap:wrap;gap:10px;color:#746e66;font-size:.9rem;border-bottom:1px solid #e8e3da;padding-bottom:20px}}.story-content{{font-size:1rem;line-height:2.05;margin:30px 0;white-space:pre-wrap}}.story-source{{display:inline-block;margin:10px 0 28px}}.story-back{{display:inline-block;margin-top:24px;color:#6d5742}}.story-note{{background:#f7f5ef;padding:18px 20px;border-radius:12px;font-size:.9rem;line-height:1.8}}</style>
 </head><body><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a><nav class="header-nav"><a href="../index.html">トップ</a><a href="../new.html">新店情報</a><a href="../closed.html">閉店情報</a><a href="../listing.html">掲載依頼</a></nav></header>
-<main class="story-wrap"><p class="story-label">YAMAGUCHI LOCAL UPDATE / {esc(category)}</p><p class="story-label">{esc(municipality)}</p><h1>{esc(title)}</h1>
+<main class="story-wrap"><nav class="story-breadcrumb" aria-label="パンくずリスト"><a href="../index.html">トップ</a> <span aria-hidden="true">›</span> <a href="../{ "closed.html" if is_closed else "new.html" }">{esc(section_label)}</a> <span aria-hidden="true">›</span> <span aria-current="page">{esc(title)}</span></nav><p class="story-label">YAMAGUCHI LOCAL UPDATE / {esc(category)}</p><p class="story-label">{esc(municipality)}</p><h1>{esc(title)}</h1>
 <div class="story-meta"><span>店舗の状態：{esc(status)}</span><span>情報確認日：{esc(published)}</span>{'<span>開店・閉店等の日付：'+esc(event)+'</span>' if event else ''}</div>
 <div class="story-content">{esc(summary)}</div>
 <div class="story-note">掲載内容は確認時点の情報です。営業状況・日程は変更される場合があります。最新情報は店舗または施設の公式案内をご確認ください。</div>
