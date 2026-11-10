@@ -133,7 +133,7 @@ areaSelect.addEventListener('change',render);
 try{
 const response=await fetch('data/published.json',{cache:'no-store'});if(!response.ok)throw new Error('公開データの読み込みに失敗');
 const data=await response.json();const rows=Array.isArray(data.articles)?data.articles:(Array.isArray(data)?data:[]);
-articles=rows.filter(a=>a&&(a.status==='公開'||a.status==='公開済み')&&a.approved_at&&Array.isArray(a.review_flags)&&a.review_flags.length===0&&a.title&&/^https?:\\/\\//.test(a.source_url||'')&&!isLodging(a)&&isNew(a)).slice(0,100);render();
+articles=rows.filter(a=>a&&(a.status==='公開'||a.status==='公開済み')&&a.approved_at&&Array.isArray(a.review_flags)&&a.review_flags.length===0&&a.title&&/^https?:\/\//.test(a.source_url||'')&&!isLodging(a)&&isNew(a)).slice(0,100);render();
 }catch(e){count.textContent='読み込みエラー';container.replaceChildren();const p=document.createElement('p');p.className='load-error';p.textContent='情報を読み込めませんでした。時間をおいて再読み込みしてください。';container.appendChild(p);}
 })();
 </script>
