@@ -44,6 +44,10 @@ jobs:
               "published_change_reviews",
               "recorded_at",
               "save-change-review",
+              "function normalizeChangeReviewStore(data)",
+              "data.published_change_reviews",
+              "return identity+\"::\"",
+              "approvals.published_change_reviews=all",
           ]
           missing = [item for item in required if item not in js]
           assert not missing, f"Missing change-review features: {missing}"
