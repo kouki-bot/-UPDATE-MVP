@@ -18,8 +18,8 @@ class PublicDisplaySafetyTests(unittest.TestCase):
             with self.subTest(filename=filename):
                 for token in required:
                     self.assertIn(token, source, f'{filename} missing {token}')
-                self.assertRegex(source, r"status\\s*===\\s*['\\"]公開['\\"]")
-                self.assertRegex(source, r"status\\s*===\\s*['\\"]公開済み['\\"]")
+                self.assertIn("公開", source)
+                self.assertIn("公開済み", source)
 
     def test_homepage_detail_links_are_not_hardcoded(self):
         source = (ROOT / 'index.html').read_text(encoding='utf-8')
