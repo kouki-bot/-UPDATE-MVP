@@ -44,7 +44,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <div class="stat"><b id="approvedCount">-</b><span>確認済み・承認</span></div>
 <div class="stat"><b id="holdCount">-</b><span>要修正・対象外</span></div>
 </div>
-<div class="exportbar"><button class="primary" id="draftImportBtn">候補データを読み込む</button><button class="secondary" id="exportBtn">承認データを書き出す</button><button class="plain" id="importBtn">承認データを読み込む</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="draftFile" accept="application/json,.json" hidden><input type="file" id="importFile" accept="application/json,.json" hidden></div>
+<div class="exportbar"><button class="primary" id="draftImportBtn">候補データを読み込む</button><button class="secondary" id="backupBtn">審査データをバックアップ</button><button class="plain" id="exportBtn">公開用承認データを書き出す</button><button class="plain" id="importBtn">バックアップを復元</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="draftFile" accept="application/json,.json" hidden><input type="file" id="importFile" accept="application/json,.json" hidden></div>
 <div class="toolbar">
 <input id="search" type="search" placeholder="店名・市町・情報元で検索">
 <select id="statusFilter"><option value="all">すべての状態</option><option value="未確認">未確認</option><option value="確認済み">確認済み・承認</option><option value="要修正">要修正</option><option value="対象外">対象外</option></select>
@@ -206,14 +206,35 @@ approvals.reviewed_articles[id]=rec;saveLocal();renderList();renderDetail();
 function downloadFile(name,text){
 var blob=new Blob([text],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
 }
+function backupEnvelope(){return {format:"yamaguchi-local-update-review-backup",version:1,created_at:new Date().toISOString(),description:"審査画面の端末内データのバックアップ。公開用承認JSONとは別形式。",approvals:approvals};}
+function validateApprovals(data){if(!data||typeof data!=="object"||Array.isArray(data))throw new Error("JSONの形式が正しくありません");if(!Array.isArray(data.approved_ids)||!data.reviewed_articles||typeof data.reviewed_articles!=="object"||Array.isArray(data.reviewed_articles))throw new Error("承認データの必須項目がありません");if(data.published_change_reviews!==undefined&&(!data.published_change_reviews||typeof data.published_change_reviews!=="object"||Array.isArray(data.published_change_reviews)))throw new Error("変更履歴の形式が正しくありません");return normalizeChangeReviewStore(data);}
+el("backupBtn").addEventListener("click",function(){
+var payload=backupEnvelope(),out=JSON.stringify(payload,null,2)+"\n";
+downloadFile("ylu-review-backup-"+new Date().toISOString().slice(0,10)+".json",out);
+alert("バックアップを書き出しました。端末とは別の安全な場所にも保存してください。定期的にバックアップすることをおすすめします。");
+});
 el("exportBtn").addEventListener("click",function(){
 var out=JSON.stringify(approvals,null,2)+"\n";downloadFile("publication_approvals.json",out);
-alert("JSONを書き出しました。非公開リポジトリ kouki-bot/yamaguchi-review-private の data/publication_approvals.json にアップロードしてください。公開ワークフローは別途 main ブランチから手動実行するまで公開されません。");
+alert("公開用承認データを書き出しました。非公開リポジトリ kouki-bot/yamaguchi-review-private の data/publication_approvals.json に保存してください。");
 });
 el("draftImportBtn").addEventListener("click",function(){el("draftFile").click();});
 el("draftFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.drafts))throw new Error("drafts配列がありません");var unsafe=x.drafts.filter(function(d){return d.status!=="未確認・公開禁止";});if(unsafe.length)throw new Error("未確認・公開禁止ではない候補が含まれています");drafts=x.drafts;populateAreas();renderList();if(drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}else{selectedId="";renderDetail();}alert("候補データ "+drafts.length+"件を読み込みました。");}catch(err){alert("候補データを読み込めませんでした："+err.message);} };reader.readAsText(f);e.target.value="";});
 el("importBtn").addEventListener("click",function(){el("importFile").click();});
-approvals=normalizeChangeReviewStore(x);saveLocal();renderList();renderDetail();alert("承認データを読み込みました。");
+el("importFile").addEventListener("change",function(e){
+var file=e.target.files[0];if(!file)return;
+var reader=new FileReader();
+reader.onload=function(){try{
+var parsed=JSON.parse(reader.result),payload=parsed&&parsed.format==="yamaguchi-local-update-review-backup"?parsed.approvals:parsed;
+if(parsed&&parsed.format==="yamaguchi-local-update-review-backup"&&parsed.version!==1)throw new Error("未対応のバックアップ形式です");
+var restored=validateApprovals(payload);
+if(!confirm("バックアップを復元します。現在の端末データは置き換わります。復元前に現在のデータを自動バックアップします。続行しますか？"))return;
+downloadFile("ylu-review-before-restore-"+new Date().toISOString().replace(/[:.]/g,"-")+".json",JSON.stringify(backupEnvelope(),null,2)+"\n");
+approvals=restored;saveLocal();renderList();renderDetail();
+alert("バックアップを復元しました。承認記事 "+approvals.approved_ids.length+"件、審査記録 "+Object.keys(approvals.reviewed_articles).length+"件です。");
+}catch(err){alert("バックアップを復元できませんでした："+err.message);}
+};
+reader.readAsText(file);e.target.value="";
+});
 el("resetBtn").addEventListener("click",function(){if(!confirm("この端末に保存した編集内容を破棄し、リポジトリの承認データを再読み込みしますか？"))return;localStorage.removeItem(localKey);location.reload();});
 ["search","statusFilter","areaFilter","priorityFilter"].forEach(function(id){el(id).addEventListener("input",renderList);el(id).addEventListener("change",renderList);});
 function init(){
