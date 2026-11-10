@@ -48,6 +48,8 @@ def find_status_changes(drafts, published):
     alerts = []
     seen = set()
     for candidate in drafts:
+        if candidate.get("status") != "未確認・公開禁止":
+            continue
         new_categories = set(candidate.get("category", [])) & CHANGE_CATEGORIES
         if not new_categories:
             continue
@@ -73,7 +75,7 @@ def find_status_changes(drafts, published):
             if key in seen:
                 continue
             seen.add(key)
-            alerts.append({
+            alert = {
                 "published_title": article.get("title", "タイトル不明"),
                 "published_id": article.get("id", ""),
                 "published_status": article.get("business_status", "") or "状態記載なし",
@@ -82,6 +84,13 @@ def find_status_changes(drafts, published):
                 "candidate_status": "・".join(sorted(changed)),
                 "municipality": new_town,
                 "source_url": candidate.get("source_url", ""),
+            }
+            alerts.append(alert)
+            candidate.setdefault("published_change_candidates", []).append({
+                "published_id": article.get("id", ""),
+                "published_status": article.get("business_status", "") or "状態記載なし",
+                "possible_change": "・".join(sorted(changed)),
+                "review_required": True,
             })
     return alerts
 
@@ -122,7 +131,10 @@ def main():
     published = published_data.get("articles", [])
     if not isinstance(drafts, list) or not isinstance(published, list):
         raise SystemExit("Invalid drafts/published schema")
+    for draft in drafts:
+        draft.pop("published_change_candidates", None)
     alerts = find_status_changes(drafts, published)
+    DRAFTS.write_text(json.dumps(drafts_data, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
     report = render_markdown(alerts)
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:
