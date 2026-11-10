@@ -47,5 +47,26 @@ class CollectionReportTests(unittest.TestCase):
         self.assertIn("県公式", rendered)
         self.assertIn("check_needed", rendered)
 
+    def test_duplicate_candidates_are_reported_without_removal(self):
+        duplicates = module.audit_duplicates(
+            [{"title": "新店オープンのお知らせ", "url": "https://example.jp/news/1?utm_source=x", "area": "山口市"}],
+            [{"title": "新店オープンのお知らせ", "url": "https://example.jp/news/1", "area": "山口市"}],
+        )
+        self.assertGreaterEqual(len(duplicates), 1)
+        self.assertEqual(len(duplicates[0]["entries"]), 2)
+
+    def test_stale_collection_timestamp_is_detected(self):
+        old = module.parse_collection_time("2020-01-01T00:00:00Z")
+        age_hours = (module.datetime.now(module.timezone.utc) - old).total_seconds() / 3600
+        self.assertGreater(age_hours, 8)
+
+    def test_rss_http_error_is_reported(self):
+        report = module.build_report(
+            {"sources": [], "candidates": []},
+            {"sources": [{"name": "RSS", "items_read": 0, "diagnostics": {"http_status": 503}}], "candidates": []},
+            {"drafts": []},
+        )
+        self.assertEqual(report["rss_issues"][0]["http_status"], 503)
+
 if __name__ == "__main__":
     unittest.main()
