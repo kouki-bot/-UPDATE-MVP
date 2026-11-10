@@ -114,6 +114,7 @@ def build_report(official, rss, drafts):
     freshness_counts = count_draft_values(draft_rows, "freshness")
     review_bucket_counts = count_draft_values(draft_rows, "review_bucket")
     content_type_counts = count_draft_values(draft_rows, "content_type")
+    review_flag_counts = count_draft_values(draft_rows, "review_flags", allow_lists=True)
 
     now = datetime.now(timezone.utc)
     freshness = {}
@@ -147,6 +148,7 @@ def build_report(official, rss, drafts):
         "freshness_counts": freshness_counts,
         "review_bucket_counts": review_bucket_counts,
         "content_type_counts": content_type_counts,
+        "review_flag_counts": review_flag_counts,
         "flagged_drafts": flagged,
         "review_only_drafts": unpublished,
         "unsafe_drafts": unsafe,
@@ -189,6 +191,7 @@ def render_markdown(report):
         ("freshness_counts", "情報の鮮度別"),
         ("review_bucket_counts", "審査優先度別"),
         ("content_type_counts", "施設・サービス種別"),
+        ("review_flag_counts", "確認事項・不足情報の内訳"),
     ):
         counts = report.get(key, {})
         if counts:

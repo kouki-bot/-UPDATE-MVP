@@ -52,6 +52,26 @@ class CollectionReportTests(unittest.TestCase):
         self.assertIn("山口市: 1件", rendered)
         self.assertIn("確認待ち: 1件", rendered)
 
+    def test_review_flags_are_counted_by_type(self):
+        report = module.build_report(
+            {"sources": [], "candidates": []},
+            {"sources": [], "candidates": []},
+            {"drafts": [
+                {"status": "未確認・公開禁止",
+                 "review_flags": ["公開日未確認", "市町未特定"]},
+                {"status": "未確認・公開禁止",
+                 "review_flags": ["公開日未確認"]},
+                {"status": "未確認・公開禁止", "review_flags": []},
+            ]},
+        )
+        self.assertEqual(
+            report["review_flag_counts"],
+            {"公開日未確認": 2, "市町未特定": 1},
+        )
+        rendered = module.render_markdown(report)
+        self.assertIn("確認事項・不足情報の内訳", rendered)
+        self.assertIn("公開日未確認: 2件", rendered)
+
     def test_non_review_only_draft_is_detected(self):
         report = module.build_report(
             {"sources": [], "candidates": []},
