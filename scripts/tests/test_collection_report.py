@@ -29,6 +29,29 @@ class CollectionReportTests(unittest.TestCase):
         self.assertEqual(report["review_only_drafts"], 2)
         self.assertEqual(report["unsafe_drafts"], 0)
 
+    def test_report_breaks_down_drafts_for_review_prioritization(self):
+        report = module.build_report(
+            {"sources": [], "candidates": []},
+            {"sources": [], "candidates": []},
+            {"drafts": [
+                {"status": "未確認・公開禁止", "category": ["新店・開店", "閉店"],
+                 "municipality_group": "山口市", "freshness": "直近30日",
+                 "review_bucket": "通常候補（要確認）", "content_type": "飲食店"},
+                {"status": "未確認・公開禁止", "category": ["新店・開店"],
+                 "municipality_group": "下関市", "freshness": "日付確認が必要",
+                 "review_bucket": "確認待ち", "content_type": "小売店"},
+            ]},
+        )
+        self.assertEqual(report["category_counts"], {"新店・開店": 2, "閉店": 1})
+        self.assertEqual(report["municipality_counts"], {"下関市": 1, "山口市": 1})
+        self.assertEqual(report["freshness_counts"], {"日付確認が必要": 1, "直近30日": 1})
+        self.assertEqual(report["review_bucket_counts"], {"確認待ち": 1, "通常候補（要確認）": 1})
+        self.assertEqual(report["content_type_counts"], {"小売店": 1, "飲食店": 1})
+        rendered = module.render_markdown(report)
+        self.assertIn("市町別の審査候補", rendered)
+        self.assertIn("山口市: 1件", rendered)
+        self.assertIn("確認待ち: 1件", rendered)
+
     def test_non_review_only_draft_is_detected(self):
         report = module.build_report(
             {"sources": [], "candidates": []},
