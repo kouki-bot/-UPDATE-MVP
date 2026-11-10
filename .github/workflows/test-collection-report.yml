@@ -1,0 +1,30 @@
+name: Test collection report
+
+on:
+  pull_request:
+    paths:
+      - "scripts/collection_report.py"
+      - "scripts/tests/test_collection_report.py"
+      - ".github/workflows/test-collection-report.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check syntax
+        run: python -m py_compile scripts/collection_report.py scripts/tests/test_collection_report.py
+
+      - name: Run collection report tests
+        run: python -m unittest scripts.tests.test_collection_report -v
