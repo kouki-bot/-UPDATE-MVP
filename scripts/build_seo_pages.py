@@ -112,6 +112,9 @@ def build_article_page(article):
 <meta property="og:type" content="article"><meta property="og:site_name" content="山口ローカルUPDATE">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{esc(canonical)}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{esc(title)}">
+<meta name="twitter:description" content="{esc(description)}">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J79VXDWMTV"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-J79VXDWMTV');</script>
 <link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../detail.css">
