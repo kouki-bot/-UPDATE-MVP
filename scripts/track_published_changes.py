@@ -38,7 +38,7 @@ def store_names(article):
     # include municipality or editorial wording that the generic extractor retains.
     for text in (title, body):
         for match in re.findall(r"[「『]([^」』]{2,30})[」』]", str(text or "")):
-            value = re.sub(r"\\s+", "", match).strip("・、。")
+            value = re.sub(r"\s+", "", match).strip("・、。")
             if len(value) >= 2:
                 names.add(value)
     return names
@@ -97,7 +97,9 @@ def find_status_changes(drafts, published):
             alerts.append(alert)
             candidate.setdefault("published_change_candidates", []).append({
                 "published_id": article.get("id", ""),
+                "published_title": article.get("title", "タイトル不明"),
                 "published_status": article.get("business_status", "") or "状態記載なし",
+                "published_source_url": article.get("source_url", ""),
                 "possible_change": "・".join(sorted(changed)),
                 "review_required": True,
             })
@@ -143,7 +145,7 @@ def main():
     for draft in drafts:
         draft.pop("published_change_candidates", None)
     alerts = find_status_changes(drafts, published)
-    DRAFTS.write_text(json.dumps(drafts_data, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    DRAFTS.write_text(json.dumps(drafts_data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     report = render_markdown(alerts)
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:

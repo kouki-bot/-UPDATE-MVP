@@ -99,7 +99,7 @@ return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0
 });
 rows.sort(function(a,b){
 var order={"要優先確認":0,"重複確認":1,"情報不足・保留":2,"確認推奨":3,"基本項目あり・内容確認は必要":4};
-var ap=order[a.review_priority||"確認推奨"],bp=order[b.review_priority||"確認推奨"];
+var ap=changeCandidates(a).length?-1:(order[a.review_priority||"確認推奨"]===undefined?9:order[a.review_priority||"確認推奨"]),bp=changeCandidates(b).length?-1:(order[b.review_priority||"確認推奨"]===undefined?9:order[b.review_priority||"確認推奨"]);
 return (ap===undefined?9:ap)-(bp===undefined?9:bp);
 });
 el("shownCount").textContent=rows.length+"件";
@@ -121,7 +121,7 @@ var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消した�
 var reviewChecks=r.review_checks||{};
 var status=statusOf(id);
 var changeRows=changeCandidates(d);
-var changeHtml=changeRows.length?'<div class="change-alert"><b>要確認：掲載済み店舗の状態変化候補</b>'+changeRows.map(function(x){return '<p><strong>'+esc(x.possible_change||"状態変化")+'</strong> — 掲載済み：'+esc(x.published_title||("ID "+(x.published_id||"不明")))+'（'+esc(x.published_status||"状態記載なし")+'）</p>';}).join("")+'<p>自動では記事を変更しません。既存記事と新着情報の両方を開き、店舗名・所在地・日付・公式情報を照合してください。</p></div>':"";
+var changeHtml=changeRows.length?'<div class="change-alert"><b>要確認：掲載済み店舗の状態変化候補</b>'+changeRows.map(function(x){var oldUrl=safeHttpUrl(x.published_source_url);return '<p><strong>'+esc(x.possible_change||"状態変化")+'</strong> — 掲載済み：'+esc(x.published_title||("ID "+(x.published_id||"不明")))+'（'+esc(x.published_status||"状態記載なし")+'）'+(oldUrl?'　<a href="'+esc(oldUrl)+'" target="_blank" rel="noopener noreferrer">掲載済み店舗の元情報を開く</a>':'')+'</p>';}).join("")+'<p>自動では記事を変更しません。掲載済み店舗の元情報と、下の新着候補の元記事を開き、店舗名・所在地・日付・公式情報を照合してください。</p></div>':"";
 var duplicateHtml="";
 if(d.duplicate_review){
 var related=(d.duplicate_candidate_ids||[]).map(function(otherId){var other=drafts.find(function(x){return String(x.id)===String(otherId);});return other?'<li>'+esc(other.title)+'</li>':'<li>関連候補ID：'+esc(otherId)+'</li>';}).join("");
