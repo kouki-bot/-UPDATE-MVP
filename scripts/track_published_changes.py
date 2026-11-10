@@ -97,7 +97,9 @@ def find_status_changes(drafts, published):
             alerts.append(alert)
             candidate.setdefault("published_change_candidates", []).append({
                 "published_id": article.get("id", ""),
+                "published_title": article.get("title", "タイトル不明"),
                 "published_status": article.get("business_status", "") or "状態記載なし",
+                "published_source_url": article.get("source_url", ""),
                 "possible_change": "・".join(sorted(changed)),
                 "review_required": True,
             })
