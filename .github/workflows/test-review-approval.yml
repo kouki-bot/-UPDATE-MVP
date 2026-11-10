@@ -64,6 +64,15 @@ jobs:
               "承認IDが重複しています",
               "承認IDに対応する審査記録がありません",
               "店舗変更履歴の形式が正しくありません",
+              "function countInsightValues(getValues)",
+              "function renderReviewInsights()",
+              "審査候補の内訳",
+              "確認事項が多い項目（押すと絞り込み）",
+              "data-flag-filter",
+              "flagFilter",
+              "categoryInsights",
+              "municipalityInsights",
+
           ]
           missing = [item for item in required if item not in js]
           assert not missing, f"Missing change-review features: {missing}"
