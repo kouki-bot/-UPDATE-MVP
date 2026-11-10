@@ -19,7 +19,7 @@ button{font:inherit;cursor:pointer;border:0;border-radius:7px;padding:11px 14px;
 .layout{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(0,1.4fr);gap:14px;align-items:start}
 .list,.detail{background:white;border:1px solid var(--line);border-radius:11px;overflow:hidden}.list-head,.detail-head{padding:14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}.list-items{max-height:70vh;overflow:auto}
 .item{display:block;width:100%;text-align:left;background:white;border-radius:0;border-bottom:1px solid var(--line);padding:13px 14px;color:var(--ink)}.item.active{background:#edf2ec;box-shadow:inset 3px 0 var(--green)}.item-title{font-weight:700;font-size:13px;display:block;line-height:1.5}.item-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px;color:var(--muted);font-size:11px}
-.pill{display:inline-block;border-radius:99px;padding:2px 8px;background:#eee;color:#4d554d;font-size:10px}.pill.ok{background:#e4efe5;color:#28583a}.pill.fix{background:#fff0d9;color:#825718}.pill.out{background:#f6e7e5;color:#93433d}
+.pill{display:inline-block;border-radius:99px;padding:2px 8px;background:#eee;color:#4d554d;font-size:10px}.pill.ok{background:#e4efe5;color:#28583a}.pill.fix{background:#fff0d9;color:#825718}.pill.out{background:#f6e7e5;color:#93433d}.pill.change{background:#f8e8dc;color:#914516}.change-alert{background:#fff4e8;border:1px solid #edcfad;border-left:4px solid #bd7131;border-radius:9px;padding:12px;margin:12px 0}.change-alert b{display:block;color:#80451c;margin-bottom:5px}.change-alert p{margin:4px 0;font-size:12px}
 .detail-body{padding:16px}.empty{padding:35px 18px;text-align:center;color:var(--muted)}
 h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;color:var(--muted)}
 .field{margin:13px 0}.field label{display:block;font-weight:700;font-size:12px;margin-bottom:5px}.field textarea{min-height:100px;resize:vertical}.field small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
@@ -49,7 +49,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <input id="search" type="search" placeholder="店名・市町・情報元で検索">
 <select id="statusFilter"><option value="all">すべての状態</option><option value="未確認">未確認</option><option value="確認済み">確認済み・承認</option><option value="要修正">要修正</option><option value="対象外">対象外</option></select>
 <select id="areaFilter"><option value="">すべての市町</option></select>
-<select id="priorityFilter"><option value="all">すべての確認区分</option><option value="要優先確認">要優先確認</option><option value="重複確認">重複確認</option><option value="情報不足・保留">情報不足・保留</option><option value="確認推奨">確認推奨</option><option value="基本項目あり・内容確認は必要">基本項目あり</option></select>
+<select id="priorityFilter"><option value="all">すべての確認区分</option><option value="要優先確認">要優先確認</option><option value="重複確認">重複確認</option><option value="情報不足・保留">情報不足・保留</option><option value="確認推奨">確認推奨</option><option value="基本項目あり・内容確認は必要">基本項目あり</option><option value="掲載済み店舗の変更候補">掲載済み店舗の変更候補</option></select>
 </div>
 <div class="layout">
 <section class="list"><div class="list-head"><b>確認待ち・記事一覧</b><span class="sub" id="shownCount"></span></div><div class="list-items" id="items"><div class="empty">記事データを読み込んでいます。</div></div></section>
@@ -78,6 +78,7 @@ var statusOf=function(id){var r=approvals.reviewed_articles[id]||{};return r.rev
 function saveLocal(){try{localStorage.setItem(localKey,JSON.stringify(approvals));}catch(e){alert("端末内に保存できませんでした。JSONを書き出して保存してください。");}}
 function loadLocal(){try{var raw=localStorage.getItem(localKey);if(raw){var x=JSON.parse(raw);if(x&&Array.isArray(x.approved_ids)&&x.reviewed_articles)approvals=x;}}catch(e){}}
 function flagsFor(d){return Array.isArray(d.review_flags)?d.review_flags:[];}
+function changeCandidates(d){return Array.isArray(d.published_change_candidates)?d.published_change_candidates:[];}
 function updateStats(){
 var counts={"未確認":0,"確認済み":0,"要修正":0,"対象外":0};
 drafts.forEach(function(d){var s=statusOf(String(d.id));counts[counts.hasOwnProperty(s)?s:"未確認"]++;});
@@ -92,9 +93,9 @@ el("areaFilter").value=old;
 function renderList(){
 var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value,pf=el("priorityFilter").value;
 var rows=drafts.filter(function(d){
-var id=String(d.id),s=statusOf(id),priority=d.review_priority||"確認推奨",hay=[d.title,d.content_type,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
+var id=String(d.id),s=statusOf(id),priority=d.review_priority||"確認推奨",changes=changeCandidates(d),hay=[d.title,d.content_type,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
 var areas=[d.municipality||""].concat(d.municipality_candidates||[],d.area||[]);
-return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0)&&(pf==="all"||priority===pf);
+return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0)&&(pf==="all"||(pf==="掲載済み店舗の変更候補"?changes.length>0:priority===pf));
 });
 rows.sort(function(a,b){
 var order={"要優先確認":0,"重複確認":1,"情報不足・保留":2,"確認推奨":3,"基本項目あり・内容確認は必要":4};
@@ -105,7 +106,7 @@ el("shownCount").textContent=rows.length+"件";
 if(!rows.length){el("items").innerHTML='<div class="empty">条件に一致する記事はありません。</div>';return;}
 el("items").innerHTML=rows.map(function(d){
 var id=String(d.id),s=statusOf(id),cls=s==="確認済み"?"ok":s==="要修正"?"fix":s==="対象外"?"out":"";
-return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span>'+'<span class="pill '+(d.review_priority==="要優先確認"?"out":d.review_priority==="重複確認"?"fix":"")+'">'+esc(d.review_priority||"確認推奨")+'</span>'+'<span>'+esc(d.content_type||"種別要確認")+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
+return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span>'+(changeCandidates(d).length?'<span class="pill change">掲載済み変更候補 '+changeCandidates(d).length+'件</span>':'')+'<span class="pill '+(d.review_priority==="要優先確認"?"out":d.review_priority==="重複確認"?"fix":"")+'">'+esc(d.review_priority||"確認推奨")+'</span>'+'<span>'+esc(d.content_type||"種別要確認")+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
 }).join("");
 Array.prototype.forEach.call(el("items").querySelectorAll("[data-id]"),function(b){b.addEventListener("click",function(){selectedId=b.getAttribute("data-id");renderList();renderDetail();});});
 updateStats();
@@ -119,6 +120,8 @@ var flags=flagsFor(d),cleared=Array.isArray(r.cleared_review_flags)?r.cleared_re
 var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消したものだけチェック）</b>'+flags.map(function(f){return '<label><input type="checkbox" class="clearFlag" value="'+esc(f)+'" '+(cleared.indexOf(f)>=0?"checked":"")+'><span>'+esc(f)+'</span></label>';}).join("")+'</div>':'<p class="sub">自動検出された確認フラグはありません。内容確認は必要です。</p>';
 var reviewChecks=r.review_checks||{};
 var status=statusOf(id);
+var changeRows=changeCandidates(d);
+var changeHtml=changeRows.length?'<div class="change-alert"><b>要確認：掲載済み店舗の状態変化候補</b>'+changeRows.map(function(x){return '<p><strong>'+esc(x.possible_change||"状態変化")+'</strong> — 掲載済み：'+esc(x.published_title||("ID "+(x.published_id||"不明")))+'（'+esc(x.published_status||"状態記載なし")+'）</p>';}).join("")+'<p>自動では記事を変更しません。既存記事と新着情報の両方を開き、店舗名・所在地・日付・公式情報を照合してください。</p></div>':"";
 var duplicateHtml="";
 if(d.duplicate_review){
 var related=(d.duplicate_candidate_ids||[]).map(function(otherId){var other=drafts.find(function(x){return String(x.id)===String(otherId);});return other?'<li>'+esc(other.title)+'</li>':'<li>関連候補ID：'+esc(otherId)+'</li>';}).join("");
@@ -126,7 +129,7 @@ duplicateHtml='<div class="flags"><b>重複候補の確認</b><p>同じ店舗・
 }
 el("detailId").textContent="ID: "+id;
 el("detail").innerHTML=
-'<div class="sub">現在の状態：<b>'+esc(status)+'</b>　／　種別：'+esc(d.content_type||"要確認")+'　／　情報元：'+esc(d.source_name||"未設定")+'</div>'+
+'<div class="sub">現在の状態：<b>'+esc(status)+'</b>　／　種別：'+esc(d.content_type||"要確認")+'　／　情報元：'+esc(d.source_name||"未設定")+'</div>'+changeHtml+
 '<div class="source-box"><b>元記事リンク（必ず開いて確認）</b>'+sourceHtml+'</div>'+
 '<div class="excerpt"><b>自動取得した本文抜粋</b><br>'+esc(d.body_excerpt||"本文抜粋なし。元記事を直接確認してください。")+'</div>'+
 '<div class="field"><label for="headline">掲載タイトル（確認・必要なら修正）</label><input id="headline" value="'+esc(r.headline||d.suggested_headline||d.title||"")+'"></div>'+
