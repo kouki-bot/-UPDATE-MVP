@@ -27,4 +27,4 @@ jobs:
         run: python -m py_compile scripts/collection_report.py scripts/tests/test_collection_report.py
 
       - name: Run collection report tests
-        run: python -m unittest scripts.tests.test_collection_report -v
+        run: python -m unittest discover -s scripts/tests -p 'test_collection_report.py' -v
