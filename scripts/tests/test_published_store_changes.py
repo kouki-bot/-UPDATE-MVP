@@ -31,6 +31,8 @@ class PublishedStoreChangeTests(unittest.TestCase):
         self.assertEqual(len(alerts), 1)
         self.assertEqual(alerts[0]["candidate_status"], "閉店")
         self.assertTrue(draft["published_change_candidates"][0]["review_required"])
+        self.assertEqual(draft["published_change_candidates"][0]["published_title"], "カフェ青空店がオープン")
+        self.assertEqual(draft["published_change_candidates"][0]["published_source_url"], "https://example.jp/old")
 
     def test_does_not_match_different_municipality(self):
         self.assertEqual(
@@ -54,6 +56,13 @@ class PublishedStoreChangeTests(unittest.TestCase):
     def test_ignores_candidates_that_are_not_review_only(self):
         draft = self.candidate(status="公開済み")
         self.assertEqual(module.find_status_changes([draft], [self.published()]), [])
+
+    def test_review_metadata_includes_safe_published_source_fields(self):
+        draft = self.candidate()
+        module.find_status_changes([draft], [self.published()])
+        change = draft["published_change_candidates"][0]
+        self.assertTrue(change["published_source_url"].startswith("https://"))
+        self.assertTrue(change["published_title"])
 
     def test_report_explicitly_says_manual_review_only(self):
         report = module.render_markdown([])
