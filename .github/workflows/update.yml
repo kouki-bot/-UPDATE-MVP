@@ -38,6 +38,9 @@ jobs:
       - name: Check candidate source links
         run: python scripts/check_source_links.py
 
+      - name: Track possible updates to published stores
+        run: python scripts/status_update_tracker.py
+
       - name: Validate all collected candidates remain unpublished
         run: |
           python - <<'PY'
