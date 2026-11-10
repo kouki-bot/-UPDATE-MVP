@@ -123,7 +123,7 @@ const rules=[
 ["暮らし・サービス",/クリーニング|修理|クリニック|病院|歯科|薬局|教室|スクール/],
 ["その他",/.*/]];
 const matched=rules.find(([,pattern])=>pattern.test(text));return matched?matched[0]:"その他";}
-function articleAreas(article){const areas=Array.isArray(article.area)?article.area:(article.area?[article.area]:[]);const normalized=areas.filter(area=>typeof area==="string").map(area=>area.trim()).filter(Boolean);const broadOnly=normalized.length>0&&normalized.every(area=>["山口県内","山口県"].includes(area));if(broadOnly&&article.municipality)return [String(article.municipality).trim()];return normalized.filter(area=>!["山口県内","山口県"].includes(area));}
+function articleAreas(article){const municipality=typeof article.municipality==="string"?article.municipality.trim():"";if(municipality)return [municipality];const areas=Array.isArray(article.area)?article.area:(article.area?[article.area]:[]);return areas.filter(area=>typeof area==="string").map(area=>area.trim()).filter(area=>area&&!["山口県内","山口県"].includes(area));}
 function safeUrl(value){try{const url=new URL(value,location.href);return["http:","https:"].includes(url.protocol)?url.href:"";}catch{return"";}}
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));}
 function imageForArticle(article,index){
