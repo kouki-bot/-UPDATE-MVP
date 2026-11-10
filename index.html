@@ -136,7 +136,6 @@ if(/閉店|営業終了/.test(text))return imageLibrary.interior;
 const choices=[imageLibrary.cafe,imageLibrary.coffee,imageLibrary.interior,imageLibrary.plants];return choices[index%choices.length];}
 const list=document.getElementById("article-list"),count=document.getElementById("article-count");
 const keywordSearch=document.getElementById("keyword-search"),areaFilter=document.getElementById("area-filter"),businessFilter=document.getElementById("business-filter"),resetSearch=document.getElementById("reset-search");
-const detailPageIds=new Set(["235a1e438be7faf8","7c92459cebfdb8e0","c18b507ab8356416","832c58c0103db456","201d36d6e27a6708","b464427820ff7abd","a9c4016b7e2d4f81","b8d3027a6c1e5f94","d6f2049e8b3a7c15","c7e1038d5a2f6b90","82b792cd5379aba1","569d7aa074bdf503"]);
 let allArticles=[],activeFilter="all",activeArea="",activeBusiness="",activeKeyword="",revealObserver;
 function populateSearchOptions(){
 const selectedArea=areaFilter.value,selectedBusiness=businessFilter.value;
@@ -167,7 +166,7 @@ const group=categoryGroup(article.category),label=group==="new"?"NEW OPEN":group
 const area=articleAreas(article).join("・"),source=escapeHtml(article.source_name||"情報提供元"),sourceUrl=safeUrl(article.source_url);
 const date=escapeHtml(article.event_date||article.published_date||""),title=escapeHtml(article.title||"店舗情報");
 const summary=escapeHtml(article.summary||article.body||article.draft_summary||"詳細は情報提供元をご確認ください。"),imageUrl=escapeHtml(imageForArticle(article,index));const share=articleShareTools(article,article.title||"店舗情報");
-const detailUrl=detailPageIds.has(String(article.id||""))?"articles/"+encodeURIComponent(article.id)+".html":"";
+const detailUrl=/^[a-zA-Z0-9_-]+$/.test(String(article.id||""))?"articles/"+encodeURIComponent(article.id)+".html":"";
 const dateLabel=group==="new"?(article.business_status==="開店予定"?"開店予定日":"開店日"):group==="closed"?(article.business_status==="閉店予定"?"閉店予定日":"閉店日"):"更新日";
 const detailLink=detailUrl?`<a class="article-detail-link" href="${detailUrl}">記事の詳細を見る <span aria-hidden="true">↗</span></a>`:"";
 return `<article id="${share.id}" class="article-card reveal" style="--card-index:${index}"><div class="article-image"><img src="${imageUrl}" alt="店舗情報のイメージ写真" loading="lazy" onerror="this.style.display='none';"><span class="article-tag tag-${group}">${label}</span><span class="image-caption">イメージ写真</span></div><div class="article-card-body"><p class="article-area">${escapeHtml(area||"山口県内")}</p><h3>${title}</h3><p class="article-category">${escapeHtml(categoryText(article.category))}</p><p class="article-summary">${summary}</p><p class="article-category">業種：${escapeHtml(articleBusiness(article))}</p>${article.business_status?'<p class="article-category">営業状態：'+escapeHtml(article.business_status)+'</p>':""}</div><div class="article-card-bottom"><span class="article-date"><span class="article-date-label">${dateLabel}</span>${date}</span>${sourceUrl?`<a class="article-source" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">情報元：${source} ↗</a>`:`<span class="article-source">情報元：${source}</span>`}</div>${detailLink}${share.html}</article>`;
@@ -188,7 +187,7 @@ async function loadArticles(){
 try{
 const response=await fetch("data/published.json");if(!response.ok)throw new Error("記事データを取得できません");
 const data=await response.json();
-allArticles=(Array.isArray(data.articles)?data.articles:[]).filter(article=>(article.status==="公開"||article.status==="公開済み")&&article.title&&categoryGroup(article.category)).sort((a,b)=>String(b.event_date||b.published_date||"").localeCompare(String(a.event_date||a.published_date||"")));
+allArticles=(Array.isArray(data.articles)?data.articles:[]).filter(article=>(article.status==="公開"||article.status==="公開済み")&&article.approved_at&&Array.isArray(article.review_flags)&&article.review_flags.length===0&&article.title&&/^https?:\/\//.test(article.source_url||"")&&categoryGroup(article.category)).sort((a,b)=>String(b.event_date||b.published_date||"").localeCompare(String(a.event_date||a.published_date||"")));
 populateSearchOptions();renderArticles();
 }catch(error){list.innerHTML=`<div class="empty-state"><h3>情報を読み込めませんでした。</h3><p>時間をおいて、もう一度ご確認ください。</p></div>`;}}
 observeReveals();loadArticles();
