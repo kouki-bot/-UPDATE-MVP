@@ -48,6 +48,10 @@ jobs:
               "data.published_change_reviews",
               "return identity+\"::\"",
               "approvals.published_change_reviews=all",
+              "function changeReviewCaution(x)",
+              "過去に誤検出の記録あり",
+              "過去に誤検出あり・再確認",
+              "今回も自動除外せず",
           ]
           missing = [item for item in required if item not in js]
           assert not missing, f"Missing change-review features: {missing}"
