@@ -188,6 +188,7 @@ def render_markdown(report):
         f"| RSS取得項目 | {report['rss_items_read']}件 |",
         f"| RSS候補 | {report['rss_candidates']}件 |",
         f"| 審査用下書き | {report['draft_count']}件 |",
+        f"| 除外監査ログ | {report.get('excluded_audit_count', 0)}件 |",
         f"| 要確認フラグ付き | {report['flagged_drafts']}件 |",
         f"| 未確認・公開禁止 | {report['review_only_drafts']}件 |",
         f"| 公開禁止ルール違反 | {report['unsafe_drafts']}件 |",
