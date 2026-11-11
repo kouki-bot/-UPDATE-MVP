@@ -135,18 +135,30 @@ var counts={"未確認":0,"確認済み":0,"要修正":0,"対象外":0};
 drafts.forEach(function(d){var s=statusOf(String(d.id));counts[counts.hasOwnProperty(s)?s:"未確認"]++;});
 el("totalCount").textContent=drafts.length;el("pendingCount").textContent=counts["未確認"];el("approvedCount").textContent=counts["確認済み"];el("holdCount").textContent=counts["要修正"]+counts["対象外"];
 }
+function areaValuesFor(d){
+var values=[];
+[d.municipality,d.municipality_group].forEach(function(value){
+var label=String(value||"").trim();
+if(label&&label!=="地域要確認"&&label!=="市町未特定")values.push(label);
+});
+(d.municipality_candidates||[]).forEach(function(value){
+var label=String(value||"").trim();
+if(label&&label!=="地域要確認"&&label!=="市町未特定")values.push(label);
+});
+return values.filter(function(value,index,list){return list.indexOf(value)===index;});
+}
 function populateAreas(){
 var old=el("areaFilter").value,areas={};
-drafts.forEach(function(d){var m=d.municipality||"";if(m)areas[m]=1;(d.municipality_candidates||[]).forEach(function(x){areas[x]=1;});});
+drafts.forEach(function(d){areaValuesFor(d).forEach(function(name){areas[name]=1;});});
 el("areaFilter").innerHTML='<option value="">すべての市町</option>'+Object.keys(areas).sort().map(function(a){return '<option value="'+esc(a)+'">'+esc(a)+'</option>';}).join("");
-el("areaFilter").value=old;
+el("areaFilter").value=Object.prototype.hasOwnProperty.call(areas,old)?old:"";
 }
 function renderList(){
 var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value,pf=el("priorityFilter").value;
 var ff=el("flagFilter").value;
 var rows=drafts.filter(function(d){
 var id=String(d.id),s=statusOf(id),priority=d.review_priority||"確認推奨",changes=changeCandidates(d),hay=[d.title,d.content_type,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
-var areas=[d.municipality||""].concat(d.municipality_candidates||[],d.area||[]);
+var areas=areaValuesFor(d);
 return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0)&&(pf==="all"||(pf==="掲載済み店舗の変更候補"?changes.length>0:priority===pf))&&(!ff||flagsFor(d).indexOf(ff)>=0);
 });
 rows.sort(function(a,b){
