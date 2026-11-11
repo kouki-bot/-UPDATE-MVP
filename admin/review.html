@@ -179,7 +179,7 @@ function exportRecheckCandidates(){
 var selected=Object.keys(selectedExcluded),rows=[];
 selected.forEach(function(key,index){var row=null;excludedAudit.some(function(item,i){if(excludedKey(item,i)===key){row=item;return true;}return false;});if(!row)return;var url=safeHttpUrl(row.url||row.source_url);if(!url)return;var category=selectedExcluded[key].category;if(["新店・開店","閉店","移転","リニューアル"].indexOf(category)<0)return;rows.push({id:"audit-"+Date.now()+"-"+index,title:row.title||"要確認候補",suggested_headline:row.title||"要確認候補",category:[category],priority:(category==="閉店"||category==="新店・開店")?1:2,published_date:row.published_date||"",event_date:"",event_date_text:"",freshness:"日付確認が必要",age_days:null,area:[],area_status:"所在地は元記事で再確認",municipality:"",municipality_candidates:[],municipality_group:"地域要確認",municipality_status:"要確認",source_name:row.source_name||"",source_url:url,source_urls:[{source_name:row.source_name||"",url:url}],body_excerpt:row.body_excerpt||"",draft_summary:"除外監査ログから再調査。除外理由："+(row.exclusion_reason||"不明")+"。元記事で店舗の実在・所在地・動作内容を再確認してください。",relevance:"除外監査から再調査・要確認",content_type:"店舗・商業サービス（要確認）",collection_method:"除外監査から手動再調査",review_flags:["除外監査から手動再調査"],review_priority:"情報不足・保留",status:"未確認・公開禁止",created_at:new Date().toISOString()});});
 if(!rows.length){alert("再調査用に書き出せる記事がありません。元記事URLとカテゴリーを確認してください。");return;}
-downloadFile("manual_candidates_from_exclusion_audit.json",JSON.stringify({generated_at:new Date().toISOString(),candidates:rows},null,2)+"\\n");
+downloadFile("manual_candidates_from_exclusion_audit.json",JSON.stringify({generated_at:new Date().toISOString(),candidates:rows},null,2)+"\n");
 alert(rows.length+"件を再調査候補として書き出しました。内容を確認後、必要な記事だけ data/manual_candidates.json に追加してください。自動公開はされません。");
 }
 function renderList(){
