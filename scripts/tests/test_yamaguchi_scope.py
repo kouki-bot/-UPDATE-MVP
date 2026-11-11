@@ -9,6 +9,31 @@ spec.loader.exec_module(module)
 
 
 class YamaguchiScopeTests(unittest.TestCase):
+    def test_exclusion_audit_keeps_reason_and_source_for_event(self):
+        item = {
+            "title": "宇部市で秋のマルシェ開催",
+            "url": "https://example.com/market",
+            "source_name": "地域ニュース",
+            "description": "市内の飲食店が出店します。",
+        }
+        accepted, excluded = module.collect_candidates_with_audit([item], "RSS", 2)
+        self.assertEqual(accepted, [])
+        self.assertEqual(len(excluded), 1)
+        self.assertEqual(excluded[0]["exclusion_reason"], "イベント・催事")
+        self.assertEqual(excluded[0]["url"], item["url"])
+        self.assertEqual(excluded[0]["status"], "除外・公開禁止")
+
+    def test_exclusion_audit_keeps_uncertain_store_candidate_for_recheck(self):
+        item = {
+            "title": "新しいカフェの話題",
+            "url": "https://example.com/cafe",
+            "source_name": "地域ニュース",
+            "description": "山口県内に新しいお店ができるという情報です。",
+        }
+        accepted, excluded = module.collect_candidates_with_audit([item], "RSS", 2)
+        self.assertEqual(accepted, [])
+        self.assertEqual(excluded[0]["exclusion_reason"], "店舗動作の根拠不足（要再確認）")
+
     def test_clear_foreign_city_is_excluded(self):
         self.assertTrue(module.is_clearly_outside_yamaguchi("【開店】伊勢崎南店がオープン"))
 
