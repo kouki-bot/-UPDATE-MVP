@@ -142,7 +142,8 @@ el("areaFilter").innerHTML='<option value="">すべての市町</option>'+Object
 el("areaFilter").value=old;
 }
 function renderList(){
-var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value,pf=el("priorityFilter").value;\nvar ff=el("flagFilter").value;
+var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value,pf=el("priorityFilter").value;
+var ff=el("flagFilter").value;
 var rows=drafts.filter(function(d){
 var id=String(d.id),s=statusOf(id),priority=d.review_priority||"確認推奨",changes=changeCandidates(d),hay=[d.title,d.content_type,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
 var areas=[d.municipality||""].concat(d.municipality_candidates||[],d.area||[]);
