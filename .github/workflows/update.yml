@@ -58,12 +58,24 @@ jobs:
                   raise SystemExit(f"{filename}: unpublished check failed ({len(unsafe)})")
               print(f"{filename}: {len(rows)}件すべて未確認・公開禁止")
           PY
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("data/excluded_candidates.json").read_text(encoding="utf-8"))
+          rows = data.get("candidates", [])
+          unsafe = [x for x in rows if x.get("status") != "除外・公開禁止"]
+          if unsafe:
+              raise SystemExit(f"excluded_candidates.json: audit safety failed ({len(unsafe)})")
+          print(f"data/excluded_candidates.json: {len(rows)}件すべて除外・公開禁止")
+          PY
 
       - name: Save review candidates as downloadable artifact
         uses: actions/upload-artifact@v4
         with:
           name: yamaguchi-review-candidates
-          path: data/drafts.json
+          path: |
+            data/drafts.json
+            data/excluded_candidates.json
           if-no-files-found: error
           retention-days: 7
 

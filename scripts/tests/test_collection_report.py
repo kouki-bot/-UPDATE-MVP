@@ -72,6 +72,17 @@ class CollectionReportTests(unittest.TestCase):
         self.assertIn("確認事項・不足情報の内訳", rendered)
         self.assertIn("公開日未確認: 2件", rendered)
 
+    def test_excluded_candidate_reason_counts_are_reported(self):
+        report = module.build_report(
+            {"sources": [], "candidates": []},
+            {"sources": [], "candidates": []},
+            {"drafts": []},
+            {"excluded_count": 2, "reason_counts": {"イベント・催事": 1, "店舗動作の根拠不足（要再確認）": 1}, "candidates": []},
+        )
+        self.assertEqual(report["excluded_audit_count"], 2)
+        self.assertEqual(report["excluded_reason_counts"]["イベント・催事"], 1)
+        self.assertIn("除外理由の内訳", module.render_markdown(report))
+
     def test_non_review_only_draft_is_detected(self):
         report = module.build_report(
             {"sources": [], "candidates": []},

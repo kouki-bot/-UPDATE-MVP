@@ -10,6 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 OFFICIAL_FILE = BASE_DIR / "data" / "source_checks.json"
 RSS_FILE = BASE_DIR / "data" / "rss_candidates.json"
 OUTPUT_FILE = BASE_DIR / "data" / "drafts.json"
+EXCLUDED_FILE = BASE_DIR / "data" / "excluded_candidates.json"
 MANUAL_FILE = BASE_DIR / "data" / "manual_candidates.json"
 JST = timezone(timedelta(hours=9))
 UTC = timezone.utc
@@ -209,7 +210,11 @@ def is_event_only_content(title, body_excerpt=""):
         return False
     # 見出しがイベント告知でも、本文に実店舗の開店・閉店等があれば候補を残す。
     commercial_context = r"(?:店舗|店|カフェ|飲食店|レストラン|美容室|サロン|専門店|ショップ|ストア|スタジオ|ジム|スクール|教室|ベーカリー|スーパー|コンビニ)"
-    if has_body_movement_evidence(body_text) and re.search(commercial_context, body_text):
+    permanent_store_action = re.search(
+        r"(?:新規出店|新規開店|オープン|開店|開業|閉店|閉業|営業終了|移転|リニューアル|改装オープン|営業再開)",
+        body_text,
+    )
+    if permanent_store_action and re.search(commercial_context, body_text):
         return False
     store_movement = re.search(
         r"(?:新店|新店舗|新規開店|新規出店|オープン|開店|開業|閉店|営業終了|閉業|移転|リニューアル|改装オープン)",
@@ -469,6 +474,61 @@ def convert_candidate(item, method, source_priority):
         "area_status": clean_text(item.get("area_status")) or "地域は未確認。配信元の対象地域を店舗所在地として扱わない。",
         "source_priority": source_priority,
     }
+
+def exclusion_reason(item):
+    """候補化できなかった理由を監査用に分類する。削除理由ではなく再確認の手掛かり。"""
+    title = clean_text(item.get("title"))
+    url = clean_text(item.get("url"))
+    body = clean_text(item.get("body_excerpt") or item.get("description", ""))
+    if not title:
+        return "タイトル不足"
+    if not url:
+        return "記事URL不足"
+    if is_listing_candidate(title, url, item.get("source_url", "")):
+        return "一覧・カテゴリーページ"
+    if is_clearly_outside_yamaguchi(title, body):
+        return "山口県外と確認"
+    content_type = classify_content_type(title, body)
+    if content_type == "イベント・催事" or is_event_only_content(title, body):
+        return "イベント・催事"
+    if content_type in {"宿泊施設", "観光・レジャー", "公共・地域施設"}:
+        return content_type + "（サイト対象外）"
+    if not is_store_news(title, body):
+        return "店舗動作の根拠不足（要再確認）"
+    categories = list(dict.fromkeys(
+        normalize_categories(item) + detect_categories(title) + detect_categories(body)
+    ))
+    if not categories:
+        return "店舗動作・カテゴリー根拠不足（要再確認）"
+    return "候補化条件の不一致（要再確認）"
+
+
+def audit_excluded(item, method, reason):
+    return {
+        "title": clean_text(item.get("title")),
+        "url": clean_text(item.get("url")),
+        "source_url": clean_text(item.get("source_url")),
+        "source_name": clean_text(item.get("source_name")),
+        "published_date": clean_text(item.get("published_date")),
+        "body_excerpt": clean_text(item.get("body_excerpt") or item.get("description", ""))[:1000],
+        "collection_method": method,
+        "exclusion_reason": reason,
+        "content_type": classify_content_type(item.get("title", ""), item.get("body_excerpt") or item.get("description", "")),
+        "status": "除外・公開禁止",
+    }
+
+
+def collect_candidates_with_audit(items, method, source_priority):
+    accepted, excluded = [], []
+    for item in items:
+        candidate = convert_candidate(item, method, source_priority)
+        if candidate:
+            accepted.append(candidate)
+        else:
+            reason = exclusion_reason(item)
+            excluded.append(audit_excluded(item, method, reason))
+    return accepted, excluded
+
 
 def get_official_candidates():
     data = load_json(OFFICIAL_FILE)
@@ -1123,13 +1183,31 @@ def load_manual_candidates():
 
 
 def main():
-    official, rss = get_official_candidates(), get_rss_candidates()
+    official_data, rss_data = load_json(OFFICIAL_FILE), load_json(RSS_FILE)
+    official, official_excluded = collect_candidates_with_audit(official_data.get("candidates", []), "公式サイト", 1)
+    rss, rss_excluded = collect_candidates_with_audit(rss_data.get("candidates", []), "RSS", 2)
     unique = merge_candidates(official + rss)
     all_drafts = [make_draft(x) for x in unique]
-    excluded_scope_count = sum(1 for x in all_drafts if not is_in_store_scope(x))
-    scoped_drafts = [x for x in all_drafts if is_in_store_scope(x)]
+    excluded_rows = official_excluded + rss_excluded
+    scoped_drafts = []
+    for draft in all_drafts:
+        if not is_in_store_scope(draft):
+            excluded_rows.append(audit_excluded({
+                "title": draft.get("title"), "url": draft.get("source_url"),
+                "source_name": draft.get("source_name"), "published_date": draft.get("published_date"),
+                "body_excerpt": draft.get("body_excerpt"),
+            }, draft.get("collection_method", ""), draft.get("content_type", "サイト対象外") + "（サイト対象外）"))
+        else:
+            scoped_drafts.append(draft)
     old_count = sum(1 for x in scoped_drafts if x["freshness"] == "90日より前")
-    # 宿泊・観光・公共施設は店舗サイトの対象外。古い記事も通常候補から除外。
+    for draft in scoped_drafts:
+        if draft["freshness"] == "90日より前":
+            excluded_rows.append(audit_excluded({
+                "title": draft.get("title"), "url": draft.get("source_url"),
+                "source_name": draft.get("source_name"), "published_date": draft.get("published_date"),
+                "body_excerpt": draft.get("body_excerpt"),
+            }, draft.get("collection_method", ""), "90日より前（通常候補から除外）"))
+    # 古い記事も除外ログに残し、必要なら後から再確認できるようにする。
     drafts = [x for x in scoped_drafts if x["freshness"] != "90日より前"]
     published_data = load_json(BASE_DIR / "data" / "published.json")
     published_articles = published_data.get("articles", []) if isinstance(published_data, dict) else []
@@ -1153,10 +1231,23 @@ def main():
         municipality = draft.get("municipality_group") or "地域要確認"
         municipality_counts[municipality] = municipality_counts.get(municipality, 0) + 1
     municipality_counts = dict(sorted(municipality_counts.items(), key=lambda item: (item[0] == "地域要確認", item[0])))
+    excluded_counts = {}
+    for row in excluded_rows:
+        reason = row.get("exclusion_reason", "理由不明")
+        excluded_counts[reason] = excluded_counts.get(reason, 0) + 1
+    excluded_payload = {
+        "generated_at": now_jst().isoformat(),
+        "excluded_count": len(excluded_rows),
+        "reason_counts": dict(sorted(excluded_counts.items())),
+        "note": "除外候補は誤検出・取りこぼしの監査用です。公開・承認対象ではありません。理由は機械判定であり、必要に応じて元記事を再確認してください。",
+        "candidates": excluded_rows[-500:],
+    }
+    with EXCLUDED_FILE.open("w", encoding="utf-8") as f:
+        json.dump(excluded_payload, f, ensure_ascii=False, indent=2)
     output = {
         "generated_at": now_jst().isoformat(), "draft_count": len(drafts),
         "recent_draft_count": freshness_counts.get("直近30日", 0),
-        "excluded_old_count": old_count, "excluded_scope_count": excluded_scope_count, "freshness_counts": freshness_counts,
+        "excluded_old_count": old_count, "excluded_scope_count": sum(1 for x in excluded_rows if "サイト対象外" in x.get("exclusion_reason", "")), "excluded_audit_count": len(excluded_rows), "excluded_reason_counts": excluded_payload["reason_counts"], "freshness_counts": freshness_counts,
         "category_counts": category_counts,
         "content_type_counts": dict(sorted(content_type_counts.items())),
         "municipality_counts": municipality_counts,
@@ -1169,7 +1260,7 @@ def main():
     with OUTPUT_FILE.open("w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     print("公式サイト候補:", len(official), "RSS候補:", len(rss), "手動調査候補:", manual_added)
-    print("統合後:", len(unique), "下書き候補:", len(drafts), "対象外施設の除外:", excluded_scope_count, "90日より前の除外:", old_count)
+    print("統合後:", len(unique), "下書き候補:", len(drafts), "除外監査ログ:", len(excluded_rows), "理由別:", excluded_payload["reason_counts"], "90日より前の除外:", old_count)
     print("直近30日:", output["recent_draft_count"], "カテゴリー:", category_counts)
     print("鮮度:", freshness_counts, "保存先:", OUTPUT_FILE)
     print("施設タイプ別件数:", output["content_type_counts"])
