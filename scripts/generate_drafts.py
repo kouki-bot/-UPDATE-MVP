@@ -992,6 +992,13 @@ def annotate_review_flags(drafts):
             flags.append("公開日未確認")
         if not draft.get("event_date"):
             flags.append("開店・閉店等の日付未確認")
+        body_excerpt = clean_text(draft.get("body_excerpt", ""))
+        movement_evidence = re.search(
+            r"オープン|開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|リニューアル|改装オープン|営業再開",
+            body_excerpt,
+        )
+        if body_excerpt and not movement_evidence:
+            flags.append("本文で店舗動作を確認できず")
         if len(draft.get("municipality_candidates", [])) > 1:
             flags.append("市町候補が複数")
         elif not draft.get("municipality"):
@@ -1006,6 +1013,7 @@ def annotate_review_flags(drafts):
         missing_information_flags = {
             "本文抜粋なし", "公開日未確認",
             "開店・閉店等の日付未確認", "市町未特定",
+            "本文で店舗動作を確認できず",
         }
         if any(flag in critical_flags for flag in flags):
             draft["review_priority"] = "要優先確認"
@@ -1022,6 +1030,7 @@ def annotate_review_flags(drafts):
             "情報源URLなし", "本文抜粋なし", "公開日未確認",
             "開店・閉店等の日付未確認", "市町候補が複数",
             "市町未特定", "未来日付", "予定情報・要確認", "重複の可能性・要確認",
+            "本文で店舗動作を確認できず",
         }
         if draft.get("freshness") not in {"直近30日", "31〜90日前"}:
             draft["review_bucket"] = "確認待ち"
