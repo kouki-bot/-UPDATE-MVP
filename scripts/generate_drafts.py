@@ -210,7 +210,11 @@ def is_event_only_content(title, body_excerpt=""):
         return False
     # 見出しがイベント告知でも、本文に実店舗の開店・閉店等があれば候補を残す。
     commercial_context = r"(?:店舗|店|カフェ|飲食店|レストラン|美容室|サロン|専門店|ショップ|ストア|スタジオ|ジム|スクール|教室|ベーカリー|スーパー|コンビニ)"
-    if has_body_movement_evidence(body_text) and re.search(commercial_context, body_text):
+    permanent_store_action = re.search(
+        r"(?:新規出店|新規開店|オープン|開店|開業|閉店|閉業|営業終了|移転|リニューアル|改装オープン|営業再開)",
+        body_text,
+    )
+    if permanent_store_action and re.search(commercial_context, body_text):
         return False
     store_movement = re.search(
         r"(?:新店|新店舗|新規開店|新規出店|オープン|開店|開業|閉店|営業終了|閉業|移転|リニューアル|改装オープン)",
