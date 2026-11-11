@@ -63,7 +63,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: yamaguchi-review-candidates
-          path: data/drafts.json
+          path: |
+            data/drafts.json
+            data/excluded_candidates.json
           if-no-files-found: error
           retention-days: 7
 
