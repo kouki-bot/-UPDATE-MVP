@@ -11,6 +11,7 @@ FILES = {
     "official": ROOT / "data" / "source_checks.json",
     "rss": ROOT / "data" / "rss_candidates.json",
     "drafts": ROOT / "data" / "drafts.json",
+    "excluded": ROOT / "data" / "excluded_candidates.json",
 }
 
 def read_json(path):
@@ -90,7 +91,10 @@ def count_draft_values(rows, field, allow_lists=False):
     return dict(sorted(counts.items(), key=lambda item: (-item[1], item[0])))
 
 
-def build_report(official, rss, drafts):
+def build_report(official, rss, drafts, excluded=None):
+    excluded = excluded or {}
+    excluded_rows = excluded.get('candidates', [])
+    excluded_reason_counts = excluded.get('reason_counts', {})
     official_sources = official.get("sources", [])
     rss_sources = rss.get("sources", [])
     official_candidates = official.get("candidates", [])
@@ -132,6 +136,8 @@ def build_report(official, rss, drafts):
             rss_issues.append({"name": source.get("name", "名称不明"), "http_status": status})
 
     duplicates = audit_duplicates(official_candidates, rss_candidates)
+    if not isinstance(excluded_rows, list) or not isinstance(excluded_reason_counts, dict):
+        raise ValueError("Excluded audit JSON schema invalid")
 
     return {
         "official_source_count": len(official_sources),
@@ -143,6 +149,9 @@ def build_report(official, rss, drafts):
         "rss_items_read": rss_items,
         "rss_candidates": len(rss_candidates),
         "draft_count": len(draft_rows),
+        "excluded_audit_count": int(excluded.get("excluded_count", len(excluded_rows)) or 0),
+        "excluded_reason_counts": excluded_reason_counts,
+        "excluded_candidates": excluded_rows,
         "category_counts": category_counts,
         "municipality_counts": municipality_counts,
         "freshness_counts": freshness_counts,
@@ -192,6 +201,7 @@ def render_markdown(report):
         ("review_bucket_counts", "審査優先度別"),
         ("content_type_counts", "施設・サービス種別"),
         ("review_flag_counts", "確認事項・不足情報の内訳"),
+        ("excluded_reason_counts", "除外理由の内訳（誤検出監査用）"),
     ):
         counts = report.get(key, {})
         if counts:
@@ -229,7 +239,8 @@ def main():
     official = read_json(FILES["official"])
     rss = read_json(FILES["rss"])
     drafts = read_json(FILES["drafts"])
-    report = build_report(official, rss, drafts)
+    excluded = read_json(FILES["excluded"])
+    report = build_report(official, rss, drafts, excluded)
     markdown = render_markdown(report)
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary_path:
