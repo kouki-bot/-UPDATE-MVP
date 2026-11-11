@@ -64,7 +64,17 @@ jobs:
               "承認IDが重複しています",
               "承認IDに対応する審査記録がありません",
               "店舗変更履歴の形式が正しくありません",
+              "function countInsightValues(getValues)",
+              "function renderReviewInsights()",
+              "data-flag-filter",
+              "flagFilter",
+              "categoryInsights",
+              "municipalityInsights",
+
           ]
+          markup_required = ["審査候補の内訳", "確認事項が多い項目（押すと絞り込み）"]
+          missing_markup = [item for item in markup_required if item not in page]
+          assert not missing_markup, f"Missing review dashboard markup: {missing_markup}"
           missing = [item for item in required if item not in js]
           assert not missing, f"Missing change-review features: {missing}"
           print("Change outcome recording and history fields are present.")
