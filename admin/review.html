@@ -29,7 +29,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 .review-checks{display:grid;gap:8px;background:#edf2ec;border:1px solid #d8e3d7;padding:12px;border-radius:9px;margin:14px 0}.review-checks-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.review-check{display:flex;gap:9px;align-items:flex-start;font-size:12px;font-weight:600}.review-checks small{color:var(--muted);font-size:11px}.approve:disabled{opacity:.42;cursor:not-allowed}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.actions .approve{grid-column:1/-1;background:#315b43;color:white;min-height:50px}
 .exportbar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
-.review-insights{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px;margin:14px 0}
+.review-insights{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px;margin:14px 0}.audit-panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin:14px 0}.audit-toolbar{display:grid;grid-template-columns:1fr 220px;gap:8px;margin:10px 0}.audit-toolbar input,.audit-toolbar select{width:100%;border:1px solid #d8d9d0;border-radius:7px;background:#fff;padding:10px;font:inherit}.audit-list{display:grid;gap:8px;max-height:520px;overflow:auto}.audit-item{border:1px solid var(--line);border-radius:8px;padding:11px;display:grid;gap:7px}.audit-item-head{display:flex;gap:8px;align-items:flex-start}.audit-item-title{font-weight:700;font-size:13px;line-height:1.5}.audit-item-meta{font-size:11px;color:var(--muted)}.audit-item a{color:#315b43;font-size:12px;overflow-wrap:anywhere}.audit-item p{font-size:12px;margin:0;line-height:1.6}.audit-item select{border:1px solid #d8d9d0;border-radius:6px;padding:8px;background:#fff;font:inherit}.audit-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.audit-actions button{flex:1;min-width:160px}.audit-empty{padding:18px;text-align:center;color:var(--muted);font-size:12px}@media(max-width:760px){.audit-toolbar{grid-template-columns:1fr}.audit-panel{padding:11px}}
 .insight-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px}
 .insight-title{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:7px}
 .insight-chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -70,6 +70,14 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <select id="flagFilter"><option value="">すべての確認事項</option></select>
 <select id="priorityFilter"><option value="all">すべての確認区分</option><option value="要優先確認">要優先確認</option><option value="重複確認">重複確認</option><option value="情報不足・保留">情報不足・保留</option><option value="確認推奨">確認推奨</option><option value="基本項目あり・内容確認は必要">基本項目あり</option><option value="掲載済み店舗の変更候補">掲載済み店舗の変更候補</option></select>
 </div>
+<section class="audit-panel" aria-label="除外候補の監査">
+ <div class="list-head"><div><b>除外候補の再確認</b><div class="sub">除外された記事もここで確認できます。店舗情報の可能性があれば再調査用候補として書き出せます。</div></div><span class="sub" id="auditCount">未読込</span></div>
+ <div class="exportbar"><button class="secondary" id="excludedImportBtn">除外ログを読み込む</button><input type="file" id="excludedFile" accept="application/json,.json" hidden></div>
+ <div class="audit-toolbar"><input id="excludedSearch" type="search" placeholder="タイトル・情報元・本文で検索"><select id="excludedReasonFilter"><option value="">すべての除外理由</option></select></div>
+ <div class="audit-list" id="excludedItems"><div class="audit-empty">Actionsの成果物から excluded_candidates.json を読み込んでください。</div></div>
+ <div class="audit-actions"><button class="primary" id="exportRecheckBtn" disabled>選択した記事を再調査候補として書き出す</button></div>
+ <p class="footer-note">書き出したJSONは自動登録・公開されません。内容を確認し、必要な記事だけを data/manual_candidates.json に追加して次回収集で再審査します。</p>
+</section>
 <div class="layout">
 <section class="list"><div class="list-head"><b>確認待ち・記事一覧</b><span class="sub" id="shownCount"></span></div><div class="list-items" id="items"><div class="empty">記事データを読み込んでいます。</div></div></section>
 <section class="detail"><div class="detail-head"><b>記事の確認</b><span class="sub" id="detailId"></span></div><div class="detail-body" id="detail"><div class="empty">左側の記事を選択してください。</div></div></section>
@@ -79,7 +87,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <script>
 (function(){
 "use strict";
-var drafts=[],approvals={description:"人が元記事を確認した記事だけ公開許可する。",approved_ids:[],reviewed_articles:{},published_change_reviews:{},instructions:{}};
+var drafts=[],excludedAudit=[],selectedExcluded={},approvals={description:"人が元記事を確認した記事だけ公開許可する。",approved_ids:[],reviewed_articles:{},published_change_reviews:{},instructions:{}};
 var selectedId="",localKey="ylu_review_work_v1";
 var REVIEW_CHECKS=[
  {key:"store_name_verified",label:"店舗名が元記事・公式情報と一致"},
@@ -152,6 +160,27 @@ var old=el("areaFilter").value,areas={};
 drafts.forEach(function(d){areaValuesFor(d).forEach(function(name){areas[name]=1;});});
 el("areaFilter").innerHTML='<option value="">すべての市町</option>'+Object.keys(areas).sort().map(function(a){return '<option value="'+esc(a)+'">'+esc(a)+'</option>';}).join("");
 el("areaFilter").value=Object.prototype.hasOwnProperty.call(areas,old)?old:"";
+}
+function excludedKey(row,index){return String(row.url||row.source_url||row.title||"item")+"#"+index;}
+function renderExcludedAudit(){
+var q=(el("excludedSearch").value||"").trim().toLowerCase(),reason=el("excludedReasonFilter").value;
+var reasons={};excludedAudit.forEach(function(row){var value=String(row.exclusion_reason||"理由不明");reasons[value]=(reasons[value]||0)+1;});
+var old=reason;el("excludedReasonFilter").innerHTML='<option value="">すべての除外理由</option>'+Object.keys(reasons).sort().map(function(x){return '<option value="'+esc(x)+'">'+esc(x)+'（'+reasons[x]+'件）</option>';}).join("");el("excludedReasonFilter").value=Object.prototype.hasOwnProperty.call(reasons,old)?old:"";reason=el("excludedReasonFilter").value;
+var rows=excludedAudit.map(function(row,index){return {row:row,index:index,key:excludedKey(row,index)};}).filter(function(item){var row=item.row,hay=[row.title,row.source_name,row.exclusion_reason,row.body_excerpt,row.url].join(" ").toLowerCase();return (!q||hay.indexOf(q)>=0)&&(!reason||row.exclusion_reason===reason);});
+el("auditCount").textContent=excludedAudit.length+"件保存 ／ "+rows.length+"件表示";
+if(!rows.length){el("excludedItems").innerHTML='<div class="audit-empty">'+(excludedAudit.length?"条件に一致する除外記事はありません。":"除外ログを読み込んでください。")+'</div>';el("exportRecheckBtn").disabled=true;return;}
+var cats=["新店・開店","閉店","移転","リニューアル"];
+el("excludedItems").innerHTML=rows.map(function(item){var row=item.row,key=item.key,url=safeHttpUrl(row.url||row.source_url),category=selectedExcluded[key]&&selectedExcluded[key].category||"新店・開店";return '<article class="audit-item"><div class="audit-item-head"><input type="checkbox" data-audit-select="'+esc(key)+'" '+(selectedExcluded[key]?"checked":"")+'><div><div class="audit-item-title">'+esc(row.title||"タイトル未設定")+'</div><div class="audit-item-meta">'+esc(row.exclusion_reason||"理由不明")+' ／ '+esc(row.source_name||"情報元不明")+' ／ '+esc(row.published_date||"公開日不明")+'</div></div></div>'+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">元記事を開く</a>':'<div class="audit-item-meta">元記事URLなし</div>')+'<p>'+esc(row.body_excerpt||"本文抜粋なし")+'</p><label class="sub">再調査する場合の店舗動作カテゴリー<select data-audit-category="'+esc(key)+'">'+cats.map(function(c){return '<option value="'+c+'" '+(category===c?"selected":"")+'>'+c+'</option>';}).join("")+'</select></label></article>';}).join("");
+Array.prototype.forEach.call(el("excludedItems").querySelectorAll("[data-audit-select]"),function(node){node.addEventListener("change",function(){var key=node.getAttribute("data-audit-select");if(node.checked){selectedExcluded[key]=selectedExcluded[key]||{category:"新店・開店"};}else{delete selectedExcluded[key];}renderExcludedAudit();});});
+Array.prototype.forEach.call(el("excludedItems").querySelectorAll("[data-audit-category]"),function(node){node.addEventListener("change",function(){var key=node.getAttribute("data-audit-category");selectedExcluded[key]=selectedExcluded[key]||{};selectedExcluded[key].category=node.value;});});
+el("exportRecheckBtn").disabled=!Object.keys(selectedExcluded).length;
+}
+function exportRecheckCandidates(){
+var selected=Object.keys(selectedExcluded),rows=[];
+selected.forEach(function(key,index){var row=null;excludedAudit.some(function(item,i){if(excludedKey(item,i)===key){row=item;return true;}return false;});if(!row)return;var url=safeHttpUrl(row.url||row.source_url);if(!url)return;var category=selectedExcluded[key].category;if(["新店・開店","閉店","移転","リニューアル"].indexOf(category)<0)return;rows.push({id:"audit-"+Date.now()+"-"+index,title:row.title||"要確認候補",suggested_headline:row.title||"要確認候補",category:[category],priority:(category==="閉店"||category==="新店・開店")?1:2,published_date:row.published_date||"",event_date:"",event_date_text:"",freshness:"日付確認が必要",age_days:null,area:[],area_status:"所在地は元記事で再確認",municipality:"",municipality_candidates:[],municipality_group:"地域要確認",municipality_status:"要確認",source_name:row.source_name||"",source_url:url,source_urls:[{source_name:row.source_name||"",url:url}],body_excerpt:row.body_excerpt||"",draft_summary:"除外監査ログから再調査。除外理由："+(row.exclusion_reason||"不明")+"。元記事で店舗の実在・所在地・動作内容を再確認してください。",relevance:"除外監査から再調査・要確認",content_type:"店舗・商業サービス（要確認）",collection_method:"除外監査から手動再調査",review_flags:["除外監査から手動再調査"],review_priority:"情報不足・保留",status:"未確認・公開禁止",created_at:new Date().toISOString()});});
+if(!rows.length){alert("再調査用に書き出せる記事がありません。元記事URLとカテゴリーを確認してください。");return;}
+downloadFile("manual_candidates_from_exclusion_audit.json",JSON.stringify({generated_at:new Date().toISOString(),candidates:rows},null,2)+"\n");
+alert(rows.length+"件を再調査候補として書き出しました。内容を確認後、必要な記事だけ data/manual_candidates.json に追加してください。自動公開はされません。");
 }
 function renderList(){
 var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value,pf=el("priorityFilter").value;
@@ -294,6 +323,10 @@ var out=JSON.stringify(approvals,null,2)+"\n";downloadFile("publication_approval
 alert("公開用承認データを書き出しました。非公開リポジトリ kouki-bot/yamaguchi-review-private の data/publication_approvals.json に保存してください。");
 });
 el("draftImportBtn").addEventListener("click",function(){el("draftFile").click();});
+el("excludedImportBtn").addEventListener("click",function(){el("excludedFile").click();});
+el("excludedFile").addEventListener("change",function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(){try{var data=JSON.parse(reader.result);if(!Array.isArray(data.candidates))throw new Error("candidates配列がありません");var unsafe=data.candidates.filter(function(row){return row.status!=="除外・公開禁止";});if(unsafe.length)throw new Error("除外・公開禁止ではない行が含まれています");excludedAudit=data.candidates;selectedExcluded={};renderExcludedAudit();alert("除外監査ログ "+excludedAudit.length+"件を読み込みました。");}catch(err){alert("除外ログを読み込めませんでした："+err.message);}};reader.readAsText(file);e.target.value="";});
+el("exportRecheckBtn").addEventListener("click",exportRecheckCandidates);
+["excludedSearch","excludedReasonFilter"].forEach(function(id){el(id).addEventListener("input",renderExcludedAudit);el(id).addEventListener("change",renderExcludedAudit);});
 el("draftFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.drafts))throw new Error("drafts配列がありません");var unsafe=x.drafts.filter(function(d){return d.status!=="未確認・公開禁止";});if(unsafe.length)throw new Error("未確認・公開禁止ではない候補が含まれています");drafts=x.drafts;populateAreas();renderList();if(drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}else{selectedId="";renderDetail();}alert("候補データ "+drafts.length+"件を読み込みました。");}catch(err){alert("候補データを読み込めませんでした："+err.message);} };reader.readAsText(f);e.target.value="";});
 el("importBtn").addEventListener("click",function(){el("importFile").click();});
 el("importFile").addEventListener("change",function(e){
