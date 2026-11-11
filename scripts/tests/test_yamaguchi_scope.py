@@ -137,6 +137,32 @@ class YamaguchiScopeTests(unittest.TestCase):
                 self.assertEqual(module.classify_content_type(title, body), "イベント・催事")
                 self.assertFalse(module.is_in_store_scope({"title": title, "body_excerpt": body}))
 
+    def test_event_headline_with_real_store_opening_in_body_is_kept(self):
+        item = {
+            "title": "宇部市で春のフェア開催、新しいカフェも話題に",
+            "url": "https://example.com/2026/11/spring-fair-cafe",
+            "body_excerpt": "宇部市に新しいカフェ「青空」が11月1日にオープンしました。",
+        }
+        converted = module.convert_candidate(item, "RSS", 2)
+        self.assertIsNotNone(converted)
+        self.assertIn("新店・開店", converted["category"])
+
+    def test_body_future_opening_wording_is_kept(self):
+        item = {
+            "title": "防府市に新しい美容室",
+            "url": "https://example.com/hofu-salon",
+            "body_excerpt": "美容室「花」は12月にオープンすることが決まりました。",
+        }
+        converted = module.convert_candidate(item, "RSS", 2)
+        self.assertIsNotNone(converted)
+        self.assertIn("新店・開店", converted["category"])
+
+    def test_temporary_market_stall_is_not_a_permanent_store_opening(self):
+        title = "山口市で秋のマルシェ開催、人気店が出店"
+        body = "市内のカフェや雑貨店がマルシェに出店します。"
+        self.assertTrue(module.is_event_only_content(title, body))
+        self.assertFalse(module.is_store_news(title, body))
+
     def test_event_word_does_not_exclude_real_store_opening(self):
         title = "宇部市に新しいカフェがオープン、記念イベント開催"
         body = "カフェが新規開店しました。"

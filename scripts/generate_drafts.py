@@ -178,16 +178,14 @@ def detect_categories(title):
     return [cat for cat, words in mapping.items() if any(w in title for w in words)]
 
 def has_body_movement_evidence(body_excerpt):
-    """RSS本文に実際の店舗移動アクションが明記されている場合だけ補完する。"""
+    """本文に店舗の開閉店・移転等を示す具体的な表現があるか確認する。"""
     body_excerpt = clean_text(body_excerpt)
     # 既存店の周年紹介は新規開店の根拠にしない。
-    if re.search(r"(?:オープン|開店|開業)から.{0,12}\d+周年", body_excerpt):
+    if re.search(r"(?:オープン|開店|開業)から.{0,12}\\d+周年", body_excerpt):
         return False
-    return bool(re.search(
-        r"(?:オープン|開店|開業|出店|移転|閉店|営業終了|リニューアル)"
-        r"(?:しました|していました|しています|した|している|します|する|を開始|予定|を予定)",
-        body_excerpt,
-    ))
+    action = r"(?:オープン|開店|開業|出店|移転|閉店|閉業|営業終了|営業を終了|リニューアル|改装オープン|営業再開)"
+    endings = r"(?:しました|していました|しています|した|している|します|する|することが決ま(?:りました|った)|することを発表|する予定|予定|へ|を発表|を決定|を計画|を開始|を終了|となります|となる)"
+    return bool(re.search(action + endings, body_excerpt))
 
 def is_event_only_content(title, body_excerpt=""):
     """店舗の開業・閉店ではなく、単発イベント告知と判断できる候補を除外する。"""
@@ -204,7 +202,14 @@ def is_event_only_content(title, body_excerpt=""):
         return True
     if re.search(r"(?:一日限り|1日限り|一日だけ|1日だけ|一日限定|1日限定).{0,30}(?:営業|開店|レストラン|飲食店)", body_text):
         return True
+    # マルシェ等への一時的な出店・出展は、常設店舗の開店と区別する。
+    if re.search(r"(?:マルシェ|イベント|フェス|祭り|催事|フェア).{0,25}(?:出店|出展)|(?:出店|出展).{0,25}(?:マルシェ|イベント|フェス|祭り|催事)", body_text):
+        return True
     if not any(marker in title_text for marker in event_markers):
+        return False
+    # 見出しがイベント告知でも、本文に実店舗の開店・閉店等があれば候補を残す。
+    commercial_context = r"(?:店舗|店|カフェ|飲食店|レストラン|美容室|サロン|専門店|ショップ|ストア|スタジオ|ジム|スクール|教室|ベーカリー|スーパー|コンビニ)"
+    if has_body_movement_evidence(body_text) and re.search(commercial_context, body_text):
         return False
     store_movement = re.search(
         r"(?:新店|新店舗|新規開店|新規出店|オープン|開店|開業|閉店|営業終了|閉業|移転|リニューアル|改装オープン)",
