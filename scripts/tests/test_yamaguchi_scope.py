@@ -126,6 +126,43 @@ class YamaguchiScopeTests(unittest.TestCase):
         self.assertEqual(module.classify_content_type(title, body), "店舗・商業施設")
         self.assertTrue(module.is_in_store_scope({"title": title, "body_excerpt": body}))
 
+    def test_event_only_articles_are_out_of_store_scope(self):
+        cases = [
+            ("宇部市でマルシェイベント開催", "地域の店舗が出店する催事です。"),
+            ("防府市で秋のグルメフェア", "期間限定の催事を開催します。"),
+            ("山口市でワークショップ開催", "参加者を募集しています。"),
+        ]
+        for title, body in cases:
+            with self.subTest(title=title):
+                self.assertEqual(module.classify_content_type(title, body), "イベント・催事")
+                self.assertFalse(module.is_in_store_scope({"title": title, "body_excerpt": body}))
+
+    def test_event_word_does_not_exclude_real_store_opening(self):
+        title = "宇部市に新しいカフェがオープン、記念イベント開催"
+        body = "カフェが新規開店しました。"
+        self.assertEqual(module.classify_content_type(title, body), "店舗・商業施設")
+        self.assertTrue(module.is_in_store_scope({"title": title, "body_excerpt": body}))
+
+    def test_tourism_and_public_facilities_are_out_of_scope(self):
+        cases = [
+            ("秋吉台の観光スポットがリニューアル", "観光施設の案内"),
+            ("市立図書館がリニューアルオープン", "公共施設の改修"),
+            ("道の駅がリニューアルオープン", "施設全体の改装"),
+            ("市民会館が営業開始", "公共施設のお知らせ"),
+        ]
+        for title, body in cases:
+            with self.subTest(title=title):
+                self.assertFalse(module.is_in_store_scope({"title": title, "body_excerpt": body}))
+
+    def test_store_inside_commercial_facility_is_kept(self):
+        item = {"title": "道の駅に新しいカフェがオープン", "body_excerpt": "カフェが新規出店しました。"}
+        self.assertTrue(module.is_in_store_scope(item))
+
+    def test_unknown_facility_remains_reviewable(self):
+        item = {"title": "地域の新しい拠点がオープン", "body_excerpt": "詳細は確認が必要です。"}
+        self.assertEqual(module.classify_content_type(item["title"], item["body_excerpt"]), "その他施設・サービス（要確認）")
+        self.assertTrue(module.is_in_store_scope(item))
+
     def test_body_only_pilates_opening_is_kept(self):
         item = {
             "title": "宇部・恩田にピラティススタジオ「UNO」 マシン完備で個別ケア提供",
