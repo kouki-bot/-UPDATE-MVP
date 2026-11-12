@@ -1,6 +1,58 @@
 {
-  "updated_at": "2026-11-12T19:47:00.996947+09:00",
+  "updated_at": "2026-11-12T19:48:02.863967+09:00",
   "articles": [
+    {
+      "id": "b8f21d6a4c903e75",
+      "title": "【山口市】スーパーセンタートライアル山口小郡店が11月13日8時グランドオープン予定",
+      "suggested_headline": "【山口市】スーパーセンタートライアル山口小郡店が11月13日8時グランドオープン予定",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-12",
+      "event_date": "2026-11-13",
+      "event_date_text": "2026年11月13日8時",
+      "freshness": "直近30日",
+      "age_days": 0,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "公式店舗ページと県公示資料で所在地確認済み",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "確認済み",
+      "source_name": "株式会社トライアルカンパニー 公式店舗ページ",
+      "source_url": "https://www.trial-net.co.jp/shops/827/",
+      "source_urls": [
+        {
+          "source_name": "株式会社トライアルカンパニー 公式店舗ページ",
+          "url": "https://www.trial-net.co.jp/shops/827/"
+        },
+        {
+          "source_name": "山口県 大規模小売店舗立地法公告",
+          "url": "https://www.pref.yamaguchi.lg.jp/soshiki/85/353906.html"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "トライアル公式店舗ページは、山口小郡店について11月9日〜12日のプレオープン（10時〜19時）と11月13日8時のグランドオープン予定を掲載。所在地は山口市陶1170番1、通常営業時間は24時間。",
+      "body_excerpt_method": "",
+      "draft_summary": "公式店舗ページで開店予定日時・住所・店舗情報を確認済み。11月13日8時の開店予定として掲載可能。",
+      "relevance": "店舗ニュース候補・公式発表確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "公式サイト",
+      "status": "公開済み",
+      "created_at": "2026-11-12T19:30:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・要確認",
+      "review_bucket": "通常候補（要確認）",
+      "body": "スーパーセンタートライアル山口小郡店（山口市陶1170番1）は、2026年11月13日（金）8時にグランドオープン予定です。公式店舗ページでは11月9日〜12日のプレオープン時間を10時〜19時と案内しています。通常営業時間は24時間です。",
+      "business_status": "開店予定",
+      "approved_at": "2026-11-12T19:35:00+09:00",
+      "published_at": "2026-11-12T19:48:02.863967+09:00"
+    },
     {
       "id": "235a1e438be7faf8",
       "title": "【宇部市】すき家 190号宇部西割店が改装のため一時休業中。12月15日リニューアルオープン予定",
@@ -232,6 +284,58 @@
       "business_status": "閉店予定",
       "approved_at": "2026-11-09T00:57:41.331Z",
       "published_at": "2026-11-12T18:21:27.792104+09:00"
+    },
+    {
+      "id": "a7e93b1c5d8f2046",
+      "title": "【山口市】MrMax山口店が11月5日にリニューアルオープン",
+      "suggested_headline": "【山口市】MrMax山口店が11月5日にリニューアルオープン",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-02",
+      "event_date": "2026-11-05",
+      "event_date_text": "2026年11月5日",
+      "freshness": "直近30日",
+      "age_days": 10,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "公式発表・公式店舗ページで確認済み",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "確認済み",
+      "source_name": "株式会社ミスターマックス 公式サイト",
+      "source_url": "https://mrmax.co.jp/info/mrmax%E5%B1%B1%E5%8F%A3%E5%BA%97-%E3%83%AA%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%A2%E3%83%AB%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%EF%BD%9E11%E6%9C%885%E6%97%A5%E6%9C%A8-%E7%94%9F%E9%AE%AE%E9%A3%9F/",
+      "source_urls": [
+        {
+          "source_name": "株式会社ミスターマックス 公式発表",
+          "url": "https://mrmax.co.jp/info/mrmax%E5%B1%B1%E5%8F%A3%E5%BA%97-%E3%83%AA%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%A2%E3%83%AB%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%EF%BD%9E11%E6%9C%885%E6%97%A5%E6%9C%A8-%E7%94%9F%E9%AE%AE%E9%A3%9F/"
+        },
+        {
+          "source_name": "MrMax山口店 公式店舗ページ",
+          "url": "https://mrmax.co.jp/shops/0000000024/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "株式会社ミスターマックスは2026年11月2日、MrMax山口店を11月5日8時にリニューアルオープンすると発表。生鮮・惣菜売場の新設、営業時間を8時〜22時へ拡大。公式店舗ページで住所は山口市黒川82番1、現在の営業時間も確認できます。",
+      "body_excerpt_method": "",
+      "draft_summary": "運営会社の公式発表と公式店舗ページで店舗名・所在地・日付・営業情報を確認済み。",
+      "relevance": "店舗ニュース候補・公式発表確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "公式サイト",
+      "status": "公開済み",
+      "created_at": "2026-11-12T19:30:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・要確認",
+      "review_bucket": "通常候補（要確認）",
+      "body": "MrMax山口店（山口市黒川82番1）は、2026年11月5日8時にリニューアルオープンしました。運営会社の公式発表によると、生鮮食品・惣菜売場を新設し、営業時間を8時〜22時に拡大しています。",
+      "business_status": "営業中",
+      "approved_at": "2026-11-12T19:35:00+09:00",
+      "published_at": "2026-11-12T19:48:02.863967+09:00"
     },
     {
       "id": "c18b507ab8356416",
