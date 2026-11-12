@@ -5,7 +5,7 @@ on:
   # Private approvals are checked periodically; only records passing all
   # publication checks in publish_approved.py can reach the public site.
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "7,37 * * * *"
   push:
     branches: [main]
     paths:
