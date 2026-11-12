@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T20:10:44.727437+09:00",
+  "updated_at": "2026-11-12T22:48:52.605202+09:00",
   "articles": [
     {
       "id": "f3a8c1d7e5b90264",
@@ -196,6 +196,57 @@
       "business_status": "開店予定",
       "approved_at": "2026-11-12T20:35:00+09:00",
       "published_at": "2026-11-12T20:10:44.727437+09:00"
+    },
+    {
+      "id": "c2e4a8b1d7f90365",
+      "title": "【下関市】レコパン×GooZoo長府店が11月19日リニューアルオープン",
+      "suggested_headline": "【下関市】レコパン×GooZoo長府店が11月19日リニューアルオープン",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-12",
+      "event_date": "2026-11-19",
+      "event_date_text": "2026年11月19日",
+      "freshness": "直近30日",
+      "age_days": 0,
+      "area": [
+        "下関市"
+      ],
+      "area_status": "運営会社公式発表および施設公式所在地で確認",
+      "municipality": "下関市",
+      "municipality_candidates": [
+        "下関市"
+      ],
+      "municipality_group": "下関市",
+      "municipality_status": "確認済み",
+      "source_name": "岡野食品株式会社（PR TIMES公式配信）",
+      "source_url": "https://prtimes.jp/main/html/rd/p/000000004.000193887.html/",
+      "source_urls": [
+        {
+          "source_name": "岡野食品株式会社 公式発表",
+          "url": "https://prtimes.jp/main/html/rd/p/000000004.000193887.html/"
+        },
+        {
+          "source_name": "ゆめタウン長府 公式アクセスガイド",
+          "url": "https://www.izumi.jp/tenpo/chohu/access"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "レコパンフードビジネス株式会社は、ベーカリー「レコパン×GooZoo長府店」を2026年11月19日（木）、ゆめタウン長府店内にリニューアルオープンすると発表しました。店舗コンセプトと内装を刷新し、高加水系のパンや焼き菓子などを展開します。所在地はゆめタウン長府（下関市ゆめタウン1-1）内です。",
+      "draft_summary": "運営会社の発表で店舗名・リニューアル日・施設名を確認。施設公式アクセスガイドで所在地を照合。",
+      "relevance": "店舗ニュース候補・運営会社公式発表確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "企業公式発表",
+      "status": "公開済み",
+      "created_at": "2026-11-12T20:45:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目確認済み",
+      "review_bucket": "通常候補（要確認）",
+      "body": "下関市のゆめタウン長府店内にあるベーカリー「レコパン×GooZoo長府店」は、2026年11月19日（木）にリニューアルオープン予定です。運営会社の岡野食品株式会社が11月12日に発表しました。店舗空間とコンセプトを刷新し、高加水系のパンや焼き菓子などを展開します。施設の所在地は山口県下関市ゆめタウン1-1です。",
+      "business_status": "リニューアル予定",
+      "approved_at": "2026-11-12T20:50:00+09:00",
+      "published_at": "2026-11-12T22:48:52.605202+09:00"
     },
     {
       "id": "235a1e438be7faf8",
