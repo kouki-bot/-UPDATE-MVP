@@ -72,4 +72,21 @@ class Tests(unittest.TestCase):
   result=self.run_script()
   self.assertEqual(result.returncode,0,result.stderr)
   self.assertEqual(self.published()["articles"][0]["business_status"],"一時休業中")
+
+ def test_existing_approved_article_is_rechecked_without_current_draft(self):
+  existing=self.draft(municipality="旧データ",municipality_status="要確認",review_flags=["古いフラグ"],status="公開済み")
+  self.setup(published={"updated_at":"old","articles":[existing]})
+  self.write("drafts.json",{"drafts":[]})
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  article=self.published()["articles"][0]
+  self.assertEqual(article["municipality"],"山口市")
+  self.assertEqual(article["municipality_status"],"確認済み")
+  self.assertEqual(article["review_flags"],[])
+ def test_revoked_approval_removes_existing_public_article(self):
+  existing=self.draft(status="公開済み")
+  self.setup(approved=False,published={"updated_at":"old","articles":[existing]})
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertEqual(self.published()["articles"],[])
 if __name__=="__main__": unittest.main()
