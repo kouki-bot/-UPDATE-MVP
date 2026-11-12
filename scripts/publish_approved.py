@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Publish manually approved drafts without losing approvals during regeneration."""
+"""Publish only drafts passing all six human review checks and approval."""
 import json
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
