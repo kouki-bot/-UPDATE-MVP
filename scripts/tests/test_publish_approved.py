@@ -67,4 +67,9 @@ class Tests(unittest.TestCase):
   self.setup(review=self.review(municipality="")); self.run_script(); self.assertEqual(self.published()["articles"],[])
  def test_existing_articles_preserved_if_no_new_approved(self):
   old={"updated_at":"old","articles":[{"id":"old","title":"既存"}]}; self.setup(approved=False,published=old); self.run_script(); self.assertEqual(self.published()["articles"],old["articles"])
+ def test_temporary_closure_status_can_publish(self):
+  self.setup(review=self.review(event_date="2026-12-15",business_status="一時休業中"))
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertEqual(self.published()["articles"][0]["business_status"],"一時休業中")
 if __name__=="__main__": unittest.main()

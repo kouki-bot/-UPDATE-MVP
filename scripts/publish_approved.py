@@ -60,7 +60,7 @@ def main():
    print(f"公開保留 {aid}: reviewed_at と reviewer_checked_source=true が必要"); continue
   if not valid_date(article.get("published_date")) or not valid_date(str(article.get("event_date",""))[:10]):
    print(f"公開保留 {aid}: 記事公開日または店舗動作日の日付形式が不正"); continue
-  if article.get("business_status") not in ("開店予定","営業中","閉店予定","閉店済み","移転予定","移転済み","リニューアル予定","リニューアル済み"):
+  if article.get("business_status") not in ("開店予定","営業中","閉店予定","閉店済み","一時休業中","移転予定","移転済み","リニューアル予定","リニューアル済み"):
    print(f"公開保留 {aid}: 店舗の現在の状態が不正"); continue
   if not str(article.get("source_url","")).startswith(("https://","http://")):
    print(f"公開保留 {aid}: 元記事URLが不正"); continue
