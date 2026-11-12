@@ -66,6 +66,8 @@ def main():
   if not str(article.get("source_url","")).startswith(("https://","http://")):
    print(f"公開保留 {aid}: 元記事URLが不正"); continue
   article["review_flags"]=[]
+  if article.get("business_status")=="一時休業中":
+   article["category"]=["リニューアル"]
   article["municipality_status"]="確認済み"
   article["status"]="公開済み"
   article["approved_at"]=review["reviewed_at"]
