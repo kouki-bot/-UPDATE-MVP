@@ -106,27 +106,26 @@ const imageLibrary={
 };
 function articleImageFor(a,index){
   const text=[a.title,a.name,a.summary,a.body,a.draft_summary,a.industry,a.business_type,a.category,Array.isArray(a.categories)?a.categories.join(" "):""].map(txt).join(" ");
-  if(/パン|ベーカリー|ケーキ|スイーツ/.test(text))return imageLibrary.bakery;
+  if(/パン|ベーカリー|ケーキ|スイーツ|菓子/.test(text))return imageLibrary.bakery;
   if(/カフェ|喫茶|コーヒー/.test(text))return imageLibrary.coffee;
-  if(/美容|理容|ネイル|サロン|クリニック/.test(text))return imageLibrary.interior;
-  if(/スーパー|ドラッグ|衣料|アパレル|雑貨|小売|しまむら|西松屋|トライアル/.test(text))return imageLibrary.shop;
-  if(/リニューアル|改装|移転|内装/.test(text))return imageLibrary.plants;
-  if(/閉店|営業終了|閉業/.test(text))return imageLibrary.interior;
-  if(/飲食|レストラン|ラーメン|うどん|そば|寿司|焼肉|居酒屋|食堂|レストラン/.test(text))return imageLibrary.cafe;
-  const choices=[imageLibrary.cafe,imageLibrary.shop,imageLibrary.interior,imageLibrary.plants];
-  return choices[index%choices.length];
+  if(/美容|理容|ネイル|サロン|エステ|整体|クリニック|歯科/.test(text))return imageLibrary.plants;
+  if(/スーパー|ドラッグ|コンビニ|衣料|アパレル|雑貨|小売|しまむら|西松屋|トライアル|書店/.test(text))return imageLibrary.shop;
+  if(/ラーメン|うどん|そば|寿司|焼肉|居酒屋|食堂|レストラン|飲食|弁当/.test(text))return imageLibrary.cafe;
+  if(/リニューアル|改装|移転|内装|閉店|営業終了|閉業/.test(text))return imageLibrary.plants;
+  return imageLibrary.shop;
 }
 function appendArticleImage(card,a,index){
   const frame=document.createElement("div");
   frame.className="article-image";
   const img=document.createElement("img");
   img.src=articleImageFor(a,index);
-  img.alt="店舗のイメージ写真";
+  img.alt="店舗情報のイメージ写真";
   img.loading="lazy";
-  img.onerror=()=>{img.style.display="none";};
+  img.decoding="async";
   const caption=document.createElement("span");
   caption.className="image-caption";
   caption.textContent="イメージ写真";
+  img.onerror=()=>{frame.classList.add("is-fallback");img.style.display="none";caption.textContent="画像を読み込めません";};
   frame.append(img,caption);
   card.appendChild(frame);
 }
