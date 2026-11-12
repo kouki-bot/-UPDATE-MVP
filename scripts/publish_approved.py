@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Publish only records with current approval and all six human review checks.
 
-Rebuild all approved public records from the latest private review snapshot, including newly reviewed store updates.
+Rebuild all approved public records from the latest private review snapshot, including newly reviewed store updates and regional shop openings.
 """
 import json
 from pathlib import Path
