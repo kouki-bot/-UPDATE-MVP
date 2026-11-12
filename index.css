@@ -1546,3 +1546,55 @@ button {
     padding: 7px 8px;
   }
 }
+
+
+/* ===== Mobile launch polish: keep the first useful content in reach ===== */
+@media (max-width: 600px) {
+  .hero {
+    padding: 38px 0 44px;
+    gap: 24px;
+  }
+
+  .hero .eyebrow {
+    margin-bottom: 17px;
+  }
+
+  .hero h1 {
+    line-height: 1.34;
+  }
+
+  .hero-description {
+    margin: 19px 0 20px;
+    line-height: 2;
+  }
+
+  .hero-link {
+    padding: 9px 0;
+  }
+
+  .hero-art {
+    min-height: 205px;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-header {
+    gap: 10px;
+  }
+
+  .header-nav {
+    gap: 9px;
+    font-size: 9px;
+  }
+
+  .header-nav a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .header-nav .nav-contact {
+    padding: 7px 8px;
+  }
+}
