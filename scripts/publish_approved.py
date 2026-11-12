@@ -64,6 +64,8 @@ def main():
    print(f"公開保留 {aid}: 店舗の現在の状態が不正"); continue
   if not str(article.get("source_url","")).startswith(("https://","http://")):
    print(f"公開保留 {aid}: 元記事URLが不正"); continue
+  article["review_flags"]=sorted(flags)
+  article["municipality_status"]="確認済み"
   article["status"]="公開済み"
   article["approved_at"]=review["reviewed_at"]
   article["published_at"]=datetime.now(JST).isoformat()
