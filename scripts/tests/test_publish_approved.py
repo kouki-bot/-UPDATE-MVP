@@ -74,7 +74,7 @@ class Tests(unittest.TestCase):
   self.assertEqual(self.published()["articles"][0]["business_status"],"一時休業中")
 
  def test_existing_approved_article_is_rechecked_without_current_draft(self):
-  existing=self.draft(municipality="旧データ",municipality_status="要確認",review_flags=["古いフラグ"],status="公開済み")
+  existing=self.draft(municipality="旧データ",municipality_status="要確認",review_flags=[],status="公開済み")
   self.setup(published={"updated_at":"old","articles":[existing]})
   self.write("drafts.json",{"drafts":[]})
   result=self.run_script()
