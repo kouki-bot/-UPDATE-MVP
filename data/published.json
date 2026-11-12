@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T22:48:52.605202+09:00",
+  "updated_at": "2026-11-12T22:56:40.360710+09:00",
   "articles": [
     {
       "id": "f3a8c1d7e5b90264",
@@ -247,6 +247,54 @@
       "business_status": "リニューアル予定",
       "approved_at": "2026-11-12T20:50:00+09:00",
       "published_at": "2026-11-12T22:48:52.605202+09:00"
+    },
+    {
+      "id": "4a7d9c2e6f1b8035",
+      "title": "【下関市】しまむら豊浦店が11月7日にリニューアルオープン",
+      "suggested_headline": "【下関市】しまむら豊浦店が11月7日にリニューアルオープン",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-12",
+      "event_date": "2026-11-07",
+      "event_date_text": "2026年11月7日",
+      "freshness": "直近30日",
+      "age_days": 0,
+      "area": [
+        "下関市"
+      ],
+      "area_status": "しまむらグループ公式店舗ページで所在地確認済み",
+      "municipality": "下関市",
+      "municipality_candidates": [
+        "下関市"
+      ],
+      "municipality_group": "下関市",
+      "municipality_status": "確認済み",
+      "source_name": "しまむらグループ公式店舗ページ",
+      "source_url": "https://www.shimamura.gr.jp/shop/map_detail_2118.html",
+      "source_urls": [
+        {
+          "source_name": "しまむらグループ公式店舗ページ",
+          "url": "https://www.shimamura.gr.jp/shop/map_detail_2118.html"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "しまむら豊浦店（下関市豊浦町大字吉永1746）は、2026年11月7日（土）にリニューアルオープンしました。しまむらグループ公式店舗ページでリニューアル日、所在地、営業時間（10:00～19:00）を確認できます。現在は営業中です。",
+      "body_excerpt_method": "",
+      "draft_summary": "しまむら公式店舗ページで店舗名・下関市の所在地・2026年11月7日のリニューアル日・営業時間を確認。公開済み記事25件と照合し重複なし。",
+      "relevance": "店舗ニュース候補・企業公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "公式サイト",
+      "status": "公開済み",
+      "created_at": "2026-11-12T16:00:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目確認済み",
+      "review_bucket": "通常候補（要確認）",
+      "body": "しまむら豊浦店（下関市豊浦町大字吉永1746）は、2026年11月7日（土）にリニューアルオープンしました。しまむらグループ公式店舗ページでリニューアル日、所在地、営業時間（10:00～19:00）を確認できます。現在は営業中です。",
+      "business_status": "営業中",
+      "approved_at": "2026-11-12T16:00:00+09:00",
+      "published_at": "2026-11-12T22:56:40.360710+09:00"
     },
     {
       "id": "235a1e438be7faf8",
