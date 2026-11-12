@@ -95,6 +95,42 @@ const isRelated=a=>cats(a).some(c=>['閉店','閉店・営業終了','移転','�
 const isLodging=a=>a&&((a.content_type==='宿泊施設')||/ホテル|旅館|宿泊施設|民宿|民泊|ゲストハウス|ペンション|コテージ|簡易宿所|東横イン/.test(txt(a.title)+' '+txt(a.content_type)));
 const badge=a=>{const c=cats(a);if(c.includes('閉店')||c.includes('閉店・営業終了'))return '閉店情報';if(c.includes('移転'))return '移転情報';if(c.includes('リニューアル'))return 'リニューアル';if(c.includes('長期休業'))return '長期休業';return '営業情報';};
 const safeURL=v=>{try{const u=new URL(v);return ['https:','http:'].includes(u.protocol)?u.href:'';}catch(e){return '';}};
+
+const imageLibrary={
+  cafe:"https://images.unsplash.com/photo-1445116572660-236099ec97a0?auto=format&fit=crop&w=1000&q=85",
+  coffee:"https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1000&q=85",
+  bakery:"https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1000&q=85",
+  interior:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=85",
+  shop:"https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1000&q=85",
+  plants:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=85"
+};
+function articleImageFor(a,index){
+  const text=[a.title,a.name,a.summary,a.body,a.draft_summary,a.industry,a.business_type,a.category,Array.isArray(a.categories)?a.categories.join(" "):""].map(txt).join(" ");
+  if(/パン|ベーカリー|ケーキ|スイーツ/.test(text))return imageLibrary.bakery;
+  if(/カフェ|喫茶|コーヒー/.test(text))return imageLibrary.coffee;
+  if(/美容|理容|ネイル|サロン|クリニック/.test(text))return imageLibrary.interior;
+  if(/スーパー|ドラッグ|衣料|アパレル|雑貨|小売|しまむら|西松屋|トライアル/.test(text))return imageLibrary.shop;
+  if(/リニューアル|改装|移転|内装/.test(text))return imageLibrary.plants;
+  if(/閉店|営業終了|閉業/.test(text))return imageLibrary.interior;
+  if(/飲食|レストラン|ラーメン|うどん|そば|寿司|焼肉|居酒屋|食堂|レストラン/.test(text))return imageLibrary.cafe;
+  const choices=[imageLibrary.cafe,imageLibrary.shop,imageLibrary.interior,imageLibrary.plants];
+  return choices[index%choices.length];
+}
+function appendArticleImage(card,a,index){
+  const frame=document.createElement("div");
+  frame.className="article-image";
+  const img=document.createElement("img");
+  img.src=articleImageFor(a,index);
+  img.alt="店舗のイメージ写真";
+  img.loading="lazy";
+  img.onerror=()=>{img.style.display="none";};
+  const caption=document.createElement("span");
+  caption.className="image-caption";
+  caption.textContent="イメージ写真";
+  frame.append(img,caption);
+  card.appendChild(frame);
+}
+
 const areaOf=a=>{const s=[a.area,a.municipality,a.city,a.location,a.address,a.title,a.summary].map(txt).join(' ');return ['山口市','宇部市','山陽小野田市','下関市','防府市','周南市','岩国市','萩市'].find(x=>s.includes(x))||'その他';};
 
 function articleShareId(value){let hash=0;for(let i=0;i<value.length;i++){hash=((hash<<5)-hash)+value.charCodeAt(i);hash|=0;}return "story-"+Math.abs(hash).toString(36);}
@@ -108,6 +144,7 @@ container.replaceChildren();count.textContent=rows.length+'件の情報';
 if(!rows.length){const p=document.createElement('p');p.className='empty-state';p.textContent=articles.length?'条件に合う情報はありません。検索条件を変えてください。':'現在、公開中の閉店・移転情報はありません。確認できた情報から順次掲載します。';container.appendChild(p);return;}
 rows.forEach(a=>{
 const card=document.createElement('article');card.className='article-card';
+      appendArticleImage(card,a,rows.indexOf(a));
 const tag=document.createElement('span');tag.className='badge';tag.textContent=badge(a);card.appendChild(tag);
 const h=document.createElement('h2');h.textContent=txt(a.title);card.appendChild(h);
 const summary=document.createElement('p');summary.className='summary';summary.textContent=txt(a.summary||a.body||a.draft_summary||'詳細は情報源をご確認ください。');card.appendChild(summary);
