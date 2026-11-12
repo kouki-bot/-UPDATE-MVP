@@ -1,6 +1,54 @@
 {
-  "updated_at": "2026-11-12T20:05:18.567074+09:00",
+  "updated_at": "2026-11-12T20:10:44.727437+09:00",
   "articles": [
+    {
+      "id": "f3a8c1d7e5b90264",
+      "title": "【山口市】西松屋 サンパークあじす店が2026年11月14日オープン予定",
+      "suggested_headline": "【山口市】西松屋 サンパークあじす店が2026年11月14日オープン予定",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-12",
+      "event_date": "2026-11-14",
+      "event_date_text": "2026年11月14日",
+      "freshness": "直近30日",
+      "age_days": 0,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "企業公式店舗情報で確認済み",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "確認済み",
+      "source_name": "西松屋公式サイト・新店舗情報",
+      "source_url": "https://www.24028.jp/tenpo/new.php",
+      "source_urls": [
+        {
+          "source_name": "西松屋公式サイト・新店舗情報",
+          "url": "https://www.24028.jp/tenpo/new.php"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "西松屋 サンパークあじす店が2026年11月14日（土）にオープン予定です。西松屋の公式新店舗情報に山口県山口市の店舗として掲載され、開店日と営業時間（10:00〜20:00）が案内されています。所在地はサンパークあじすの施設住所、山口市阿知須4830-1です。",
+      "body_excerpt_method": "",
+      "draft_summary": "西松屋公式新店舗情報で店舗名・山口市・開店日・営業時間を確認。施設住所を確認済み。",
+      "relevance": "店舗ニュース候補・企業公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "公式サイト",
+      "status": "公開済み",
+      "created_at": "2026-11-12T20:30:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目確認済み",
+      "review_bucket": "通常候補（要確認）",
+      "body": "西松屋 サンパークあじす店が2026年11月14日（土）にオープン予定です。西松屋の公式新店舗情報に山口県山口市の店舗として掲載され、開店日と営業時間（10:00〜20:00）が案内されています。所在地はサンパークあじすの施設住所、山口市阿知須4830-1です。",
+      "business_status": "開店予定",
+      "approved_at": "2026-11-12T20:35:00+09:00",
+      "published_at": "2026-11-12T20:10:44.727437+09:00"
+    },
     {
       "id": "b8f21d6a4c903e75",
       "title": "【山口市】スーパーセンタートライアル山口小郡店が11月13日8時グランドオープン予定",
@@ -52,6 +100,102 @@
       "business_status": "開店予定",
       "approved_at": "2026-11-12T19:35:00+09:00",
       "published_at": "2026-11-12T19:48:02.863967+09:00"
+    },
+    {
+      "id": "f4b9d2e8a6c01375",
+      "title": "【宇部市】バースデイ ゆめタウン宇部店が2026年11月18日リニューアルオープン予定",
+      "suggested_headline": "【宇部市】バースデイ ゆめタウン宇部店が2026年11月18日リニューアルオープン予定",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-12",
+      "event_date": "2026-11-18",
+      "event_date_text": "2026年11月18日",
+      "freshness": "直近30日",
+      "age_days": 0,
+      "area": [
+        "宇部市"
+      ],
+      "area_status": "企業公式店舗情報で確認済み",
+      "municipality": "宇部市",
+      "municipality_candidates": [
+        "宇部市"
+      ],
+      "municipality_group": "宇部市",
+      "municipality_status": "確認済み",
+      "source_name": "しまむらグループ公式店舗ページ",
+      "source_url": "https://www.shimamura.gr.jp/shop/map_detail_3210.html",
+      "source_urls": [
+        {
+          "source_name": "しまむらグループ公式店舗ページ",
+          "url": "https://www.shimamura.gr.jp/shop/map_detail_3210.html"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "バースデイ ゆめタウン宇部店は改装のため2026年10月26日から11月17日まで一時休業し、11月18日（水）にリニューアルオープン予定です。しまむらグループ公式店舗ページで店名、宇部市の所在地、休業期間、再開日、営業時間（10:00〜19:00）を確認できます。",
+      "body_excerpt_method": "",
+      "draft_summary": "しまむらグループ公式店舗ページで一時休業期間・リニューアル日・住所・営業時間を確認。",
+      "relevance": "店舗ニュース候補・企業公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "公式サイト",
+      "status": "公開済み",
+      "created_at": "2026-11-12T20:30:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目確認済み",
+      "review_bucket": "通常候補（要確認）",
+      "body": "バースデイ ゆめタウン宇部店は改装のため2026年10月26日から11月17日まで一時休業し、11月18日（水）にリニューアルオープン予定です。しまむらグループ公式店舗ページで店名、宇部市の所在地、休業期間、再開日、営業時間（10:00〜19:00）を確認できます。",
+      "business_status": "開店予定",
+      "approved_at": "2026-11-12T20:35:00+09:00",
+      "published_at": "2026-11-12T20:10:44.727437+09:00"
+    },
+    {
+      "id": "f5c0e3f9b7d12486",
+      "title": "【宇部市】しまむら 宇部店が2026年11月19日リニューアルオープン予定",
+      "suggested_headline": "【宇部市】しまむら 宇部店が2026年11月19日リニューアルオープン予定",
+      "category": [
+        "移転・リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-12",
+      "event_date": "2026-11-19",
+      "event_date_text": "2026年11月19日",
+      "freshness": "直近30日",
+      "age_days": 0,
+      "area": [
+        "宇部市"
+      ],
+      "area_status": "企業公式店舗情報で確認済み",
+      "municipality": "宇部市",
+      "municipality_candidates": [
+        "宇部市"
+      ],
+      "municipality_group": "宇部市",
+      "municipality_status": "確認済み",
+      "source_name": "しまむらグループ公式店舗ページ",
+      "source_url": "https://www.shimamura.gr.jp/shop/map_detail_1973.html",
+      "source_urls": [
+        {
+          "source_name": "しまむらグループ公式店舗ページ",
+          "url": "https://www.shimamura.gr.jp/shop/map_detail_1973.html"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "しまむら 宇部店は改装に伴い2026年10月26日から11月18日まで一時休業し、11月19日（木）に移転リニューアルオープン予定です。しまむらグループ公式店舗ページで店舗名、宇部市の所在地、休業期間、移転リニューアル日、営業時間（10:00〜19:00）を確認できます。",
+      "body_excerpt_method": "",
+      "draft_summary": "しまむらグループ公式店舗ページで休業期間・移転リニューアル日・住所・営業時間を確認。",
+      "relevance": "店舗ニュース候補・企業公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "公式サイト",
+      "status": "公開済み",
+      "created_at": "2026-11-12T20:30:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目確認済み",
+      "review_bucket": "通常候補（要確認）",
+      "body": "しまむら 宇部店は改装に伴い2026年10月26日から11月18日まで一時休業し、11月19日（木）に移転リニューアルオープン予定です。しまむらグループ公式店舗ページで店舗名、宇部市の所在地、休業期間、移転リニューアル日、営業時間（10:00〜19:00）を確認できます。",
+      "business_status": "開店予定",
+      "approved_at": "2026-11-12T20:35:00+09:00",
+      "published_at": "2026-11-12T20:10:44.727437+09:00"
     },
     {
       "id": "235a1e438be7faf8",
