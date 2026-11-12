@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T18:21:27.792114+09:00",
+  "updated_at": "2026-11-12T18:23:05.438833+09:00",
   "articles": [
     {
       "id": "235a1e438be7faf8",
@@ -205,7 +205,7 @@
         "宇部市"
       ],
       "municipality_group": "宇部市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "号外NET 宇部市・山陽小野田市",
       "source_url": "https://ube-sanyoonoda.goguynet.jp/2026/11/02/room_newopen/",
       "source_urls": [
@@ -459,7 +459,7 @@
         "山口市"
       ],
       "municipality_group": "山口市",
-      "municipality_status": "公式発表で確認",
+      "municipality_status": "確認済み",
       "source_name": "株式会社ハピネット公式プレスリリース",
       "source_url": "https://tohakusha.com/main/html/rd/p/000002922.000031422.html",
       "source_urls": [
@@ -511,7 +511,7 @@
         "山口市"
       ],
       "municipality_group": "山口市",
-      "municipality_status": "運営会社公式発表で確認",
+      "municipality_status": "確認済み",
       "source_name": "株式会社ワッツ公式プレスリリース",
       "source_url": "https://prtimes.jp/main/html/rd/p/000000413.000084599.html",
       "source_urls": [
@@ -615,7 +615,7 @@
         "防府市"
       ],
       "municipality_group": "防府市",
-      "municipality_status": "DCM公式店舗情報で確認",
+      "municipality_status": "確認済み",
       "source_name": "DCMホールディングス公式発表",
       "source_url": "https://www.dcm-hldgs.co.jp/grp/news/shop/20261013141521.html",
       "source_urls": [
@@ -667,7 +667,7 @@
         "山口市"
       ],
       "municipality_group": "山口市",
-      "municipality_status": "公式告知・公的資料で確認",
+      "municipality_status": "確認済み",
       "source_name": "猫カフェGATO公式サイト",
       "source_url": "https://www.cafe-gato.com/",
       "source_urls": [
