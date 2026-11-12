@@ -65,6 +65,11 @@ def main():
    print(f"公開保留 {aid}: 店舗の現在の状態が不正"); continue
   if not str(article.get("source_url","")).startswith(("https://","http://")):
    print(f"公開保留 {aid}: 元記事URLが不正"); continue
+  if article.get("business_status")=="一時休業中":
+   categories=article.get("category",[])
+   if isinstance(categories,str): categories=[categories]
+   article["category"]=[c for c in categories if c!="閉店"]
+   if "リニューアル" not in article["category"]: article["category"].append("リニューアル")
   article["review_flags"]=[]
   if article.get("business_status")=="一時休業中":
    article["category"]=["リニューアル"]
