@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10T16:22:51.585987+09:00",
+  "updated_at": "2026-11-12T18:21:27.792114+09:00",
   "articles": [
     {
       "id": "235a1e438be7faf8",
@@ -14,7 +14,7 @@
       "event_date": "2026-11-09",
       "event_date_text": "",
       "freshness": "直近30日",
-      "age_days": 1,
+      "age_days": 2,
       "area": [
         "宇部市",
         "山陽小野田市"
@@ -25,7 +25,7 @@
         "宇部市"
       ],
       "municipality_group": "宇部市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "号外NET 宇部市・山陽小野田市",
       "source_url": "https://ube-sanyoonoda.goguynet.jp/2026/11/08/sukiyaube_renewal/",
       "source_urls": [
@@ -42,14 +42,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.513660+09:00",
+      "created_at": "2026-11-11T10:56:11.723928+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
       "body": "宇部市妻崎開作にある「すき家 190号宇部西割店」では、改装工事に伴い一時閉店されるそうです。 一時閉店期間は2026年11月9日(月)朝9時からで、約1ヶ月後の12月15日(火)朝8時59分まで一時閉店されたのち、リニ […]",
       "business_status": "閉店済み",
       "approved_at": "2026-11-09T00:48:43.527Z",
-      "published_at": "2026-11-10T16:22:51.585839+09:00"
+      "published_at": "2026-11-12T18:21:27.792005+09:00"
     },
     {
       "id": "a42cf1fb9275cc4a",
@@ -64,7 +64,7 @@
       "event_date": "2026-11-13",
       "event_date_text": "11月中旬",
       "freshness": "直近30日",
-      "age_days": 3,
+      "age_days": 4,
       "area": [
         "山口市",
         "防府市"
@@ -75,7 +75,7 @@
         "防府市"
       ],
       "municipality_group": "防府市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "号外NET 山口市・防府市",
       "source_url": "https://yamaguchi-hofu.goguynet.jp/2026/11/07/chikyubunkaya-hofu/",
       "source_urls": [
@@ -92,16 +92,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.513753+09:00",
-      "review_flags": [
-        "開店・閉店等の日付未確認"
-      ],
+      "created_at": "2026-11-11T10:56:11.724023+09:00",
+      "review_flags": [],
       "review_priority": "情報不足・保留",
       "review_bucket": "確認待ち",
       "body": "防府市八王子のゆめタウン防府の2階に、衣料・雑貨の専門店「地球文化屋」が11月中旬にオープンする予定です。2026年10月15日（木）にリニューアルオープンしたゆめタウン防府に、新しく加わる専門店の1つです。 地球文化屋 […]",
       "business_status": "開店予定",
       "approved_at": "2026-11-09T01:01:30.900Z",
-      "published_at": "2026-11-10T16:22:51.585867+09:00"
+      "published_at": "2026-11-12T18:21:27.792031+09:00"
     },
     {
       "id": "7c92459cebfdb8e0",
@@ -116,7 +114,7 @@
       "event_date": "2027-08-31",
       "event_date_text": "",
       "freshness": "予定日・要確認",
-      "age_days": -294,
+      "age_days": -293,
       "area": [
         "山口県内"
       ],
@@ -126,7 +124,7 @@
         "下関市"
       ],
       "municipality_group": "下関市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "山口新聞 開店・閉店一覧",
       "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/107679",
       "source_urls": [
@@ -175,14 +173,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.513844+09:00",
+      "created_at": "2026-11-11T10:56:11.724119+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "確認待ち",
       "body": "大丸下関店は2027年8月31日をもって営業終了予定。大丸松坂屋百貨店の公式告知で営業終了日と閉店日まで営業する旨を確認できます。",
       "business_status": "閉店予定",
       "approved_at": "2026-11-09T00:57:41.331Z",
-      "published_at": "2026-11-10T16:22:51.585977+09:00"
+      "published_at": "2026-11-12T18:21:27.792104+09:00"
     },
     {
       "id": "c18b507ab8356416",
@@ -245,7 +243,7 @@
       "event_date": "2026-11-21",
       "event_date_text": "",
       "freshness": "予定日・要確認",
-      "age_days": -11,
+      "age_days": -10,
       "area": [
         "下関市"
       ],
@@ -253,7 +251,7 @@
       "municipality": "下関市",
       "municipality_candidates": [],
       "municipality_group": "地域要確認",
-      "municipality_status": "要確認（市町名を抽出できず）",
+      "municipality_status": "確認済み",
       "source_name": "シーモール下関公式・新店情報",
       "source_url": "https://www.seamall.jp/info/new-shop/",
       "source_urls": [
@@ -270,18 +268,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "公式サイト",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.513060+09:00",
-      "review_flags": [
-        "本文抜粋なし",
-        "公開日未確認",
-        "市町未特定"
-      ],
+      "created_at": "2026-11-11T10:56:11.722911+09:00",
+      "review_flags": [],
       "review_priority": "情報不足・保留",
       "review_bucket": "確認待ち",
       "body": "シーモール下関5階に子ども体操教室「LUNA STUDIO」が2026年11月21日オープン予定。シーモール公式の新店情報（2026年11月2日更新）で店舗名・場所・日付を確認できます。",
       "business_status": "開店予定",
       "approved_at": "2026-11-09T00:50:52.617Z",
-      "published_at": "2026-11-10T16:22:51.585985+09:00"
+      "published_at": "2026-11-12T18:21:27.792112+09:00"
     },
     {
       "id": "832c58c0103db456",
@@ -295,7 +289,7 @@
       "event_date": "2026-10-29",
       "event_date_text": "",
       "freshness": "直近30日",
-      "age_days": 12,
+      "age_days": 13,
       "area": [
         "山口県内"
       ],
@@ -305,7 +299,7 @@
         "山口市"
       ],
       "municipality_group": "山口市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "山口新聞 開店・閉店一覧",
       "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/112565",
       "source_urls": [
@@ -326,14 +320,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.514072+09:00",
+      "created_at": "2026-11-11T10:56:11.724179+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
       "body": "ケーズデンキ山口店は山口市に2026年10月29日オープン。ケーズデンキ公式の開店情報では10月17日に告知され、店舗情報にも掲載されています。",
       "business_status": "営業中",
       "approved_at": "2026-11-09T00:55:37.733Z",
-      "published_at": "2026-11-10T16:22:51.585891+09:00"
+      "published_at": "2026-11-12T18:21:27.792044+09:00"
     },
     {
       "id": "201d36d6e27a6708",
@@ -347,7 +341,7 @@
       "event_date": "2026-10-01",
       "event_date_text": "",
       "freshness": "31〜90日前",
-      "age_days": 40,
+      "age_days": 41,
       "area": [
         "山口市",
         "宇部市",
@@ -363,7 +357,7 @@
         "宇部市"
       ],
       "municipality_group": "宇部市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "山口宇部経済新聞",
       "source_url": "https://yamaguchi.keizai.biz/headline/5556/",
       "source_urls": [
@@ -380,14 +374,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.514159+09:00",
+      "created_at": "2026-11-11T10:56:11.724271+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
       "body": "女性専用ピラティススタジオ「pilates studio UNO（ウノ）」（宇部市恩田町2）が10月1日、宇部にオープンした。 #山口宇部経済新聞",
       "business_status": "営業中",
       "approved_at": "2026-11-09T00:56:12.110Z",
-      "published_at": "2026-11-10T16:22:51.585949+09:00"
+      "published_at": "2026-11-12T18:21:27.792072+09:00"
     },
     {
       "id": "b464427820ff7abd",
@@ -401,7 +395,7 @@
       "event_date": "2026-10-23",
       "event_date_text": "",
       "freshness": "直近30日",
-      "age_days": 18,
+      "age_days": 19,
       "area": [
         "山口市",
         "宇部市",
@@ -417,7 +411,7 @@
         "宇部市"
       ],
       "municipality_group": "宇部市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "山口宇部経済新聞",
       "source_url": "https://yamaguchi.keizai.biz/headline/5554/",
       "source_urls": [
@@ -434,14 +428,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.514243+09:00",
+      "created_at": "2026-11-11T10:56:11.724360+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
       "body": "カフェ＆デリ「にくとはな」（宇部市南浜町1、TEL 080-5194-0995）が10月23日、宇部にオープンした。 #山口宇部経済新聞",
       "business_status": "営業中",
       "approved_at": "2026-11-09T00:55:55.534Z",
-      "published_at": "2026-11-10T16:22:51.585899+09:00"
+      "published_at": "2026-11-12T18:21:27.792054+09:00"
     },
     {
       "id": "a9c4016b7e2d4f81",
@@ -563,7 +557,7 @@
       "event_date": "2026-10-19",
       "event_date_text": "",
       "freshness": "直近30日",
-      "age_days": 22,
+      "age_days": 23,
       "area": [
         "周南市"
       ],
@@ -573,7 +567,7 @@
         "周南市"
       ],
       "municipality_group": "周南市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "徳山デッキ公式・店舗オープン情報",
       "source_url": "https://tokuyamadeck.com/information/%e5%ba%97%e8%88%97%e3%82%aa%e3%83%bc%e3%83%97%e3%83%b3%e6%83%85%e5%a0%b1%f0%9f%8c%88/",
       "source_urls": [
@@ -590,16 +584,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "公式サイト",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.513202+09:00",
-      "review_flags": [
-        "公開日未確認"
-      ],
+      "created_at": "2026-11-11T10:56:11.723092+09:00",
+      "review_flags": [],
       "review_priority": "情報不足・保留",
       "review_bucket": "確認待ち",
       "body": "ハクジュプラザ徳山駅前店は周南市銀座1丁目31のTOKUYAMA DECK 2階に2026年10月19日オープン。徳山デッキ公式の店舗オープン情報で確認できます。",
       "business_status": "営業中",
       "approved_at": "2026-11-09T00:54:58.573Z",
-      "published_at": "2026-11-10T16:22:51.585941+09:00"
+      "published_at": "2026-11-12T18:21:27.792063+09:00"
     },
     {
       "id": "d6f2049e8b3a7c15",
@@ -717,7 +709,7 @@
       "event_date": "2026-09-24",
       "event_date_text": "",
       "freshness": "31〜90日前",
-      "age_days": 47,
+      "age_days": 48,
       "area": [
         "山口県内"
       ],
@@ -727,7 +719,7 @@
         "山陽小野田市"
       ],
       "municipality_group": "山陽小野田市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "山口新聞 開店・閉店一覧",
       "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/111103",
       "source_urls": [
@@ -744,14 +736,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.514387+09:00",
+      "created_at": "2026-11-11T10:56:11.724513+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
       "body": "サイゼリヤ おのだサンパーク店は山陽小野田市の商業施設おのだサンパークに2026年9月24日オープン。サイゼリヤ公式の店舗ニュースで確認できます。",
       "business_status": "営業中",
       "approved_at": "2026-11-09T00:56:26.599Z",
-      "published_at": "2026-11-10T16:22:51.585956+09:00"
+      "published_at": "2026-11-12T18:21:27.792081+09:00"
     },
     {
       "id": "fc60dba3f27ab740",
@@ -765,7 +757,7 @@
       "event_date": "2026-09-18",
       "event_date_text": "",
       "freshness": "31〜90日前",
-      "age_days": 53,
+      "age_days": 54,
       "area": [
         "周南市"
       ],
@@ -773,7 +765,7 @@
       "municipality": "周南市",
       "municipality_candidates": [],
       "municipality_group": "地域要確認",
-      "municipality_status": "要確認（市町名を抽出できず）",
+      "municipality_status": "確認済み",
       "source_name": "徳山デッキ公式・店舗オープン情報",
       "source_url": "https://tokuyamadeck.com/information/%e5%ba%97%e8%88%97%e3%82%aa%e3%83%bc%e3%83%97%e3%83%b3%e6%83%85%e5%a0%b1-10/",
       "source_urls": [
@@ -790,17 +782,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "公式サイト",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.513320+09:00",
-      "review_flags": [
-        "公開日未確認",
-        "市町未特定"
-      ],
+      "created_at": "2026-11-11T10:56:11.723233+09:00",
+      "review_flags": [],
       "review_priority": "情報不足・保留",
       "review_bucket": "確認待ち",
       "body": "お知らせ INFORMATION ショップ 店舗オープン情報🌟 2026年09月18日(金) New Open！ 新しくオープンした店舗を紹介します。 2026年9月18日(金) 10:00 1階 110区画(デッキパーク側出入口横)に テイクアウトもイートインもお気軽にお楽しみいただける 「 甘味処 しづくや 」がオープンしました🌟 ”ひとしづくから想いの波紋を…” ︎・わらび餅や彩り餡の団子、五感が喜ぶ和スイーツ🍡 ・お茶系ラテや、山口ならではの柑橘系ソーダ🍹 お買い物のついでに、 ちょっと立ち寄ってみませんか？ 前のお知らせ 次のお知らせ View All テナント募集中",
       "business_status": "営業中",
       "approved_at": "2026-11-09T00:54:09.458Z",
-      "published_at": "2026-11-10T16:22:51.585970+09:00"
+      "published_at": "2026-11-12T18:21:27.792096+09:00"
     },
     {
       "id": "569d7aa074bdf503",
@@ -815,7 +804,7 @@
       "event_date": "2026-09-11",
       "event_date_text": "",
       "freshness": "31〜90日前",
-      "age_days": 60,
+      "age_days": 61,
       "area": [
         "山口県内"
       ],
@@ -825,7 +814,7 @@
         "山陽小野田市"
       ],
       "municipality_group": "山陽小野田市",
-      "municipality_status": "要確認（タイトル・本文から抽出した候補）",
+      "municipality_status": "確認済み",
       "source_name": "山口新聞 開店・閉店一覧",
       "source_url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/110649",
       "source_urls": [
@@ -846,14 +835,14 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-10T09:25:36.514447+09:00",
+      "created_at": "2026-11-11T10:56:11.724587+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
       "body": "おのだサンパーク本館1階に「おのだサンパークロフト」が2026年9月11日オープン。ロフト公式の開店情報と現行店舗一覧で所在地を確認できます。",
       "business_status": "営業中",
       "approved_at": "2026-11-09T00:56:37.538Z",
-      "published_at": "2026-11-10T16:22:51.585963+09:00"
+      "published_at": "2026-11-12T18:21:27.792089+09:00"
     }
   ]
 }
