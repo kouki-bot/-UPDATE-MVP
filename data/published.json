@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T18:24:47.807672+09:00",
+  "updated_at": "2026-11-12T19:47:00.996947+09:00",
   "articles": [
     {
       "id": "235a1e438be7faf8",
@@ -99,6 +99,58 @@
       "business_status": "開店予定",
       "approved_at": "2026-11-09T01:01:30.900Z",
       "published_at": "2026-11-12T18:21:27.792031+09:00"
+    },
+    {
+      "id": "f91a6c2d8e4b7305",
+      "title": "【山口市】油そば専門店「きりん寺 山口店」が11月7日オープン",
+      "suggested_headline": "【山口市】油そば専門店「きりん寺 山口店」が11月7日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-07",
+      "event_date": "2026-11-07",
+      "event_date_text": "2026年11月7日",
+      "freshness": "直近30日",
+      "age_days": 5,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "公式発表と公式店舗情報で確認済み",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "確認済み",
+      "source_name": "株式会社GOLD-STAR 公式サイト",
+      "source_url": "https://suzume-group.co.jp/news/",
+      "source_urls": [
+        {
+          "source_name": "株式会社GOLD-STAR 公式サイト",
+          "url": "https://suzume-group.co.jp/news/"
+        },
+        {
+          "source_name": "油そばきりん寺 公式店舗情報",
+          "url": "https://suzume-group.co.jp/kirinji/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "株式会社GOLD-STARの公式サイトは、山口市緑町6-1に「きりん寺山口店」が2026年11月7日にオープンしたと発表しています。公式店舗一覧にも山口店の住所・電話番号・営業時間が掲載されています。",
+      "body_excerpt_method": "",
+      "draft_summary": "公式発表で店舗名・市町村・開店日を確認済み。公開前に現在の営業状況を確認してください。",
+      "relevance": "店舗ニュース候補・公式発表確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "公式サイト",
+      "status": "公開済み",
+      "created_at": "2026-11-12T19:00:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・要確認",
+      "review_bucket": "確認待ち",
+      "body": "油そば専門店「きりん寺 山口店」が2026年11月7日、山口市緑町6-1にオープンしました。運営会社の公式発表で開店日を確認でき、公式店舗情報には住所・電話番号・営業時間（11:00〜22:00）が掲載されています。",
+      "business_status": "営業中",
+      "approved_at": "2026-11-12T19:05:00+09:00",
+      "published_at": "2026-11-12T19:47:00.996947+09:00"
     },
     {
       "id": "7c92459cebfdb8e0",
