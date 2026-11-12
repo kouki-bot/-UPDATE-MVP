@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T19:48:02.863967+09:00",
+  "updated_at": "2026-11-12T20:05:18.567074+09:00",
   "articles": [
     {
       "id": "b8f21d6a4c903e75",
@@ -286,6 +286,54 @@
       "published_at": "2026-11-12T18:21:27.792104+09:00"
     },
     {
+      "id": "e52f9b8c4d0a3167",
+      "title": "【防府市】イオンタウン防府に「スポーツミツハシ」が11月13日オープン予定",
+      "suggested_headline": "【防府市】イオンタウン防府に「スポーツミツハシ」が11月13日オープン予定",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-05",
+      "event_date": "2026-11-13",
+      "event_date_text": "2026年11月13日",
+      "freshness": "直近30日",
+      "age_days": 0,
+      "area": [
+        "防府市"
+      ],
+      "area_status": "施設運営会社の公式発表で確認",
+      "municipality": "防府市",
+      "municipality_candidates": [
+        "防府市"
+      ],
+      "municipality_group": "防府市",
+      "municipality_status": "確認済み",
+      "source_name": "イオンタウン防府公式サイト",
+      "source_url": "https://www.aeontown.co.jp/hofu/",
+      "source_urls": [
+        {
+          "source_name": "イオンタウン防府公式サイト",
+          "url": "https://www.aeontown.co.jp/hofu/"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "イオンタウン防府（防府市鐘紡町7-1）は、2026年11月13日に「スポーツミツハシ」が新規オープンすると公式サイトで告知しています。店舗は本館2階です。開店前のため、現時点の状態は開店予定です。",
+      "body_excerpt_method": "",
+      "draft_summary": "施設運営会社の公式お知らせで店舗名・開店予定日・所在地を確認。",
+      "relevance": "店舗ニュース候補・施設運営会社の公式発表確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "公式サイト",
+      "status": "公開済み",
+      "created_at": "2026-11-12T20:00:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・要確認",
+      "review_bucket": "通常候補（要確認）",
+      "body": "イオンタウン防府（防府市鐘紡町7-1）は、2026年11月13日に「スポーツミツハシ」が新規オープンすると公式サイトで告知しています。店舗は本館2階です。開店前のため、現時点の状態は開店予定です。",
+      "business_status": "開店予定",
+      "approved_at": "2026-11-12T20:05:00+09:00",
+      "published_at": "2026-11-12T20:05:18.567074+09:00"
+    },
+    {
       "id": "a7e93b1c5d8f2046",
       "title": "【山口市】MrMax山口店が11月5日にリニューアルオープン",
       "suggested_headline": "【山口市】MrMax山口店が11月5日にリニューアルオープン",
@@ -385,6 +433,54 @@
       "business_status": "営業中",
       "approved_at": "2026-11-09T00:55:25.959Z",
       "published_at": "2026-11-10T16:22:51.585881+09:00"
+    },
+    {
+      "id": "d41e8a7b3c9f2056",
+      "title": "【下関市】シーモールに「ナイスネイル」が11月3日オープン",
+      "suggested_headline": "【下関市】シーモールに「ナイスネイル」が11月3日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-02",
+      "event_date": "2026-11-03",
+      "event_date_text": "2026年11月3日",
+      "freshness": "直近30日",
+      "age_days": 0,
+      "area": [
+        "下関市"
+      ],
+      "area_status": "施設運営会社の公式発表で確認",
+      "municipality": "下関市",
+      "municipality_candidates": [
+        "下関市"
+      ],
+      "municipality_group": "下関市",
+      "municipality_status": "確認済み",
+      "source_name": "シーモール（下関商業開発株式会社）公式サイト",
+      "source_url": "https://www.seamall.jp/info/new-shop/",
+      "source_urls": [
+        {
+          "source_name": "シーモール（下関商業開発株式会社）公式サイト",
+          "url": "https://www.seamall.jp/info/new-shop/"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "下関市竹崎町のシーモール3階に「ナイスネイル」が2026年11月3日にオープンしました。シーモールを運営する下関商業開発株式会社の公式新店情報で、店名・開店日・フロア・電話番号を確認できます。施設所在地は下関市竹崎町4-4-8です。",
+      "body_excerpt_method": "",
+      "draft_summary": "施設運営会社の公式新店情報で開店日と店舗情報を確認。",
+      "relevance": "店舗ニュース候補・施設運営会社の公式発表確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "公式サイト",
+      "status": "公開済み",
+      "created_at": "2026-11-12T20:00:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・要確認",
+      "review_bucket": "通常候補（要確認）",
+      "body": "下関市竹崎町のシーモール3階に「ナイスネイル」が2026年11月3日にオープンしました。シーモールを運営する下関商業開発株式会社の公式新店情報で、店名・開店日・フロア・電話番号を確認できます。施設所在地は下関市竹崎町4-4-8です。",
+      "business_status": "営業中",
+      "approved_at": "2026-11-12T20:05:00+09:00",
+      "published_at": "2026-11-12T20:05:18.567074+09:00"
     },
     {
       "id": "01901f1142547e8b",
