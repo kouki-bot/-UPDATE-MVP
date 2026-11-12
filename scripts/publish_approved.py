@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Publish only drafts passing all six human review checks and approval."""
+"""Publish only records with current approval and all six human review checks."""
 import json
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
@@ -23,17 +23,18 @@ def main():
  published=load("published.json",{"updated_at":"","articles":[]})
  approved=set(map(str,approvals.get("approved_ids",[])))
  reviews=approvals.get("reviewed_articles",{})
+ draft_by_id={str(a.get("id")):a for a in drafts if a.get("id")}
  existing={str(a.get("id")):a for a in published.get("articles",[]) if a.get("id")}
- added=0
- for draft in drafts:
-  aid=str(draft.get("id",""))
-  if not aid or aid not in approved: continue
+ next_articles={}
+ now=datetime.now(JST).isoformat()
+ for aid in sorted(approved):
+  # 候補一覧から外れた既存記事も、最新の承認記録で再照合する。
+  draft=draft_by_id.get(aid) or existing.get(aid)
+  if not draft: continue
   review=reviews.get(aid,{})
-  # 店舗サイトの対象外カテゴリは、承認データがあっても公開しない。
   excluded_types={"宿泊施設","観光・レジャー","公共・地域施設"}
   if draft.get("content_type") in excluded_types:
    print(f"公開保留 {aid}: 店舗サイトの対象外カテゴリ ({draft.get('content_type')})"); continue
-  # 下書き段階で明示された記事公開日が不正なら、承認データの上書きで隠さず公開を止める。
   if draft.get("published_date") not in (None,"") and not valid_date(draft.get("published_date")):
    print(f"公開保留 {aid}: 下書きの記事公開日が不正。元情報を再確認してください"); continue
   article=dict(draft)
@@ -64,17 +65,21 @@ def main():
    print(f"公開保留 {aid}: 店舗の現在の状態が不正"); continue
   if not str(article.get("source_url","")).startswith(("https://","http://")):
    print(f"公開保留 {aid}: 元記事URLが不正"); continue
-  article["review_flags"]=sorted(flags)
+  article["review_flags"]=[]
   article["municipality_status"]="確認済み"
   article["status"]="公開済み"
   article["approved_at"]=review["reviewed_at"]
-  article["published_at"]=datetime.now(JST).isoformat()
+  article["published_at"]=existing.get(aid,{}).get("published_at") or now
   article["body"]=article.get("body") or article.get("body_excerpt","")
-  existing[aid]=article; added+=1
- if added:
-  published["updated_at"]=datetime.now(JST).isoformat()
-  published["articles"]=sorted(existing.values(),key=lambda a:(a.get("published_date",""),a.get("title","")),reverse=True)
+  next_articles[aid]=article
+  print(f"公開確認済み {aid}")
+ old_articles=published.get("articles",[])
+ sorted_articles=sorted(next_articles.values(),key=lambda a:(a.get("published_date",""),a.get("title","")),reverse=True)
+ if sorted_articles != old_articles:
+  published["updated_at"]=now
+  published["articles"]=sorted_articles
   (DATA/"published.json").write_text(json.dumps(published,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
- print(f"公開候補として反映: {added}件")
- if not added: print("公開可能な承認済み記事がないため published.json は変更していません。")
+  print(f"公開データを更新: {len(sorted_articles)}件")
+ else:
+  print(f"公開データに変更なし: {len(sorted_articles)}件")
 if __name__=="__main__": main()
