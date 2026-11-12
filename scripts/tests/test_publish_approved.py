@@ -21,7 +21,7 @@ class Tests(unittest.TestCase):
   self.write("published.json",published or {"updated_at":"","articles":[]})
  def published(self): return json.loads((self.base/"data/published.json").read_text(encoding="utf-8"))
  def test_approved_reviewed_publishes_even_status_unverified(self):
-  self.setup(); result=self.run_script(); self.assertEqual(result.returncode,0,result.stderr); self.assertEqual(len(self.published()["articles"]),1); self.assertEqual(self.published()["articles"][0]["municipality"],"山口市"); self.assertEqual(self.published()["articles"][0]["event_date"],"2026-10-30"); self.assertEqual(self.published()["articles"][0]["business_status"],"営業中")
+  self.setup(); result=self.run_script(); self.assertEqual(result.returncode,0,result.stderr); self.assertEqual(len(self.published()["articles"]),1); self.assertEqual(self.published()["articles"][0]["municipality"],"山口市"); self.assertEqual(self.published()["articles"][0]["event_date"],"2026-10-30"); self.assertEqual(self.published()["articles"][0]["business_status"],"営業中"); self.assertEqual(self.published()["articles"][0]["review_flags"],[]); self.assertEqual(self.published()["articles"][0]["municipality_status"],"確認済み")
  def test_future_closure_can_publish_as_planned(self):
   self.setup(review=self.review(event_date="2027-08-31",business_status="閉店予定"))
   result=self.run_script()
