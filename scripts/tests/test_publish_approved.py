@@ -65,11 +65,28 @@ class Tests(unittest.TestCase):
   self.setup(review=self.review(cleared_review_flags=[])); self.run_script(); self.assertEqual(self.published()["articles"],[])
  def test_missing_municipality_blocked(self):
   self.setup(review=self.review(municipality="")); self.run_script(); self.assertEqual(self.published()["articles"],[])
- def test_existing_articles_preserved_if_no_new_approved(self):
-  old={"updated_at":"old","articles":[{"id":"old","title":"既存"}]}; self.setup(approved=False,published=old); self.run_script(); self.assertEqual(self.published()["articles"],old["articles"])
+ def test_existing_articles_without_current_approval_are_removed(self):
+  old={"updated_at":"old","articles":[{"id":"old","title":"既存"}]}; self.setup(approved=False,published=old); result=self.run_script(); self.assertEqual(result.returncode,0,result.stderr); self.assertEqual(self.published()["articles"],[])
  def test_temporary_closure_status_can_publish(self):
   self.setup(review=self.review(event_date="2026-12-15",business_status="一時休業中"))
   result=self.run_script()
   self.assertEqual(result.returncode,0,result.stderr)
   self.assertEqual(self.published()["articles"][0]["business_status"],"一時休業中")
+
+ def test_existing_approved_article_is_rechecked_without_current_draft(self):
+  existing=self.draft(municipality="旧データ",municipality_status="要確認",review_flags=[],status="公開済み")
+  self.setup(published={"updated_at":"old","articles":[existing]})
+  self.write("drafts.json",{"drafts":[]})
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  article=self.published()["articles"][0]
+  self.assertEqual(article["municipality"],"山口市")
+  self.assertEqual(article["municipality_status"],"確認済み")
+  self.assertEqual(article["review_flags"],[])
+ def test_revoked_approval_removes_existing_public_article(self):
+  existing=self.draft(status="公開済み")
+  self.setup(approved=False,published={"updated_at":"old","articles":[existing]})
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertEqual(self.published()["articles"],[])
 if __name__=="__main__": unittest.main()
