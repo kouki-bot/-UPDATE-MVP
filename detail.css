@@ -77,3 +77,17 @@
 .contact-page .contact-back{display:flex;flex-wrap:wrap;gap:20px;margin-top:27px}
 .contact-page .contact-back a{color:var(--green);font-size:11px;font-weight:800;border-bottom:1px solid #aab8a7;padding-bottom:4px}
 @media(max-width:760px){.contact-page .contact-card-grid{grid-template-columns:1fr;gap:12px}.contact-page .contact-card{min-height:0;padding:21px}.contact-page .contact-index{margin-bottom:14px}.contact-page .contact-content{padding-top:38px}.contact-page .contact-back{gap:14px}}
+
+
+/* New / closed list image layout polish */
+.detail-page .article-card{padding:0;overflow:hidden;border-radius:10px}
+.detail-page .article-card > .article-image{width:100%;margin:0 0 17px;aspect-ratio:16/9;flex:0 0 auto;border-radius:9px 9px 0 0;background:linear-gradient(135deg,#e9e8df 0%,#dfe6dc 52%,#ece9df 100%)}
+.detail-page .article-card > .article-image img{width:100%;height:100%;display:block;object-fit:cover;object-position:center;filter:saturate(.88) contrast(.97)}
+.detail-page .article-card > .badge,.detail-page .article-card > h2,.detail-page .article-card > h3,.detail-page .article-card > .summary,.detail-page .article-card > .meta,.detail-page .article-card > .links{margin-left:20px;margin-right:20px}
+.detail-page .article-card > .badge{margin-top:0;margin-bottom:2px}
+.detail-page .article-card > h2,.detail-page .article-card > h3{margin-top:9px}
+.detail-page .article-card > .links{padding-bottom:3px}
+.detail-page .article-card > .article-share{margin:15px 20px 19px}
+.detail-page .article-image.is-fallback:before{content:'LOCAL UPDATE';position:absolute;inset:0;display:grid;place-items:center;color:rgba(42,70,54,.48);font:700 12px/1 'Playfair Display',serif;letter-spacing:.16em;background:repeating-linear-gradient(135deg,transparent 0 18px,rgba(255,255,255,.18) 18px 36px)}
+.detail-page .article-image .image-caption{right:10px;bottom:10px;padding:5px 8px;border:1px solid rgba(255,255,255,.7);border-radius:4px;background:rgba(255,255,255,.92);color:#365443;font-size:10px;font-weight:600;line-height:1.4}
+@media(max-width:760px){.detail-page .article-card > .badge,.detail-page .article-card > h2,.detail-page .article-card > h3,.detail-page .article-card > .summary,.detail-page .article-card > .meta,.detail-page .article-card > .links{margin-left:16px;margin-right:16px}.detail-page .article-card > .article-share{margin-left:16px;margin-right:16px}}
