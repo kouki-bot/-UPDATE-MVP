@@ -128,12 +128,15 @@ function safeUrl(value){try{const url=new URL(value,location.href);return["http:
 function escapeHtml(value){return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));}
 function imageForArticle(article,index){
 const suppliedImage=safeUrl(article.image_url);if(suppliedImage)return suppliedImage;
-const text=[article.title||"",categoryText(article.category),article.summary||article.draft_summary||""].join(" ");
-if(/パン|ベーカリー|ケーキ|スイーツ/.test(text))return imageLibrary.bakery;
-if(/美容室|アパレル|セレクトショップ|雑貨/.test(text))return imageLibrary.shop;
-if(/リニューアル|改装|内装/.test(text))return imageLibrary.plants;
-if(/閉店|営業終了/.test(text))return imageLibrary.interior;
-const choices=[imageLibrary.cafe,imageLibrary.coffee,imageLibrary.interior,imageLibrary.plants];return choices[index%choices.length];}
+const text=[article.title||"",categoryText(article.category),article.summary||"",article.draft_summary||""].join(" ");
+if(/パン|ベーカリー|ケーキ|スイーツ|菓子/.test(text))return imageLibrary.bakery;
+if(/カフェ|喫茶|コーヒー/.test(text))return imageLibrary.coffee;
+if(/美容室|ヘアサロン|理容|ネイル|エステ|整体|クリニック|歯科/.test(text))return imageLibrary.plants;
+if(/スーパー|ドラッグ|コンビニ|アパレル|衣料|洋服|雑貨|書店|小売|しまむら|西松屋|トライアル/.test(text))return imageLibrary.shop;
+if(/ラーメン|うどん|そば|寿司|焼肉|居酒屋|食堂|レストラン|飲食|弁当/.test(text))return imageLibrary.cafe;
+if(/リニューアル|改装|内装|移転|閉店|営業終了|閉業/.test(text))return imageLibrary.plants;
+return imageLibrary.shop;
+}
 const list=document.getElementById("article-list"),count=document.getElementById("article-count");
 const keywordSearch=document.getElementById("keyword-search"),areaFilter=document.getElementById("area-filter"),businessFilter=document.getElementById("business-filter"),resetSearch=document.getElementById("reset-search");
 let allArticles=[],activeFilter="all",activeArea="",activeBusiness="",activeKeyword="",revealObserver;
