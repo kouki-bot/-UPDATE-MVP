@@ -172,6 +172,8 @@ addMeta(card,'開店日',a.event_date||a.opening_date||'日付確認中');
 if(a.published_date)addMeta(card,'掲載日',a.published_date);
 if(a.business_status)addMeta(card,'営業状況',a.business_status);
 const links=document.createElement('div');links.className='links';
+const detailPath=/^[a-zA-Z0-9_-]+$/.test(String(a.id||''))?'articles/'+encodeURIComponent(a.id)+'.html':'';
+if(detailPath){const detail=document.createElement('a');detail.href=detailPath;detail.className='article-detail-link';detail.textContent='記事の詳細を見る ↗';links.appendChild(detail);}
 const source=safeURL(a.source_url||a.official_url||a.reference_url);
 if(source){const link=document.createElement('a');link.href=source;link.target='_blank';link.rel='noopener noreferrer';link.textContent='情報源を確認する ↗';links.appendChild(link);}
 if(links.childNodes.length)card.appendChild(links);
