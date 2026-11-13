@@ -106,7 +106,7 @@ const imageLibrary={
   plants:"https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1000&q=85"
 };
 function approvedStorePhoto(a){
-  const image=safeUrl(a.image_url),source=safeUrl(a.image_source_url),credit=String(a.image_credit||"").trim();
+  const image=safeURL(a.image_url),source=safeURL(a.image_source_url),credit=String(a.image_credit||"").trim();
   if(a.image_usage_approved!==true||!image||!source||!credit||!["許可確認済み","利用条件確認済み"].includes(a.image_rights_status))return null;
   return {url:image,source,credit,caption:a.image_type==="provided"?"店舗提供写真":"公式掲載写真"};
 }
