@@ -13,7 +13,7 @@ DATA = ROOT / "data" / "published.json"
 OUT = ROOT / "articles"
 ALLOWED_CATEGORIES = {
     "新店・開店", "新店", "開店", "閉店", "閉店・営業終了",
-    "移転", "リニューアル", "長期休業",
+    "移転", "移転・リニューアル", "リニューアル", "長期休業",
 }
 ALLOWED_STATUSES = {
     "開店予定", "営業中", "閉店予定", "閉店済み", "一時休業中",
