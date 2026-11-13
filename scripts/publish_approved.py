@@ -43,6 +43,12 @@ def main():
   article=dict(draft)
   for key in ("municipality","body","published_date","event_date","business_status","source_url","title"):
    if review.get(key) not in (None,""): article[key]=review[key]
+  # Public area filters must use only the human-confirmed store municipality.
+  # Candidate extraction may include neighboring cities from regional source names.
+  municipality=str(article.get("municipality") or "").strip()
+  if municipality:
+   article["area"]=[municipality]
+   article["municipality_group"]=municipality
   if review.get("headline"): article["title"]=review["headline"]
   missing=[k for k in ("title","source_url","published_date","event_date","business_status","municipality") if not str(article.get(k,"")).strip()]
   flags=set(draft.get("review_flags") or [])-set(review.get("cleared_review_flags") or [])
