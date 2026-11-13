@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-12T22:56:40.360710+09:00",
+  "updated_at": "2026-11-14T07:16:34.816817+09:00",
   "articles": [
     {
       "id": "f3a8c1d7e5b90264",
@@ -310,8 +310,7 @@
       "freshness": "直近30日",
       "age_days": 2,
       "area": [
-        "宇部市",
-        "山陽小野田市"
+        "宇部市"
       ],
       "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
       "municipality": "宇部市",
@@ -360,7 +359,6 @@
       "freshness": "直近30日",
       "age_days": 4,
       "area": [
-        "山口市",
         "防府市"
       ],
       "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
@@ -462,7 +460,7 @@
       "freshness": "予定日・要確認",
       "age_days": -293,
       "area": [
-        "山口県内"
+        "下関市"
       ],
       "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
       "municipality": "下関市",
@@ -642,8 +640,7 @@
       "freshness": "直近30日",
       "age_days": 7,
       "area": [
-        "宇部市",
-        "山陽小野田市"
+        "宇部市"
       ],
       "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
       "municipality": "宇部市",
@@ -744,7 +741,7 @@
       "area_status": "市町名を抽出できず。店舗所在地は元記事で要確認。",
       "municipality": "下関市",
       "municipality_candidates": [],
-      "municipality_group": "地域要確認",
+      "municipality_group": "下関市",
       "municipality_status": "確認済み",
       "source_name": "シーモール下関公式・新店情報",
       "source_url": "https://www.seamall.jp/info/new-shop/",
@@ -785,7 +782,7 @@
       "freshness": "直近30日",
       "age_days": 13,
       "area": [
-        "山口県内"
+        "山口市"
       ],
       "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
       "municipality": "山口市",
@@ -837,13 +834,7 @@
       "freshness": "31〜90日前",
       "age_days": 41,
       "area": [
-        "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
+        "宇部市"
       ],
       "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
       "municipality": "宇部市",
@@ -891,13 +882,7 @@
       "freshness": "直近30日",
       "age_days": 19,
       "area": [
-        "山口市",
-        "宇部市",
-        "山陽小野田市",
-        "美祢市",
-        "防府市",
-        "萩市",
-        "長門市"
+        "宇部市"
       ],
       "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
       "municipality": "宇部市",
@@ -1205,7 +1190,7 @@
       "freshness": "31〜90日前",
       "age_days": 48,
       "area": [
-        "山口県内"
+        "山陽小野田市"
       ],
       "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
       "municipality": "山陽小野田市",
@@ -1258,7 +1243,7 @@
       "area_status": "市町名を抽出できず。店舗所在地は元記事で要確認。",
       "municipality": "周南市",
       "municipality_candidates": [],
-      "municipality_group": "地域要確認",
+      "municipality_group": "周南市",
       "municipality_status": "確認済み",
       "source_name": "徳山デッキ公式・店舗オープン情報",
       "source_url": "https://tokuyamadeck.com/information/%e5%ba%97%e8%88%97%e3%82%aa%e3%83%bc%e3%83%97%e3%83%b3%e6%83%85%e5%a0%b1-10/",
@@ -1300,7 +1285,7 @@
       "freshness": "31〜90日前",
       "age_days": 61,
       "area": [
-        "山口県内"
+        "山陽小野田市"
       ],
       "area_status": "市町名候補を抽出済み。店舗所在地として公開する前に元記事で要確認。",
       "municipality": "山陽小野田市",
