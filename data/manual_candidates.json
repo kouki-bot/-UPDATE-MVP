@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T23:28:00+09:00",
+  "generated_at": "2026-11-14T23:48:00+09:00",
   "description": "公式情報を優先して手動調査した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
@@ -718,6 +718,62 @@
         "最終承認前のため公開禁止"
       ],
       "review_priority": "基本項目あり・実施後確認待ち",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
+    },
+    {
+      "id": "b7e2a9c4d1f60385",
+      "title": "【山口市】長崎ちゃんめん 山口小郡店が11月16日にリニューアルオープン",
+      "suggested_headline": "【山口市】長崎ちゃんめん 山口小郡店が11月16日にリニューアルオープン",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-13",
+      "event_date": "2026-11-16",
+      "event_date_text": "",
+      "freshness": "予定日・要確認",
+      "age_days": -2,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "運営会社公式発表および公式店舗ページで確認",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "公式店舗ページに山口市小郡新町と記載",
+      "source_name": "株式会社焼肉坂井ホールディングス公式発表・長崎ちゃんめん公式店舗ページ",
+      "source_url": "https://prtimes.jp/main/html/rd/p/000000683.000028006.html",
+      "source_urls": [
+        {
+          "source_name": "運営会社公式発表（PR TIMES・2026年11月13日）",
+          "url": "https://prtimes.jp/main/html/rd/p/000000683.000028006.html"
+        },
+        {
+          "source_name": "長崎ちゃんめん公式店舗ページ（住所・休業期間・再開予定日）",
+          "url": "https://ys-holdings.co.jp/shop/14814/"
+        },
+        {
+          "source_name": "長崎ちゃんめん公式店舗一覧",
+          "url": "https://ys-holdings.co.jp/nagasakichanmen/?page_id=676"
+        }
+      ],
+      "duplicate_sources_count": 3,
+      "body_excerpt": "株式会社焼肉坂井ホールディングスは2026年11月13日付の発表で、長崎ちゃんめん山口小郡店を「麺中華れすとらん」として11月16日（月）にリニューアルオープンすると告知。店舗住所は山口市小郡新町1丁目2-1。公式店舗ページでは改装に伴う一時休業期間を10月13日～11月15日、リニューアルオープン予定を11月16日と案内している。新メニュー追加やセルフレジ導入も発表されている。",
+      "body_excerpt_method": "運営会社公式発表・公式店舗ページ",
+      "draft_summary": "店舗名・山口市・発表日（11月13日）・リニューアル日（11月16日）・現在の営業状況（改装休業中、11月16日再開予定）・情報源URLを照合。公開前に再開予定の変更有無を確認し、最終承認すること。",
+      "relevance": "店舗ニュース候補・運営会社公式発表と公式店舗ページの両方で日付・住所・休業期間を確認",
+      "content_type": "店舗・飲食店",
+      "collection_method": "手動調査・運営会社公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T23:48:00+09:00",
+      "review_flags": [
+        "11月16日のリニューアル実施・営業再開を確認後に最終承認",
+        "最終承認前のため公開禁止"
+      ],
+      "review_priority": "基本項目あり・再開確認待ち",
       "review_bucket": "確認待ち",
       "manual_hold": true
     }
