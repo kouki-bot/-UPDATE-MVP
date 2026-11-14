@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T20:42:00+09:00",
+  "generated_at": "2026-11-14T22:57:00+09:00",
   "description": "公式情報を優先して手動調査した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
@@ -610,6 +610,60 @@
       "review_priority": "要優先確認",
       "review_bucket": "確認待ち",
       "manual_hold": true
+    },
+    {
+      "id": "e6d0a4c8f1b32795",
+      "title": "【山口市】MrMax山口店が11月5日にリニューアルオープン",
+      "suggested_headline": "【山口市】MrMax山口店が11月5日にリニューアルオープン",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-02",
+      "event_date": "2026-11-05",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 9,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "運営会社公式発表および公式店舗ページで確認",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "公式店舗ページの住所で確認",
+      "source_name": "株式会社ミスターマックス公式発表・公式店舗ページ",
+      "source_url": "https://mrmax.co.jp/info/mrmax%E5%B1%B1%E5%8F%A3%E5%BA%97-%E3%83%AA%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%A2%E3%83%AB%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%EF%BD%9E11%E6%9C%885%E6%97%A5%E6%9C%A8-%E7%94%9F%E9%AE%AE%E9%A3%9F/",
+      "source_urls": [
+        {
+          "source_name": "株式会社ミスターマックス公式発表（2026年11月2日）",
+          "url": "https://mrmax.co.jp/info/mrmax%E5%B1%B1%E5%8F%A3%E5%BA%97-%E3%83%AA%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%A2%E3%83%AB%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%EF%BD%9E11%E6%9C%885%E6%97%A5%E6%9C%A8-%E7%94%9F%E9%AE%AE%E9%A3%9F/"
+        },
+        {
+          "source_name": "株式会社ミスターマックス公式店舗ページ（住所・営業時間・テナント情報）",
+          "url": "https://mrmax.co.jp/shops/0000000024/"
+        },
+        {
+          "source_name": "株式会社ミスターマックス公式お知らせ一覧（掲載日確認）",
+          "url": "https://mrmax.co.jp/info/year/2026"
+        }
+      ],
+      "duplicate_sources_count": 3,
+      "body_excerpt": "株式会社ミスターマックスは2026年11月2日付の公式発表で、MrMax山口店を11月5日8時にリニューアルオープンすると案内。生鮮食品・惣菜売場を新設し、営業時間を従来の9時～20時から8時～22時へ拡大。公式店舗ページには山口市黒川82番1、営業時間8時～22時、店舗の営業情報が掲載されている。",
+      "body_excerpt_method": "運営会社公式発表・公式店舗ページ・公式お知らせ一覧",
+      "draft_summary": "店舗名・山口市・公式発表日（11月2日）・リニューアル日（11月5日）・現在の営業情報（公式店舗ページ）・情報源URLを照合。最終承認後に公開可能。",
+      "relevance": "店舗ニュース候補・運営会社公式発表と現行店舗情報あり",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・運営会社公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T22:57:00+09:00",
+      "review_flags": [
+        "最終承認前のため公開禁止。公式発表と現行店舗ページを審査画面で再確認"
+      ],
+      "review_priority": "基本項目あり・最終確認待ち",
+      "review_bucket": "通常候補（要確認）"
     }
   ]
 }
