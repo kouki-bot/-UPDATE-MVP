@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T23:48:00+09:00",
+  "generated_at": "2026-11-15T00:10:00+09:00",
   "description": "公式情報を優先して手動調査した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
@@ -776,6 +776,57 @@
       "review_priority": "基本項目あり・再開確認待ち",
       "review_bucket": "確認待ち",
       "manual_hold": true
+    },
+    {
+      "id": "6d9a2f4c8b1e7053",
+      "title": "【宇部市】宇部兵間仏閣堂が12月23日をもって閉店予定",
+      "suggested_headline": "【宇部市】宇部兵間仏閣堂が12月23日をもって閉店予定",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "2026-08-14",
+      "event_date": "2026-12-23",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 92,
+      "area": [
+        "宇部市"
+      ],
+      "area_status": "運営会社公式サイトで住所を確認",
+      "municipality": "宇部市",
+      "municipality_candidates": [
+        "宇部市"
+      ],
+      "municipality_group": "宇部市",
+      "municipality_status": "公式店舗ページで宇部市と確認",
+      "source_name": "株式会社宇部兵間仏閣堂公式サイト",
+      "source_url": "https://www.ubehyoma.jp/news/%E9%96%89%E5%BA%97%E3%81%AE%E3%81%94%E6%8C%A8%E6%8B%B6/",
+      "source_urls": [
+        {
+          "source_name": "株式会社宇部兵間仏閣堂公式・閉店のご挨拶（2026年8月14日）",
+          "url": "https://www.ubehyoma.jp/news/%E9%96%89%E5%BA%97%E3%81%AE%E3%81%94%E6%8C%A8%E6%8B%B6/"
+        },
+        {
+          "source_name": "株式会社宇部兵間仏閣堂公式・宇部本店情報（住所・営業時間）",
+          "url": "https://www.ubehyoma.jp/store/ube/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "株式会社宇部兵間仏閣堂は2026年8月14日付の公式サイト「閉店のご挨拶」で、創業以来52年間営業してきた宇部本店を2026年12月23日をもって閉店すると発表。公式店舗ページでは住所を山口県宇部市大字中野開作241-7、営業時間を9:00～18:00（10月1日～1月31日は17:00閉店）、定休日を毎週木曜日と案内している。閉店日までの営業状況は公開前に再確認する。",
+      "body_excerpt_method": "運営会社公式閉店告知・公式店舗ページ",
+      "draft_summary": "公式閉店告知で店名・告知日・閉店日を確認。公式店舗ページで所在地・営業時間を照合。公開前に現時点の営業状況と6項目を最終確認してください。",
+      "relevance": "店舗ニュース候補・運営会社公式閉店告知あり",
+      "content_type": "店舗",
+      "collection_method": "手動調査・公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-15T00:10:00+09:00",
+      "review_flags": [
+        "閉店予定日まで期間があるため、公開直前に営業継続状況・閉店日の変更有無を再確認"
+      ],
+      "review_priority": "基本項目あり・承認前最終確認",
+      "review_bucket": "通常候補（要確認）",
+      "manual_hold": false
     }
   ]
 }
