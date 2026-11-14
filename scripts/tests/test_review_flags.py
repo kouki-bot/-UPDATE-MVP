@@ -41,5 +41,18 @@ class ReviewFlagTests(unittest.TestCase):
         self.assertIn("公開日未確認", drafts[0]["review_flags"])
         self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
 
+    def test_manual_review_flags_are_preserved(self):
+        drafts = [{"id":"manual-flags","title":"やよい軒 山口大学前店","category":["リニューアル"],"source_url":"https://example.com/story","source_urls":[{"url":"https://example.com/story"}],"body_excerpt":"11月12日にリニューアルオープンしました。","published_date":"2026-11-11","event_date":"2026-11-12","municipality":"山口市","municipality_candidates":["山口市"],"freshness":"直近30日","review_flags":["公式情報の日付に不一致あり"],"status":"x"}]
+        module.annotate_review_flags(drafts)
+        self.assertIn("公式情報の日付に不一致あり", drafts[0]["review_flags"])
+
+    def test_manual_hold_forces_review_bucket_and_unpublished_status(self):
+        drafts = [{"id":"manual-hold","title":"やよい軒 山口大学前店","category":["リニューアル"],"source_url":"https://example.com/story","source_urls":[{"url":"https://example.com/story"}],"body_excerpt":"11月12日にリニューアルオープンしました。","published_date":"2026-11-11","event_date":"2026-11-12","municipality":"山口市","municipality_candidates":["山口市"],"freshness":"直近30日","manual_hold":True,"review_flags":["公式情報の日付に不一致あり"],"status":"x"}]
+        module.annotate_review_flags(drafts)
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["review_priority"], "要優先確認")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+        self.assertIn("公式情報の日付に不一致あり", drafts[0]["review_flags"])
+
 if __name__ == "__main__":
     unittest.main()
