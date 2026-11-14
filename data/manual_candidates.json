@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T21:10:00+09:00",
+  "generated_at": "2026-11-14T20:42:00+09:00",
   "description": "公式情報を優先して手動調査した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
@@ -497,6 +497,115 @@
       "review_flags": [
         "公式トップページとアクセスページで店舗名表記（MOCA/MACA）に不一致あり。運営元に正式名称を確認",
         "現在の営業状況を公式SNS等で最終確認"
+      ],
+      "review_priority": "要優先確認",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
+    },
+    {
+      "id": "c4b8d2a6e1f90375",
+      "title": "【山口市】アルク平川店が11月12日にリニューアルオープン",
+      "suggested_headline": "【山口市】アルク平川店が11月12日にリニューアルオープン",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-02",
+      "event_date": "2026-11-12",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 12,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "丸久公式発表および公式店舗ページで確認",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "丸久公式発表で山口市と確認",
+      "source_name": "株式会社丸久公式ニュース・公式店舗ページ",
+      "source_url": "https://www.mrk09.co.jp/アルク平川店リニューアルオープンについて/",
+      "source_urls": [
+        {
+          "source_name": "株式会社丸久公式発表（2026年11月2日）",
+          "url": "https://www.mrk09.co.jp/アルク平川店リニューアルオープンについて/"
+        },
+        {
+          "source_name": "株式会社丸久公式店舗情報（住所・24時間営業）",
+          "url": "https://www.mrk09.co.jp/area_info/アルク平川店/"
+        },
+        {
+          "source_name": "山口新聞（2026年11月13日・営業再開を現地取材）",
+          "url": "https://yama.minato-yamaguchi.co.jp/e-yama/articles/113121"
+        }
+      ],
+      "duplicate_sources_count": 3,
+      "body_excerpt": "株式会社丸久は2026年11月2日付の公式発表で、アルク平川店（山口市）を11月12日にリニューアルオープンすると案内。公式店舗ページには山口市平井724番地1、24時間営業の店舗情報が掲載されている。山口新聞は11月13日付の記事で、11月12日にリニューアルオープンし、約半年の休業を経て営業を再開したことを報道。",
+      "body_excerpt_method": "運営会社公式発表・公式店舗ページ・地域新聞の現地取材記事",
+      "draft_summary": "店名・市町・公式発表日・リニューアル日・現在の営業状況・情報源URLを照合。6項目確認後に承認してください。",
+      "relevance": "店舗ニュース候補・運営会社公式発表および営業再開報道あり",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報と地域メディア",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T20:42:00+09:00",
+      "review_flags": [
+        "同一住所内にワッツウィズ 平川アルク店の候補あり。別店舗・別ニュースであることを確認してから審査"
+      ],
+      "review_priority": "基本項目あり・内容確認は必要",
+      "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "d5c9e3b7f2a01486",
+      "title": "【岩国市】中華園が岩国駅前にマーラータン店をオープン（店名・現況確認待ち）",
+      "suggested_headline": "【岩国市】中華園が岩国駅前にマーラータン店をオープン（店名・現況確認待ち）",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 2,
+      "published_date": "2026-10-05",
+      "event_date": "2026-10-06",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 39,
+      "area": [
+        "岩国市"
+      ],
+      "area_status": "岩国駅前との案内あり。正確な店舗住所は運営元公式情報で未確認",
+      "municipality": "岩国市",
+      "municipality_candidates": [
+        "岩国市"
+      ],
+      "municipality_group": "岩国市",
+      "municipality_status": "地域情報サイトで岩国駅前と確認。番地未確認",
+      "source_name": "駅通りに来てみんさい！",
+      "source_url": "https://kuga.iwakuni.city/news",
+      "source_urls": [
+        {
+          "source_name": "駅通りに来てみんさい！（2026年10月5日・開店日告知）",
+          "url": "https://kuga.iwakuni.city/news"
+        },
+        {
+          "source_name": "駅通りに来てみんさい！（2026年8月10日・旧店舗の休業と新業態告知）",
+          "url": "https://kuga.iwakuni.city/news/1332"
+        },
+        {
+          "source_name": "運営元とされる中華園のInstagram（正式店名・現況の追加確認用）",
+          "url": "https://www.instagram.com/chuukaenn6542/"
+        }
+      ],
+      "duplicate_sources_count": 3,
+      "body_excerpt": "岩国市の地域情報サイト「駅通りに来てみんさい！」は10月5日付で、玖珂・周東で営業していた中華園が岩国駅前にマーラータン店を10月6日にオープンすると告知。8月の記事では旧店舗の長期休業と新業態への転換予定を案内している。一方、正式店名・正確な住所・現在の営業状況は運営元の公式発信で未確認。",
+      "body_excerpt_method": "地域情報サイトの開店告知。運営元公式情報は追加確認が必要",
+      "draft_summary": "開店日・岩国市内での出店情報は地域情報サイトで確認できるが、正式店名・正確な住所・現在の営業状況を運営元公式SNS等で確認するまで公開不可。",
+      "relevance": "店舗ニュース候補・一次情報と所在地の追加確認が必要",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・地域情報サイト",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T20:42:00+09:00",
+      "review_flags": [
+        "正式店名・正確な住所・現在の営業状況を運営元公式SNS等で確認するまで承認不可"
       ],
       "review_priority": "要優先確認",
       "review_bucket": "確認待ち",
