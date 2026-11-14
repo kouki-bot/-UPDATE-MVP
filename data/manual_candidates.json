@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-14T20:04:00+09:00",
-  "description": "公式情報を中心に手動調査した候補。すべて審査専用であり、自動公開しない。",
+  "generated_at": "2026-11-14T21:10:00+09:00",
+  "description": "公式情報を優先して手動調査した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
       "id": "a9c4016b7e2d4f81",
@@ -395,6 +395,108 @@
       "review_flags": [
         "店舗公式情報未確認",
         "現在の営業状況を追加確認"
+      ],
+      "review_priority": "要優先確認",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
+    },
+    {
+      "id": "7c4e91a6d2f8305b",
+      "title": "【柳井市】カラオケまねきねこ 柳井店が11月13日グランドオープン",
+      "suggested_headline": "【柳井市】カラオケまねきねこ 柳井店が11月13日グランドオープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-06",
+      "event_date": "2026-11-13",
+      "event_date_text": "17:00",
+      "freshness": "直近30日",
+      "age_days": 8,
+      "area": [
+        "柳井市"
+      ],
+      "area_status": "運営会社公式プレスリリースで所在地を確認",
+      "municipality": "柳井市",
+      "municipality_candidates": [
+        "柳井市"
+      ],
+      "municipality_group": "柳井市",
+      "municipality_status": "運営会社公式発表で確認",
+      "source_name": "株式会社コシダカホールディングス公式ニュースリリース",
+      "source_url": "https://www.koshidakaholdings.co.jp/ja/news/20261106/main/0/link/yanai.pdf",
+      "source_urls": [
+        {
+          "source_name": "株式会社コシダカホールディングス公式ニュースリリース（2026年11月6日）",
+          "url": "https://www.koshidakaholdings.co.jp/ja/news/20261106/main/0/link/yanai.pdf"
+        },
+        {
+          "source_name": "カラオケまねきねこ 柳井店 公式店舗ページ",
+          "url": "https://www.karaokemanekineko.jp/locations/yamaguchi/yanai/yanai-store/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "株式会社コシダカは2026年11月6日付の公式発表で、カラオケまねきねこ柳井店を11月13日17時にグランドオープンすると発表。所在地は山口県柳井市南町4-2-20。公式発表に営業時間9:00～翌5:00、無料駐車場22台の記載あり。開店日を過ぎているため、掲載前に公式店舗ページで現在の営業状況を最終確認する。",
+      "body_excerpt_method": "運営会社公式発表・公式店舗ページ",
+      "draft_summary": "運営会社公式PDFで店舗名・市町・開店日時・所在地を確認。開店後の現在の営業状況は公式店舗ページで最終照合し、6項目確認後に承認してください。",
+      "relevance": "店舗ニュース候補・運営会社公式発表あり",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T21:00:00+09:00",
+      "review_flags": [
+        "公式発表で開店日時・所在地を確認。開店後の現在の営業状況を公式店舗ページで最終確認"
+      ],
+      "review_priority": "基本項目あり・内容確認は必要",
+      "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "8d5f02b7a1c6493e",
+      "title": "【宇部市】MOCA cafe＆beautyが10月15日グランドオープン",
+      "suggested_headline": "【宇部市】MOCA cafe＆beautyが10月15日グランドオープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 2,
+      "published_date": "2026-10-30",
+      "event_date": "2026-10-15",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 15,
+      "area": [
+        "宇部市"
+      ],
+      "area_status": "店舗公式サイトおよび地域情報記事で所在地を照合",
+      "municipality": "宇部市",
+      "municipality_candidates": [
+        "宇部市"
+      ],
+      "municipality_group": "宇部市",
+      "municipality_status": "公式サイトで宇部市内の店舗であることを確認",
+      "source_name": "MOCA cafe＆beauty公式サイト・宇部to山陽小野田まひる.com",
+      "source_url": "https://lounge-twins.com/",
+      "source_urls": [
+        {
+          "source_name": "MOCA cafe＆beauty公式サイト",
+          "url": "https://lounge-twins.com/"
+        },
+        {
+          "source_name": "宇部to山陽小野田まひる.com（2026年10月30日掲載・住所/開店日）",
+          "url": "https://mahirunet.com/moca-cafe-beauty-open/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "MOCA cafe＆beauty公式サイトは宇部市のカフェ・ピラティス・ネイル・エステを提供する複合型サロンとして案内し、2026年10月15日GRAND OPENと記載。地域情報記事は2026年10月30日付で10月15日オープン、所在地を山口県宇部市鵜の島町6-31と報道。公式サイトにはネイル・ピラティス等のメニューが掲載されている。",
+      "body_excerpt_method": "店舗公式サイト・地域情報記事",
+      "draft_summary": "公式トップページでは「MOCA cafe＆beauty」、アクセスページでは「MACA cafe＆beauty」と表記が異なる。住所・開店日は公式トップページと地域情報記事で照合できるが、正式名称の不一致が解消するまで公開しないこと。",
+      "relevance": "店舗ニュース候補・公式サイトあり・住所と営業状況の最終確認が必要",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報と地域情報記事",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T21:00:00+09:00",
+      "review_flags": [
+        "公式トップページとアクセスページで店舗名表記（MOCA/MACA）に不一致あり。運営元に正式名称を確認",
+        "現在の営業状況を公式SNS等で最終確認"
       ],
       "review_priority": "要優先確認",
       "review_bucket": "確認待ち",
