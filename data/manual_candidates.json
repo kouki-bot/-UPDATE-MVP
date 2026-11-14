@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T09:00:00+09:00",
+  "generated_at": "2026-11-14T20:04:00+09:00",
   "description": "公式情報を中心に手動調査した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
@@ -197,6 +197,208 @@
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "4f6810240f45e72a",
+      "title": "【山口市】やよい軒 山口大学前店が11月12日にリニューアルオープン",
+      "suggested_headline": "【山口市】やよい軒 山口大学前店が11月12日にリニューアルオープン",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-11",
+      "event_date": "2026-11-12",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 3,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "運営会社公式発表および公式店舗ページで所在地を確認",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "公式発表で確認",
+      "source_name": "株式会社プレナス公式ニュースリリース",
+      "source_url": "https://www.yayoiken.com/contents/news/261111_yamaguchi.html",
+      "source_urls": [
+        {
+          "source_name": "やよい軒公式・山口大学前店改装オープンのお知らせ",
+          "url": "https://www.yayoiken.com/contents/news/261111_yamaguchi.html"
+        },
+        {
+          "source_name": "やよい軒公式店舗情報・山口大学前店",
+          "url": "https://store.yayoiken.com/b/yayoiken/info/2013/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "株式会社プレナスは、やよい軒 山口大学前店を2026年11月12日10時に改装オープンすると2026年11月11日付で発表。住所は山口県山口市平井724-1。公式店舗ページにも同住所と営業時間10:00～24:00が掲載されています。",
+      "body_excerpt_method": "運営会社公式発表・公式店舗ページを確認",
+      "draft_summary": "運営会社の公式ニュースリリースでは2026年11月12日10時改装オープンと発表。一方、公式店舗ページには11月10日リニューアルオープンと記載があり、日付が一致しません。店舗名・所在地は確認できますが、開店日の不一致が解消するまで公開しないでください。",
+      "relevance": "店舗ニュース候補・公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T20:04:00+09:00",
+      "review_flags": [
+        "公式ニュースリリースは11月12日改装オープンと記載。一方、公式店舗ページには11月10日リニューアルオープンと記載。日付の不一致を運営会社へ確認するまで承認不可"
+      ],
+      "review_priority": "要優先確認",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
+    },
+    {
+      "id": "05ec41e58932e3d7",
+      "title": "【下関市】Pilates Studio Glow 下関店が2026年10月17日オープン",
+      "suggested_headline": "【下関市】Pilates Studio Glow 下関店が2026年10月17日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 2,
+      "published_date": "2026-11-12T11:55:00+09:00",
+      "event_date": "2026-10-17",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 2,
+      "area": [
+        "下関市"
+      ],
+      "area_status": "公式店舗ページで住所を確認",
+      "municipality": "下関市",
+      "municipality_candidates": [
+        "下関市"
+      ],
+      "municipality_group": "下関市",
+      "municipality_status": "公式店舗ページで確認",
+      "source_name": "号外NET 下関市・Pilates Studio Glow公式サイト",
+      "source_url": "https://shimonoseki.goguynet.jp/2026/11/12/pilates-glow-shimonoseki/",
+      "source_urls": [
+        {
+          "source_name": "号外NET 下関市・開店記事（2026年11月12日掲載）",
+          "url": "https://shimonoseki.goguynet.jp/2026/11/12/pilates-glow-shimonoseki/"
+        },
+        {
+          "source_name": "Pilates Studio Glow公式・下関店案内",
+          "url": "https://ps-glow.com/pilates-studio-glowshimonoseki/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "号外NET下関市は2026年11月12日付の記事で、Pilates Studio Glow 下関店が2026年10月17日に下関市秋根新町18-15でオープンしたと報道。運営元の公式店舗ページにも同住所、レッスンスケジュール、体験予約案内が掲載されています。",
+      "body_excerpt_method": "地域メディア記事・運営元公式店舗ページを照合",
+      "draft_summary": "地域メディアは2026年10月17日オープンと報道し、運営元公式ページで店舗名・所在地・現在の予約案内を確認。ただし開店日は公式一次情報で確認できていないため、公式SNS等で追加確認するまで公開しないでください。",
+      "relevance": "店舗ニュース候補・公式営業情報あり・開店日追加確認推奨",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報と地域メディア",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T20:04:00+09:00",
+      "review_flags": [
+        "開店日は地域メディアの取材記事のみで確認。運営元公式SNS等で開店日を追加確認"
+      ],
+      "review_priority": "要優先確認",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
+    },
+    {
+      "id": "b9ffaf48379c25a9",
+      "title": "【山口市】ワッツウィズ 平川アルク店が2026年11月12日オープン",
+      "suggested_headline": "【山口市】ワッツウィズ 平川アルク店が2026年11月12日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-12T10:00:00+09:00",
+      "event_date": "2026-11-12",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 2,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "運営会社公式プレスリリース・公式店舗ページで確認",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "運営会社公式発表で確認",
+      "source_name": "株式会社ワッツ公式プレスリリース",
+      "source_url": "https://prtimes.jp/main/html/rd/p/000000427.000084599.html",
+      "source_urls": [
+        {
+          "source_name": "株式会社ワッツ公式プレスリリース（2026年11月12日）",
+          "url": "https://prtimes.jp/main/html/rd/p/000000427.000084599.html"
+        },
+        {
+          "source_name": "株式会社ワッツ公式店舗情報",
+          "url": "https://www.watts-jp.com/shop/54220/"
+        },
+        {
+          "source_name": "株式会社ワッツ公式店舗ニュース",
+          "url": "https://www.watts-jp.com/store-news/%E3%83%AF%E3%83%83%E3%83%84%E3%82%A6%E3%82%A3%E3%82%BA-%E5%B9%B3%E5%B7%9D%E3%82%A2%E3%83%AB%E3%82%AF%E5%BA%97%EF%BC%88%E5%B1%B1%E5%8F%A3%E7%9C%8C%EF%BC%8911-12%E6%9C%A8OPEN%E4%BA%88%E5%AE%9A/"
+        }
+      ],
+      "duplicate_sources_count": 3,
+      "body_excerpt": "株式会社ワッツは2026年11月12日付プレスリリースで、同日に「ワッツウィズ 平川アルク店」を山口県山口市平井724-1 アルク平川店内にオープンしたと発表。公式店舗情報にも同住所と営業時間0:00～24:00を掲載。",
+      "body_excerpt_method": "運営会社公式プレスリリース・公式店舗情報",
+      "draft_summary": "運営会社の公式プレスリリースで店舗名・所在地・開店日を確認。公式店舗ページで現在の店舗情報と営業時間を確認。6項目照合後に承認してください。",
+      "relevance": "店舗ニュース候補・公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T20:04:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要",
+      "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "2b87d7c03f9c4d12",
+      "title": "【宇部市】居酒屋「－永－（えい）」が2026年10月21日オープン",
+      "suggested_headline": "【宇部市】居酒屋「－永－（えい）」が2026年10月21日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 3,
+      "published_date": "2026-11-10T00:00:00+09:00",
+      "event_date": "2026-10-21",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 4,
+      "area": [
+        "宇部市"
+      ],
+      "area_status": "地域メディア記事で店舗所在地を確認",
+      "municipality": "宇部市",
+      "municipality_candidates": [
+        "宇部市"
+      ],
+      "municipality_group": "宇部市",
+      "municipality_status": "地域メディア記事で確認",
+      "source_name": "山口宇部経済新聞",
+      "source_url": "https://yamaguchi.keizai.biz/index.php/headline/5563/",
+      "source_urls": [
+        {
+          "source_name": "山口宇部経済新聞（2026年11月10日）",
+          "url": "https://yamaguchi.keizai.biz/index.php/headline/5563/"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "山口宇部経済新聞は2026年11月10日付記事で、居酒屋「－永－（えい）」が2026年10月21日に宇部市昭和町4でオープンしたと報道。前店舗「お食事処 かくれんぼ」跡に出店したこと、店主・提供メニューについて取材内容を掲載。",
+      "body_excerpt_method": "地域経済メディアの取材記事",
+      "draft_summary": "地域経済メディアの取材記事で店舗名・所在地・開店日を確認。ただし店舗公式サイト・公式SNSを確認できておらず、現在の営業状況も未確認。公式情報と現在の営業状況を追加確認するまで公開しないでください。",
+      "relevance": "店舗ニュース候補・地域メディア確認・公式情報追加確認が必要",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・地域メディア",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T20:04:00+09:00",
+      "review_flags": [
+        "店舗公式情報未確認",
+        "現在の営業状況を追加確認"
+      ],
+      "review_priority": "要優先確認",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
     }
   ]
 }
