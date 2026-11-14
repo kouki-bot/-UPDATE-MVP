@@ -245,8 +245,9 @@
       "review_flags": [
         "公式ニュースリリースは11月12日改装オープンと記載。一方、公式店舗ページには11月10日リニューアルオープンと記載。日付の不一致を運営会社へ確認するまで承認不可"
       ],
-      "review_priority": "確認待ち",
-      "review_bucket": "確認待ち"
+      "review_priority": "要優先確認",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
     },
     {
       "id": "05ec41e58932e3d7",
@@ -295,8 +296,9 @@
       "review_flags": [
         "開店日は地域メディアの取材記事のみで確認。運営元公式SNS等で開店日を追加確認"
       ],
-      "review_priority": "確認待ち",
-      "review_bucket": "確認待ち"
+      "review_priority": "要優先確認",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
     },
     {
       "id": "b9ffaf48379c25a9",
@@ -394,8 +396,9 @@
         "店舗公式情報未確認",
         "現在の営業状況を追加確認"
       ],
-      "review_priority": "確認待ち",
-      "review_bucket": "確認待ち"
+      "review_priority": "要優先確認",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
     }
   ]
 }
