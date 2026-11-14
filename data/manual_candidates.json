@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T22:57:00+09:00",
+  "generated_at": "2026-11-14T23:28:00+09:00",
   "description": "公式情報を優先して手動調査した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
@@ -664,6 +664,62 @@
       ],
       "review_priority": "基本項目あり・最終確認待ち",
       "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "a8c2e6f0b4d91375",
+      "title": "【下関市】レコパン×GooZoo長府店が11月19日にリニューアルオープン",
+      "suggested_headline": "【下関市】レコパン×GooZoo長府店が11月19日にリニューアルオープン",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-12",
+      "event_date": "2026-11-19",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 2,
+      "area": [
+        "下関市"
+      ],
+      "area_status": "運営会社発表およびゆめタウン長府公式ショップ情報で確認",
+      "municipality": "下関市",
+      "municipality_candidates": [
+        "下関市"
+      ],
+      "municipality_group": "下関市",
+      "municipality_status": "運営会社発表・施設公式情報に下関市ゆめタウン1-1と記載",
+      "source_name": "レコパンフードビジネス（岡野食品株式会社）公式発表・ゆめタウン長府公式ショップ情報",
+      "source_url": "https://prtimes.jp/main/html/rd/p/000000004.000193887.html",
+      "source_urls": [
+        {
+          "source_name": "運営会社・岡野食品株式会社のプレスリリース（2026年11月12日）",
+          "url": "https://prtimes.jp/main/html/rd/p/000000004.000193887.html"
+        },
+        {
+          "source_name": "山口新聞掲載の企業発表（店舗概要・住所・営業時間）",
+          "url": "https://yama.minato-yamaguchi.co.jp/press/uncategorized/c193887_r4/"
+        },
+        {
+          "source_name": "ゆめタウン長府公式ショップ一覧（既存店舗・1階・電話番号）",
+          "url": "https://www.izumi.jp/tenpo/chohu/shop/food"
+        }
+      ],
+      "duplicate_sources_count": 3,
+      "body_excerpt": "レコパンフードビジネス株式会社（岡野食品株式会社の子会社）は2026年11月12日付の発表で、ベーカリー「レコパン×GooZoo長府店」を11月19日（木）にリニューアルオープンすると告知。店舗概要には〒752-0926 山口県下関市ゆめタウン1-1 ゆめタウン長府店内1F、営業時間9:00～19:00、年中無休、電話083-248-5834と記載。ゆめタウン長府公式ショップ一覧にもレコパンが1階の店舗として掲載されている。",
+      "body_excerpt_method": "運営会社発表・施設公式ショップ情報",
+      "draft_summary": "店舗名・下関市・発表日（11月12日）・リニューアル日（11月19日）・現況（既存店舗の改装予定）・情報源URLを照合。実施後は公式SNSまたは施設公式情報でリニューアル完了を再確認してから承認すること。",
+      "relevance": "店舗ニュース候補・運営会社の具体的なリニューアル告知と施設公式掲載あり",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・運営会社発表と施設公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T23:28:00+09:00",
+      "review_flags": [
+        "11月19日のリニューアル実施後、営業再開・店舗名・営業状況を公式SNSまたは施設公式情報で再確認",
+        "最終承認前のため公開禁止"
+      ],
+      "review_priority": "基本項目あり・実施後確認待ち",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
     }
   ]
 }
