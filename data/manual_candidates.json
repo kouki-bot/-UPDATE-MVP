@@ -511,8 +511,8 @@
       ],
       "priority": 2,
       "published_date": "2026-11-07",
-      "event_date": "2026-11-07",
-      "event_date_text": "",
+      "event_date": "",
+      "event_date_text": "施工会社記事では11月1日予定、店舗掲載情報では11月7日オープンと記載（不一致）",
       "freshness": "直近30日",
       "age_days": 7,
       "area": [
@@ -647,16 +647,12 @@
         {
           "source_name": "号外NET（公式Instagram投稿の引用・2026年10月18日）",
           "url": "https://shunan-kudamatsu-hikari.goguynet.jp/2026/10/18/chukasobayouran/"
-        },
-        {
-          "source_name": "中華そば 洋RUN公式Instagram（店舗アカウント・URL要確認）",
-          "url": "https://www.instagram.com/"
         }
       ],
       "duplicate_sources_count": 1,
       "body_excerpt": "中華そば 洋RUN 光店は光市島田1-11-6 Be st.（ビーストリート）内に出店予定。2026年10月18日付の号外NET記事は店舗公式Instagramの告知を引用し、オープン時期を11月下旬～12月としている。具体的な開店日は未発表のため、日付確定後に再確認する必要がある。",
       "body_excerpt_method": "公式Instagram投稿を引用した地域メディア記事",
-      "draft_summary": "光市島田1-11-6への出店予定と開店時期（11月下旬～12月）は確認できるが、具体的な開店日は未発表。公式アカウントで日付と営業開始を確認するまで公開しないでください。",
+      "draft_summary": "光市島田1-11-6への出店予定と開店時期（11月下旬～12月）は、公式Instagram投稿を引用した号外NET記事で確認できる。ただし具体的な開店日は未発表であり、公式アカウントのURLも今回の調査では特定できていない。日付と営業開始を確認するまで公開しないでください。",
       "relevance": "開店予定候補・公式告知の引用あり・開店日未確定",
       "content_type": "店舗・商業施設",
       "collection_method": "手動調査・地域メディア",
