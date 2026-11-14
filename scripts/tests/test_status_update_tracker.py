@@ -1,4 +1,10 @@
+import sys
 import unittest
+from pathlib import Path
+
+# Make scripts/ importable when unittest discovers tests from scripts/tests.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from status_update_tracker import find_possible_updates
 
 class StatusUpdateTrackerTests(unittest.TestCase):
