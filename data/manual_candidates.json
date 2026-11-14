@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-15T00:18:00+09:00",
+  "generated_at": "2026-11-15T00:35:00+09:00",
   "description": "公式情報を優先して手動調査した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
@@ -829,6 +829,112 @@
       "review_priority": "基本項目あり・承認前最終確認",
       "review_bucket": "通常候補（要確認）",
       "manual_hold": false
+    },
+    {
+      "id": "e7a4c91d6f2b8053",
+      "title": "【周南市】明屋書店 今宿店が12月6日をもって閉店予定",
+      "suggested_headline": "【周南市】明屋書店 今宿店が12月6日をもって閉店予定",
+      "category": [
+        "閉店"
+      ],
+      "priority": 1,
+      "published_date": "2026-10-13",
+      "event_date": "2026-12-06",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 32,
+      "area": [
+        "周南市"
+      ],
+      "area_status": "公式SNSアカウントと地域メディアで住所を照合",
+      "municipality": "周南市",
+      "municipality_candidates": [
+        "周南市"
+      ],
+      "municipality_group": "周南市",
+      "municipality_status": "店舗所在地を確認",
+      "source_name": "明屋書店 今宿店公式Xアカウント（投稿の個別URL未確認）",
+      "source_url": "https://x.com/haruya_imajuku",
+      "source_urls": [
+        {
+          "source_name": "明屋書店 今宿店公式Xアカウント（閉店告知投稿を掲載）",
+          "url": "https://x.com/haruya_imajuku"
+        },
+        {
+          "source_name": "号外NET 周南市・下松市・光市（2026年10月13日・公式HPの閉店告知も引用）",
+          "url": "https://shunan-kudamatsu-hikari.goguynet.jp/2026/10/13/haruyashotenimajyuku/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "明屋書店 今宿店は2026年12月6日（日）をもって閉店予定。公式Xアカウントのプロフィール・投稿情報で閉店告知を確認し、号外NETの2026年10月13日記事でも、明屋書店公式ホームページの閉店告知内容が引用されている。所在地は山口県周南市月丘町4丁目19。公式Xの閉店告知投稿の個別URLと公式サイトの告知URLは未取得のため、公開前に原文URLを取得する。",
+      "body_excerpt_method": "公式SNSアカウント情報と地域メディアの公式発表引用",
+      "draft_summary": "閉店予定日・店名・所在地は確認できるが、公式X投稿の個別URLと公式サイト告知の直接URLを取得できていないため、公開禁止の保留候補として登録。",
+      "relevance": "閉店候補・公式SNSで告知確認、一次情報の直接URL取得待ち",
+      "content_type": "店舗",
+      "collection_method": "手動調査・公式SNSおよび地域メディア照合",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-15T00:35:00+09:00",
+      "review_flags": [
+        "公式X投稿の個別URLおよび公式サイト閉店告知URLを取得するまで公開不可",
+        "閉店日まで営業継続するか、直前に再確認"
+      ],
+      "review_priority": "一次情報URLの特定待ち",
+      "review_bucket": "保留（要一次情報URL）",
+      "manual_hold": true
+    },
+    {
+      "id": "d2b8f6a1c4e90375",
+      "title": "【周南市】カエルストアが12月30日に閉店し、周防大島へ移転予定",
+      "suggested_headline": "【周南市】カエルストアが12月30日に閉店し、周防大島へ移転予定",
+      "category": [
+        "移転",
+        "閉店"
+      ],
+      "priority": 2,
+      "published_date": "2026-10-14",
+      "event_date": "2026-12-30",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 31,
+      "area": [
+        "周南市"
+      ],
+      "area_status": "地域メディア記事で所在地を確認",
+      "municipality": "周南市",
+      "municipality_candidates": [
+        "周南市"
+      ],
+      "municipality_group": "周南市",
+      "municipality_status": "地域メディアの店舗所在地情報で確認",
+      "source_name": "号外NET 周南市・下松市・光市（店舗のGoogleビジネスプロフィール投稿を確認した記事）",
+      "source_url": "https://shunan-kudamatsu-hikari.goguynet.jp/2026/10/14/kaerustore-3/",
+      "source_urls": [
+        {
+          "source_name": "号外NET 周南市・下松市・光市（2026年10月14日・店舗Googleビジネスプロフィール投稿の内容を掲載）",
+          "url": "https://shunan-kudamatsu-hikari.goguynet.jp/2026/10/14/kaerustore-3/"
+        },
+        {
+          "source_name": "号外NET 周南市・下松市・光市（2026年6月28日・店頭掲示の閉店告知写真）",
+          "url": "https://shunan-kudamatsu-hikari.goguynet.jp/2026/06/28/kaerustore-2/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "周南市若宮町のカフェ「カエルストア」は2026年12月30日に現店舗を閉店し、周防大島へ移転予定。号外NETは2026年10月14日付の記事で、店舗のGoogleビジネスプロフィールに掲載された閉店・移転告知を確認したと報道。移転先はアロハオレンジ付近、2027年後半オープン予定とされるが、正確な住所・開店日は未公表。公式Googleビジネスプロフィール投稿の直接URLを取得できていない。",
+      "body_excerpt_method": "地域メディアによる店舗Googleビジネスプロフィール投稿の確認報道",
+      "draft_summary": "閉店・移転情報は具体的だが、一次情報であるGoogleビジネスプロフィール投稿の直接URLを確認できていない。店舗公式投稿の取得まで公開禁止の保留候補。",
+      "relevance": "閉店・移転候補・店舗公式Googleビジネスプロフィールの原文URL取得待ち",
+      "content_type": "店舗",
+      "collection_method": "手動調査・地域メディア経由の公式情報確認",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-15T00:35:00+09:00",
+      "review_flags": [
+        "店舗Googleビジネスプロフィールの公式投稿の直接URLまたは店舗からの公式発信を取得するまで公開不可",
+        "移転先の住所・正式な開店日が確定するまでは移転先記事を作成しない",
+        "閉店日直前に営業継続状況を再確認"
+      ],
+      "review_priority": "一次情報URL・移転先詳細の確認待ち",
+      "review_bucket": "保留（要一次情報URL）",
+      "manual_hold": true
     }
   ]
 }
