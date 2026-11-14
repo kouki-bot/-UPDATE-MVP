@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-14T08:29:15.203492+09:00",
+  "updated_at": "2026-11-14T19:13:09.625562+09:00",
   "articles": [
     {
       "id": "f3a8c1d7e5b90264",
@@ -308,7 +308,7 @@
       "event_date": "2026-12-15",
       "event_date_text": "",
       "freshness": "直近30日",
-      "age_days": 2,
+      "age_days": 5,
       "area": [
         "宇部市"
       ],
@@ -335,7 +335,7 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-11T10:56:11.723928+09:00",
+      "created_at": "2026-11-14T16:39:51.742074+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
@@ -357,7 +357,7 @@
       "event_date": "2026-11-13",
       "event_date_text": "11月中旬",
       "freshness": "直近30日",
-      "age_days": 4,
+      "age_days": 7,
       "area": [
         "防府市"
       ],
@@ -384,7 +384,7 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-11T10:56:11.724023+09:00",
+      "created_at": "2026-11-14T16:39:51.742163+09:00",
       "review_flags": [],
       "review_priority": "情報不足・保留",
       "review_bucket": "確認待ち",
@@ -458,7 +458,7 @@
       "event_date": "2027-08-31",
       "event_date_text": "",
       "freshness": "予定日・要確認",
-      "age_days": -293,
+      "age_days": -290,
       "area": [
         "下関市"
       ],
@@ -517,7 +517,7 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-11T10:56:11.724119+09:00",
+      "created_at": "2026-11-14T16:39:51.742255+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "確認待ち",
@@ -725,7 +725,7 @@
     {
       "id": "01901f1142547e8b",
       "title": "LUNA STUDIOがシーモール下関5階に2026年11月21日オープン予定",
-      "suggested_headline": "LUNA STUDIO（シーモール下関）2026年11月21日オープン",
+      "suggested_headline": "モビスク（シーモール下関）2026年12月18日オープン",
       "category": [
         "新店・開店"
       ],
@@ -734,7 +734,7 @@
       "event_date": "2026-11-21",
       "event_date_text": "",
       "freshness": "予定日・要確認",
-      "age_days": -10,
+      "age_days": -34,
       "area": [
         "下関市"
       ],
@@ -756,10 +756,10 @@
       "body_excerpt_method": "",
       "draft_summary": "【公開前の確認事項】店舗名・所在地・開店日または閉店日・現在の営業状況・情報源を確認してください。開店・閉店等の予定日です。予定変更・中止の有無を元記事と公式情報で確認してください。 鮮度は記事公開日ではなく、本文から抽出した店舗動作日を基準にしています。 元記事の概要を取得できていないため、本文の確認が必要です。",
       "relevance": "店舗ニュース候補・要確認",
-      "content_type": "店舗・商業施設",
+      "content_type": "その他施設・サービス（要確認）",
       "collection_method": "公式サイト",
       "status": "公開済み",
-      "created_at": "2026-11-11T10:56:11.722911+09:00",
+      "created_at": "2026-11-14T16:39:51.740686+09:00",
       "review_flags": [],
       "review_priority": "情報不足・保留",
       "review_bucket": "確認待ち",
@@ -780,7 +780,7 @@
       "event_date": "2026-10-29",
       "event_date_text": "",
       "freshness": "直近30日",
-      "age_days": 13,
+      "age_days": 16,
       "area": [
         "山口市"
       ],
@@ -811,7 +811,7 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-11T10:56:11.724179+09:00",
+      "created_at": "2026-11-14T16:39:51.742312+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
@@ -1036,7 +1036,7 @@
       "event_date": "2026-10-19",
       "event_date_text": "",
       "freshness": "直近30日",
-      "age_days": 23,
+      "age_days": 26,
       "area": [
         "周南市"
       ],
@@ -1063,7 +1063,7 @@
       "content_type": "店舗・商業施設",
       "collection_method": "公式サイト",
       "status": "公開済み",
-      "created_at": "2026-11-11T10:56:11.723092+09:00",
+      "created_at": "2026-11-14T16:39:51.740867+09:00",
       "review_flags": [],
       "review_priority": "情報不足・保留",
       "review_bucket": "確認待ち",
@@ -1188,7 +1188,7 @@
       "event_date": "2026-09-24",
       "event_date_text": "",
       "freshness": "31〜90日前",
-      "age_days": 48,
+      "age_days": 51,
       "area": [
         "山陽小野田市"
       ],
@@ -1215,7 +1215,7 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-11T10:56:11.724513+09:00",
+      "created_at": "2026-11-14T16:39:51.742479+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
@@ -1236,7 +1236,7 @@
       "event_date": "2026-09-18",
       "event_date_text": "",
       "freshness": "31〜90日前",
-      "age_days": 54,
+      "age_days": 57,
       "area": [
         "周南市"
       ],
@@ -1261,7 +1261,7 @@
       "content_type": "店舗・商業施設",
       "collection_method": "公式サイト",
       "status": "公開済み",
-      "created_at": "2026-11-11T10:56:11.723233+09:00",
+      "created_at": "2026-11-14T16:39:51.741000+09:00",
       "review_flags": [],
       "review_priority": "情報不足・保留",
       "review_bucket": "確認待ち",
@@ -1283,7 +1283,7 @@
       "event_date": "2026-09-11",
       "event_date_text": "",
       "freshness": "31〜90日前",
-      "age_days": 61,
+      "age_days": 64,
       "area": [
         "山陽小野田市"
       ],
@@ -1314,7 +1314,7 @@
       "content_type": "店舗・商業施設",
       "collection_method": "RSS",
       "status": "公開済み",
-      "created_at": "2026-11-11T10:56:11.724587+09:00",
+      "created_at": "2026-11-14T16:39:51.742537+09:00",
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）",
