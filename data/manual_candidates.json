@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-10T09:00:00+09:00",
+  "generated_at": "2026-11-14T20:04:00+09:00",
   "description": "公式情報を中心に手動調査した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
@@ -197,6 +197,104 @@
       "review_flags": [],
       "review_priority": "基本項目あり・内容確認は必要",
       "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "4f6810240f45e72a",
+      "title": "【山口市】やよい軒 山口大学前店が11月12日にリニューアルオープン",
+      "suggested_headline": "【山口市】やよい軒 山口大学前店が11月12日にリニューアルオープン",
+      "category": [
+        "リニューアル"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-11",
+      "event_date": "2026-11-12",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 3,
+      "area": [
+        "山口市"
+      ],
+      "area_status": "運営会社公式発表および公式店舗ページで所在地を確認",
+      "municipality": "山口市",
+      "municipality_candidates": [
+        "山口市"
+      ],
+      "municipality_group": "山口市",
+      "municipality_status": "公式発表で確認",
+      "source_name": "株式会社プレナス公式ニュースリリース",
+      "source_url": "https://www.yayoiken.com/contents/news/261111_yamaguchi.html",
+      "source_urls": [
+        {
+          "source_name": "やよい軒公式・山口大学前店改装オープンのお知らせ",
+          "url": "https://www.yayoiken.com/contents/news/261111_yamaguchi.html"
+        },
+        {
+          "source_name": "やよい軒公式店舗情報・山口大学前店",
+          "url": "https://store.yayoiken.com/b/yayoiken/info/2013/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "株式会社プレナスは、やよい軒 山口大学前店を2026年11月12日10時に改装オープンすると2026年11月11日付で発表。住所は山口県山口市平井724-1。公式店舗ページにも同住所と営業時間10:00～24:00が掲載されています。",
+      "body_excerpt_method": "運営会社公式発表・公式店舗ページを確認",
+      "draft_summary": "運営会社の公式ニュースリリースで発表日・改装オープン日を確認。公式店舗ページで所在地と現在の営業時間を確認。6項目照合後に承認してください。",
+      "relevance": "店舗ニュース候補・公式情報確認済み",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T20:04:00+09:00",
+      "review_flags": [],
+      "review_priority": "基本項目あり・内容確認は必要",
+      "review_bucket": "通常候補（要確認）"
+    },
+    {
+      "id": "05ec41e58932e3d7",
+      "title": "【下関市】Pilates Studio Glow 下関店が2026年10月17日オープン",
+      "suggested_headline": "【下関市】Pilates Studio Glow 下関店が2026年10月17日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 2,
+      "published_date": "2026-11-12T11:55:00+09:00",
+      "event_date": "2026-10-17",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 2,
+      "area": [
+        "下関市"
+      ],
+      "area_status": "公式店舗ページで住所を確認",
+      "municipality": "下関市",
+      "municipality_candidates": [
+        "下関市"
+      ],
+      "municipality_group": "下関市",
+      "municipality_status": "公式店舗ページで確認",
+      "source_name": "号外NET 下関市・Pilates Studio Glow公式サイト",
+      "source_url": "https://shimonoseki.goguynet.jp/2026/11/12/pilates-glow-shimonoseki/",
+      "source_urls": [
+        {
+          "source_name": "号外NET 下関市・開店記事（2026年11月12日掲載）",
+          "url": "https://shimonoseki.goguynet.jp/2026/11/12/pilates-glow-shimonoseki/"
+        },
+        {
+          "source_name": "Pilates Studio Glow公式・下関店案内",
+          "url": "https://ps-glow.com/pilates-studio-glowshimonoseki/"
+        }
+      ],
+      "duplicate_sources_count": 2,
+      "body_excerpt": "号外NET下関市は2026年11月12日付の記事で、Pilates Studio Glow 下関店が2026年10月17日に下関市秋根新町18-15でオープンしたと報道。運営元の公式店舗ページにも同住所、レッスンスケジュール、体験予約案内が掲載されています。",
+      "body_excerpt_method": "地域メディア記事・運営元公式店舗ページを照合",
+      "draft_summary": "開店日と記事掲載日は地域メディアで確認。住所・現在の営業案内は運営元公式ページで照合。開店日の一次情報が未確認のため、公開前に公式SNS等も確認してください。",
+      "relevance": "店舗ニュース候補・公式営業情報あり・開店日追加確認推奨",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動調査・公式情報と地域メディア",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-14T20:04:00+09:00",
+      "review_flags": [
+        "開店日を公式情報で追加確認"
+      ],
+      "review_priority": "確認待ち",
+      "review_bucket": "確認待ち"
     }
   ]
 }
