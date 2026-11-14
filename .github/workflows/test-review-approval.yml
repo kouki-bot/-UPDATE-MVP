@@ -10,6 +10,7 @@ on:
       - "scripts/publish_approved.py"
       - "scripts/tests/**"
       - ".github/workflows/test-review-approval.yml"
+      - "data/manual_candidates.json"
   workflow_dispatch:
 
 permissions:
@@ -25,6 +26,29 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      - name: Verify manual candidates remain review-only
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("data/manual_candidates.json")
+          if path.exists():
+              data = json.loads(path.read_text(encoding="utf-8"))
+              candidates = data.get("candidates", [])
+              invalid = [
+                  item.get("id", "(no id)")
+                  for item in candidates
+                  if item.get("status") != "未確認・公開禁止"
+              ]
+              assert not invalid, (
+                  "Manual candidates must remain unpublished until human approval: "
+                  + ", ".join(invalid)
+              )
+              print(f"Verified {len(candidates)} manual candidates remain review-only.")
+          else:
+              print("No manual candidate file in this change; skipped.")
+          PY
       - name: Compile publication script
         run: python -m py_compile scripts/publish_approved.py
       - name: Run publication safety tests
