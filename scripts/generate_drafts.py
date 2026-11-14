@@ -1061,7 +1061,11 @@ def annotate_review_flags(drafts):
 
     quality_counts = {}
     for draft in drafts:
-        flags = []
+        # Keep manually assigned review warnings; automated checks add to them.
+        manual_flags = draft.get("review_flags", [])
+        if not isinstance(manual_flags, list):
+            manual_flags = []
+        flags = [str(flag) for flag in manual_flags if str(flag).strip()]
 
         if not draft.get("source_url") and not draft.get("source_urls"):
             flags.append("情報源URLなし")
@@ -1094,7 +1098,9 @@ def annotate_review_flags(drafts):
             "開店・閉店等の日付未確認", "市町未特定",
             "本文で店舗動作を確認できず",
         }
-        if any(flag in critical_flags for flag in flags):
+        if draft.get("manual_hold"):
+            draft["review_priority"] = "要優先確認"
+        elif any(flag in critical_flags for flag in flags):
             draft["review_priority"] = "要優先確認"
         elif "重複の可能性・要確認" in flags:
             draft["review_priority"] = "重複確認"
@@ -1111,7 +1117,9 @@ def annotate_review_flags(drafts):
             "市町未特定", "未来日付", "予定情報・要確認", "重複の可能性・要確認",
             "本文で店舗動作を確認できず",
         }
-        if draft.get("freshness") not in {"直近30日", "31〜90日前"}:
+        if draft.get("manual_hold"):
+            draft["review_bucket"] = "確認待ち"
+        elif draft.get("freshness") not in {"直近30日", "31〜90日前"}:
             draft["review_bucket"] = "確認待ち"
         elif any(flag in hold_flags for flag in flags):
             draft["review_bucket"] = "確認待ち"
