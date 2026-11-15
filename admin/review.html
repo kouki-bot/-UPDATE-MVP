@@ -46,7 +46,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <body>
 <header><div class="brand">YAMAGUCHI LOCAL UPDATE<small>EDITORIAL REVIEW DESK / 記事確認・承認管理</small></div></header>
 <main>
-<div class="notice"><b>管理用画面について</b><br>候補データは公開サイトに保存していません。GitHub Actionsの実行成果物からダウンロードした drafts.json を「候補データを読み込む」から選択してください。承認データは非公開リポジトリ kouki-bot/yamaguchi-review-private の data/publication_approvals.json に保存してください。書き出しただけでは公開されません。記事公開日・店舗動作日・営業状態・重複候補を確認してください。</div>
+<div class="notice"><b>管理用画面について</b><br>候補データは公開サイトに保存していません。GitHub Actionsの実行成果物からダウンロードした drafts.json を「候補データを読み込む」から選択してください。承認データは非公開リポジトリ local-life-lab/yamaguchi-review-private の data/publication_approvals.json に保存してください。書き出しただけでは公開されません。記事公開日・店舗動作日・営業状態・重複候補を確認してください。</div>
 <h1>記事確認・承認管理</h1><div class="sub">収集された候補を確認し、公開可能な情報だけを承認します。</div>
 <div class="stats">
 <div class="stat"><b id="totalCount">-</b><span>候補記事</span></div>
@@ -320,7 +320,7 @@ alert("バックアップを書き出しました。端末とは別の安全な�
 });
 el("exportBtn").addEventListener("click",function(){
 var out=JSON.stringify(approvals,null,2)+"\n";downloadFile("publication_approvals.json",out);
-alert("公開用承認データを書き出しました。非公開リポジトリ kouki-bot/yamaguchi-review-private の data/publication_approvals.json に保存してください。");
+alert("公開用承認データを書き出しました。非公開リポジトリ local-life-lab/yamaguchi-review-private の data/publication_approvals.json に保存してください。");
 });
 el("draftImportBtn").addEventListener("click",function(){el("draftFile").click();});
 el("excludedImportBtn").addEventListener("click",function(){el("excludedFile").click();});
