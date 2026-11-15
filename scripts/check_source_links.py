@@ -4,6 +4,7 @@ import socket
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
+from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parent.parent
 INPUT = ROOT / 'data' / 'drafts.json'
@@ -11,7 +12,10 @@ TIMEOUT = 8
 MAX_URLS = 60
 
 def check_url(url, opener=urlopen):
-    request = Request(url, headers={'User-Agent': 'YamaguchiLocalUpdate-LinkHealth/1.0', 'Range': 'bytes=0-0'}, method='GET')
+    # 日本語を含むパス・クエリをASCIIのURL表現に変換してからHTTPリクエストする。
+    request_url = quote(url, safe=":/?&=#%[]@!    request = Request(url, headers={'User-Agent': 'YamaguchiLocalUpdate-LinkHealth/1.0', 'Range': 'bytes=0-0'}, method='GET')
+'()*+,;~-._")
+    request = Request(request_url, headers={'User-Agent': 'YamaguchiLocalUpdate-LinkHealth/1.0', 'Range': 'bytes=0-0'}, method='GET')
     try:
         with opener(request, timeout=TIMEOUT) as response:
             status = getattr(response, 'status', response.getcode())
