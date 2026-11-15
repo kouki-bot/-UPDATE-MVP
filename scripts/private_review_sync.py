@@ -9,7 +9,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PRIVATE_REPO = "kouki-bot/yamaguchi-review-private"
+PRIVATE_REPO = "local-life-lab/yamaguchi-review-private"
 API = "https://api.github.com"
 TOKEN = os.environ.get("PRIVATE_REVIEW_TOKEN", "").strip()
 HEADERS = {
