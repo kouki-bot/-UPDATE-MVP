@@ -13,8 +13,7 @@ MAX_URLS = 60
 
 def check_url(url, opener=urlopen):
     # 日本語を含むパス・クエリをASCIIのURL表現に変換してからHTTPリクエストする。
-    request_url = quote(url, safe=":/?&=#%[]@!    request = Request(url, headers={'User-Agent': 'YamaguchiLocalUpdate-LinkHealth/1.0', 'Range': 'bytes=0-0'}, method='GET')
-'()*+,;~-._")
+    request_url = quote(url, safe=":/?&=#%[]@!$()*+,;~-._")
     request = Request(request_url, headers={'User-Agent': 'YamaguchiLocalUpdate-LinkHealth/1.0', 'Range': 'bytes=0-0'}, method='GET')
     try:
         with opener(request, timeout=TIMEOUT) as response:
