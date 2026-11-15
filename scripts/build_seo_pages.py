@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 
 ROOT = Path(__file__).resolve().parent.parent
-BASE = "https://kouki-bot.github.io/-UPDATE-MVP"
+BASE = "https://local-life-lab.github.io/-UPDATE-MVP"
 DATA = ROOT / "data" / "published.json"
 OUT = ROOT / "articles"
 ALLOWED_CATEGORIES = {
