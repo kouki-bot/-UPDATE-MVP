@@ -42,7 +42,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 .footer-note{font-size:11px;color:var(--muted);margin-top:16px}
 @media(max-width:760px){header{position:static}.stats{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.layout{grid-template-columns:1fr}.list-items{max-height:38vh}.detail-body{padding:13px}.actions{grid-template-columns:1fr}.actions .approve{grid-column:auto}}
 </style>
-</head>
+<style>.photo-review{margin:18px 0;padding:16px;border:1px solid #d9e0d6;border-radius:8px;background:#f7f9f5}.photo-review>b{display:block;margin-bottom:8px}.photo-review>label{display:flex;gap:8px;align-items:center;margin:10px 0;font-weight:700}.photo-review .field{margin:10px 0}.photo-review input[type=checkbox]{width:auto}</style></head>
 <body>
 <header><div class="brand">YAMAGUCHI LOCAL UPDATE<small>EDITORIAL REVIEW DESK / 記事確認・承認管理</small></div></header>
 <main>
@@ -231,6 +231,14 @@ el("detail").innerHTML=
 '<div class="field"><label for="eventDate">店舗の実際の動作日 *</label><input id="eventDate" type="date" value="'+esc(dateOnly(r.event_date||d.event_date))+'"><small>開店・閉店・移転・リニューアルが実際に行われた日付。</small></div>'+
 '<div class="field"><label for="businessStatus">店舗の現在の状態 *</label><select id="businessStatus"><option value="">選択してください</option>'+["開店予定","営業中","閉店予定","閉店済み","一時休業中","移転予定","移転済み","リニューアル予定","リニューアル済み"].map(function(x){return '<option value="'+x+'" '+((r.business_status||"")===x?"selected":"")+'>'+x+'</option>';}).join("")+'</select></div>'+
 '<div class="field"><label for="bodyText">確認済みの説明文</label><textarea id="bodyText" placeholder="元記事で確認できた事実を簡潔に記入">'+esc(r.body||d.body_excerpt||"")+'</textarea><small>推測や未確認情報は書かない。記事本文の長文転載は避ける。</small></div>'+
+'<div class="photo-review"><b>店舗写真（任意・許可確認ができた場合のみ）</b><p class="sub">写真の利用許可が確認できていない場合は、チェックを入れず空欄のままにしてください。</p>'+
+'<label><input id="imageUsageApproved" type="checkbox" '+(r.image_usage_approved===true?"checked":"")+'> 写真の権利・掲載許可を確認した</label>'+
+'<div class="field"><label for="imageUrl">写真ファイルURL</label><input id="imageUrl" type="url" placeholder="https://..." value="'+esc(r.image_url||"")+'"></div>'+
+'<div class="field"><label for="imageSourceUrl">写真の出典・許可確認先URL</label><input id="imageSourceUrl" type="url" placeholder="https://..." value="'+esc(r.image_source_url||"")+'"></div>'+
+'<div class="field"><label for="imageCredit">写真クレジット</label><input id="imageCredit" placeholder="例：店舗提供" value="'+esc(r.image_credit||"")+'"></div>'+
+'<div class="field"><label for="imageRightsStatus">権利確認の状態</label><select id="imageRightsStatus"><option value="">未確認</option><option value="許可確認済み" '+(r.image_rights_status==="許可確認済み"?"selected":"")+'>許可確認済み</option><option value="利用条件確認済み" '+(r.image_rights_status==="利用条件確認済み"?"selected":"")+'>利用条件確認済み</option></select></div>'+
+'<div class="field"><label for="imageType">写真の種類</label><select id="imageType"><option value="provided" '+(r.image_type==="provided"?"selected":"")+'>店舗提供写真</option><option value="official" '+(r.image_type==="official"?"selected":"")+'>公式掲載写真（利用条件確認済み）</option></select></div>'+
+'<div class="field"><label for="imagePermissionNote">許可・利用条件の確認メモ</label><textarea id="imagePermissionNote" placeholder="許可を得た相手・日付・掲載範囲など">'+esc(r.image_permission_note||"")+'</textarea></div></div>'+
 duplicateHtml+flagHtml+
 '<div class="review-checks"><div class="review-checks-head"><b>公開前の照合チェック（全6項目必須）</b><span class="sub" id="reviewCheckCount"></span></div>'+
 REVIEW_CHECKS.map(function(c){return '<label class="review-check"><input type="checkbox" class="reviewCheck" data-check="'+c.key+'" '+(reviewChecks[c.key]===true?"checked":"")+'><span>'+c.label+'</span></label>';}).join("")+
@@ -271,6 +279,8 @@ var count=el("reviewCheckCount");if(count)count.textContent=done+"/"+REVIEW_CHEC
 function saveReview(status){
 var d=drafts.find(function(x){return String(x.id)===selectedId;});if(!d)return;
 var id=String(d.id),headline=el("headline").value.trim(),municipality=el("municipality").value.trim(),publishedDate=el("publishedDate").value,eventDate=el("eventDate").value,businessStatus=el("businessStatus").value,body=el("bodyText").value.trim(),reviewChecks=currentReviewChecks(),checked=REVIEW_CHECKS.every(function(c){return reviewChecks[c.key]===true;});
+var imageApproved=el("imageUsageApproved").checked,imageUrl=safeHttpUrl(el("imageUrl").value),imageSourceUrl=safeHttpUrl(el("imageSourceUrl").value),imageCredit=el("imageCredit").value.trim(),imageRightsStatus=el("imageRightsStatus").value,imageType=el("imageType").value,imagePermissionNote=el("imagePermissionNote").value.trim();
+if(imageApproved&&(!imageUrl||!imageSourceUrl||!imageCredit||!["許可確認済み","利用条件確認済み"].includes(imageRightsStatus)||!imagePermissionNote)){alert("写真を掲載する場合は、写真URL・出典URL・クレジット・権利確認状態・許可確認メモをすべて入力してください。");return;}
 var cleared=Array.prototype.map.call(document.querySelectorAll(".clearFlag:checked"),function(x){return x.value;});
 var duplicateResolution=el("duplicateResolution")?el("duplicateResolution").value:"";
 if(status==="確認済み"){
@@ -282,6 +292,7 @@ if(d.duplicate_review&&duplicateResolution!=="別記事として掲載"){alert("
 }
 var rec=approvals.reviewed_articles[id]||{};
 rec.review_status=status;rec.review_checks=reviewChecks;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.duplicate_resolution=duplicateResolution;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
+rec.image_usage_approved=imageApproved;rec.image_url=imageApproved?imageUrl:"";rec.image_source_url=imageApproved?imageSourceUrl:"";rec.image_credit=imageApproved?imageCredit:"";rec.image_rights_status=imageApproved?imageRightsStatus:"";rec.image_type=imageApproved?imageType:"";rec.image_permission_note=imageApproved?imagePermissionNote:"";
 if(status==="確認済み"){rec.reviewed_at=new Date().toISOString();approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});approvals.approved_ids.push(id);}
 else{delete rec.reviewed_at;approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});}
 approvals.reviewed_articles[id]=rec;saveLocal();renderList();renderDetail();
