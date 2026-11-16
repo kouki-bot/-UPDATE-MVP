@@ -43,6 +43,31 @@ def main():
   article=dict(draft)
   for key in ("municipality","body","published_date","event_date","business_status","source_url","title"):
    if review.get(key) not in (None,""): article[key]=review[key]
+  # Photo data is copied only from the human review record after explicit rights approval.
+  photo_fields=("image_url","image_source_url","image_credit","image_rights_status","image_type","image_permission_note","image_usage_approved")
+  for key in photo_fields: article.pop(key,None)
+  image_url=str(review.get("image_url") or "").strip()
+  image_source_url=str(review.get("image_source_url") or "").strip()
+  image_credit=str(review.get("image_credit") or "").strip()
+  image_rights_status=review.get("image_rights_status")
+  image_type=review.get("image_type")
+  image_permission_note=str(review.get("image_permission_note") or "").strip()
+  photo_approved=(
+   review.get("image_usage_approved") is True
+   and image_url.startswith(("https://","http://"))
+   and image_source_url.startswith(("https://","http://"))
+   and bool(image_credit)
+   and image_rights_status in ("許可確認済み","利用条件確認済み")
+   and image_type in ("provided","official")
+   and bool(image_permission_note)
+  )
+  if photo_approved:
+   article.update({
+    "image_url":image_url,"image_source_url":image_source_url,
+    "image_credit":image_credit,"image_rights_status":image_rights_status,
+    "image_type":image_type,"image_permission_note":image_permission_note,
+    "image_usage_approved":True
+   })
   # Public area filters must use only the human-confirmed store municipality.
   # Candidate extraction may include neighboring cities from regional source names.
   municipality=str(article.get("municipality") or "").strip()
