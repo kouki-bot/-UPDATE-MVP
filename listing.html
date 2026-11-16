@@ -1,324 +1,81 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J79VXDWMTV"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-J79VXDWMTV');
-
-  // Measure key navigation and engagement without collecting form contents.
-  document.addEventListener('click', function(event) {
-    var target = event.target.closest('a, button');
-    if (!target) return;
-
-    if (target.matches('[data-share-title], [data-copy-url], .share-native, .share-copy')) {
-      gtag('event', 'article_share', {
-        method: target.matches('[data-copy-url], .share-copy') ? 'copy' :
-          (target.textContent.trim().toLowerCase() === 'line' ? 'line' :
-          (target.textContent.trim().toLowerCase() === 'x' ? 'x' : 'native'))
-      });
-      return;
-    }
-
-    var href = target.getAttribute('href') || '';
-    if (href.indexOf('forms.gle/') !== -1) {
-      gtag('event', location.pathname.indexOf('listing.html') !== -1 ? 'listing_consult_click' : 'contact_form_click');
-      return;
-    }
-    if (href.indexOf('listing.html') !== -1 || target.closest('.contact-card')) {
-      if (href.indexOf('listing.html') !== -1) gtag('event', 'listing_consult_click');
-      return;
-    }
-    if (target.matches('.filter-button, #search-button, #reset-button, #reset-search')) {
-      gtag('event', 'article_filter', {control: target.id || target.dataset.filter || 'filter'});
-    }
-  });
-</script>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>店舗掲載・集客相談｜山口ローカルUPDATE</title>
-
-  <meta
-    name="description"
-    content="山口県内のお店の情報掲載、店舗ホームページ制作、Googleマップ集客、Instagram運用についてご相談いただけます。"
-  >
-
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f6f0">
+<title>掲載・集客相談｜山口ローカルUPDATE</title>
+<meta name="description" content="山口県内のお店の無料情報掲載、掲載内容の修正、ホームページ制作、Googleマップ・Instagramを活用した集客についてご相談いただけます。">
+<link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="detail.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <link rel="canonical" href="https://local-life-lab.github.io/-UPDATE-MVP/listing.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="山口ローカルUPDATE">
-<meta property="og:title" content="店舗掲載・集客相談｜山口ローカルUPDATE">
-<meta property="og:description" content="山口県内のお店の情報掲載、店舗ホームページ制作、Googleマップ集客、Instagram運用についてご相談いただけます。">
+<meta property="og:title" content="掲載・集客相談｜山口ローカルUPDATE">
+<meta property="og:description" content="山口県内のお店の無料情報掲載、掲載内容の修正、ホームページ制作、Googleマップ・Instagramを活用した集客についてご相談いただけます。">
 <meta property="og:url" content="https://local-life-lab.github.io/-UPDATE-MVP/listing.html">
+<style>
+.listing-page .service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:25px}
+.listing-page .service-card{padding:25px 23px;border:1px solid #e3e2d8;border-radius:9px;background:rgba(255,254,250,.9);box-shadow:0 8px 24px rgba(32,41,31,.04)}
+.listing-page .service-number{display:block;margin-bottom:18px;color:#899184;font:700 11px var(--serif);letter-spacing:1.5px}
+.listing-page .service-card .badge{margin-bottom:13px}
+.listing-page .service-card h3{margin:0 0 10px;color:var(--ink);font-size:17px;line-height:1.65}
+.listing-page .service-card p,.listing-page .step p{margin:0;color:#656b61;font-size:12px;line-height:2}
+.listing-page .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:25px}
+.listing-page .step{padding:21px;border:1px solid #e3e2d8;border-radius:8px;background:rgba(255,254,250,.7)}
+.listing-page .step-number{display:block;margin-bottom:8px;color:var(--orange);font:700 12px var(--serif);letter-spacing:1.5px}
+.listing-page .step h3{margin:0 0 7px;font-size:15px}
+.listing-page .consult-panel{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;padding:34px 36px;border:1px solid #dfe2d7;border-radius:10px;background:linear-gradient(115deg,#e8ebe2,#f3eee5)}
+.listing-page .consult-panel h2{margin:0 0 12px;font-size:clamp(22px,3vw,29px);line-height:1.5}
+.listing-page .consult-panel p{margin:0;color:#62695f;font-size:12px;line-height:2}
+.listing-page .consult-action{text-align:center}
+.listing-page .consult-action .btn{min-height:48px;padding:12px 22px;font-size:12px}
+.listing-page .consult-action small{display:block;margin-top:10px;color:#777d72;font-size:10px;line-height:1.8}
+@media(max-width:760px){.listing-page .service-grid,.listing-page .steps{grid-template-columns:1fr;gap:12px}.listing-page .service-card{padding:21px}.listing-page .step{padding:17px}.listing-page .consult-panel{grid-template-columns:1fr;gap:20px;padding:25px 21px}.listing-page .consult-action{text-align:left}}
+</style>
 </head>
-
-<body>
-
+<body class="detail-page listing-page">
 <header class="site-header">
-  <div class="container header-inner">
-
-    <a class="logo" href="index.html">
-      山口ローカルUPDATE
-      <span>YAMAGUCHI LOCAL UPDATE</span>
-    </a>
-
-    <nav class="nav">
-      <a href="index.html">トップ</a>
-      <a href="new.html">新店情報</a>
-      <a href="closed.html">閉店情報</a>
-
-      <a href="listing.html" aria-current="page">掲載・集客相談</a>
-      <a href="contact.html">お問い合わせ</a>
-    </nav>
-
-  </div>
+<a class="brand" href="index.html" aria-label="トップページ"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a>
+<nav class="header-nav" aria-label="メインメニュー"><a href="index.html">トップ</a><a href="new.html">新店情報</a><a href="closed.html">閉店情報</a><a href="listing.html" aria-current="page">掲載・相談</a><a href="contact.html">お問い合わせ</a></nav>
 </header>
-
 <main>
-
-  <section class="detail-hero">
-    <div class="container">
-
-      <span class="eyebrow">FOR BUSINESS</span>
-
-      <h1>山口のお店の魅力を、もっと多くの人へ。</h1>
-
-      <p>
-        新店情報の掲載から、店舗ホームページや
-        Googleマップを活用した集客まで。
-        地域のお店の情報発信をお手伝いします。
-      </p>
-
-      <a
-        class="btn"
-        href="https://forms.gle/kVkjzy1oYqZoKaU66"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        無料掲載・集客相談をする
-      </a>
-
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-
-      <div class="section-head">
-        <div>
-          <h2>お店のこんなお悩みに</h2>
-          <p>現在の状況やご希望に合わせてご相談いただけます。</p>
-        </div>
-      </div>
-
-      <div class="grid">
-
-        <article class="card">
-          <span class="badge">無料掲載</span>
-          <h3>お店の情報を知ってほしい</h3>
-          <p>
-            新店オープン、リニューアル、新サービスなど、
-            地域の人に知らせたい情報の掲載を受け付けます。
-          </p>
-        </article>
-
-        <article class="card">
-          <span class="badge">情報修正</span>
-          <h3>店舗情報を修正したい</h3>
-          <p>
-            掲載済みの店名・住所・営業時間などの
-            修正についてご相談いただけます。
-          </p>
-        </article>
-
-        <article class="card">
-          <span class="badge">集客サポート</span>
-          <h3>ネットでお店を見つけてもらいたい</h3>
-          <p>
-            ホームページ制作、Googleマップの情報改善、
-            Instagramを活用した情報発信についてご相談いただけます。
-          </p>
-        </article>
-
-      </div>
-
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-
-      <div class="section-head">
-        <div>
-          <h2>ご相談いただけるサービス</h2>
-          <p>必要なサービスだけをご相談いただけます。</p>
-        </div>
-      </div>
-
-      <div class="list">
-
-        <article class="list-item">
-          <div>
-            <span class="badge">無料</span>
-            <h3>店舗情報の掲載</h3>
-            <p>
-              新店・開店、リニューアル、新サービスなどの情報を受け付けます。
-              情報源を確認したうえで、掲載可否を判断します。
-            </p>
-          </div>
-          <span class="arrow" aria-hidden="true">›</span>
-        </article>
-
-        <article class="list-item">
-          <div>
-            <span class="badge">ご相談受付</span>
-            <h3>店舗ホームページ制作</h3>
-            <p>
-              お店の基本情報やメニュー、サービス内容などを紹介する
-              ホームページ制作についてご相談いただけます。
-              料金や制作内容は個別にご案内します。
-            </p>
-          </div>
-          <span class="arrow" aria-hidden="true">›</span>
-        </article>
-
-        <article class="list-item">
-          <div>
-            <span class="badge">ご相談受付</span>
-            <h3>Googleマップ・店舗情報の改善</h3>
-            <p>
-              Googleビジネスプロフィールの情報整理や、
-              お客様に店舗を見つけてもらうための改善についてご相談いただけます。
-            </p>
-          </div>
-          <span class="arrow" aria-hidden="true">›</span>
-        </article>
-
-        <article class="list-item">
-          <div>
-            <span class="badge">ご相談受付</span>
-            <h3>Instagramを活用した情報発信</h3>
-            <p>
-              投稿内容やプロフィール、店舗情報の見せ方など、
-              SNSを活用した情報発信についてご相談いただけます。
-            </p>
-          </div>
-          <span class="arrow" aria-hidden="true">›</span>
-        </article>
-
-      </div>
-
-      <div class="notice">
-        <strong>料金について</strong>
-        <p>
-          店舗情報の掲載は無料です。
-          ホームページ制作などの有料サービスは、
-          ご希望の内容を確認したうえで料金をご案内します。
-          ご相談だけで費用が発生することはありません。
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <section class="section" id="listing-form">
-    <div class="container">
-
-      <div class="section-head">
-        <div>
-          <h2>掲載依頼・集客相談</h2>
-          <p>
-            下のボタンからGoogleフォームを開き、
-            ご相談内容を送信してください。
-          </p>
-        </div>
-      </div>
-
-      <div class="detail-grid">
-
-        <div class="detail-box">
-
-          <h3>ご相談はこちら</h3>
-
-          <p>
-            店舗情報の無料掲載、掲載内容の修正、
-            ホームページ制作、Googleマップ集客などの
-            ご相談を受け付けています。
-          </p>
-
-          <a
-            class="btn"
-            href="https://forms.gle/kVkjzy1oYqZoKaU66"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Googleフォームを開く →
-          </a>
-
-          <p class="meta">
-            ※Googleフォームの画面で必要事項を入力し、
-            送信ボタンを押してください。
-          </p>
-
-        </div>
-
-        <div class="detail-box">
-
-          <h3>掲載までの流れ</h3>
-
-          <p>
-            <strong>STEP 1</strong><br>
-            Googleフォームから情報を送信します。
-          </p>
-
-          <p>
-            <strong>STEP 2</strong><br>
-            店舗情報や情報源を確認します。
-          </p>
-
-          <p>
-            <strong>STEP 3</strong><br>
-            内容を確認し、掲載やサービスについて必要に応じてご連絡します。
-          </p>
-
-          <div class="notice">
-            <strong>掲載について</strong>
-            <p>
-              情報の正確性や内容を確認したうえで掲載を判断します。
-              ご依頼いただいたすべての情報の掲載を保証するものではありません。
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
+<section class="detail-hero"><div class="container">
+<span class="eyebrow">FOR LOCAL BUSINESS</span>
+<h1>お店の魅力を、地域の人へ。</h1>
+<p>山口県内のお店の情報掲載から、ホームページ・Googleマップ・Instagramを活用した集客まで。お店の状況やご希望に合わせてご相談いただけます。</p>
+<a class="btn" href="#consult-form">掲載・集客について相談する　↘</a>
+</div></section>
+<section class="section"><div class="container">
+<div class="section-head"><div><h2>ご相談いただけること</h2><p>必要な内容だけ、お気軽にご相談ください。</p></div></div>
+<p style="max-width:700px;color:#656b61;font-size:13px;line-height:2.15">新しくオープンするお店の情報を地域に届けたい方も、今あるお店の情報を見直したい方もご利用いただけます。店舗情報の掲載は無料です。</p>
+<div class="service-grid">
+<article class="service-card"><span class="service-number">01 / FREE LISTING</span><span class="badge">無料</span><h3>お店の情報を掲載したい</h3><p>新店・開店、リニューアル、新サービスなど、山口県内のお店の情報を受け付けています。情報源を確認したうえで掲載します。</p></article>
+<article class="service-card"><span class="service-number">02 / CORRECTION</span><span class="badge">無料</span><h3>掲載内容を修正したい</h3><p>店名・住所・営業時間・開店日など、掲載済み情報の誤りや変更をお知らせいただけます。</p></article>
+<article class="service-card"><span class="service-number">03 / PROMOTION</span><span class="badge">個別相談</span><h3>ネットでの集客を改善したい</h3><p>ホームページ制作、Googleマップの情報改善、Instagramを活用した情報発信についてご相談いただけます。</p></article>
+</div>
+</div></section>
+<section class="section" style="padding-top:0"><div class="container">
+<div class="section-head"><div><h2>ご相談から掲載まで</h2><p>内容を確認しながら、順番に進めます。</p></div></div>
+<div class="steps">
+<article class="step"><span class="step-number">STEP 01</span><h3>フォームから送信</h3><p>お店の情報や、ご希望の相談内容を入力してください。</p></article>
+<article class="step"><span class="step-number">STEP 02</span><h3>内容・情報源を確認</h3><p>いただいた内容や公式情報などを確認します。</p></article>
+<article class="step"><span class="step-number">STEP 03</span><h3>必要に応じてご連絡</h3><p>掲載可否や、集客サポートの内容・料金についてご案内します。</p></article>
+</div>
+<div class="notice" style="margin-top:22px"><div><strong>料金について</strong><p>店舗情報の掲載・掲載内容の修正は無料です。ホームページ制作などの有料サービスは、ご希望を伺ったうえで事前に料金をご案内します。相談だけで費用が発生することはありません。</p></div></div>
+</div></section>
+<section class="section" id="consult-form" style="padding-top:0"><div class="container">
+<div class="consult-panel"><div><span class="eyebrow">CONTACT</span><h2>掲載・集客について相談する</h2><p>下のボタンからGoogleフォームを開き、ご相談内容を送信してください。店舗情報の掲載依頼、修正依頼、集客に関する相談をまとめて受け付けています。</p></div>
+<div class="consult-action"><a class="btn" data-placement="main_cta" href="https://forms.gle/kVkjzy1oYqZoKaU66" target="_blank" rel="noopener noreferrer">Googleフォームを開く　↗</a><small>Googleフォームに移動します。<br>送信内容を確認後、必要に応じてご連絡します。</small></div></div>
+<div class="notice" style="margin-top:18px"><div><strong>掲載についての確認事項</strong><p>情報の正確性や情報源を確認したうえで掲載可否を判断します。ご依頼いただいたすべての情報の掲載を保証するものではありません。</p></div></div>
+<div class="contact-back"><a href="index.html">← トップページへ戻る</a><a href="new.html">新店情報を見る</a><a href="closed.html">閉店情報を見る</a></div>
+</div></section>
 </main>
-
-<footer class="footer">
-  <div class="container">
-
-    <div class="footer-links">
-      <a href="index.html">トップ</a>
-      <a href="new.html">新店情報</a>
-      <a href="closed.html">閉店情報</a>
-
-      <a href="listing.html">掲載・集客相談</a>
-      <a href="contact.html">お問い合わせ</a>
-    </div>
-
-    <small>© 2026 山口ローカルUPDATE</small>
-
-  </div>
-</footer>
-
-</body>
-</html>
+<footer class="footer"><div class="container"><div class="footer-links"><a href="index.html">トップ</a><a href="new.html">新店情報</a><a href="closed.html">閉店情報</a><a href="listing.html">掲載・相談</a><a href="contact.html">お問い合わせ</a></div><small>© 2026 山口ローカルUPDATE</small></div></footer>
+<script>
+document.addEventListener('click',function(event){var link=event.target.closest('a[href*="forms.gle/"]');if(link&&typeof gtag==='function')gtag('event','listing_consult_click',{placement:link.dataset.placement||'listing_page'});});
+</script>
+</body></html>
