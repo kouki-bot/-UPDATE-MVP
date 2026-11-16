@@ -2,7 +2,12 @@ name: Review approval safety tests
 
 on:
   push:
-    branches: [feat/review-checklist-gate]
+    branches: [main, feat/review-checklist-gate]
+    paths:
+      - "admin/review.html"
+      - "scripts/publish_approved.py"
+      - "scripts/tests/**"
+      - ".github/workflows/test-review-approval.yml"
   pull_request:
     branches: [main]
     paths:
