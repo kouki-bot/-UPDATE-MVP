@@ -131,17 +131,9 @@ const image=safeUrl(article.image_url),source=safeUrl(article.image_source_url),
 if(article.image_usage_approved!==true||!image||!source||!credit||!["許可確認済み","利用条件確認済み"].includes(article.image_rights_status))return null;
 return {url:image,source,credit,caption:article.image_type==="provided"?"店舗提供写真":"公式掲載写真"};
 }
-function imageForArticle(article,index){
-const approvedPhoto=approvedStorePhoto(article);if(approvedPhoto)return approvedPhoto.url;
-const suppliedImage="";
-const text=[article.title||"",categoryText(article.category),article.summary||"",article.draft_summary||""].join(" ");
-if(/パン|ベーカリー|ケーキ|スイーツ|菓子/.test(text))return imageLibrary.bakery;
-if(/カフェ|喫茶|コーヒー/.test(text))return imageLibrary.coffee;
-if(/美容室|ヘアサロン|理容|ネイル|エステ|整体|クリニック|歯科/.test(text))return imageLibrary.plants;
-if(/スーパー|ドラッグ|コンビニ|アパレル|衣料|洋服|雑貨|書店|小売|しまむら|西松屋|トライアル/.test(text))return imageLibrary.shop;
-if(/ラーメン|うどん|そば|寿司|焼肉|居酒屋|食堂|レストラン|飲食|弁当/.test(text))return imageLibrary.cafe;
-if(/リニューアル|改装|内装|移転|閉店|営業終了|閉業/.test(text))return imageLibrary.plants;
-return imageLibrary.shop;
+function imageForArticle(article){
+const approvedPhoto=approvedStorePhoto(article);
+return approvedPhoto?approvedPhoto.url:"";
 }
 const list=document.getElementById("article-list"),count=document.getElementById("article-count");
 const keywordSearch=document.getElementById("keyword-search"),areaFilter=document.getElementById("area-filter"),businessFilter=document.getElementById("business-filter"),resetSearch=document.getElementById("reset-search");
