@@ -1606,3 +1606,20 @@ button {
 .article-image.is-fallback:before{content:'LOCAL UPDATE';position:absolute;inset:0;display:grid;place-items:center;color:rgba(42,70,54,.48);font:700 12px/1 'Playfair Display',serif;letter-spacing:.16em;background:repeating-linear-gradient(135deg,transparent 0 18px,rgba(255,255,255,.18) 18px 36px)}
 .article-image .image-caption{right:10px;bottom:10px;padding:5px 8px;border:1px solid rgba(255,255,255,.7);border-radius:4px;background:rgba(255,255,255,.92);color:#365443;font-size:10px;font-weight:600;letter-spacing:.04em;line-height:1.4}
 @media(max-width:600px){.article-card > .article-image{aspect-ratio:16/9}}
+
+
+/* Real store photos are shown only after image-use permission is verified. */
+.article-image--empty{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#eeeee7,#e4e8df);
+  min-height:150px;
+}
+.photo-placeholder{
+  color:#737b70;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.04em;
+}
+.article-image--empty .article-tag{z-index:1}
