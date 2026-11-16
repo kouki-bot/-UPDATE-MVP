@@ -117,18 +117,25 @@ function articleImageFor(a){
 function appendArticleImage(card,a,index){
   const frame=document.createElement("div");
   frame.className="article-image";
-  const img=document.createElement("img");
-  img.src=articleImageFor(a,index);
-  img.alt="店舗情報のイメージ写真";
-  img.loading="lazy";
-  img.decoding="async";
-  const caption=document.createElement("span");
-  caption.className="image-caption";
   const approvedPhoto=approvedStorePhoto(a);
-  caption.textContent=approvedPhoto?approvedPhoto.caption:"イメージ写真";
-  img.alt=approvedPhoto?"店舗の公式・提供写真":"店舗情報のイメージ写真";
-  img.onerror=()=>{frame.classList.add("is-fallback");img.style.display="none";caption.textContent="画像を読み込めません";};
-  frame.append(img,caption);
+  if(approvedPhoto){
+    const img=document.createElement("img");
+    img.src=articleImageFor(a);
+    img.alt=txt(a.title||a.name||"店舗")+"の"+approvedPhoto.caption;
+    img.loading="lazy";
+    img.decoding="async";
+    img.onerror=()=>frame.remove();
+    const caption=document.createElement("span");
+    caption.className="image-caption";
+    caption.textContent=approvedPhoto.caption;
+    frame.append(img,caption);
+  }else{
+    frame.classList.add("article-image--empty");
+    const placeholder=document.createElement("span");
+    placeholder.className="photo-placeholder";
+    placeholder.textContent="店舗写真は確認中です";
+    frame.appendChild(placeholder);
+  }
   card.appendChild(frame);
   if(approvedPhoto){
     const credit=document.createElement("a");
