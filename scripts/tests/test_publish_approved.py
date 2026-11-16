@@ -100,4 +100,27 @@ class Tests(unittest.TestCase):
   result=self.run_script()
   self.assertEqual(result.returncode,0,result.stderr)
   self.assertEqual(self.published()["articles"],[])
+ def test_photo_is_published_only_with_explicit_rights_approval(self):
+  photo={"image_usage_approved":True,"image_url":"https://cdn.example.com/store.jpg","image_source_url":"https://example.com/photo-permission","image_credit":"店舗提供","image_rights_status":"許可確認済み","image_type":"provided","image_permission_note":"店舗担当者から2026-11-17にサイト掲載許可を取得"}
+  self.setup(review=self.review(**photo))
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  article=self.published()["articles"][0]
+  self.assertTrue(article["image_usage_approved"])
+  self.assertEqual(article["image_credit"],"店舗提供")
+ def test_photo_without_explicit_approval_is_not_published(self):
+  draft=self.draft(image_usage_approved=True,image_url="https://cdn.example.com/store.jpg",image_source_url="https://example.com",image_credit="店舗提供",image_rights_status="許可確認済み")
+  self.setup(draft=draft,review=self.review(image_usage_approved=False))
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  article=self.published()["articles"][0]
+  self.assertNotIn("image_url",article)
+  self.assertNotIn("image_usage_approved",article)
+ def test_incomplete_photo_permission_record_is_not_published(self):
+  photo={"image_usage_approved":True,"image_url":"https://cdn.example.com/store.jpg","image_source_url":"https://example.com/photo-permission","image_credit":"店舗提供","image_rights_status":"許可確認済み","image_type":"provided","image_permission_note":""}
+  self.setup(review=self.review(**photo))
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  article=self.published()["articles"][0]
+  self.assertNotIn("image_url",article)
 if __name__=="__main__": unittest.main()
