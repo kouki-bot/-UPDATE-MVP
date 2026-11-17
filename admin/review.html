@@ -46,7 +46,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <body>
 <header><div class="brand">YAMAGUCHI LOCAL UPDATE<small>EDITORIAL REVIEW DESK / 記事確認・承認管理</small></div></header>
 <main>
-<div class="notice"><b>管理用画面について</b><br>候補データは公開サイトに保存していません。GitHub Actionsの実行成果物からダウンロードした drafts.json を「候補データを読み込む」から選択してください。承認データは非公開リポジトリ local-life-lab/yamaguchi-review-private の data/publication_approvals.json に保存してください。書き出しただけでは公開されません。記事公開日・店舗動作日・営業状態・重複候補を確認してください。</div>
+<div class="notice"><b>管理用画面について</b><br>公開リポジトリに保存された手動調査候補は、この画面を開くと自動で読み込みます。最新の全候補を確認する場合は、GitHub Actionsの実行成果物 drafts.json も追加で読み込んでください。候補はすべて審査専用で、自動公開されません。承認データは非公開リポジトリ local-life-lab/yamaguchi-review-private の data/publication_approvals.json に保存してください。書き出しただけでは公開されません。</div>
 <h1>記事確認・承認管理</h1><div class="sub">収集された候補を確認し、公開可能な情報だけを承認します。</div>
 <div class="stats">
 <div class="stat"><b id="totalCount">-</b><span>候補記事</span></div>
@@ -62,7 +62,8 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
  </div>
 </section>
 <div id="backupReminder" class="notice" role="status" aria-live="polite" style="display:none;margin:14px 0"></div>
-<div class="exportbar"><button class="primary" id="draftImportBtn">候補データを読み込む</button><button class="secondary" id="backupBtn">審査データをバックアップ</button><button class="plain" id="exportBtn">公開用承認データを書き出す</button><button class="plain" id="importBtn">バックアップを復元</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="draftFile" accept="application/json,.json" hidden><input type="file" id="importFile" accept="application/json,.json" hidden></div>
+<div class="exportbar"><button class="secondary" id="reloadPublicCandidatesBtn">公開候補を再読み込み</button><button class="primary" id="draftImportBtn">Actions候補を追加読み込み</button><button class="secondary" id="backupBtn">審査データをバックアップ</button><button class="plain" id="exportBtn">公開用承認データを書き出す</button><button class="plain" id="importBtn">バックアップを復元</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="draftFile" accept="application/json,.json" hidden><input type="file" id="importFile" accept="application/json,.json" hidden></div>
+<div id="candidateLoadStatus" class="sub" role="status" aria-live="polite">公開候補の読み込み準備中</div>
 <div class="toolbar">
 <input id="search" type="search" placeholder="店名・市町・情報元で検索">
 <select id="statusFilter"><option value="all">すべての状態</option><option value="未確認">未確認</option><option value="確認済み">確認済み・承認</option><option value="要修正">要修正</option><option value="対象外">対象外</option></select>
@@ -338,7 +339,7 @@ el("excludedImportBtn").addEventListener("click",function(){el("excludedFile").c
 el("excludedFile").addEventListener("change",function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(){try{var data=JSON.parse(reader.result);if(!Array.isArray(data.candidates))throw new Error("candidates配列がありません");var unsafe=data.candidates.filter(function(row){return row.status!=="除外・公開禁止";});if(unsafe.length)throw new Error("除外・公開禁止ではない行が含まれています");excludedAudit=data.candidates;selectedExcluded={};renderExcludedAudit();alert("除外監査ログ "+excludedAudit.length+"件を読み込みました。");}catch(err){alert("除外ログを読み込めませんでした："+err.message);}};reader.readAsText(file);e.target.value="";});
 el("exportRecheckBtn").addEventListener("click",exportRecheckCandidates);
 ["excludedSearch","excludedReasonFilter"].forEach(function(id){el(id).addEventListener("input",renderExcludedAudit);el(id).addEventListener("change",renderExcludedAudit);});
-el("draftFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.drafts))throw new Error("drafts配列がありません");var unsafe=x.drafts.filter(function(d){return d.status!=="未確認・公開禁止";});if(unsafe.length)throw new Error("未確認・公開禁止ではない候補が含まれています");drafts=x.drafts;populateAreas();renderList();if(drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}else{selectedId="";renderDetail();}alert("候補データ "+drafts.length+"件を読み込みました。");}catch(err){alert("候補データを読み込めませんでした："+err.message);} };reader.readAsText(f);e.target.value="";});
+el("draftFile").addEventListener("change",function(e){var f=e.target.files[0];if(!f)return;var reader=new FileReader();reader.onload=function(){try{var x=JSON.parse(reader.result);if(!Array.isArray(x.drafts))throw new Error("drafts配列がありません");var unsafe=x.drafts.filter(function(d){return d.status!=="未確認・公開禁止";});if(unsafe.length)throw new Error("未確認・公開禁止ではない候補が含まれています");mergeDraftRows(x.drafts,"Actions成果物");populateAreas();renderList();if(drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}else{selectedId="";renderDetail();}el("candidateLoadStatus").textContent="Actions成果物を追加："+x.drafts.length+"件（重複IDは既存データを優先）／合計 "+drafts.length+"件";}catch(err){alert("候補データを読み込めませんでした："+err.message);} };reader.readAsText(f);e.target.value="";});
 el("importBtn").addEventListener("click",function(){el("importFile").click();});
 el("importFile").addEventListener("change",function(e){
 var file=e.target.files[0];if(!file)return;
@@ -357,9 +358,38 @@ reader.readAsText(file);e.target.value="";
 });
 el("resetBtn").addEventListener("click",function(){if(!confirm("この端末に保存した編集内容を破棄し、リポジトリの承認データを再読み込みしますか？"))return;localStorage.removeItem(localKey);location.reload();});
 ["search","statusFilter","areaFilter","priorityFilter","flagFilter"].forEach(function(id){el(id).addEventListener("input",renderList);el(id).addEventListener("change",renderList);});
+function mergeDraftRows(rows,sourceLabel){
+var known={};drafts.forEach(function(row){known[String(row.id)]=true;});
+var added=0;
+rows.forEach(function(row){
+if(!row||!row.id||row.status!=="未確認・公開禁止")return;
+var id=String(row.id);if(known[id])return;
+row._review_source=sourceLabel;drafts.push(row);known[id]=true;added++;
+});
+return added;
+}
+async function loadPublicCandidates(){
+var status=el("candidateLoadStatus");
+status.textContent="公開候補を読み込み中…";
+try{
+var response=await fetch("../data/manual_candidates.json",{cache:"no-store"});
+if(!response.ok)throw new Error("HTTP "+response.status);
+var data=await response.json();
+if(!Array.isArray(data.candidates))throw new Error("candidates配列がありません");
+var unsafe=data.candidates.filter(function(row){return row.status!=="未確認・公開禁止";});
+if(unsafe.length)throw new Error("公開禁止状態でない候補が含まれています");
+var added=mergeDraftRows(data.candidates,"公開手動候補");
+populateAreas();renderList();
+if(!selectedId&&drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}
+status.textContent="公開手動候補を自動読込："+data.candidates.length+"件（新規追加 "+added+"件）／更新 "+(data.generated_at||"日時記録なし")+"／合計 "+drafts.length+"件。最新の全候補はActions成果物も追加してください。";
+}catch(error){
+status.textContent="公開候補を自動読込できませんでした。Actions成果物 drafts.json を手動で追加してください。（"+error.message+"）";
+}
+}
+el("reloadPublicCandidatesBtn").addEventListener("click",loadPublicCandidates);
 function init(){
-loadLocal();populateAreas();renderList();updateBackupReminder();
-if(!drafts.length){el("items").innerHTML='<div class="empty">Actionsの実行成果物から drafts.json をダウンロードし、「候補データを読み込む」から選択してください。</div>';}
+loadLocal();populateAreas();renderList();updateBackupReminder();loadPublicCandidates();
+if(!drafts.length){el("items").innerHTML='<div class="empty">公開候補またはActions成果物を読み込んでください。</div>';}
 }
 init();
 })();
