@@ -4,7 +4,7 @@ import html
 import json
 import re
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, quote
 from xml.etree.ElementTree import Element, SubElement, ElementTree
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -97,6 +97,34 @@ def build_article_page(article):
     )
     if not source_items_html:
         source_items_html = '<li><span>情報源の詳細は確認できません</span></li>'
+    # Optional store details are displayed only when a dedicated verification record
+    # and its source URL are present. Never infer these values from article prose.
+    verified_info = article.get("verified_store_info", {})
+    if not isinstance(verified_info, dict):
+        verified_info = {}
+    verified_source = str(verified_info.get("source_url") or "").strip()
+    verified_checked = str(verified_info.get("checked_at") or "").strip()
+    verified_rows = []
+    if is_http_url(verified_source):
+        for key, label in (("address", "所在地"), ("business_hours", "営業時間"), ("regular_holiday", "定休日")):
+            value = str(verified_info.get(key) or "").strip()
+            if value:
+                verified_rows.append(f'<div class="story-store-row"><dt>{label}</dt><dd>{esc(value)}</dd></div>')
+        address = str(verified_info.get("address") or "").strip()
+        if address:
+            map_url = "https://www.google.com/maps/search/?api=1&query=" + quote(address)
+            verified_rows.append(f'<div class="story-store-map"><a href="{esc(map_url)}" target="_blank" rel="noopener noreferrer">地図で場所を確認 ↗</a></div>')
+        official_links = []
+        for key, label in (("official_website", "公式サイト"), ("official_instagram", "Instagram"), ("official_x", "公式X"), ("official_line", "公式LINE")):
+            value = str(verified_info.get(key) or "").strip()
+            if is_http_url(value):
+                official_links.append(f'<a href="{esc(value)}" target="_blank" rel="noopener noreferrer">{label} ↗</a>')
+        if official_links:
+            verified_rows.append('<div class="story-store-links">' + "".join(official_links) + '</div>')
+    verified_info_html = ""
+    if verified_rows:
+        checked_label = esc(verified_checked[:10]) if re.match(r"^\\d{4}-\\d{2}-\\d{2}", verified_checked) else "確認日記載なし"
+        verified_info_html = f'<section class="story-store-panel" aria-label="確認済み店舗情報"><div class="story-section-heading"><span>02</span><div><small>VERIFIED STORE INFO</small><h2>店舗の基本情報</h2></div></div><dl class="story-store-list">{"".join(verified_rows)}</dl><p class="story-store-meta">情報確認日：{checked_label}　／　<a href="{esc(verified_source)}" target="_blank" rel="noopener noreferrer">確認元を開く ↗</a></p></section>'
     event = str(article.get("event_date") or "")
     status = str(article.get("business_status") or "")
     photo_url = article.get("image_url") if article.get("image_usage_approved") is True and article.get("image_rights_status") in ("許可確認済み", "利用条件確認済み") and is_http_url(article.get("image_url")) else ""
@@ -168,6 +196,7 @@ def build_article_page(article):
 <div class="story-fact"><span>POSTED</span><strong>{esc(published) if published else "掲載日未掲載"}</strong></div>
 <div class="story-fact"><span>CHECKED</span><strong>{esc(checked_date) if checked_date else "確認日未掲載"}</strong></div>
 </section>
+{verified_info_html}
 <article class="story-article">
 <div class="story-section-heading"><span>01</span><div><small>ARTICLE</small><h2>店舗情報</h2></div></div>
 <div class="story-content">{esc(summary)}</div>
