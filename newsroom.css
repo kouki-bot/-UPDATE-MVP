@@ -285,7 +285,7 @@ body{background:var(--paper);color:var(--ink)}
 }
 .article-image--empty:before{
   content:"YAMAGUCHI";position:absolute;inset:auto 16px 9px auto;
-  color:rgba(255,255,255,.13);font:700 clamp(25px,3vw,40px "Playfair Display",serif);
+  color:rgba(255,255,255,.13);font:700 clamp(25px,3vw,40px) "Playfair Display",serif;
   letter-spacing:2px;z-index:0;
 }
 .article-image--empty:after{
