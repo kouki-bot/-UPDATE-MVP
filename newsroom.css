@@ -203,3 +203,22 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
  .site-footer{margin-top:48px;padding:38px 18px 22px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* Homepage hero: Yamaguchi pagoda nightscape */
+body:not(.detail-page) .hero-art{
+  min-height:440px;
+  aspect-ratio:16 / 9;
+  background:url("images/yamaguchi-local-update-hero.jpg") center center / cover no-repeat !important;
+}
+body:not(.detail-page) .hero-art:before,
+body:not(.detail-page) .hero-art:after{
+  display:none;
+}
+body:not(.detail-page) .hero-photo-caption,
+body:not(.detail-page) .hero-art .image-caption{
+  display:none;
+}
+@media(max-width:800px){
+  body:not(.detail-page) .hero-art{min-height:0;aspect-ratio:16 / 9;}
+}
