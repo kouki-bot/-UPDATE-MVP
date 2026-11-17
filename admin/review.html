@@ -40,6 +40,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 @media(max-width:760px){.insight-grid{grid-template-columns:1fr}.review-insights{padding:11px}}
 .exportbar button{flex:1;min-width:130px}
 .footer-note{font-size:11px;color:var(--muted);margin-top:16px}
+.private-sync{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin:14px 0}.private-sync-grid{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:end}.private-sync input{width:100%;min-height:44px;border:1px solid #d8d9d0;border-radius:7px;padding:10px;font:inherit}.private-sync-status{font-size:12px;color:var(--muted);margin-top:8px;overflow-wrap:anywhere}@media(max-width:760px){.private-sync-grid{grid-template-columns:1fr}.private-sync-grid button{width:100%}}
 @media(max-width:760px){header{position:static}.stats{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.layout{grid-template-columns:1fr}.list-items{max-height:38vh}.detail-body{padding:13px}.actions{grid-template-columns:1fr}.actions .approve{grid-column:auto}}
 </style>
 <style>.photo-review{margin:18px 0;padding:16px;border:1px solid #d9e0d6;border-radius:8px;background:#f7f9f5}.photo-review>b{display:block;margin-bottom:8px}.photo-review>label{display:flex;gap:8px;align-items:center;margin:10px 0;font-weight:700}.photo-review .field{margin:10px 0}.photo-review input[type=checkbox]{width:auto}</style></head>
@@ -62,6 +63,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
  </div>
 </section>
 <div id="backupReminder" class="notice" role="status" aria-live="polite" style="display:none;margin:14px 0"></div>
+<section class="private-sync" aria-label="非公開承認データ同期"><b>非公開リポジトリへ承認データを保存</b><p class="sub">GitHubのFine-grained personal access tokenを一時入力して同期します。トークンはこの画面・ブラウザに保存せず、GitHub API以外へ送信しません。権限は yamaguchi-review-private の Contents: Read and write のみにしてください。</p><div class="private-sync-grid"><div><label class="sub" for="privateSyncToken">GitHubトークン（同期時のみ入力）</label><input id="privateSyncToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..."></div><button class="secondary" id="privateLoadBtn" type="button">非公開データを読み込む</button><button class="primary" id="privateSaveBtn" type="button">非公開データへ保存</button></div><div class="private-sync-status" id="privateSyncStatus" role="status" aria-live="polite">未同期。最初に非公開データを読み込むと、既存の承認履歴を保持した状態で編集できます。</div></section>
 <div class="exportbar"><button class="secondary" id="reloadPublicCandidatesBtn">公開候補を再読み込み</button><button class="primary" id="draftImportBtn">Actions候補を追加読み込み</button><button class="secondary" id="backupBtn">審査データをバックアップ</button><button class="plain" id="exportBtn">公開用承認データを書き出す</button><button class="plain" id="importBtn">バックアップを復元</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="draftFile" accept="application/json,.json" hidden><input type="file" id="importFile" accept="application/json,.json" hidden></div>
 <div id="candidateLoadStatus" class="sub" role="status" aria-live="polite">公開候補の読み込み準備中</div>
 <div class="toolbar">
@@ -334,6 +336,80 @@ el("exportBtn").addEventListener("click",function(){
 var out=JSON.stringify(approvals,null,2)+"\n";downloadFile("publication_approvals.json",out);
 alert("公開用承認データを書き出しました。非公開リポジトリ local-life-lab/yamaguchi-review-private の data/publication_approvals.json に保存してください。");
 });
+
+var PRIVATE_APPROVAL_PATH="/repos/local-life-lab/yamaguchi-review-private/contents/data/publication_approvals.json";
+var privateSyncToken="";
+function privateApi(path,method,payload){
+ return fetch("https://api.github.com"+path,{method:method,headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer "+privateSyncToken,"X-GitHub-Api-Version":"2022-11-28","Content-Type":"application/json"},body:payload?JSON.stringify(payload):undefined});
+}
+function decodePrivateContent(encoded){
+ var binary=atob(String(encoded||"").replace(/\\s/g,""));
+ var bytes=new Uint8Array(binary.length);
+ for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+ return new TextDecoder("utf-8").decode(bytes);
+}
+function encodePrivateContent(value){
+ var bytes=new TextEncoder().encode(value),binary="";
+ for(var i=0;i<bytes.length;i++)binary+=String.fromCharCode(bytes[i]);
+ return btoa(binary);
+}
+function mergePrivateApprovals(remote,local){
+ remote=validateApprovals(remote);local=validateApprovals(local);
+ var merged=JSON.parse(JSON.stringify(remote));
+ merged.reviewed_articles=merged.reviewed_articles||{};
+ Object.keys(local.reviewed_articles).forEach(function(id){merged.reviewed_articles[id]=local.reviewed_articles[id];});
+ var histories=merged.published_change_reviews||{},localHistories=local.published_change_reviews||{};
+ Object.keys(localHistories).forEach(function(key){
+  var a=histories[key]&&Array.isArray(histories[key].history)?histories[key].history:[];
+  var b=Array.isArray(localHistories[key].history)?localHistories[key].history:[];
+  var seen={};a.concat(b).forEach(function(item){var stamp=String(item.recorded_at||"")+"|"+JSON.stringify(item);seen[stamp]=item;});
+  histories[key]=Object.assign({},histories[key]||{},localHistories[key]||{},{history:Object.keys(seen).sort().map(function(k){return seen[k];})});
+ });
+ merged.published_change_reviews=histories;
+ merged.approved_ids=Object.keys(merged.reviewed_articles).filter(function(id){return merged.reviewed_articles[id]&&merged.reviewed_articles[id].review_status==="確認済み";}).sort();
+ merged.description=remote.description||local.description||"人が確認した記事だけ公開許可する";
+ return validateApprovals(merged);
+}
+async function readPrivateApprovals(){
+ var response=await privateApi(PRIVATE_APPROVAL_PATH+"?ref=main","GET");
+ if(!response.ok)throw new Error("非公開データの取得に失敗しました（HTTP "+response.status+"）。トークン権限とリポジトリ名を確認してください。");
+ var file=await response.json();
+ if(file.encoding!=="base64"||!file.content)throw new Error("非公開承認ファイルの形式を確認できません。");
+ return {data:JSON.parse(decodePrivateContent(file.content)),sha:file.sha};
+}
+function getPrivateToken(){
+ var token=el("privateSyncToken").value.trim();
+ if(!token)throw new Error("GitHubトークンを入力してください。");
+ privateSyncToken=token;
+ return token;
+}
+el("privateLoadBtn").addEventListener("click",async function(){
+ var status=el("privateSyncStatus");el("privateLoadBtn").disabled=true;
+ try{
+  getPrivateToken();status.textContent="非公開リポジトリから読み込み中…";
+  var remote=await readPrivateApprovals();
+  var merged=mergePrivateApprovals(remote.data,approvals);
+  approvals=merged;saveLocal();renderList();renderDetail();updateBackupReminder();
+  status.textContent="読み込み完了。既存の承認履歴を保持し、端末内の編集内容も統合しました。承認 "+approvals.approved_ids.length+"件。";
+ }catch(error){status.textContent="読み込み失敗："+error.message;}
+ finally{el("privateSyncToken").value="";privateSyncToken="";el("privateLoadBtn").disabled=false;}
+});
+el("privateSaveBtn").addEventListener("click",async function(){
+ var status=el("privateSyncStatus");el("privateSaveBtn").disabled=true;
+ try{
+  getPrivateToken();status.textContent="最新の非公開データを取得して統合中…";
+  var remote=await readPrivateApprovals();
+  var merged=mergePrivateApprovals(remote.data,approvals);
+  var body=JSON.stringify(merged,null,2)+"\n";
+  var response=await privateApi(PRIVATE_APPROVAL_PATH,"PUT",{message:"Update reviewed publication approvals",content:encodePrivateContent(body),sha:remote.sha,branch:"main"});
+  if(!response.ok){var detail=await response.text();throw new Error("保存に失敗しました（HTTP "+response.status+"）。同時更新の可能性があります。再読み込みして再試行してください。 "+detail.slice(0,180));}
+  approvals=merged;saveLocal();renderList();renderDetail();
+  status.textContent="保存完了。非公開リポジトリの承認データを更新しました。承認 "+approvals.approved_ids.length+"件。";
+  el("privateSyncToken").value="";privateSyncToken="";
+ }catch(error){status.textContent="保存失敗："+error.message;}
+ finally{el("privateSyncToken").value="";privateSyncToken="";el("privateSaveBtn").disabled=false;}
+});
+
 el("draftImportBtn").addEventListener("click",function(){el("draftFile").click();});
 el("excludedImportBtn").addEventListener("click",function(){el("excludedFile").click();});
 el("excludedFile").addEventListener("change",function(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(){try{var data=JSON.parse(reader.result);if(!Array.isArray(data.candidates))throw new Error("candidates配列がありません");var unsafe=data.candidates.filter(function(row){return row.status!=="除外・公開禁止";});if(unsafe.length)throw new Error("除外・公開禁止ではない行が含まれています");excludedAudit=data.candidates;selectedExcluded={};renderExcludedAudit();alert("除外監査ログ "+excludedAudit.length+"件を読み込みました。");}catch(err){alert("除外ログを読み込めませんでした："+err.message);}};reader.readAsText(file);e.target.value="";});

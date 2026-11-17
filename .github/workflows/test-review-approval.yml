@@ -138,4 +138,18 @@ jobs:
           missing_auto_load = [item for item in auto_load_required if item not in page]
           assert not missing_auto_load, f"Missing safe candidate auto-load features: {missing_auto_load}"
           print("Public candidate auto-load and review-only guard are present.")
+          private_sync_required = [
+              'PRIVATE_APPROVAL_PATH="/repos/local-life-lab/yamaguchi-review-private/contents/data/publication_approvals.json"',
+              'function privateApi(path,method,payload)',
+              'Authorization":"Bearer "+privateSyncToken',
+              'function mergePrivateApprovals(remote,local)',
+              'async function readPrivateApprovals()',
+              'el("privateLoadBtn").addEventListener("click"',
+              'el("privateSaveBtn").addEventListener("click"',
+              'el("privateSyncToken").value="";privateSyncToken=""',
+          ]
+          missing_private_sync = [item for item in private_sync_required if item not in page]
+          assert not missing_private_sync, f"Missing private approval sync safeguards: {missing_private_sync}"
+          assert "localStorage.setItem" not in page[page.find('function getPrivateToken()'):page.find('el("privateLoadBtn")')]
+          print("Private approval sync uses an in-memory token and merges remote records before saving.")
           PY
