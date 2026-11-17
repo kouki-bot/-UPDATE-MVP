@@ -123,17 +123,33 @@ def build_article_page(article):
 <meta name="twitter:description" content="{esc(description)}">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J79VXDWMTV"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-J79VXDWMTV');</script>
-<link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../detail.css">
+<link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../newsroom.css"><link rel="stylesheet" href="../article.css">
 <script type="application/ld+json">{safe_json}</script>
-<style>.story-wrap{{max-width:820px;margin:0 auto;padding:64px 22px 90px}}.story-label{{color:#8a7258;font-size:.78rem;letter-spacing:.14em}}.story-wrap h1{{font-size:clamp(1.65rem,4vw,2.5rem);line-height:1.5;margin:16px 0 22px}}.story-meta{{display:flex;flex-wrap:wrap;gap:10px;color:#746e66;font-size:.9rem;border-bottom:1px solid #e8e3da;padding-bottom:20px}}.story-content{{font-size:1rem;line-height:2.05;margin:30px 0;white-space:pre-wrap}}.story-source{{display:inline-block;margin:10px 0 28px}}.story-back{{display:inline-block;margin-top:24px;color:#6d5742}}.story-note{{background:#f7f5ef;padding:18px 20px;border-radius:12px;font-size:.9rem;line-height:1.8}}.story-photo{{margin:26px 0 30px}}.story-photo img{{display:block;width:100%;max-height:480px;object-fit:cover;border-radius:10px}}.story-photo figcaption{{margin-top:8px;color:#777;font-size:.78rem}}.story-photo figcaption a{{color:#456b54}}</style>
-</head><body><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a><nav class="header-nav"><a href="../index.html">トップ</a><a href="../new.html">新店情報</a><a href="../closed.html">閉店情報</a><a href="../listing.html">掲載依頼</a></nav></header>
-<main class="story-wrap"><nav class="story-breadcrumb" aria-label="パンくずリスト"><a href="../index.html">トップ</a> <span aria-hidden="true">›</span> <a href="../{ "closed.html" if is_closed else "new.html" }">{esc(section_label)}</a> <span aria-hidden="true">›</span> <span aria-current="page">{esc(title)}</span></nav><p class="story-label">YAMAGUCHI LOCAL UPDATE / {esc(category)}</p><p class="story-label">{esc(municipality)}</p><h1>{esc(title)}</h1>
-<div class="story-meta"><span>店舗の状態：{esc(status)}</span><span>情報確認日：{esc(published)}</span>{'<span>開店・閉店等の日付：'+esc(event)+'</span>' if event else ''}</div>
-{f'<figure class="story-photo"><img src="{esc(photo_url)}" alt="{esc(title)}の{esc(photo_caption)}" loading="lazy" decoding="async"><figcaption>{esc(photo_caption)}・写真：{esc(photo_credit)}（<a href="{esc(photo_source)}" target="_blank" rel="noopener noreferrer">出典</a>）</figcaption></figure>' if photo_url else ''}
+
+</head><body class="article-story-page"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a><nav class="header-nav"><a href="../index.html">トップ</a><a href="../new.html">新店情報</a><a href="../closed.html">閉店情報</a><a class="nav-contact" href="../listing.html">掲載依頼</a></nav></header>
+<main class="story-wrap">
+<nav class="story-breadcrumb" aria-label="パンくずリスト"><a href="../index.html">トップ</a><span aria-hidden="true">/</span><a href="../{ "closed.html" if is_closed else "new.html" }">{esc(section_label)}</a><span aria-hidden="true">/</span><span aria-current="page">{esc(title)}</span></nav>
+<section class="story-hero">
+<div class="story-kicker"><span class="story-kicker-line"></span>YAMAGUCHI LOCAL UPDATE <span class="story-kicker-divider">/</span>{esc(category)}</div>
+<div class="story-area">{esc(municipality)}</div>
+<h1>{esc(title)}</h1>
+<div class="story-status"><span class="status-dot"></span>{esc(status)}</div>
+</section>
+{f'<figure class="story-photo"><img src="{esc(photo_url)}" alt="{esc(title)}の{esc(photo_caption)}" loading="eager" decoding="async"><figcaption>{esc(photo_caption)}　写真：{esc(photo_credit)}　<a href="{esc(photo_source)}" target="_blank" rel="noopener noreferrer">写真の出典 ↗</a></figcaption></figure>' if photo_url else '<div class="story-photo-placeholder" role="img" aria-label="写真はありません"><span>LOCAL UPDATE</span><small>PHOTO NOT AVAILABLE</small></div>'}
+<section class="story-facts" aria-label="店舗情報">
+<div class="story-fact"><span>STATUS</span><strong>{esc(status)}</strong></div>
+<div class="story-fact"><span>AREA</span><strong>{esc(municipality)}</strong></div>
+<div class="story-fact"><span>DATE</span><strong>{esc(event) if event else "日付未掲載"}</strong></div>
+<div class="story-fact"><span>POSTED</span><strong>{esc(published) if published else "掲載日未掲載"}</strong></div>
+</section>
+<article class="story-article">
+<div class="story-section-heading"><span>01</span><div><small>ARTICLE</small><h2>店舗情報</h2></div></div>
 <div class="story-content">{esc(summary)}</div>
-<div class="story-note">掲載内容は確認時点の情報です。営業状況・日程は変更される場合があります。最新情報は店舗または施設の公式案内をご確認ください。</div>
-<p>情報元：<a class="story-source" href="{esc(source_url)}" target="_blank" rel="noopener noreferrer">{esc(source_name)}（元情報を確認） ↗</a></p>
-<a class="story-back" href="../index.html#latest">← 山口ローカルUPDATEの最新情報へ戻る</a></main>
+<div class="story-note"><strong>掲載情報について</strong><p>この記事は確認できた情報をもとに掲載しています。営業状況・日程は変更される場合があります。訪問前に店舗または施設の公式案内をご確認ください。</p></div>
+</article>
+<section class="story-source-panel"><div><span class="source-kicker">SOURCE / INFORMATION</span><h2>情報の確認元</h2><p>{esc(source_name)}</p></div><a class="story-source" href="{esc(source_url)}" target="_blank" rel="noopener noreferrer">公式情報・元記事を確認 <span aria-hidden="true">↗</span></a></section>
+<div class="story-bottom-nav"><a href="../{ "closed.html" if is_closed else "new.html" }">← {esc(section_label)}一覧へ戻る</a><a href="../index.html">トップページへ</a></div>
+</main>
 <footer class="site-footer"><a class="footer-brand" href="../index.html">YAMAGUCHI LOCAL UPDATE<span>.</span></a><small>© YAMAGUCHI LOCAL UPDATE</small></footer></body></html>"""
     return slug, page
 
