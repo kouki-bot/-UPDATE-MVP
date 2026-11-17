@@ -361,3 +361,42 @@ body{background:var(--paper);color:var(--ink)}
 @media(prefers-reduced-motion:reduce){
   .category-card,.article-card,.article-image img{transition:none}
 }
+
+
+/* Final hero image refinement: use the approved local visual without distortion */
+.hero-art{
+  min-height:0!important;
+  aspect-ratio:16/9;
+  background-image:url("images/yamaguchi-local-update-hero.jpg")!important;
+  background-size:cover!important;
+  background-position:center center!important;
+}
+.hero-art:before{
+  opacity:0!important;
+  background:none!important;
+}
+.hero-art:after{
+  background:linear-gradient(0deg,rgba(12,27,19,.36),rgba(12,27,19,.02) 62%)!important;
+}
+.hero-photo-caption{
+  color:#fff!important;
+  text-shadow:0 2px 14px rgba(0,0,0,.5)!important;
+}
+.hero-photo-caption span:last-child{
+  color:rgba(255,255,255,.9)!important;
+}
+.hero-art .image-caption{
+  display:block!important;
+  position:absolute;
+  right:12px;
+  bottom:10px;
+  z-index:3;
+  padding:4px 7px;
+  background:rgba(15,31,22,.72);
+  color:#fff;
+  font-size:9px;
+  letter-spacing:.08em;
+}
+@media(max-width:800px){
+  .hero-art{aspect-ratio:16/9;min-height:0!important}
+}
