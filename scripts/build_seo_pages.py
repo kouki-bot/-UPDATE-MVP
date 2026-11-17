@@ -72,6 +72,31 @@ def build_article_page(article):
     source_name = str(article.get("source_name") or "情報提供元")
     source_url = str(article.get("source_url"))
     published = str(article.get("published_date") or "")
+    approved_at = str(article.get("approved_at") or "")
+    checked_date = approved_at[:10] if re.match(r"^\d{4}-\d{2}-\d{2}", approved_at) else ""
+    source_records = article.get("source_urls", [])
+    if not isinstance(source_records, list):
+        source_records = []
+    normalized_sources = []
+    seen_source_urls = set()
+    for record in source_records:
+        if not isinstance(record, dict):
+            continue
+        record_url = str(record.get("url") or "").strip()
+        record_name = str(record.get("source_name") or "情報提供元").strip()
+        if is_http_url(record_url) and record_url not in seen_source_urls:
+            normalized_sources.append((record_name, record_url))
+            seen_source_urls.add(record_url)
+    if is_http_url(article.get("source_url")) and str(article.get("source_url")) not in seen_source_urls:
+        normalized_sources.insert(0, (str(article.get("source_name") or "主な情報源"), str(article.get("source_url"))))
+    if not normalized_sources and is_http_url(source_url):
+        normalized_sources = [(source_name, source_url)]
+    source_items_html = "".join(
+        f'<li><span>{esc(name)}</span><a href="{esc(url)}" target="_blank" rel="noopener noreferrer">情報源を開く ↗</a></li>'
+        for name, url in normalized_sources
+    )
+    if not source_items_html:
+        source_items_html = '<li><span>情報源の詳細は確認できません</span></li>'
     event = str(article.get("event_date") or "")
     status = str(article.get("business_status") or "")
     photo_url = article.get("image_url") if article.get("image_usage_approved") is True and article.get("image_rights_status") in ("許可確認済み", "利用条件確認済み") and is_http_url(article.get("image_url")) else ""
@@ -141,13 +166,14 @@ def build_article_page(article):
 <div class="story-fact"><span>AREA</span><strong>{esc(municipality)}</strong></div>
 <div class="story-fact"><span>DATE</span><strong>{esc(event) if event else "日付未掲載"}</strong></div>
 <div class="story-fact"><span>POSTED</span><strong>{esc(published) if published else "掲載日未掲載"}</strong></div>
+<div class="story-fact"><span>CHECKED</span><strong>{esc(checked_date) if checked_date else "確認日未掲載"}</strong></div>
 </section>
 <article class="story-article">
 <div class="story-section-heading"><span>01</span><div><small>ARTICLE</small><h2>店舗情報</h2></div></div>
 <div class="story-content">{esc(summary)}</div>
 <div class="story-note"><strong>掲載情報について</strong><p>この記事は確認できた情報をもとに掲載しています。営業状況・日程は変更される場合があります。訪問前に店舗または施設の公式案内をご確認ください。</p></div>
 </article>
-<section class="story-source-panel"><div><span class="source-kicker">SOURCE / INFORMATION</span><h2>情報の確認元</h2><p>{esc(source_name)}</p></div><a class="story-source" href="{esc(source_url)}" target="_blank" rel="noopener noreferrer">公式情報・元記事を確認 <span aria-hidden="true">↗</span></a></section>
+<section class="story-source-panel"><div><span class="source-kicker">SOURCE / INFORMATION</span><h2>情報の確認元</h2><p>記事作成時に参照した情報源を掲載しています。複数の情報源がある場合は、それぞれ確認できます。</p><ul class="story-source-list">{source_items_html}</ul></div></section>
 <div class="story-bottom-nav"><a href="../{ "closed.html" if is_closed else "new.html" }">← {esc(section_label)}一覧へ戻る</a><a href="../index.html">トップページへ</a></div>
 </main>
 <footer class="site-footer"><a class="footer-brand" href="../index.html">YAMAGUCHI LOCAL UPDATE<span>.</span></a><small>© YAMAGUCHI LOCAL UPDATE</small></footer></body></html>"""
