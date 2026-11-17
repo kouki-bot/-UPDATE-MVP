@@ -63,7 +63,8 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
  </div>
 </section>
 <div id="backupReminder" class="notice" role="status" aria-live="polite" style="display:none;margin:14px 0"></div>
-<section class="private-sync" aria-label="非公開承認データ同期"><b>非公開リポジトリへ承認データを保存</b><p class="sub">GitHubのFine-grained personal access tokenを一時入力して同期します。トークンはこの画面・ブラウザに保存せず、GitHub API以外へ送信しません。権限は yamaguchi-review-private の Contents: Read and write のみにしてください。</p><div class="private-sync-grid"><div><label class="sub" for="privateSyncToken">GitHubトークン（同期時のみ入力）</label><input id="privateSyncToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..."></div><button class="secondary" id="privateLoadBtn" type="button">非公開データを読み込む</button><button class="primary" id="privateSaveBtn" type="button">非公開データへ保存</button></div><div class="private-sync-status" id="privateSyncStatus" role="status" aria-live="polite">未同期。最初に非公開データを読み込むと、既存の承認履歴を保持した状態で編集できます。</div></section>\n<div class="exportbar"><button class="secondary" id="reloadPublicCandidatesBtn">公開候補を再読み込み</button><button class="primary" id="draftImportBtn">Actions候補を追加読み込み</button><button class="secondary" id="backupBtn">審査データをバックアップ</button><button class="plain" id="exportBtn">公開用承認データを書き出す</button><button class="plain" id="importBtn">バックアップを復元</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="draftFile" accept="application/json,.json" hidden><input type="file" id="importFile" accept="application/json,.json" hidden></div>
+<section class="private-sync" aria-label="非公開承認データ同期"><b>非公開リポジトリへ承認データを保存</b><p class="sub">GitHubのFine-grained personal access tokenを一時入力して同期します。トークンはこの画面・ブラウザに保存せず、GitHub API以外へ送信しません。権限は yamaguchi-review-private の Contents: Read and write のみにしてください。</p><div class="private-sync-grid"><div><label class="sub" for="privateSyncToken">GitHubトークン（同期時のみ入力）</label><input id="privateSyncToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..."></div><button class="secondary" id="privateLoadBtn" type="button">非公開データを読み込む</button><button class="primary" id="privateSaveBtn" type="button">非公開データへ保存</button></div><div class="private-sync-status" id="privateSyncStatus" role="status" aria-live="polite">未同期。最初に非公開データを読み込むと、既存の承認履歴を保持した状態で編集できます。</div></section>
+<div class="exportbar"><button class="secondary" id="reloadPublicCandidatesBtn">公開候補を再読み込み</button><button class="primary" id="draftImportBtn">Actions候補を追加読み込み</button><button class="secondary" id="backupBtn">審査データをバックアップ</button><button class="plain" id="exportBtn">公開用承認データを書き出す</button><button class="plain" id="importBtn">バックアップを復元</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="draftFile" accept="application/json,.json" hidden><input type="file" id="importFile" accept="application/json,.json" hidden></div>
 <div id="candidateLoadStatus" class="sub" role="status" aria-live="polite">公開候補の読み込み準備中</div>
 <div class="toolbar">
 <input id="search" type="search" placeholder="店名・市町・情報元で検索">
@@ -391,7 +392,7 @@ el("privateLoadBtn").addEventListener("click",async function(){
   approvals=merged;saveLocal();renderList();renderDetail();updateBackupReminder();
   status.textContent="読み込み完了。既存の承認履歴を保持し、端末内の編集内容も統合しました。承認 "+approvals.approved_ids.length+"件。";
  }catch(error){status.textContent="読み込み失敗："+error.message;}
- finally{el("privateLoadBtn").disabled=false;}
+ finally{el("privateSyncToken").value="";privateSyncToken="";el("privateLoadBtn").disabled=false;}
 });
 el("privateSaveBtn").addEventListener("click",async function(){
  var status=el("privateSyncStatus");el("privateSaveBtn").disabled=true;
@@ -406,7 +407,7 @@ el("privateSaveBtn").addEventListener("click",async function(){
   status.textContent="保存完了。非公開リポジトリの承認データを更新しました。承認 "+approvals.approved_ids.length+"件。";
   el("privateSyncToken").value="";privateSyncToken="";
  }catch(error){status.textContent="保存失敗："+error.message;}
- finally{el("privateSaveBtn").disabled=false;}
+ finally{el("privateSyncToken").value="";privateSyncToken="";el("privateSaveBtn").disabled=false;}
 });
 
 el("draftImportBtn").addEventListener("click",function(){el("draftFile").click();});
