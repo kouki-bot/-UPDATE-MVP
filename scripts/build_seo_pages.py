@@ -123,7 +123,7 @@ def build_article_page(article):
             verified_rows.append('<div class="story-store-links">' + "".join(official_links) + '</div>')
     verified_info_html = ""
     if verified_rows:
-        checked_label = esc(verified_checked[:10]) if re.match(r"^\\d{4}-\\d{2}-\\d{2}", verified_checked) else "確認日記載なし"
+        checked_label = esc(verified_checked[:10]) if re.match(r"^\d{4}-\d{2}-\d{2}", verified_checked) else "確認日記載なし"
         verified_info_html = f'<section class="story-store-panel" aria-label="確認済み店舗情報"><div class="story-section-heading"><span>02</span><div><small>VERIFIED STORE INFO</small><h2>店舗の基本情報</h2></div></div><dl class="story-store-list">{"".join(verified_rows)}</dl><p class="story-store-meta">情報確認日：{checked_label}　／　<a href="{esc(verified_source)}" target="_blank" rel="noopener noreferrer">確認元を開く ↗</a></p></section>'
     event = str(article.get("event_date") or "")
     status = str(article.get("business_status") or "")
