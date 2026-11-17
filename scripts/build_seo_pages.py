@@ -73,7 +73,7 @@ def build_article_page(article):
     source_url = str(article.get("source_url"))
     published = str(article.get("published_date") or "")
     approved_at = str(article.get("approved_at") or "")
-    checked_date = approved_at[:10] if re.match(r"^\\d{4}-\\d{2}-\\d{2}", approved_at) else ""
+    checked_date = approved_at[:10] if re.match(r"^\d{4}-\d{2}-\d{2}", approved_at) else ""
     source_records = article.get("source_urls", [])
     if not isinstance(source_records, list):
         source_records = []
