@@ -20,7 +20,7 @@
 .article-story-page .story-photo-placeholder{min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;background:linear-gradient(135deg,#e6ebe5,#d4dfd5);color:rgba(33,75,58,.55)}
 .article-story-page .story-photo-placeholder span{font:700 clamp(25px,4vw,42px) "Playfair Display",Georgia,serif;letter-spacing:.1em}
 .article-story-page .story-photo-placeholder small{font-size:9px;font-weight:800;letter-spacing:3px}
-.article-story-page .story-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:0 0 54px;background:#fff;border:1px solid #dfe3dc;border-top:0}
+.article-story-page .story-facts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin:0 0 54px;background:#fff;border:1px solid #dfe3dc;border-top:0}
 .article-story-page .story-fact{min-width:0;padding:18px 20px;border-right:1px solid #e7ebe5}
 .article-story-page .story-fact:last-child{border-right:0}
 .article-story-page .story-fact span{display:block;margin-bottom:6px;color:#a45a3b;font-size:9px;font-weight:800;letter-spacing:1.7px}
@@ -67,3 +67,16 @@
  .article-story-page .story-bottom-nav{flex-direction:column}
 }
 @media(prefers-reduced-motion:reduce){.article-story-page *{transition:none!important;scroll-behavior:auto!important}}
+
+/* Article source transparency */
+.article-story-page .story-source-panel{display:block}
+.article-story-page .story-source-panel>div{width:100%}
+.article-story-page .story-source-panel p{max-width:760px;line-height:1.9}
+.article-story-page .story-source-list{display:grid;gap:0;margin:16px 0 0;padding:0;list-style:none;border-top:1px solid #e7ebe5}
+.article-story-page .story-source-list li{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid #e7ebe5;color:#354239;font-size:12px}
+.article-story-page .story-source-list li a{flex:0 0 auto;color:#315b45;font-size:11px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:700px){
+ .article-story-page .story-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .article-story-page .story-fact:nth-child(5){border-bottom:0}
+ .article-story-page .story-source-list li{align-items:flex-start;flex-direction:column;gap:6px}
+}
