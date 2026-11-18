@@ -219,7 +219,13 @@ function renderDetail(){
 var d=drafts.find(function(x){return String(x.id)===selectedId;});
 if(!d){el("detail").innerHTML='<div class="empty">左側の記事を選択してください。</div>';el("detailId").textContent="";return;}
 var id=String(d.id),r=approvals.reviewed_articles[id]||{},sources=Array.isArray(d.source_urls)&&d.source_urls.length?d.source_urls:[{source_name:d.source_name,url:d.source_url}];
-var sourceHtml=sources.map(function(s){var u=safeHttpUrl(s.url);return u?'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(s.source_name||"元記事")+'：'+esc(u)+'</a>':'<span>'+esc(s.source_name||"元記事")+'：URL未設定または不正</span>';}).join("");
+var sourceChecks=Array.isArray(d.source_link_checks)?d.source_link_checks:[];
+var sourceHtml=sources.map(function(s){
+var u=safeHttpUrl(s.url),check=sourceChecks.find(function(x){return safeHttpUrl(x.url)===u;});
+var label=check?(check.status==="ok"?"リンク応答あり":check.status==="broken"?"404/410・要確認":check.status==="not_checked_limit"?"確認上限超過・未確認":"確認不能・要確認"):"リンク状態未記録";
+var link=u?'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer">'+esc(s.source_name||"元記事")+'：'+esc(u)+'</a>':'<span>'+esc(s.source_name||"元記事")+'：URL未設定または不正</span>';
+return '<div class="source-check-row">'+link+'<span class="pill '+(check&&check.status==="ok"?"fix":check&&check.status==="broken"?"out":"")+'">'+esc(label)+'</span></div>';
+}).join("")+'<p class="sub">リンク確認はHTTP応答の検査です。記事内容・店舗の実在・営業状況を保証するものではありません。すべて元記事を開いて確認してください。</p>';
 var flags=flagsFor(d),cleared=Array.isArray(r.cleared_review_flags)?r.cleared_review_flags:[];
 var flagHtml=flags.length?'<div class="flags"><b>確認フラグ（解消したものだけチェック）</b>'+flags.map(function(f){return '<label><input type="checkbox" class="clearFlag" value="'+esc(f)+'" '+(cleared.indexOf(f)>=0?"checked":"")+'><span>'+esc(f)+'</span></label>';}).join("")+'</div>':'<p class="sub">自動検出された確認フラグはありません。内容確認は必要です。</p>';
 var reviewChecks=r.review_checks||{};
