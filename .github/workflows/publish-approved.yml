@@ -2,11 +2,8 @@ name: Publish Manually Approved Articles
 
 on:
   workflow_dispatch:
-  # 定期実行は安全条件のマージ・検証後に再開する。
-  push:
-    branches: [main]
-    paths:
-      - "scripts/publish_approved.py"
+  schedule:
+    - cron: "7,37 * * * *"
 
 permissions:
   contents: write
