@@ -38,11 +38,38 @@ def store_names(article):
     # include municipality or editorial wording that the generic extractor retains.
     for text in (title, body):
         for match in re.findall(r"[「『]([^」』]{2,30})[」』]", str(text or "")):
-            value = re.sub(r"\s+", "", match).strip("・、。")
+            value = re.sub(r"\\s+", "", match).strip("・、。")
             if len(value) >= 2:
                 names.add(value)
-    return names
 
+    # Preserve a full store name when the brand and branch suffix are separated
+    # by whitespace, as in "長崎ちゃんめん 山口小郡店".
+    store_chars = r"A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&"
+    for text in (title, body):
+        for match in re.finditer(
+            rf"([{store_chars}]{{2,24}})\\s+([{store_chars}]{{2,12}}店)",
+            str(text or ""),
+        ):
+            names.add(match.group(1) + match.group(2))
+
+    # The generic extractor may return both a full brand/store name and its
+    # shorter branch suffix (e.g. "Trial Yamaguchi-Ogori Store" and
+    # "Yamaguchi-Ogori Store"). Keep only the longest candidates within this
+    # article so two unrelated businesses in the same area cannot match on
+    # a shared location suffix alone. Conservative false negatives are safer
+    # than false change alerts; ambiguous cases remain for human review.
+    normalized = {
+        re.sub(r"[\\s　・、。]", "", str(name)).strip()
+        for name in names
+        if len(re.sub(r"[\\s　・、。]", "", str(name)).strip()) >= 2
+    }
+    return {
+        name for name in normalized
+        if not any(
+            other != name and len(other) > len(name) and other.endswith(name)
+            for other in normalized
+        )
+    }
 
 def municipality(article):
     value = clean_text(article.get("municipality", ""))
