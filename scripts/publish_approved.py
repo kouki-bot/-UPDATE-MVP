@@ -35,9 +35,12 @@ def main():
   draft=draft_by_id.get(aid) or existing.get(aid)
   if not draft: continue
   review=reviews.get(aid,{})
-  excluded_types={"宿泊施設","観光・レジャー","公共・地域施設"}
-  if draft.get("content_type") in excluded_types:
-   print(f"公開保留 {aid}: 店舗サイトの対象外カテゴリ ({draft.get('content_type')})"); continue
+  # 店舗情報サイトの対象カテゴリ以外は、承認済みでも公開しない。
+  if draft.get("content_type") != "店舗・商業施設":
+   print(f"公開保留 {aid}: 店舗サイトの対象外または未分類カテゴリ ({draft.get('content_type')})"); continue
+  # 追加確認フラグは、通常の承認操作だけでは解除できない。
+  if draft.get("manual_hold") is True:
+   print(f"公開保留 {aid}: manual_hold=true（追加確認が必要）"); continue
   if draft.get("published_date") not in (None,"") and not valid_date(draft.get("published_date")):
    print(f"公開保留 {aid}: 下書きの記事公開日が不正。元情報を再確認してください"); continue
   article=dict(draft)
@@ -87,6 +90,27 @@ def main():
    print(f"公開保留 {aid}: 日付・鮮度の確認が必要"); continue
   if review.get("review_status") != "確認済み":
    print(f"公開保留 {aid}: review_status=確認済み が必要"); continue
+  # 新規公開記事は、直近7日以内の人による再確認と、全出典URLの正常確認を必須にする。
+  if aid not in existing:
+   try:
+    reviewed_at=datetime.fromisoformat(str(review.get("reviewed_at","")).replace("Z","+00:00"))
+    if reviewed_at.tzinfo is None: reviewed_at=reviewed_at.replace(tzinfo=JST)
+    review_age=(datetime.now(JST)-reviewed_at.astimezone(JST)).total_seconds()
+   except (TypeError,ValueError):
+    print(f"公開保留 {aid}: 再確認日時が不正"); continue
+   if review_age < 0 or review_age > 7*24*60*60:
+    print(f"公開保留 {aid}: 人による最終確認から7日を超過"); continue
+   link_checks=draft.get("source_link_checks")
+   if not isinstance(link_checks,list) or not link_checks:
+    print(f"公開保留 {aid}: 出典URLのリンク確認記録がありません"); continue
+   checked={str(row.get("url") or "").strip():row.get("status") for row in link_checks if isinstance(row,dict)}
+   required_urls={str(draft.get("source_url") or "").strip()}
+   extra_sources=draft.get("source_urls",[])
+   if isinstance(extra_sources,list):
+    required_urls.update(str(row.get("url") or "").strip() for row in extra_sources if isinstance(row,dict) and row.get("url"))
+   required_urls.discard("")
+   if not required_urls or any(checked.get(url)!="ok" for url in required_urls):
+    print(f"公開保留 {aid}: 主出典・追加出典のすべてで正常なURL確認が必要"); continue
   required_checks=("store_name_verified","municipality_verified","published_date_verified","event_date_verified","business_status_verified","source_url_verified")
   review_checks=review.get("review_checks",{})
   if not isinstance(review_checks,dict) or not all(review_checks.get(key) is True for key in required_checks):
