@@ -55,6 +55,34 @@ class PublishedStoreChangeTests(unittest.TestCase):
         draft = self.candidate(status="公開済み")
         self.assertEqual(module.find_status_changes([draft], [self.published()]), [])
 
+    def test_store_names_discards_shared_branch_suffix_when_full_name_exists(self):
+        published = {
+            "title": "【山口市】スーパーセンタートライアル山口小郡店がオープン",
+            "body": "スーパーセンタートライアル山口小郡店（山口市陶）。",
+        }
+        candidate = {
+            "title": "【山口市】長崎ちゃんめん 山口小郡店がリニューアル",
+            "body_excerpt": "長崎ちゃんめん 山口小郡店（山口市小郡）。",
+        }
+        old_names = module.store_names(published)
+        new_names = module.store_names(candidate)
+        self.assertTrue(old_names)
+        self.assertTrue(new_names)
+        self.assertFalse(old_names & new_names)
+
+    def test_does_not_flag_different_brands_sharing_same_area_suffix(self):
+        published = self.published(
+            town="山口市",
+            title="【山口市】スーパーセンタートライアル山口小郡店がオープン",
+        )
+        published["body"] = "スーパーセンタートライアル山口小郡店（山口市陶）。"
+        candidate = self.candidate(
+            town="山口市",
+            title="【山口市】長崎ちゃんめん 山口小郡店がリニューアル",
+        )
+        candidate["body_excerpt"] = "長崎ちゃんめん 山口小郡店（山口市小郡）。"
+        self.assertEqual(module.find_status_changes([candidate], [published]), [])
+
     def test_report_explicitly_says_manual_review_only(self):
         report = module.render_markdown([])
         self.assertIn("自動承認・公開記事の自動変更を行いません", report)
