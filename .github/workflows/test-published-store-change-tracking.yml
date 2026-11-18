@@ -5,6 +5,7 @@ on:
     paths:
       - "scripts/track_published_changes.py"
       - "scripts/generate_drafts.py"
+      - "scripts/check_source_links.py"
       - "scripts/tests/**"
       - ".github/workflows/test-published-store-change-tracking.yml"
 
