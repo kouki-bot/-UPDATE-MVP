@@ -37,6 +37,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 .insight-chip.active{background:#315b43;color:white;border-color:#315b43}
 .insight-chip span{font-variant-numeric:tabular-nums;font-weight:800;margin-left:4px}
 .insight-empty{font-size:11px;color:var(--muted)}
+.recommendation-panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px;margin:14px 0}.recommendation-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.recommendation-card{background:#f7f7f3;border:1px solid var(--line);border-radius:8px;padding:10px;text-align:left;color:var(--ink)}.recommendation-card b{display:block;font-size:20px;font-variant-numeric:tabular-nums}.recommendation-card span{font-size:11px;color:var(--muted)}.recommendation-card.active{border-color:var(--green);background:#edf2ec;box-shadow:inset 0 0 0 1px var(--green)}.pill.rec-priority{background:#f8e8dc;color:#914516}.pill.rec-research{background:#fff0d9;color:#825718}.pill.rec-exclude{background:#f6e7e5;color:#93433d}.pill.rec-normal{background:#eef0eb;color:#59635a}@media(max-width:760px){.recommendation-grid{grid-template-columns:repeat(2,1fr)}.recommendation-panel{padding:11px}}
 @media(max-width:760px){.insight-grid{grid-template-columns:1fr}.review-insights{padding:11px}}
 .exportbar button{flex:1;min-width:130px}
 .footer-note{font-size:11px;color:var(--muted);margin-top:16px}
@@ -80,6 +81,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 <select id="areaFilter"><option value="">すべての市町</option></select>
 <select id="flagFilter"><option value="">すべての確認事項</option></select>
 <select id="priorityFilter"><option value="all">すべての確認区分</option><option value="要優先確認">要優先確認</option><option value="重複確認">重複確認</option><option value="情報不足・保留">情報不足・保留</option><option value="確認推奨">確認推奨</option><option value="基本項目あり・内容確認は必要">基本項目あり</option><option value="掲載済み店舗の変更候補">掲載済み店舗の変更候補</option></select>
+<select id="recommendationFilter"><option value="all">おすすめ分類：すべて</option><option value="priority">優先確認</option><option value="research">追加調査</option><option value="exclude">除外候補（要判断）</option><option value="normal">通常確認</option></select>
 </div>
 <section class="audit-panel" aria-label="除外候補の監査">
  <div class="list-head"><div><b>除外候補の再確認</b><div class="sub">除外された記事もここで確認できます。店舗情報の可能性があれば再調査用候補として書き出せます。</div></div><span class="sub" id="auditCount">未読込</span></div>
@@ -89,6 +91,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
  <div class="audit-actions"><button class="primary" id="exportRecheckBtn" disabled>選択した記事を再調査候補として書き出す</button></div>
  <p class="footer-note">書き出したJSONは自動登録・公開されません。内容を確認し、必要な記事だけを data/manual_candidates.json に追加して次回収集で再審査します。</p>
 </section>
+<section class="recommendation-panel" aria-label="審査おすすめ分類"><div class="list-head" style="padding:0 0 10px;border:0"><div><b>自動おすすめ分類（参考）</b><div class="sub">候補の確認順を整理する目安です。分類だけで承認・除外・公開状態は変更されません。</div></div></div><div class="recommendation-grid" id="recommendationSummary"><span class="insight-empty">候補データ読み込み後に表示</span></div></section>
 <div class="layout">
 <section class="list"><div class="list-head"><b>確認待ち・記事一覧</b><span class="sub" id="shownCount"></span></div><div class="list-items" id="items"><div class="empty">記事データを読み込んでいます。</div></div></section>
 <section class="detail"><div class="detail-head"><b>記事の確認</b><span class="sub" id="detailId"></span></div><div class="detail-body" id="detail"><div class="empty">左側の記事を選択してください。</div></div></section>
@@ -117,6 +120,27 @@ function saveLocal(){try{localStorage.setItem(localKey,JSON.stringify(approvals)
 function normalizeChangeReviewStore(data){data.published_change_reviews=data.published_change_reviews||{};data.reviewed_articles=data.reviewed_articles||{};Object.keys(data.reviewed_articles).forEach(function(id){var old=data.reviewed_articles[id]&&data.reviewed_articles[id].published_change_reviews;if(!old)return;Object.keys(old).forEach(function(key){var current=data.published_change_reviews[key]||{history:[]},incoming=old[key]||{history:[]};current.history=(Array.isArray(current.history)?current.history:[]).concat(Array.isArray(incoming.history)?incoming.history:[]);current.history.sort(function(a,b){return String(a.recorded_at||"").localeCompare(String(b.recorded_at||""));});if(!current.published_title)current.published_title=incoming.published_title||"";if(!current.published_source_url)current.published_source_url=incoming.published_source_url||"";data.published_change_reviews[key]=current;});delete data.reviewed_articles[id].published_change_reviews;});return data;}
 function loadLocal(){try{var raw=localStorage.getItem(localKey);if(raw){var x=JSON.parse(raw);if(x&&Array.isArray(x.approved_ids)&&x.reviewed_articles)approvals=normalizeChangeReviewStore(x);}}catch(e){}}
 function flagsFor(d){return Array.isArray(d.review_flags)?d.review_flags:[];}
+function recommendationFor(d){
+var title=String(d.title||"")+" "+String(d.content_type||"");
+var excludedWords=["宿泊施設","ホテル","旅館","民泊","ゲストハウス","観光施設","公共施設","図書館","市役所","イベント会場","祭り","花火大会","ポップアップストア"];
+var excluded=excludedWords.some(function(word){return title.indexOf(word)>=0;});
+if(excluded)return {key:"exclude",label:"除外候補",reason:"対象外方針に該当する可能性があります。店舗ニュースではないか人が確認してください。"};
+if(d.review_priority==="要優先確認"||changeCandidates(d).length>0)return {key:"priority",label:"優先確認",reason:"手動調査で優先指定、または掲載済み店舗の変更候補です。"};
+var checks=Array.isArray(d.source_link_checks)?d.source_link_checks:[];
+var broken=checks.some(function(x){return x.status!=="ok";});
+var missingDate=!String(d.event_date||"").trim();
+var uncertainArea=["要確認","未特定","不明"].some(function(word){return String(d.municipality_status||"").indexOf(word)>=0;});
+var flags=flagsFor(d);
+if(flags.length||broken||missingDate||uncertainArea||d.duplicate_review||d.review_priority==="情報不足・保留"||d.review_priority==="重複確認")return {key:"research",label:"追加調査",reason:flags.length?"確認フラグあり":broken?"出典リンクの状態確認が必要":missingDate?"店舗の動作日が未確認":uncertainArea?"店舗所在地の再確認が必要":d.duplicate_review?"重複候補の確認が必要":"追加確認項目があります。"};
+return {key:"normal",label:"通常確認",reason:"基本項目はそろっています。元記事・公式情報との照合は必要です。"};
+}
+function renderRecommendationSummary(){
+var counts={priority:0,research:0,exclude:0,normal:0};
+drafts.forEach(function(d){counts[recommendationFor(d).key]++;});
+var labels=[["priority","優先確認"],["research","追加調査"],["exclude","除外候補（要判断）"],["normal","通常確認"]];
+el("recommendationSummary").innerHTML=labels.map(function(item){return '<button type="button" class="recommendation-card '+(el("recommendationFilter").value===item[0]?"active":"")+'" data-recommendation-filter="'+item[0]+'"><b>'+counts[item[0]]+'件</b><span>'+item[1]+'</span></button>';}).join("");
+Array.prototype.forEach.call(el("recommendationSummary").querySelectorAll("[data-recommendation-filter]"),function(button){button.addEventListener("click",function(){var key=button.getAttribute("data-recommendation-filter");el("recommendationFilter").value=el("recommendationFilter").value===key?"all":key;renderList();});});
+}
 function changeCandidates(d){return Array.isArray(d.published_change_candidates)?d.published_change_candidates:[];}
 function changeReviewKey(x){var identity=x.published_id?String(x.published_id):[x.published_title||"unknown",x.municipality||""].join("@");return identity+"::"+String(x.possible_change||"status");}
 function changeReviewRecord(id,key){var all=approvals.published_change_reviews||{};return all[key]||{history:[]};}
@@ -194,12 +218,12 @@ downloadFile("manual_candidates_from_exclusion_audit.json",JSON.stringify({gener
 alert(rows.length+"件を再調査候補として書き出しました。内容を確認後、必要な記事だけ data/manual_candidates.json に追加してください。自動公開はされません。");
 }
 function renderList(){
-var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value,pf=el("priorityFilter").value;
+var q=el("search").value.trim().toLowerCase(),sf=el("statusFilter").value,af=el("areaFilter").value,pf=el("priorityFilter").value,rf=el("recommendationFilter").value;
 var ff=el("flagFilter").value;
 var rows=drafts.filter(function(d){
 var id=String(d.id),s=statusOf(id),priority=d.review_priority||"確認推奨",changes=changeCandidates(d),hay=[d.title,d.content_type,d.municipality,d.municipality_group,d.source_name,(d.area||[]).join(" "),d.body_excerpt].join(" ").toLowerCase();
 var areas=areaValuesFor(d);
-return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0)&&(pf==="all"||(pf==="掲載済み店舗の変更候補"?changes.length>0:priority===pf))&&(!ff||flagsFor(d).indexOf(ff)>=0);
+return (!q||hay.indexOf(q)>=0)&&(sf==="all"||s===sf)&&(!af||areas.indexOf(af)>=0)&&(rf==="all"||recommendationFor(d).key===rf)&&(pf==="all"||(pf==="掲載済み店舗の変更候補"?changes.length>0:priority===pf))&&(!ff||flagsFor(d).indexOf(ff)>=0);
 });
 rows.sort(function(a,b){
 var order={"要優先確認":0,"重複確認":1,"情報不足・保留":2,"確認推奨":3,"基本項目あり・内容確認は必要":4};
@@ -210,10 +234,10 @@ el("shownCount").textContent=rows.length+"件";
 if(!rows.length){el("items").innerHTML='<div class="empty">条件に一致する記事はありません。</div>';return;}
 el("items").innerHTML=rows.map(function(d){
 var id=String(d.id),s=statusOf(id),cls=s==="確認済み"?"ok":s==="要修正"?"fix":s==="対象外"?"out":"";
-return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span>'+(changeCandidates(d).length?'<span class="pill change">掲載済み変更候補 '+changeCandidates(d).length+'件</span>':'')+(changeCandidates(d).some(function(x){return changeReviewCaution(x).falsePositive;})?'<span class="pill fix">過去に誤検出あり・再確認</span>':'')+'<span class="pill '+(d.review_priority==="要優先確認"?"out":d.review_priority==="重複確認"?"fix":"")+'">'+esc(d.review_priority||"確認推奨")+'</span>'+'<span>'+esc(d.content_type||"種別要確認")+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
+return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id)+'"><span class="item-title">'+esc(d.title||"タイトル未設定")+'</span><span class="item-meta"><span class="pill '+cls+'">'+esc(s)+'</span>'+(changeCandidates(d).length?'<span class="pill change">掲載済み変更候補 '+changeCandidates(d).length+'件</span>':'')+(changeCandidates(d).some(function(x){return changeReviewCaution(x).falsePositive;})?'<span class="pill fix">過去に誤検出あり・再確認</span>':'')+'<span class="pill '+(d.review_priority==="要優先確認"?"out":d.review_priority==="重複確認"?"fix":"")+'">'+esc(d.review_priority||"確認推奨")+'</span>'+'<span class="pill rec-'+recommendationFor(d).key+'" title="'+esc(recommendationFor(d).reason)+'">'+esc(recommendationFor(d).label)+'</span>'+'<span>'+esc(d.content_type||"種別要確認")+'</span><span>'+esc(d.municipality||d.municipality_group||"地域未特定")+'</span><span>'+esc(dateOnly(d.published_date))+'</span></span></button>';
 }).join("");
 Array.prototype.forEach.call(el("items").querySelectorAll("[data-id]"),function(b){b.addEventListener("click",function(){selectedId=b.getAttribute("data-id");renderList();renderDetail();});});
-updateStats();renderReviewInsights();
+updateStats();renderReviewInsights();renderRecommendationSummary();
 }
 function renderDetail(){
 var d=drafts.find(function(x){return String(x.id)===selectedId;});
@@ -447,7 +471,7 @@ alert("バックアップを復元しました。承認記事 "+approvals.approv
 reader.readAsText(file);e.target.value="";
 });
 el("resetBtn").addEventListener("click",function(){if(!confirm("この端末に保存した編集内容を破棄し、リポジトリの承認データを再読み込みしますか？"))return;localStorage.removeItem(localKey);location.reload();});
-["search","statusFilter","areaFilter","priorityFilter","flagFilter"].forEach(function(id){el(id).addEventListener("input",renderList);el(id).addEventListener("change",renderList);});
+["search","statusFilter","areaFilter","priorityFilter","flagFilter","recommendationFilter"].forEach(function(id){el(id).addEventListener("input",renderList);el(id).addEventListener("change",renderList);});
 function mergeDraftRows(rows,sourceLabel){
 var known={};drafts.forEach(function(row){known[String(row.id)]=true;});
 var added=0;
