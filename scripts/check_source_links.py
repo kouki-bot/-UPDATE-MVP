@@ -176,15 +176,15 @@ def main():
 
     # 確認結果を候補JSONに保持し、審査画面でも出典単位で参照できるようにする。
     INPUT.write_text(
-        json.dumps(data, ensure_ascii=False, indent=2) + '\\n',
+        json.dumps(data, ensure_ascii=False, indent=2) + '\n',
         encoding='utf-8',
     )
 
     summary = os.environ.get('GITHUB_STEP_SUMMARY')
     if summary:
         with open(summary, 'a', encoding='utf-8') as handle:
-            handle.write('\\n'.join(lines) + '\\n')
-    print('\\n'.join(lines))
+            handle.write('\n'.join(lines) + '\n')
+    print('\n'.join(lines))
 
 
 if __name__ == '__main__':
