@@ -64,6 +64,14 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 </section>
 <div id="backupReminder" class="notice" role="status" aria-live="polite" style="display:none;margin:14px 0"></div>
 <section class="private-sync" aria-label="非公開承認データ同期"><b>非公開リポジトリへ承認データを保存</b><p class="sub">GitHubのFine-grained personal access tokenを一時入力して同期します。トークンはこの画面・ブラウザに保存せず、GitHub API以外へ送信しません。権限は yamaguchi-review-private の Contents: Read and write のみにしてください。</p><div class="private-sync-grid"><div><label class="sub" for="privateSyncToken">GitHubトークン（同期時のみ入力）</label><input id="privateSyncToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..."></div><button class="secondary" id="privateLoadBtn" type="button">非公開データを読み込む</button><button class="primary" id="privateSaveBtn" type="button">非公開データへ保存</button></div><div class="private-sync-status" id="privateSyncStatus" role="status" aria-live="polite">未同期。最初に非公開データを読み込むと、既存の承認履歴を保持した状態で編集できます。</div></section>
+<section class="private-sync" aria-label="公開処理ステータス">
+ <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>自動公開の稼働状況</b><p class="sub">GitHub Actionsの最新実行結果と公開記事数を表示します。ここから公開操作や承認変更は行いません。</p></div><button class="secondary" id="refreshPublicationStatusBtn" type="button">状況を更新</button></div>
+ <div class="stats" style="grid-template-columns:repeat(2,1fr);margin:10px 0">
+  <div class="stat"><b id="publicationRunStatus" style="font-size:16px">確認中</b><span>最新の自動公開処理</span></div>
+  <div class="stat"><b id="publicArticleCount">-</b><span>現在の公開記事数</span></div>
+ </div>
+ <div class="private-sync-status" id="publicationRunDetails" role="status" aria-live="polite">GitHub Actionsの状態を取得しています。</div>
+</section>
 <div class="exportbar"><button class="secondary" id="reloadPublicCandidatesBtn">公開候補を再読み込み</button><button class="primary" id="draftImportBtn">Actions候補を追加読み込み</button><button class="secondary" id="backupBtn">審査データをバックアップ</button><button class="plain" id="exportBtn">公開用承認データを書き出す</button><button class="plain" id="importBtn">バックアップを復元</button><button class="plain" id="resetBtn">端末内の編集を破棄</button><input type="file" id="draftFile" accept="application/json,.json" hidden><input type="file" id="importFile" accept="application/json,.json" hidden></div>
 <div id="candidateLoadStatus" class="sub" role="status" aria-live="polite">公開候補の読み込み準備中</div>
 <div class="toolbar">
@@ -444,6 +452,35 @@ row._review_source=sourceLabel;drafts.push(row);known[id]=true;added++;
 });
 return added;
 }
+function formatRunDate(value){
+ try{return new Intl.DateTimeFormat("ja-JP",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Tokyo"}).format(new Date(value));}
+ catch(e){return String(value||"日時不明");}
+}
+async function refreshPublicationStatus(){
+ var status=el("publicationRunStatus"),count=el("publicArticleCount"),details=el("publicationRunDetails");
+ var button=el("refreshPublicationStatusBtn");if(button)button.disabled=true;
+ status.textContent="確認中";details.textContent="GitHub Actionsと公開データを確認しています。";
+ try{
+  var results=await Promise.all([
+   fetch("https://api.github.com/repos/local-life-lab/-UPDATE-MVP/actions/workflows/publish-approved.yml/runs?per_page=1",{headers:{Accept:"application/vnd.github+json"},cache:"no-store"}),
+   fetch("../data/published.json",{cache:"no-store"})
+  ]);
+  if(!results[0].ok)throw new Error("Actions情報 HTTP "+results[0].status);
+  if(!results[1].ok)throw new Error("公開データ HTTP "+results[1].status);
+  var runs=await results[0].json(),published=await results[1].json(),run=(runs.workflow_runs||[])[0];
+  count.textContent=Array.isArray(published.articles)?published.articles.length:"-";
+  if(!run){status.textContent="実行履歴なし";details.textContent="自動公開ワークフローの実行履歴が見つかりません。";return;}
+  var done=run.status==="completed",ok=done&&run.conclusion==="success";
+  status.textContent=ok?"成功":done?"要確認":run.status==="in_progress"||run.status==="queued"?"実行中":"状態確認";
+  status.style.color=ok?"#28583a":done?"#93433d":"#825718";
+  var link=document.createElement("a");link.href=run.html_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="GitHub Actionsで詳細を見る";link.style.color="#315b43";
+  details.textContent="最終実行："+formatRunDate(run.updated_at||run.created_at)+" ／ 結果："+(run.conclusion||run.status)+" ／ ";
+  details.appendChild(link);
+ }catch(error){
+  status.textContent="取得できません";count.textContent="-";details.textContent="状態を取得できませんでした："+error.message+"。GitHub Actionsから直接確認してください。";
+ }finally{if(button)button.disabled=false;}
+}
+el("refreshPublicationStatusBtn").addEventListener("click",refreshPublicationStatus);
 async function loadPublicCandidates(){
 var status=el("candidateLoadStatus");
 status.textContent="公開候補を読み込み中…";
@@ -464,7 +501,7 @@ status.textContent="公開候補を自動読込できませんでした。Action
 }
 el("reloadPublicCandidatesBtn").addEventListener("click",loadPublicCandidates);
 function init(){
-loadLocal();populateAreas();renderList();updateBackupReminder();loadPublicCandidates();
+loadLocal();populateAreas();renderList();updateBackupReminder();loadPublicCandidates();refreshPublicationStatus();
 if(!drafts.length){el("items").innerHTML='<div class="empty">公開候補またはActions成果物を読み込んでください。</div>';}
 }
 init();
