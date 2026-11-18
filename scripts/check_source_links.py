@@ -89,6 +89,43 @@ def collect_urls(drafts):
     return [source['url'] for source in collect_sources(drafts)]
 
 
+
+def check_sources(sources, checker=check_url):
+    """全出典を確認し、URLごとの結果を返す。"""
+    results = {}
+    for source in sources:
+        url = source['url']
+        if url not in results:
+            results[url] = checker(url)
+    return results
+
+
+def annotate_draft_source_checks(drafts, results):
+    """各候補に出典ごとのリンク確認結果を付与する。"""
+    for draft in drafts:
+        if not isinstance(draft, dict):
+            continue
+        checks = []
+        for source in collect_sources([draft]):
+            result = results.get(source['url'])
+            if result is None:
+                status = 'not_checked_limit'
+                http_status = None
+                error = '確認上限を超過'
+            else:
+                status = result.get('status', 'inconclusive')
+                http_status = result.get('http_status')
+                error = result.get('error')
+            checks.append({
+                'url': source['url'],
+                'source_name': source['source_name'],
+                'status': status,
+                'http_status': http_status,
+                'error': error,
+            })
+        draft['source_link_checks'] = checks
+    return drafts
+
 def main():
     data = json.loads(INPUT.read_text(encoding='utf-8'))
     drafts = data.get('drafts', [])
@@ -96,15 +133,11 @@ def main():
         raise SystemExit('Invalid drafts schema: drafts must be an array')
 
     sources = collect_sources(drafts)
-    results = []
-    for source in sources:
-        result = check_url(source['url'])
-        result['source_name'] = source['source_name']
-        result['title'] = source['title']
-        results.append(result)
+    results = check_sources(sources)
+    annotate_draft_source_checks(drafts, results)
 
-    broken = [x for x in results if x['status'] == 'broken']
-    uncertain = [x for x in results if x['status'] == 'inconclusive']
+    broken = [x for x in results.values() if x['status'] == 'broken']
+    uncertain = [x for x in results.values() if x['status'] == 'inconclusive']
     lines = [
         '## 出典URLリンク確認',
         '',
@@ -118,30 +151,40 @@ def main():
     if broken:
         lines += ['### リンク切れの可能性が高いURL（人による確認が必要）', '']
         lines += [
-            f"- HTTP {x['http_status']} [{x.get('source_name') or '出典名なし'}] "
-            f"{x.get('title') or 'タイトルなし'}: {x['url']}"
+            f"- HTTP {x['http_status']}: {x['url']}"
             for x in broken
         ]
 
     if uncertain:
         lines += ['', '### アクセス制限・一時エラー等で確認できなかったURL', '']
         lines += [
-            f"- {x.get('http_status', x.get('error', '不明'))} "
-            f"[{x.get('source_name') or '出典名なし'}] "
-            f"{x.get('title') or 'タイトルなし'}: {x['url']}"
+            f"- {x.get('http_status', x.get('error', '不明'))}: {x['url']}"
             for x in uncertain
         ]
 
+    unchecked = sum(
+        1 for draft in drafts if isinstance(draft, dict)
+        for check in draft.get('source_link_checks', [])
+        if check.get('status') == 'not_checked_limit'
+    )
     lines += [
         '',
+        f'- 上限超過で未確認: {unchecked}件',
         'この検査は候補の公開可否を判断しません。404/410も自動削除せず、人による確認対象にします。',
         'アクセス制限・一時エラーはリンク切れと断定せず、確認不能として扱います。',
     ]
+
+    # 確認結果を候補JSONに保持し、審査画面でも出典単位で参照できるようにする。
+    INPUT.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2) + '\\n',
+        encoding='utf-8',
+    )
+
     summary = os.environ.get('GITHUB_STEP_SUMMARY')
     if summary:
         with open(summary, 'a', encoding='utf-8') as handle:
-            handle.write('\n'.join(lines) + '\n')
-    print('\n'.join(lines))
+            handle.write('\\n'.join(lines) + '\\n')
+    print('\\n'.join(lines))
 
 
 if __name__ == '__main__':
