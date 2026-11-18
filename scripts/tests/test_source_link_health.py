@@ -15,6 +15,43 @@ class SourceLinkHealthTests(unittest.TestCase):
         rows = [{'source_url': 'https://example.jp/a'}, {'source_url': 'https://example.jp/a'}, {'source_url': 'javascript:alert(1)'}, {'source_url': 'http://example.jp/b'}]
         self.assertEqual(module.collect_urls(rows), ['https://example.jp/a', 'http://example.jp/b'])
 
+    def test_check_sources_deduplicates_urls(self):
+        sources = [
+            {"url": "https://example.jp/a"},
+            {"url": "https://example.jp/a"},
+            {"url": "https://example.jp/b"},
+        ]
+        calls = []
+        def checker(url):
+            calls.append(url)
+            return {"url": url, "status": "ok", "http_status": 200}
+        results = module.check_sources(sources, checker=checker)
+        self.assertEqual(calls, ["https://example.jp/a", "https://example.jp/b"])
+        self.assertEqual(len(results), 2)
+
+    def test_annotates_each_candidate_with_link_status(self):
+        drafts = [{
+            "title": "店舗A",
+            "source_url": "https://example.jp/main",
+            "source_name": "記事",
+            "source_urls": [{"source_name": "公式", "url": "https://example.jp/official"}],
+        }]
+        results = {
+            "https://example.jp/main": {"url": "https://example.jp/main", "status": "ok", "http_status": 200},
+            "https://example.jp/official": {"url": "https://example.jp/official", "status": "broken", "http_status": 404},
+        }
+        module.annotate_draft_source_checks(drafts, results)
+        checks = drafts[0]["source_link_checks"]
+        self.assertEqual([x["status"] for x in checks], ["ok", "broken"])
+        self.assertEqual(checks[1]["http_status"], 404)
+
+    def test_missing_result_is_marked_not_checked_not_broken(self):
+        drafts = [{"source_url": "https://example.jp/not-checked"}]
+        module.annotate_draft_source_checks(drafts, {})
+        check = drafts[0]["source_link_checks"][0]
+        self.assertEqual(check["status"], "not_checked_limit")
+        self.assertIsNone(check["http_status"])
+
     def test_404_is_broken(self):
         def opener(*args, **kwargs):
             raise HTTPError('https://example.jp/x', 404, 'Not Found', {}, None)
