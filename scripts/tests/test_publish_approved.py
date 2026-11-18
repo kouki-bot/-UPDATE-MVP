@@ -10,10 +10,12 @@ class Tests(unittest.TestCase):
  def write(self,n,d): (self.base/"data"/n).write_text(json.dumps(d,ensure_ascii=False),encoding="utf-8")
  def run_script(self): return subprocess.run([sys.executable,str(self.base/"scripts/publish_approved.py")],capture_output=True,text=True)
  def draft(self,**kw):
-  d={"id":"abc","title":"山口店開店","source_url":"https://example.com","published_date":"2026-10-28","municipality":"","status":"未確認・公開禁止","freshness":"直近30日","review_flags":["市町候補が複数"],"body_excerpt":"抜粋"}
+  d={"id":"abc","title":"山口店開店","source_url":"https://example.com","source_urls":[{"url":"https://example.com"}],"source_link_checks":[{"url":"https://example.com","status":"ok","http_status":200}],"content_type":"店舗・商業施設","published_date":"2026-10-28","municipality":"","status":"未確認・公開禁止","freshness":"直近30日","review_flags":["市町候補が複数"],"body_excerpt":"抜粋"}
   d.update(kw); return d
  def review(self,**kw):
-  d={"review_status":"確認済み","municipality":"山口市","published_date":"2026-10-28","event_date":"2026-10-30","business_status":"営業中","reviewed_at":"2026-10-29T10:00:00+09:00","reviewer_checked_source":True,"review_checks":{"store_name_verified":True,"municipality_verified":True,"published_date_verified":True,"event_date_verified":True,"business_status_verified":True,"source_url_verified":True},"cleared_review_flags":["市町候補が複数"],"body":"確認済み本文"}
+  from datetime import datetime, timezone, timedelta
+  now=datetime.now(timezone(timedelta(hours=9))).isoformat()
+  d={"review_status":"確認済み","municipality":"山口市","published_date":"2026-10-28","event_date":"2026-10-30","business_status":"営業中","reviewed_at":now,"reviewer_checked_source":True,"review_checks":{"store_name_verified":True,"municipality_verified":True,"published_date_verified":True,"event_date_verified":True,"business_status_verified":True,"source_url_verified":True},"cleared_review_flags":["市町候補が複数"],"body":"確認済み本文"}
   d.update(kw); return d
  def setup(self,approved=True,review=None,draft=None,published=None):
   self.write("drafts.json",{"drafts":[draft or self.draft()]})
@@ -46,6 +48,32 @@ class Tests(unittest.TestCase):
   result=self.run_script()
   self.assertEqual(result.returncode,0,result.stderr)
   self.assertEqual(self.published()["articles"][0]["business_status"],"リニューアル予定")
+ def test_manual_hold_is_blocked_even_if_approved(self):
+  self.setup(draft=self.draft(manual_hold=True))
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertEqual(self.published()["articles"],[])
+  self.assertIn("manual_hold=true",result.stdout)
+ def test_non_store_category_is_blocked_even_if_approved(self):
+  self.setup(draft=self.draft(content_type="その他施設・サービス（要確認）"))
+  self.run_script()
+  self.assertEqual(self.published()["articles"],[])
+ def test_missing_source_link_checks_blocks_new_publication(self):
+  self.setup(draft=self.draft(source_link_checks=[]))
+  self.run_script()
+  self.assertEqual(self.published()["articles"],[])
+ def test_inconclusive_source_link_blocks_new_publication(self):
+  self.setup(draft=self.draft(source_link_checks=[{"url":"https://example.com","status":"inconclusive"}]))
+  self.run_script()
+  self.assertEqual(self.published()["articles"],[])
+ def test_missing_additional_source_check_blocks_new_publication(self):
+  self.setup(draft=self.draft(source_urls=[{"url":"https://example.com"},{"url":"https://second.example.com"}]))
+  self.run_script()
+  self.assertEqual(self.published()["articles"],[])
+ def test_stale_human_review_blocks_new_publication(self):
+  self.setup(review=self.review(reviewed_at="2026-10-01T10:00:00+09:00"))
+  self.run_script()
+  self.assertEqual(self.published()["articles"],[])
  def test_lodging_is_blocked_even_if_approved(self):
   self.setup(draft=self.draft(content_type="宿泊施設"))
   self.run_script()
