@@ -1164,6 +1164,45 @@ def add_manual_candidates(drafts, manual_candidates, published_articles=None):
             continue
         if not normalize_categories(candidate):
             continue
+
+        # URLが異なっても、同じ店舗・同じ動作日・同じ市町の案件なら既存候補へ出典を追加する。
+        # 類似度だけでの統合は行わず、既存の保守的な同一案件判定を再利用する。
+        matching_draft = next(
+            (row for row in drafts if same_store_news_candidate(candidate, row)),
+            None,
+        )
+        if matching_draft:
+            sources = matching_draft.get("source_urls", [])
+            if not isinstance(sources, list):
+                sources = []
+            source_entries = list(sources)
+            for entry in candidate.get("source_urls", []):
+                if not isinstance(entry, dict):
+                    continue
+                entry_url = normalize_url(entry.get("url", ""))
+                if entry_url and all(
+                    normalize_url(x.get("url", "")) != entry_url
+                    for x in source_entries if isinstance(x, dict)
+                ):
+                    source_entries.append(entry)
+            if all(
+                normalize_url(x.get("url", "")) != source_url
+                for x in source_entries if isinstance(x, dict)
+            ):
+                source_entries.append({
+                    "source_name": candidate.get("source_name", ""),
+                    "url": source_url,
+                })
+            matching_draft["source_urls"] = source_entries
+            matching_draft["duplicate_sources_count"] = len(source_entries)
+            matching_draft["manual_duplicate_sources_added"] = True
+            seen_urls.add(source_url)
+            continue
+
+        # 公開済み記事と同一案件の手動候補は再掲載候補にしない。
+        if any(same_store_news_candidate(candidate, row) for row in published_articles):
+            continue
+
         published_date = parse_date(candidate.get("published_date", ""))
         if published_date:
             age_days = (now_jst().date() - published_date.date()).days
@@ -1182,7 +1221,6 @@ def add_manual_candidates(drafts, manual_candidates, published_articles=None):
         seen_urls.add(source_url)
         added += 1
     return added
-
 
 def load_manual_candidates():
     data = load_json(MANUAL_FILE)
