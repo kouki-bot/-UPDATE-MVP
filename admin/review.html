@@ -44,7 +44,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 .private-sync{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin:14px 0}.private-sync-grid{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:end}.private-sync input{width:100%;min-height:44px;border:1px solid #d8d9d0;border-radius:7px;padding:10px;font:inherit}.private-sync-status{font-size:12px;color:var(--muted);margin-top:8px;overflow-wrap:anywhere}@media(max-width:760px){.private-sync-grid{grid-template-columns:1fr}.private-sync-grid button{width:100%}}
 @media(max-width:760px){header{position:static}.stats{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:1fr 1fr}.toolbar input{grid-column:1/-1}.layout{grid-template-columns:1fr}.list-items{max-height:38vh}.detail-body{padding:13px}.actions{grid-template-columns:1fr}.actions .approve{grid-column:auto}}
 </style>
-<style>.photo-review{margin:18px 0;padding:16px;border:1px solid #d9e0d6;border-radius:8px;background:#f7f9f5}.photo-review>b{display:block;margin-bottom:8px}.photo-review>label{display:flex;gap:8px;align-items:center;margin:10px 0;font-weight:700}.photo-review .field{margin:10px 0}.photo-review input[type=checkbox]{width:auto}</style></head>
+<style>.photo-review{margin:18px 0;padding:16px;border:1px solid #d9e0d6;border-radius:8px;background:#f7f9f5}.photo-review>b{display:block;margin-bottom:8px}.photo-review>label{display:flex;gap:8px;align-items:center;margin:10px 0;font-weight:700}.photo-review .field{margin:10px 0}.photo-review input[type=checkbox]{width:auto} .publication-readiness{border:1px solid var(--line);border-radius:9px;padding:12px;margin:12px 0;background:#fbfbf8}.publication-readiness h3{font-size:13px;margin:0 0 5px}.readiness-summary{font-weight:800;font-size:13px;margin:5px 0 9px}.readiness-summary.ok{color:#28583a}.readiness-summary.hold{color:#93433d}.readiness-row{display:grid;grid-template-columns:20px minmax(0,1fr);gap:7px;padding:6px 0;border-top:1px solid #e8e8df;font-size:11px}.readiness-row b{display:block;font-size:12px}.readiness-row small{display:block;color:var(--muted);font-size:10px;overflow-wrap:anywhere}.readiness-mark{font-weight:900}.readiness-mark.ok{color:#28583a}.readiness-mark.no{color:#93433d}.readiness-note{font-size:10px;color:var(--muted);margin-top:8px}</style></head>
 <body>
 <header><div class="brand">YAMAGUCHI LOCAL UPDATE<small>EDITORIAL REVIEW DESK / 記事確認・承認管理</small></div></header>
 <main>
@@ -102,7 +102,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 (function(){
 "use strict";
 var drafts=[],excludedAudit=[],selectedExcluded={},approvals={description:"人が元記事を確認した記事だけ公開許可する。",approved_ids:[],reviewed_articles:{},published_change_reviews:{},instructions:{}};
-var selectedId="",localKey="ylu_review_work_v1";
+var selectedId="",localKey="ylu_review_work_v1",publishedArticleIds={};
 var REVIEW_CHECKS=[
  {key:"store_name_verified",label:"店舗名が元記事・公式情報と一致"},
  {key:"municipality_verified",label:"店舗所在地（市町名）が一致"},
@@ -239,6 +239,67 @@ return '<button class="item '+(id===selectedId?"active":"")+'" data-id="'+esc(id
 Array.prototype.forEach.call(el("items").querySelectorAll("[data-id]"),function(b){b.addEventListener("click",function(){selectedId=b.getAttribute("data-id");renderList();renderDetail();});});
 updateStats();renderReviewInsights();renderRecommendationSummary();
 }
+
+function readinessDateValid(value){
+ var text=String(value||"").trim();if(!text)return false;
+ var parsed=Date.parse(text);return Number.isFinite(parsed);
+}
+function readinessRow(label,ok,detail){
+ return '<div class="readiness-row"><span class="readiness-mark '+(ok?'ok':'no')+'">'+(ok?'✓':'!')+'</span><div><b>'+esc(label)+'：'+(ok?'クリア':'未達')+'</b><small>'+esc(detail||'')+'</small></div></div>';
+}
+function renderPublicationReadiness(d,r){
+ r=r||{};var id=String(d.id||''),existing=publishedArticleIds[id]===true;
+ var headline=String(r.headline||d.suggested_headline||d.title||'').trim();
+ var municipality=String(r.municipality||d.municipality||'').trim();
+ var publishedDate=String(r.published_date||d.published_date||'').trim();
+ var eventDate=String(r.event_date||d.event_date||'').trim();
+ var businessStatus=String(r.business_status||'').trim();
+ var sourceUrl=String(r.source_url||d.source_url||'').trim();
+ var requiredFields=[['掲載タイトル',headline],['市町名',municipality],['記事公開日',publishedDate],['店舗動作日',eventDate],['現在の状態',businessStatus],['元記事URL',sourceUrl]];
+ var missing=requiredFields.filter(function(x){return !x[1];}).map(function(x){return x[0];});
+ var flags=flagsFor(d).filter(function(flag){return (r.cleared_review_flags||[]).indexOf(flag)<0;});
+ var checks=r.review_checks||{},checkKeys=REVIEW_CHECKS.filter(function(c){return checks[c.key]===true;}).length;
+ var reviewTime=Date.parse(String(r.reviewed_at||'')),age=(Date.now()-reviewTime)/1000,reviewRecent=Number.isFinite(reviewTime)&&age>=0&&age<=7*24*60*60;
+ var sourceChecks=Array.isArray(d.source_link_checks)?d.source_link_checks:[];
+ var sourceUrls=[String(d.source_url||'').trim()];
+ if(Array.isArray(d.source_urls))d.source_urls.forEach(function(row){if(row&&row.url)sourceUrls.push(String(row.url).trim());});
+ sourceUrls=sourceUrls.filter(function(url,index,list){return url&&list.indexOf(url)===index;});
+ var linkMap={};sourceChecks.forEach(function(row){if(row&&row.url)linkMap[String(row.url).trim()]=row.status;});
+ var linksOk=sourceUrls.length>0&&sourceUrls.every(function(url){return linkMap[url]==='ok';});
+ var allowedStatuses=['開店予定','営業中','閉店予定','閉店済み','一時休業中','移転予定','移転済み','リニューアル予定','リニューアル済み'];
+ var categoryOk=d.content_type==='店舗・商業施設';
+ var manualHold=d.manual_hold===true;
+ var duplicateOk=d.duplicate_review!=='重複の可能性・要確認'||r.duplicate_resolution==='別記事として掲載';
+ var freshnessOk=['未来日付・要確認','90日より前'].indexOf(d.freshness)<0;
+ var statusOk=allowedStatuses.indexOf(businessStatus)>=0;
+ var datesOk=readinessDateValid(publishedDate)&&readinessDateValid(eventDate.slice(0,10));
+ var urlOk=/^https?:\/\//i.test(sourceUrl);
+ var reviewOk=r.review_status==='確認済み';
+ var sixOk=checkKeys===REVIEW_CHECKS.length;
+ var reviewerOk=!!r.reviewed_at&&r.reviewer_checked_source===true;
+ var gates=[
+  ['対象カテゴリ',categoryOk,'content_type：'+String(d.content_type||'未設定')+'（店舗・商業施設のみ）'],
+  ['追加保留フラグ',!manualHold,manualHold?'manual_hold=true。人による追加確認が必要':'manual_holdによる保留なし'],
+  ['必須情報',missing.length===0,missing.length?'不足：'+missing.join('、'):'タイトル・市町・日付・状態・元記事URLあり'],
+  ['未解消確認フラグ',flags.length===0,flags.length?'未解消：'+flags.join('、'):'未解消フラグなし'],
+  ['重複判定',duplicateOk,duplicateOk?'重複保留なし、または別記事として掲載の確認済み':'重複候補の掲載判断が未完了'],
+  ['記事の鮮度',freshnessOk,freshnessOk?'未来日付・90日超の保留条件に該当しない':'日付または鮮度の再確認が必要'],
+  ['人による承認',reviewOk,'審査状態：'+String(r.review_status||'未確認')],
+  ['最終確認日時',existing?!!r.reviewed_at:reviewRecent,Number.isFinite(reviewTime)?'最終確認：'+new Date(reviewTime).toLocaleString('ja-JP')+(existing?'（既存記事のため7日条件は対象外）':''):'確認日時が記録されていない'],
+  ['出典URL確認',existing?true:linksOk,existing?'既存公開記事のため新規公開時のリンク確認条件は対象外':(linksOk?'必要な出典URLはすべてHTTP確認OK':'主出典・追加出典の全URLで正常確認が必要')],
+  ['照合チェック6項目',sixOk,checkKeys+'/'+REVIEW_CHECKS.length+'項目完了'],
+  ['承認記録',reviewerOk,reviewerOk?'確認日時と元記事確認記録あり':'確認日時または元記事確認記録が不足'],
+  ['日付形式',datesOk,datesOk?'記事公開日・店舗動作日は有効な日付':'記事公開日または店舗動作日を再確認'],
+  ['店舗状態',statusOk,'現在の状態：'+(businessStatus||'未選択')],
+  ['元記事URL形式',urlOk,urlOk?'HTTP(S) URL':'有効なHTTP(S) URLが必要']
+ ];
+ if(!existing)gates.push(['最終確認から7日以内',reviewRecent,reviewRecent?'7日以内に人が確認':'新規記事は最終確認から7日以内である必要があります']);
+ var passed=gates.filter(function(g){return g[1];}).length,allOk=passed===gates.length;
+ var html='<section class="publication-readiness" aria-label="公開可否チェック"><h3>公開可否チェック</h3><div class="sub">'+(existing?'既存公開記事の再確認':'新規公開候補')+' ／ 公開処理と同じ条件を目安に判定</div><div class="readiness-summary '+(allOk?'ok':'hold')+'">'+(allOk?'公開条件クリア':'公開保留・条件未達')+'　'+passed+'/'+gates.length+'項目</div>';
+ gates.forEach(function(g){html+=readinessRow(g[0],g[1],g[2]);});
+ return html+'<div class="readiness-note">この表示は審査補助です。承認・公開状態は変更せず、最終的な公開判定はGitHub Actions側でも再実行されます。</div></section>';
+}
+
 function renderDetail(){
 var d=drafts.find(function(x){return String(x.id)===selectedId;});
 if(!d){el("detail").innerHTML='<div class="empty">左側の記事を選択してください。</div>';el("detailId").textContent="";return;}
@@ -263,7 +324,7 @@ duplicateHtml='<div class="flags"><b>重複候補の確認</b><p>同じ店舗・
 }
 el("detailId").textContent="ID: "+id;
 el("detail").innerHTML=
-'<div class="sub">現在の状態：<b>'+esc(status)+'</b>　／　種別：'+esc(d.content_type||"要確認")+'　／　情報元：'+esc(d.source_name||"未設定")+'</div>'+changeHtml+
+'<div class="sub">現在の状態：<b>'+esc(status)+'</b>　／　種別：'+esc(d.content_type||"要確認")+'　／　情報元：'+esc(d.source_name||"未設定")+'</div>'+renderPublicationReadiness(d,r)+changeHtml+
 '<div class="source-box"><b>元記事リンク（必ず開いて確認）</b>'+sourceHtml+'</div>'+
 '<div class="excerpt"><b>自動取得した本文抜粋</b><br>'+esc(d.body_excerpt||"本文抜粋なし。元記事を直接確認してください。")+'</div>'+
 '<div class="field"><label for="headline">掲載タイトル（確認・必要なら修正）</label><input id="headline" value="'+esc(r.headline||d.suggested_headline||d.title||"")+'"></div>'+
@@ -498,7 +559,7 @@ async function refreshPublicationStatus(){
   if(!results[0].ok)throw new Error("Actions情報 HTTP "+results[0].status);
   if(!results[1].ok)throw new Error("公開データ HTTP "+results[1].status);
   var runs=await results[0].json(),published=await results[1].json(),run=(runs.workflow_runs||[])[0];
-  count.textContent=Array.isArray(published.articles)?published.articles.length:"-";
+  count.textContent=Array.isArray(published.articles)?published.articles.length:"-";publishedArticleIds={};(published.articles||[]).forEach(function(article){if(article&&article.id)publishedArticleIds[String(article.id)]=true;});if(selectedId)renderDetail();
   if(!run){status.textContent="実行履歴なし";details.textContent="自動公開ワークフローの実行履歴が見つかりません。";return;}
   var done=run.status==="completed",ok=done&&run.conclusion==="success";
   status.textContent=ok?"成功":done?"要確認":run.status==="in_progress"||run.status==="queued"?"実行中":"状態確認";
