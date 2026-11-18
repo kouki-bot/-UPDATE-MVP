@@ -42,6 +42,16 @@ def store_names(article):
             if len(value) >= 2:
                 names.add(value)
 
+    # Preserve a full store name when the brand and branch suffix are separated
+    # by whitespace, as in "長崎ちゃんめん 山口小郡店".
+    store_chars = r"A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&"
+    for text in (title, body):
+        for match in re.finditer(
+            rf"([{store_chars}]{{2,24}})\\s+([{store_chars}]{{2,12}}店)",
+            str(text or ""),
+        ):
+            names.add(match.group(1) + match.group(2))
+
     # The generic extractor may return both a full brand/store name and its
     # shorter branch suffix (e.g. "Trial Yamaguchi-Ogori Store" and
     # "Yamaguchi-Ogori Store"). Keep only the longest candidates within this
