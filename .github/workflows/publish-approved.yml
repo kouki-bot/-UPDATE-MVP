@@ -2,10 +2,7 @@ name: Publish Manually Approved Articles
 
 on:
   workflow_dispatch:
-  # Private approvals are checked periodically; only records passing all
-  # publication checks in publish_approved.py can reach the public site.
-  schedule:
-    - cron: "7,37 * * * *"
+  # 定期実行は安全条件のマージ・検証後に再開する。
   push:
     branches: [main]
     paths:
