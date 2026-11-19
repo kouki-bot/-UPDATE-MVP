@@ -33,6 +33,34 @@ class ReviewFlagTests(unittest.TestCase):
         module.annotate_review_flags(drafts)
         self.assertNotIn("本文で店舗動作を確認できず", drafts[0]["review_flags"])
 
+    def test_title_body_movement_category_mismatch_is_held(self):
+        drafts = [{
+            "id": "mismatch", "title": "カフェ青空が閉店",
+            "category": ["閉店"], "source_url": "https://example.com/story",
+            "source_urls": [{"url": "https://example.com/story"}],
+            "body_excerpt": "カフェ青空は11月に新規オープンしました。",
+            "published_date": "2026-11-01", "event_date": "2026-11-01",
+            "municipality": "宇部市", "municipality_candidates": ["宇部市"],
+            "freshness": "直近30日", "status": "x",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertIn("見出しと本文の店舗動作が不一致", drafts[0]["review_flags"])
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
+    def test_title_body_matching_movement_category_is_not_flagged(self):
+        drafts = [{
+            "id": "matching", "title": "カフェ青空が閉店",
+            "category": ["閉店"], "source_url": "https://example.com/story",
+            "source_urls": [{"url": "https://example.com/story"}],
+            "body_excerpt": "カフェ青空は11月30日に閉店しました。",
+            "published_date": "2026-11-01", "event_date": "2026-11-30",
+            "municipality": "宇部市", "municipality_candidates": ["宇部市"],
+            "freshness": "直近30日", "status": "x",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertNotIn("見出しと本文の店舗動作が不一致", drafts[0]["review_flags"])
+
     def test_missing_data_flagged(self):
         drafts = [{"id":"x","title":"店舗","category":["閉店"],"source_url":"","source_urls":[],"body_excerpt":"","published_date":"","municipality":"","municipality_candidates":[],"freshness":"日付確認が必要","status":"x"}]
         module.annotate_review_flags(drafts)
