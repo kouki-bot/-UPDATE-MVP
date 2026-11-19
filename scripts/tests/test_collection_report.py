@@ -83,6 +83,26 @@ class CollectionReportTests(unittest.TestCase):
         self.assertEqual(report["excluded_reason_counts"]["イベント・催事"], 1)
         self.assertIn("除外理由の内訳", module.render_markdown(report))
 
+    def test_rss_quality_metrics_report_date_body_and_limit_by_source(self):
+        metrics = module.build_rss_quality_metrics(
+            [{"name": "媒体A", "items_read": 3}, {"name": "媒体B", "items_read": 1}],
+            [
+                {"source_name": "媒体A", "published_date": "2026-11-18", "body_excerpt": "本文", "body_excerpt_method": "article_meta_or_paragraph", "article_fetch_status": "success"},
+                {"source_name": "媒体A", "published_date": "", "body_excerpt": "概要", "body_excerpt_method": "RSS description", "article_fetch_status": "not_requested"},
+                {"source_name": "媒体A", "published_date": "", "body_excerpt": "", "body_excerpt_method": "not_fetched_limit", "article_fetch_status": "not_requested"},
+                {"source_name": "媒体B", "published_date": "2026-11-18", "body_excerpt": "", "body_excerpt_method": "fetch_failed", "article_fetch_status": "failed"},
+            ],
+        )
+        self.assertEqual(metrics["candidate_count"], 4)
+        self.assertEqual(metrics["dated_count"], 2)
+        self.assertEqual(metrics["date_missing_count"], 2)
+        self.assertEqual(metrics["excerpt_count"], 2)
+        self.assertEqual(metrics["not_fetched_limit"], 1)
+        self.assertEqual(metrics["fetch_failed"], 1)
+        self.assertEqual(metrics["sources"][0]["date_coverage_percent"], 33.3)
+        self.assertEqual(metrics["sources"][0]["excerpt_coverage_percent"], 66.7)
+        self.assertEqual(metrics["sources"][1]["fetch_failed"], 1)
+
     def test_non_review_only_draft_is_detected(self):
         report = module.build_report(
             {"sources": [], "candidates": []},
