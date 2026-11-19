@@ -213,6 +213,39 @@ class ReviewFlagTests(unittest.TestCase):
             "情報源未分類",
         )
 
+    def test_known_source_domain_match_is_accepted(self):
+        self.assertEqual(
+            module.source_url_domain_mismatches(
+                "山口宇部経済新聞",
+                [{"url": "https://yamaguchi.keizai.biz/headline/123/"}],
+            ),
+            [],
+        )
+
+    def test_known_source_domain_mismatch_is_flagged_and_held(self):
+        drafts = [{
+            "id": "source-domain-mismatch", "title": "宇部市のカフェ青空が開店",
+            "category": ["新店・開店"], "source_name": "山口宇部経済新聞",
+            "source_url": "https://example.com/story",
+            "source_urls": [{"source_name": "山口宇部経済新聞", "url": "https://example.com/story"}],
+            "body_excerpt": "カフェ青空は11月10日にオープンしました。",
+            "published_date": "2026-11-01", "event_date": "2026-11-10",
+            "municipality": "宇部市", "municipality_candidates": ["宇部市"],
+            "freshness": "直近30日", "status": "未確認・公開禁止",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertIn("情報源名とURLドメインが不一致", drafts[0]["review_flags"])
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
+    def test_unknown_source_domain_is_not_guessed(self):
+        self.assertEqual(
+            module.source_url_domain_mismatches(
+                "未登録サイト", [{"url": "https://example.com/story"}]
+            ),
+            [],
+        )
+
     def test_secondary_source_without_business_primary_source_is_held(self):
         drafts = [{
             "id": "secondary-source", "title": "宇部市のカフェ青空が開店",
