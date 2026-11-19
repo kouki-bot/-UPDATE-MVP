@@ -1,0 +1,30 @@
+name: Test RSS candidate merge
+
+on:
+  pull_request:
+    paths:
+      - "scripts/collect_rss.py"
+      - "scripts/tests/test_rss_candidate_merge.py"
+      - ".github/workflows/test-rss-candidate-merge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Check syntax
+        run: python -m py_compile scripts/collect_rss.py scripts/tests/test_rss_candidate_merge.py
+
+      - name: Run RSS candidate merge regression tests
+        run: python -m unittest scripts.tests.test_rss_candidate_merge -v
