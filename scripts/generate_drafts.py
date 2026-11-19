@@ -645,12 +645,8 @@ def same_event(a, b):
     if not title_a or not title_b:
         return False
 
-    # タイトルが完全一致する場合
-    if title_a == title_b:
-        return True
-
-    # 短いタイトルが長いタイトルに含まれるだけでは
-    # 誤統合の可能性があるため、ここでは統合しない
+    # タイトルの完全一致だけでは同一案件と判断しない。
+    # 店舗名などの主要語が十分に一致する場合に限って統合する。
     terms_a = event_terms(a)
     terms_b = event_terms(b)
 
@@ -683,7 +679,7 @@ def merge_candidates(items):
                 normalize_url(s.get("url", ""))
                 for s in old.get("source_urls", [])
             )
-            if normalized in old_urls or same_store_news_candidate(candidate, old):
+            if normalized in old_urls or same_event(candidate, old) or same_store_news_candidate(candidate, old):
                 match_index = index
                 break
         if match_index is None:
