@@ -10,6 +10,30 @@ module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
 class ReviewFlagTests(unittest.TestCase):
+    def test_store_name_variant_normalization_is_limited(self):
+        self.assertEqual(
+            module.normalize_store_name_variant("Cafe青空"),
+            module.normalize_store_name_variant("カフェ青空"),
+        )
+        self.assertNotEqual(
+            module.normalize_store_name_variant("Cafe青空 宇部店"),
+            module.normalize_store_name_variant("Cafe青空 山口店"),
+        )
+        self.assertEqual(module.normalize_store_name_variant("青空珈琲"), "青空珈琲")
+
+    def test_store_name_variant_requires_matching_municipality(self):
+        base = {
+            "category": ["新店・開店"],
+            "event_date": "2026-11-10",
+            "published_date": "2026-11-01",
+            "municipality_candidates": ["宇部市"],
+        }
+        a = dict(base, title="Cafe青空が宇部市にオープン")
+        b = dict(base, title="カフェ青空がオープン")
+        self.assertTrue(module.same_store_news_candidate(a, b))
+        b["municipality_candidates"] = ["山口市"]
+        self.assertFalse(module.same_store_news_candidate(a, b))
+
     def test_similar_titles_flagged_not_removed(self):
         drafts = [
             {"id":"a","title":"【開店】カフェ青空 宇部店","category":["新店・開店"],"source_url":"https://example.com/a","source_urls":[{"url":"https://example.com/a"}],"body_excerpt":"紹介文","published_date":"2026-10-01","municipality":"宇部市","municipality_candidates":["宇部市"],"freshness":"直近30日","status":"x"},
