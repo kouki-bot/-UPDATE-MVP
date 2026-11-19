@@ -96,7 +96,9 @@ class DraftSortingTests(unittest.TestCase):
             "status": "公開可能",
         }]
         module.annotate_review_flags(drafts)
-        self.assertEqual(drafts[0]["review_priority"], "基本項目あり・内容確認は必要")
+        self.assertEqual(drafts[0]["review_priority"], "情報不足・保留")
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertIn("情報源が未分類", drafts[0]["review_flags"])
         self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
 
 
