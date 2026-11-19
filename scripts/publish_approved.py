@@ -4,6 +4,8 @@
 Rebuild all approved public records from the latest private review snapshot, including newly reviewed store updates and regional shop openings, including Ube and Ajisu updates.
 """
 import json
+import math
+import os
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 BASE_DIR=Path(__file__).resolve().parent.parent
@@ -24,10 +26,33 @@ def main():
  drafts=load("drafts.json",{"drafts":[]}).get("drafts",[])
  approvals=load("publication_approvals.json",{"approved_ids":[],"reviewed_articles":{}})
  published=load("published.json",{"updated_at":"","articles":[]})
- approved=set(map(str,approvals.get("approved_ids",[])))
- reviews=approvals.get("reviewed_articles",{})
- draft_by_id={str(a.get("id")):a for a in drafts if a.get("id")}
- existing={str(a.get("id")):a for a in published.get("articles",[]) if a.get("id")}
+ approved_raw=approvals.get("approved_ids")
+ reviews=approvals.get("reviewed_articles")
+ if not isinstance(approved_raw,list) or not isinstance(reviews,dict):
+  raise SystemExit("承認データの形式が不正です。公開処理を中止しました")
+ approved_list=[str(value).strip() for value in approved_raw]
+ if any(not value for value in approved_list) or len(set(approved_list))!=len(approved_list):
+  raise SystemExit("承認IDに空欄または重複があります。公開処理を中止しました")
+ approved=set(approved_list)
+ draft_by_id={str(a.get("id")):a for a in drafts if isinstance(a,dict) and a.get("id")}
+ existing={str(a.get("id")):a for a in published.get("articles",[]) if isinstance(a,dict) and a.get("id")}
+ allow_bulk_withdrawal=os.environ.get("ALLOW_BULK_WITHDRAWAL","").strip().lower()=="true"
+ if existing and not approved and len(existing)>max(3,math.ceil(len(existing)*0.25)) and not allow_bulk_withdrawal:
+  raise SystemExit("承認IDが0件で、公開済み記事の一括取り下げを検出しました。承認データ欠落の可能性があるため公開・一括削除を中止しました。意図的な全件取り下げの場合のみ手動実行で ALLOW_BULK_WITHDRAWAL=true を指定してください")
+ missing_records=sorted(aid for aid in approved if not isinstance(reviews.get(aid),dict))
+ if missing_records:
+  raise SystemExit("承認IDに対応する審査記録がありません: "+", ".join(missing_records[:10]))
+ unknown_ids=sorted(aid for aid in approved if aid not in draft_by_id and aid not in existing)
+ if unknown_ids:
+  raise SystemExit("候補・公開済みデータのどちらにも存在しない承認IDがあります: "+", ".join(unknown_ids[:10]))
+ removed_ids=set(existing)-approved
+ removal_limit=max(1,math.floor(len(existing)*0.25))
+ if len(removed_ids)>removal_limit and not allow_bulk_withdrawal:
+  raise SystemExit(
+   f"公開済み記事 {len(existing)}件中 {len(removed_ids)}件の一括取り下げを検出しました。"
+   f"安全上限（{removal_limit}件）を超えたため公開処理を中止しました。"
+   "意図的な一括取り下げの場合のみ手動実行で ALLOW_BULK_WITHDRAWAL=true を指定してください"
+  )
  next_articles={}
  now=datetime.now(JST).isoformat()
  for aid in sorted(approved):
