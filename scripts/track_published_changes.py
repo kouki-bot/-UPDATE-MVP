@@ -38,7 +38,7 @@ def store_names(article):
     # include municipality or editorial wording that the generic extractor retains.
     for text in (title, body):
         for match in re.findall(r"[「『]([^」』]{2,30})[」』]", str(text or "")):
-            value = re.sub(r"\\s+", "", match).strip("・、。")
+            value = re.sub(r"\s+", "", match).strip("・、。")
             if len(value) >= 2:
                 names.add(value)
 
@@ -47,7 +47,7 @@ def store_names(article):
     store_chars = r"A-Za-z0-9一-龯ぁ-んァ-ヶー・＆&"
     for text in (title, body):
         for match in re.finditer(
-            rf"([{store_chars}]{{2,24}})\\s+([{store_chars}]{{2,12}}店)",
+            rf"([{store_chars}]{{2,24}})\s+([{store_chars}]{{2,12}}店)",
             str(text or ""),
         ):
             names.add(match.group(1) + match.group(2))
@@ -59,7 +59,7 @@ def store_names(article):
     # a shared location suffix alone. Conservative false negatives are safer
     # than false change alerts; ambiguous cases remain for human review.
     normalized = {
-        re.sub(r"[\\s　・、。]", "", str(name)).strip()
+        re.sub(r"[\s　・、。]", "", str(name)).strip()
         for name in names
         if len(re.sub(r"[\\s　・、。]", "", str(name)).strip()) >= 2
     }
@@ -70,6 +70,30 @@ def store_names(article):
             for other in normalized
         )
     }
+
+def source_records(article):
+    """Return deduplicated, HTTP(S)-only source references for human verification."""
+    raw = article.get("source_urls")
+    if not isinstance(raw, list):
+        raw = []
+    if not raw and article.get("source_url"):
+        raw = [{"source_name": article.get("source_name", ""), "url": article.get("source_url", "")}]
+    records = []
+    seen = set()
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        original = str(item.get("url") or "").strip()
+        normalized = normalize_url(original)
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        records.append({
+            "source_name": clean_text(item.get("source_name", "")) or "情報源不明",
+            "url": normalized,
+        })
+    return records
+
 
 def municipality(article):
     value = clean_text(article.get("municipality", ""))
@@ -111,6 +135,7 @@ def find_status_changes(drafts, published):
             if key in seen:
                 continue
             seen.add(key)
+            candidate_sources = source_records(candidate)
             alert = {
                 "published_title": article.get("title", "タイトル不明"),
                 "published_id": article.get("id", ""),
@@ -119,7 +144,8 @@ def find_status_changes(drafts, published):
                 "candidate_id": candidate.get("id", ""),
                 "candidate_status": "・".join(sorted(changed)),
                 "municipality": new_town,
-                "source_url": candidate.get("source_url", ""),
+                "source_url": candidate_sources[0]["url"] if candidate_sources else "",
+                "sources": candidate_sources,
             }
             alerts.append(alert)
             candidate.setdefault("published_change_candidates", []).append({
@@ -127,6 +153,7 @@ def find_status_changes(drafts, published):
                 "published_title": article.get("title", "タイトル不明"),
                 "published_status": article.get("business_status", "") or "状態記載なし",
                 "published_source_url": article.get("source_url", ""),
+                "candidate_sources": candidate_sources,
                 "possible_change": "・".join(sorted(changed)),
                 "review_required": True,
             })
@@ -150,8 +177,12 @@ def render_markdown(alerts):
                 f"  - 掲載済み状態: {item['published_status']}",
                 f"  - 新しい候補: {item['candidate_title']}",
                 f"  - 変更候補: {item['candidate_status']}",
-                f"  - 出典: {item['source_url']}",
+                f"  - 出典: {item['source_url'] or '確認できるURLなし'}",
             ]
+            for source in item.get("sources", [])[:5]:
+                lines.append(
+                    f"  - 追加出典（{source['source_name']}）: {source['url']}"
+                )
     else:
         lines.append("掲載済み店舗と一致する状況変化候補は見つかりませんでした。")
     lines += [
