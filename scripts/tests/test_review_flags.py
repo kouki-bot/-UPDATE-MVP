@@ -198,7 +198,7 @@ class ReviewFlagTests(unittest.TestCase):
     def test_source_reliability_classifies_known_sources_conservatively(self):
         self.assertEqual(
             module.classify_source_reliability("山口県公式・報道発表")["level"],
-            "公的機関の公式情報",
+            "公的機関の公式情報（店舗公式とは別）",
         )
         self.assertEqual(
             module.classify_source_reliability("山口宇部経済新聞")["level"],
@@ -234,7 +234,7 @@ class ReviewFlagTests(unittest.TestCase):
             "山口県公式・報道発表",
             [{"source_name": "山口県公式・報道発表", "url": "https://example.com"}],
         )
-        self.assertEqual(quality["level"], "公的機関の公式情報")
+        self.assertEqual(quality["level"], "公的機関の公式情報（店舗公式とは別）")
         self.assertIn("店舗自身の公式発表とは限らない", quality["note"])
 
     def test_unregistered_source_is_held_for_manual_verification(self):
