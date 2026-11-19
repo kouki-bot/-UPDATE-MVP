@@ -1102,8 +1102,8 @@ def classify_source_reliability(source_name):
     name = clean_text(source_name)
     if name == "山口県公式・報道発表":
         return {
-            "level": "公的機関の公式情報",
-            "rank": 3,
+            "level": "公的機関の公式情報（店舗公式とは別）",
+            "rank": 2,
             "note": "公的機関の発表。店舗自身の公式発表とは限らないため店舗情報は別途確認。",
         }
     if name in {"山口宇部経済新聞", "号外NET 山口市・防府市",
