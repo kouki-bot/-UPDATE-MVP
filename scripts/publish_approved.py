@@ -37,8 +37,8 @@ def main():
  draft_by_id={str(a.get("id")):a for a in drafts if isinstance(a,dict) and a.get("id")}
  existing={str(a.get("id")):a for a in published.get("articles",[]) if isinstance(a,dict) and a.get("id")}
  allow_bulk_withdrawal=os.environ.get("ALLOW_BULK_WITHDRAWAL","").strip().lower()=="true"
- if existing and not approved and not allow_bulk_withdrawal:
-  raise SystemExit("承認IDが0件ですが公開済み記事があります。承認データ欠落の可能性があるため公開・一括削除を中止しました。意図的な全件取り下げの場合のみ手動実行で ALLOW_BULK_WITHDRAWAL=true を指定してください")
+ if existing and not approved and len(existing)>max(3,math.ceil(len(existing)*0.25)) and not allow_bulk_withdrawal:
+  raise SystemExit("承認IDが0件で、公開済み記事の一括取り下げを検出しました。承認データ欠落の可能性があるため公開・一括削除を中止しました。意図的な全件取り下げの場合のみ手動実行で ALLOW_BULK_WITHDRAWAL=true を指定してください")
  missing_records=sorted(aid for aid in approved if not isinstance(reviews.get(aid),dict))
  if missing_records:
   raise SystemExit("承認IDに対応する審査記録がありません: "+", ".join(missing_records[:10]))
