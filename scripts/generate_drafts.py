@@ -441,6 +441,30 @@ def extract_event_date(title, body_excerpt, published_date=""):
 
 
 
+
+def ambiguous_event_date_flags(title, body_excerpt):
+    """同じ文に複数の日付と店舗動作がある場合、対象日を断定せず確認へ送る。"""
+    text = unicodedata.normalize(
+        "NFKC", clean_text(f"{title or ''} {body_excerpt or ''}")
+    )
+    date_pattern = re.compile(
+        r"20\d{2}年\s*\d{1,2}月\s*(?:\d{1,2}日|末)|"
+        r"\d{1,2}月\s*\d{1,2}日|(?<!\d)\d{1,2}日"
+    )
+    action_pattern = re.compile(
+        r"オープン(?!セール|場所|情報|記念|キャンペーン)|"
+        r"開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|"
+        r"リニューアル|営業再開"
+    )
+    sentences = re.split(r"(?<=[。！？!?])|\n", text)
+    for sentence in sentences:
+        if not action_pattern.search(sentence):
+            continue
+        dates = date_pattern.findall(sentence)
+        if len(set(dates)) > 1:
+            return ["複数日付・対象日確認"]
+    return []
+
 def event_date_review_flags(title, body_excerpt, event_date, published_date="", reference_date=None):
     """予定・実施表現と日付の矛盾を検知し、人手確認へ送る。"""
     parsed_event = parse_date(event_date)
@@ -1156,6 +1180,9 @@ def annotate_review_flags(drafts):
             draft.get("event_date", ""), draft.get("published_date", ""),
         )
         flags.extend(date_context_flags)
+        flags.extend(ambiguous_event_date_flags(
+            draft.get("title", ""), draft.get("body_excerpt", "")
+        ))
         body_excerpt = clean_text(draft.get("body_excerpt", ""))
         movement_evidence = re.search(
             r"オープン|開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|リニューアル|改装オープン|営業再開",
@@ -1183,7 +1210,7 @@ def annotate_review_flags(drafts):
             "開店・閉店等の日付未確認", "市町未特定",
             "本文で店舗動作を確認できず", "見出しと本文の店舗動作が不一致",
             "予定日経過・実施確認", "実施表現と公開日が不一致",
-            "実施表現と未来日付が不一致",
+            "実施表現と未来日付が不一致", "複数日付・対象日確認",
         }
         if draft.get("manual_hold"):
             draft["review_priority"] = "要優先確認"
