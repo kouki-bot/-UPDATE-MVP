@@ -242,18 +242,22 @@ updateStats();renderReviewInsights();renderRecommendationSummary();
 
 function readinessDateValid(value){
  var text=String(value||"").trim();if(!text)return false;
- var parsed=Date.parse(text);return Number.isFinite(parsed);
+ var match=text.match(/^(\d{4})-(\d{2})-(\d{2})(?:[Tt ].*)?$/);if(!match)return false;
+ var year=Number(match[1]),month=Number(match[2]),day=Number(match[3]);
+ var calendarDate=new Date(year,month-1,day);
+ if(calendarDate.getFullYear()!==year||calendarDate.getMonth()!==month-1||calendarDate.getDate()!==day)return false;
+ return Number.isFinite(Date.parse(text));
 }
 function readinessRow(label,ok,detail){
  return '<div class="readiness-row"><span class="readiness-mark '+(ok?'ok':'no')+'">'+(ok?'✓':'!')+'</span><div><b>'+esc(label)+'：'+(ok?'クリア':'未達')+'</b><small>'+esc(detail||'')+'</small></div></div>';
 }
 function renderPublicationReadiness(d,r){
  r=r||{};var id=String(d.id||''),existing=publishedArticleIds[id]===true;
- var headline=String(r.headline||d.suggested_headline||d.title||'').trim();
+ var headline=String(r.headline||d.title||'').trim();
  var municipality=String(r.municipality||d.municipality||'').trim();
  var publishedDate=String(r.published_date||d.published_date||'').trim();
  var eventDate=String(r.event_date||d.event_date||'').trim();
- var businessStatus=String(r.business_status||'').trim();
+ var businessStatus=String(r.business_status||d.business_status||'').trim();
  var sourceUrl=String(r.source_url||d.source_url||'').trim();
  var requiredFields=[['掲載タイトル',headline],['市町名',municipality],['記事公開日',publishedDate],['店舗動作日',eventDate],['現在の状態',businessStatus],['元記事URL',sourceUrl]];
  var missing=requiredFields.filter(function(x){return !x[1];}).map(function(x){return x[0];});
@@ -272,8 +276,9 @@ function renderPublicationReadiness(d,r){
  var duplicateOk=d.duplicate_review!=='重複の可能性・要確認'||r.duplicate_resolution==='別記事として掲載';
  var freshnessOk=['未来日付・要確認','90日より前'].indexOf(d.freshness)<0;
  var statusOk=allowedStatuses.indexOf(businessStatus)>=0;
- var datesOk=readinessDateValid(publishedDate)&&readinessDateValid(eventDate.slice(0,10));
- var urlOk=/^https?:\/\//i.test(sourceUrl);
+ var draftPublishedDateOk=!String(d.published_date||'').trim()||readinessDateValid(d.published_date);
+ var datesOk=draftPublishedDateOk&&readinessDateValid(publishedDate)&&readinessDateValid(eventDate.slice(0,10));
+ var urlOk=/^https?:\/\//.test(sourceUrl);
  var reviewOk=r.review_status==='確認済み';
  var sixOk=checkKeys===REVIEW_CHECKS.length;
  var reviewerOk=!!r.reviewed_at&&r.reviewer_checked_source===true;
@@ -289,7 +294,7 @@ function renderPublicationReadiness(d,r){
   ['出典URL確認',existing?true:linksOk,existing?'既存公開記事のため新規公開時のリンク確認条件は対象外':(linksOk?'必要な出典URLはすべてHTTP確認OK':'主出典・追加出典の全URLで正常確認が必要')],
   ['照合チェック6項目',sixOk,checkKeys+'/'+REVIEW_CHECKS.length+'項目完了'],
   ['承認記録',reviewerOk,reviewerOk?'確認日時と元記事確認記録あり':'確認日時または元記事確認記録が不足'],
-  ['日付形式',datesOk,datesOk?'記事公開日・店舗動作日は有効な日付':'記事公開日または店舗動作日を再確認'],
+  ['日付形式',datesOk,datesOk?'下書き・最終確認後の記事公開日と店舗動作日は有効な日付':(!draftPublishedDateOk?'下書き側の記事公開日が不正。公開処理側で保留されます':'記事公開日または店舗動作日を再確認')],
   ['店舗状態',statusOk,'現在の状態：'+(businessStatus||'未選択')],
   ['元記事URL形式',urlOk,urlOk?'HTTP(S) URL':'有効なHTTP(S) URLが必要']
  ];
