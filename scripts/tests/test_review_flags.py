@@ -28,8 +28,8 @@ class ReviewFlagTests(unittest.TestCase):
             "published_date": "2026-11-01",
             "municipality_candidates": ["宇部市"],
         }
-        a = dict(base, title="Cafe青空が宇部市にオープン")
-        b = dict(base, title="カフェ青空がオープン")
+        a = dict(base, title="宇部市の「Cafe青空」がオープン")
+        b = dict(base, title="宇部市の「カフェ青空」がオープン")
         self.assertTrue(module.same_store_news_candidate(a, b))
         b["municipality_candidates"] = ["山口市"]
         self.assertFalse(module.same_store_news_candidate(a, b))
