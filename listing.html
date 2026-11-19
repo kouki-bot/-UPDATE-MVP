@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google Analytics: measure listing-page navigation and form opens only. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J79VXDWMTV"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-J79VXDWMTV');
+</script>
 <meta name="theme-color" content="#f7f6f0">
 <title>掲載・集客相談｜山口ローカルUPDATE</title>
 <meta name="description" content="山口県内のお店の無料情報掲載、掲載内容の修正、ホームページ制作、Googleマップ・Instagramを活用した集客についてご相談いただけます。">
@@ -49,7 +57,7 @@
 <span class="eyebrow">FOR LOCAL BUSINESS</span>
 <h1>お店の魅力を、地域の人へ。</h1>
 <p>山口県内のお店の情報掲載から、ホームページ・Googleマップ・Instagramを活用した集客まで。お店の状況やご希望に合わせてご相談いただけます。</p>
-<a class="btn" href="#consult-form">掲載・集客について相談する　↘</a>
+<a class="btn" data-placement="hero" href="#consult-form">掲載・集客について相談する　↘</a>
 </div></section>
 <section class="section"><div class="container">
 <div class="section-head"><div><h2>ご相談いただけること</h2><p>必要な内容だけ、お気軽にご相談ください。</p></div></div>
@@ -78,6 +86,17 @@
 </main>
 <footer class="footer"><div class="container"><div class="footer-links"><a href="index.html">トップ</a><a href="new.html">新店情報</a><a href="closed.html">閉店情報</a><a href="listing.html">掲載・相談</a><a href="contact.html">お問い合わせ</a></div><small>© 2026 山口ローカルUPDATE</small></div></footer>
 <script>
-document.addEventListener('click',function(event){var link=event.target.closest('a[href*="forms.gle/"]');if(link&&typeof gtag==='function')gtag('event','listing_consult_click',{placement:link.dataset.placement||'listing_page'});});
+document.addEventListener('click',function(event){
+  var link=event.target.closest('a');
+  if(!link || typeof gtag!=='function') return;
+  if(link.getAttribute('href')==='#consult-form'){
+    gtag('event','listing_cta_click',{placement:link.dataset.placement||'listing_page'});
+    return;
+  }
+  if(link.href && link.href.indexOf('forms.gle/')!==-1){
+    // This records opening the external form, not a completed submission.
+    gtag('event','listing_consult_click',{placement:link.dataset.placement||'listing_page',form_provider:'google_forms'});
+  }
+});
 </script>
 </body></html>
