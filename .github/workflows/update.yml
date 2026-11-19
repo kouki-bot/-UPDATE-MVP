@@ -3,7 +3,7 @@ name: Yamaguchi Local Update
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * 1"
+    - cron: "0 0 * * *"
 
 permissions:
   contents: read
@@ -83,5 +83,3 @@ jobs:
         env:
           PRIVATE_REVIEW_TOKEN: ${{ secrets.PRIVATE_REVIEW_TOKEN }}
         run: python scripts/private_review_sync.py upload
-
-  
