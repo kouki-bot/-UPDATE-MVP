@@ -45,6 +45,15 @@ class RssCandidateMergeTests(unittest.TestCase):
         self.assertEqual(set(merged[0]["categories"]), {"新店・開店", "移転"})
         self.assertEqual(merged[0]["description"], "詳しい本文")
 
+    def test_same_url_preserves_all_source_names_for_quality_reporting(self):
+        rows = [
+            self.candidate("同じ記事", "https://news.example/story", "山口市") | {"source_name": "媒体A"},
+            self.candidate("同じ記事", "https://news.example/story?utm_source=rss", "山口市") | {"source_name": "媒体B"},
+        ]
+        merged = module.merge_candidates(rows)
+        self.assertEqual(len(merged), 1)
+        self.assertEqual(set(merged[0]["source_names"]), {"媒体A", "媒体B"})
+
     def test_same_url_merges_missing_publication_date(self):
         rows = [
             self.candidate("新店オープン", "https://news.example/story", "宇部市"),
