@@ -38,6 +38,10 @@ class TestPublicationReadinessPanelAlignment(unittest.TestCase):
         self.assertIn("r.headline||d.title||''", PANEL)
         self.assertNotIn("r.headline||d.suggested_headline||d.title||''", PANEL)
 
+    def test_panel_keeps_raw_draft_published_date_gate(self):
+        self.assertIn("draftPublishedDateOk=!String(d.published_date||'').trim()||readinessDateValid(d.published_date)", PANEL)
+        self.assertIn('if draft.get("published_date") not in (None,"") and not valid_date(draft.get("published_date")):', PUBLISHER)
+
     def test_panel_date_validation_rejects_impossible_calendar_dates(self):
         self.assertIn("calendarDate.getFullYear()!==year", PANEL)
         self.assertIn("calendarDate.getMonth()!==month-1", PANEL)
