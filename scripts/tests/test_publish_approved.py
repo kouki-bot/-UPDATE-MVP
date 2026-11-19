@@ -141,6 +141,13 @@ class Tests(unittest.TestCase):
   self.assertNotEqual(result.returncode,0)
   self.assertIn("一括取り下げ",result.stderr)
   self.assertEqual(self.published(),existing)
+ def test_removing_more_than_one_quarter_of_existing_articles_is_blocked(self):
+  rows=[self.draft(status="公開済み")]+[{"id":f"old-{i}","title":f"既存{i}"} for i in range(3)]
+  self.setup(approved=True,published={"updated_at":"old","articles":rows})
+  result=self.run_script()
+  self.assertNotEqual(result.returncode,0)
+  self.assertIn("一括取り下げ",result.stderr)
+  self.assertEqual(self.published()["articles"],rows)
  def test_explicit_manual_override_allows_intentional_bulk_withdrawal(self):
   rows=[{"id":f"old-{i}","title":f"記事{i}"} for i in range(8)]
   existing={"updated_at":"old","articles":rows}
