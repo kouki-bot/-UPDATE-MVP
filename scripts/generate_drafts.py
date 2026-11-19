@@ -1078,6 +1078,10 @@ def annotate_review_flags(drafts):
         )
         if body_excerpt and not movement_evidence:
             flags.append("本文で店舗動作を確認できず")
+        title_categories = set(draft.get("category", [])) or set(detect_categories(draft.get("title", "")))
+        body_categories = set(detect_categories(body_excerpt))
+        if title_categories and body_categories and not (title_categories & body_categories):
+            flags.append("見出しと本文の店舗動作が不一致")
         if len(draft.get("municipality_candidates", [])) > 1:
             flags.append("市町候補が複数")
         elif not draft.get("municipality"):
@@ -1092,7 +1096,7 @@ def annotate_review_flags(drafts):
         missing_information_flags = {
             "本文抜粋なし", "公開日未確認",
             "開店・閉店等の日付未確認", "市町未特定",
-            "本文で店舗動作を確認できず",
+            "本文で店舗動作を確認できず", "見出しと本文の店舗動作が不一致",
         }
         if draft.get("manual_hold"):
             draft["review_priority"] = "要優先確認"
@@ -1111,7 +1115,7 @@ def annotate_review_flags(drafts):
             "情報源URLなし", "本文抜粋なし", "公開日未確認",
             "開店・閉店等の日付未確認", "市町候補が複数",
             "市町未特定", "未来日付", "予定情報・要確認", "重複の可能性・要確認",
-            "本文で店舗動作を確認できず",
+            "本文で店舗動作を確認できず", "見出しと本文の店舗動作が不一致",
         }
         if draft.get("manual_hold"):
             draft["review_bucket"] = "確認待ち"
