@@ -98,6 +98,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
 </div>
 <p class="footer-note">承認条件：元記事確認チェック、市町名、記事公開日、店舗動作日、現在の営業状態、タイトル、情報元URL、確認日時、未解消フラグなし。重複候補は別記事として掲載できることの確認が必要です。公開処理側でも再検査されます。</p>
 </main>
+<script src="../scripts/approval_sync.js"></script>
 <script>
 (function(){
 "use strict";
@@ -398,7 +399,7 @@ if(remaining.length){alert("未解消の確認フラグがあります。解消�
 if(d.duplicate_review&&duplicateResolution!=="別記事として掲載"){alert("重複候補です。別記事として掲載できると確認した場合だけ承認できます。同一ニュースなら対象外として保存してください。");return;}
 }
 var rec=approvals.reviewed_articles[id]||{};
-rec.review_status=status;rec.review_checks=reviewChecks;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.duplicate_resolution=duplicateResolution;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
+rec.review_status=status;rec.updated_at=new Date().toISOString();rec.review_checks=reviewChecks;rec.headline=headline;rec.municipality=municipality;rec.published_date=publishedDate;rec.event_date=eventDate;rec.business_status=businessStatus;rec.duplicate_resolution=duplicateResolution;rec.body=body;rec.cleared_review_flags=cleared;rec.reviewer_checked_source=checked;
 rec.image_usage_approved=imageApproved;rec.image_url=imageApproved?imageUrl:"";rec.image_source_url=imageApproved?imageSourceUrl:"";rec.image_credit=imageApproved?imageCredit:"";rec.image_rights_status=imageApproved?imageRightsStatus:"";rec.image_type=imageApproved?imageType:"";rec.image_permission_note=imageApproved?imagePermissionNote:"";
 if(status==="確認済み"){rec.reviewed_at=new Date().toISOString();approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});approvals.approved_ids.push(id);}
 else{delete rec.reviewed_at;approvals.approved_ids=approvals.approved_ids.filter(function(x){return String(x)!==id;});}
@@ -458,21 +459,7 @@ function encodePrivateContent(value){
  return btoa(binary);
 }
 function mergePrivateApprovals(remote,local){
- remote=validateApprovals(remote);local=validateApprovals(local);
- var merged=JSON.parse(JSON.stringify(remote));
- merged.reviewed_articles=merged.reviewed_articles||{};
- Object.keys(local.reviewed_articles).forEach(function(id){merged.reviewed_articles[id]=local.reviewed_articles[id];});
- var histories=merged.published_change_reviews||{},localHistories=local.published_change_reviews||{};
- Object.keys(localHistories).forEach(function(key){
-  var a=histories[key]&&Array.isArray(histories[key].history)?histories[key].history:[];
-  var b=Array.isArray(localHistories[key].history)?localHistories[key].history:[];
-  var seen={};a.concat(b).forEach(function(item){var stamp=String(item.recorded_at||"")+"|"+JSON.stringify(item);seen[stamp]=item;});
-  histories[key]=Object.assign({},histories[key]||{},localHistories[key]||{},{history:Object.keys(seen).sort().map(function(k){return seen[k];})});
- });
- merged.published_change_reviews=histories;
- merged.approved_ids=Object.keys(merged.reviewed_articles).filter(function(id){return merged.reviewed_articles[id]&&merged.reviewed_articles[id].review_status==="確認済み";}).sort();
- merged.description=remote.description||local.description||"人が確認した記事だけ公開許可する";
- return validateApprovals(merged);
+ return window.YLUApprovalSync.mergePrivateApprovals(remote,local);
 }
 async function readPrivateApprovals(){
  var response=await privateApi(PRIVATE_APPROVAL_PATH+"?ref=main","GET");
@@ -492,9 +479,9 @@ el("privateLoadBtn").addEventListener("click",async function(){
  try{
   getPrivateToken();status.textContent="非公開リポジトリから読み込み中…";
   var remote=await readPrivateApprovals();
-  var merged=mergePrivateApprovals(remote.data,approvals);
-  approvals=merged;saveLocal();renderList();renderDetail();updateBackupReminder();
-  status.textContent="読み込み完了。既存の承認履歴を保持し、端末内の編集内容も統合しました。承認 "+approvals.approved_ids.length+"件。";
+  var mergeResult=mergePrivateApprovals(remote.data,approvals);
+  approvals=mergeResult.approvals;saveLocal();renderList();renderDetail();updateBackupReminder();
+  status.textContent="読み込み完了。非公開側を優先して統合しました。承認 "+approvals.approved_ids.length+"件。"+(mergeResult.conflicts.length?" 同期競合 "+mergeResult.conflicts.length+"件は非公開側を優先。必要なら記事を再読込して編集してください。":"")+(mergeResult.migratedCount?" 旧形式の記録 "+mergeResult.migratedCount+"件に更新日時を補完しました。":"");
  }catch(error){status.textContent="読み込み失敗："+error.message;}
  finally{el("privateSyncToken").value="";privateSyncToken="";el("privateLoadBtn").disabled=false;}
 });
@@ -503,12 +490,12 @@ el("privateSaveBtn").addEventListener("click",async function(){
  try{
   getPrivateToken();status.textContent="最新の非公開データを取得して統合中…";
   var remote=await readPrivateApprovals();
-  var merged=mergePrivateApprovals(remote.data,approvals);
+  var mergeResult=mergePrivateApprovals(remote.data,approvals),merged=mergeResult.approvals;
   var body=JSON.stringify(merged,null,2)+"\n";
   var response=await privateApi(PRIVATE_APPROVAL_PATH,"PUT",{message:"Update reviewed publication approvals",content:encodePrivateContent(body),sha:remote.sha,branch:"main"});
   if(!response.ok){var detail=await response.text();throw new Error("保存に失敗しました（HTTP "+response.status+"）。同時更新の可能性があります。再読み込みして再試行してください。 "+detail.slice(0,180));}
   approvals=merged;saveLocal();renderList();renderDetail();
-  status.textContent="保存完了。非公開リポジトリの承認データを更新しました。承認 "+approvals.approved_ids.length+"件。";
+  status.textContent="保存完了。非公開リポジトリの承認データを更新しました。承認 "+approvals.approved_ids.length+"件。"+(mergeResult.conflicts.length?" 同期競合 "+mergeResult.conflicts.length+"件は非公開側を優先しました。端末側の変更は再読込後にやり直してください。":"")+(mergeResult.migratedCount?" 旧形式の記録 "+mergeResult.migratedCount+"件に更新日時を補完しました。":"");
   el("privateSyncToken").value="";privateSyncToken="";
  }catch(error){status.textContent="保存失敗："+error.message;}
  finally{el("privateSyncToken").value="";privateSyncToken="";el("privateSaveBtn").disabled=false;}
