@@ -195,6 +195,64 @@ class ReviewFlagTests(unittest.TestCase):
         module.annotate_review_flags(drafts)
         self.assertNotIn("見出しと本文の店舗動作が不一致", drafts[0]["review_flags"])
 
+    def test_source_reliability_classifies_known_sources_conservatively(self):
+        self.assertEqual(
+            module.classify_source_reliability("山口県公式・報道発表")["level"],
+            "公的機関の公式情報",
+        )
+        self.assertEqual(
+            module.classify_source_reliability("山口宇部経済新聞")["level"],
+            "地域報道・編集媒体",
+        )
+        self.assertEqual(
+            module.classify_source_reliability("開店閉店.com 山口カテゴリ")["level"],
+            "店舗情報投稿・集約サイト",
+        )
+        self.assertEqual(
+            module.classify_source_reliability("未登録サイト")["level"],
+            "情報源未分類",
+        )
+
+    def test_secondary_source_without_business_primary_source_is_held(self):
+        drafts = [{
+            "id": "secondary-source", "title": "宇部市のカフェ青空が開店",
+            "category": ["新店・開店"], "source_name": "山口宇部経済新聞",
+            "source_url": "https://example.com/story",
+            "source_urls": [{"source_name": "山口宇部経済新聞", "url": "https://example.com/story"}],
+            "body_excerpt": "カフェ青空は11月10日にオープンしました。",
+            "published_date": "2026-11-01", "event_date": "2026-11-10",
+            "municipality": "宇部市", "municipality_candidates": ["宇部市"],
+            "freshness": "直近30日", "status": "未確認・公開禁止",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertIn("店舗・運営元の一次情報未確認", drafts[0]["review_flags"])
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
+    def test_official_public_source_is_not_misrepresented_as_store_official(self):
+        quality = module.source_reliability_for_sources(
+            "山口県公式・報道発表",
+            [{"source_name": "山口県公式・報道発表", "url": "https://example.com"}],
+        )
+        self.assertEqual(quality["level"], "公的機関の公式情報")
+        self.assertIn("店舗自身の公式発表とは限らない", quality["note"])
+
+    def test_unregistered_source_is_held_for_manual_verification(self):
+        drafts = [{
+            "id": "unknown-source", "title": "宇部市のカフェ青空が開店",
+            "category": ["新店・開店"], "source_name": "未知の情報サイト",
+            "source_url": "https://example.com/story",
+            "source_urls": [{"source_name": "未知の情報サイト", "url": "https://example.com/story"}],
+            "body_excerpt": "カフェ青空は11月10日にオープンしました。",
+            "published_date": "2026-11-01", "event_date": "2026-11-10",
+            "municipality": "宇部市", "municipality_candidates": ["宇部市"],
+            "freshness": "直近30日", "status": "未確認・公開禁止",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertIn("情報源が未分類", drafts[0]["review_flags"])
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
     def test_missing_data_flagged(self):
         drafts = [{"id":"x","title":"店舗","category":["閉店"],"source_url":"","source_urls":[],"body_excerpt":"","published_date":"","municipality":"","municipality_candidates":[],"freshness":"日付確認が必要","status":"x"}]
         module.annotate_review_flags(drafts)
