@@ -590,7 +590,31 @@ def same_store_news_candidate(a, b):
         return False
     names_a = set(duplicate_store_entity(a.get("title", ""), a.get("body_excerpt", "")))
     names_b = set(duplicate_store_entity(b.get("title", ""), b.get("body_excerpt", "")))
-    if not names_a or not (names_a & names_b):
+    if not names_a or not names_b:
+        return False
+
+    exact_name_match = bool(names_a & names_b)
+    variant_name_match = bool(
+        {normalize_store_name_variant(name) for name in names_a if normalize_store_name_variant(name)}
+        & {normalize_store_name_variant(name) for name in names_b if normalize_store_name_variant(name)}
+    )
+    if not exact_name_match and variant_name_match:
+        # 表記ゆれだけで照合する場合は、市町が双方で特定され一致することを必須にする。
+        towns_a = set(a.get("municipality_candidates", [])) or set(
+            extract_municipality_candidates(a.get("title", ""), a.get("body_excerpt", ""))
+        )
+        towns_b = set(b.get("municipality_candidates", [])) or set(
+            extract_municipality_candidates(b.get("title", ""), b.get("body_excerpt", ""))
+        )
+        municipality_a = clean_text(a.get("municipality", ""))
+        municipality_b = clean_text(b.get("municipality", ""))
+        if municipality_a and municipality_b:
+            same_municipality = municipality_a == municipality_b
+        else:
+            same_municipality = bool(towns_a and towns_b and (towns_a & towns_b))
+        if not same_municipality:
+            return False
+    elif not exact_name_match:
         return False
 
     # 公開日が離れていても、店舗動作日が同一なら同じ案件として扱う。
@@ -977,6 +1001,15 @@ def duplicate_store_entity(title, body_excerpt=""):
             normalized.append(name)
 
     return normalized
+
+
+def normalize_store_name_variant(name):
+    """表記差を限定的に正規化。店名の意味語や支店名は削除しない。"""
+    value = unicodedata.normalize("NFKC", clean_text(name)).casefold()
+    value = re.sub(r"[\\s・･　_‐‑‒–—―-]+", "", value)
+    # Cafe青空 / カフェ青空 のような先頭業態表記だけを同一視する。
+    value = re.sub(r"^(?:cafe|カフェ)", "", value, count=1)
+    return value if len(value) >= 2 else ""
 
 
 def same_store_duplicate(a, b):
