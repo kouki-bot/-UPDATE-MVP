@@ -1,4 +1,4 @@
-import json, shutil, subprocess, sys, tempfile, unittest
+import json, os, shutil, subprocess, sys, tempfile, unittest
 from pathlib import Path
 SOURCE=Path(__file__).resolve().parents[1]/"publish_approved.py"
 class Tests(unittest.TestCase):
@@ -8,7 +8,11 @@ class Tests(unittest.TestCase):
   shutil.copy2(SOURCE,self.base/"scripts/publish_approved.py")
  def tearDown(self): self.tmp.cleanup()
  def write(self,n,d): (self.base/"data"/n).write_text(json.dumps(d,ensure_ascii=False),encoding="utf-8")
- def run_script(self): return subprocess.run([sys.executable,str(self.base/"scripts/publish_approved.py")],capture_output=True,text=True)
+ def run_script(self, extra_env=None):
+  env=os.environ.copy()
+  env.pop("ALLOW_BULK_WITHDRAWAL",None)
+  if extra_env: env.update(extra_env)
+  return subprocess.run([sys.executable,str(self.base/"scripts/publish_approved.py")],capture_output=True,text=True,env=env)
  def draft(self,**kw):
   d={"id":"abc","title":"山口店開店","source_url":"https://example.com","source_urls":[{"url":"https://example.com"}],"source_link_checks":[{"url":"https://example.com","status":"ok","http_status":200}],"content_type":"店舗・商業施設","published_date":"2026-10-28","municipality":"","status":"未確認・公開禁止","freshness":"直近30日","review_flags":["市町候補が複数"],"body_excerpt":"抜粋"}
   d.update(kw); return d
@@ -122,6 +126,36 @@ class Tests(unittest.TestCase):
   self.assertEqual(article["municipality"],"山口市")
   self.assertEqual(article["municipality_status"],"確認済み")
   self.assertEqual(article["review_flags"],[])
+ def test_empty_approval_snapshot_cannot_delete_existing_public_articles(self):
+  existing={"updated_at":"old","articles":[{"id":"old-1"},{"id":"old-2"},{"id":"old-3"},{"id":"old-4"}]}
+  self.setup(approved=False,published=existing)
+  result=self.run_script()
+  self.assertNotEqual(result.returncode,0)
+  self.assertIn("承認IDが0件",result.stderr)
+  self.assertEqual(self.published(),existing)
+ def test_bulk_withdrawal_above_safety_limit_is_blocked(self):
+  rows=[{"id":f"old-{i}","title":f"記事{i}"} for i in range(8)]
+  existing={"updated_at":"old","articles":rows}
+  self.setup(approved=False,published=existing)
+  result=self.run_script()
+  self.assertNotEqual(result.returncode,0)
+  self.assertIn("一括取り下げ",result.stderr)
+  self.assertEqual(self.published(),existing)
+ def test_explicit_manual_override_allows_intentional_bulk_withdrawal(self):
+  rows=[{"id":f"old-{i}","title":f"記事{i}"} for i in range(8)]
+  existing={"updated_at":"old","articles":rows}
+  self.setup(approved=False,published=existing)
+  result=self.run_script({"ALLOW_BULK_WITHDRAWAL":"true"})
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertEqual(self.published()["articles"],[])
+ def test_approved_id_without_review_record_aborts_without_changes(self):
+  existing={"updated_at":"old","articles":[{"id":"old-1","title":"既存"}]}
+  self.setup(approved=False,published=existing)
+  self.write("publication_approvals.json",{"approved_ids":["missing-review"],"reviewed_articles":{}})
+  result=self.run_script()
+  self.assertNotEqual(result.returncode,0)
+  self.assertIn("審査記録がありません",result.stderr)
+  self.assertEqual(self.published(),existing)
  def test_revoked_approval_removes_existing_public_article(self):
   existing=self.draft(status="公開済み")
   self.setup(approved=False,published={"updated_at":"old","articles":[existing]})
