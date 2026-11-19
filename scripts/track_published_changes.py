@@ -61,7 +61,7 @@ def store_names(article):
     normalized = {
         re.sub(r"[\s　・、。]", "", str(name)).strip()
         for name in names
-        if len(re.sub(r"[\\s　・、。]", "", str(name)).strip()) >= 2
+        if len(re.sub(r"[\s　・、。]", "", str(name)).strip()) >= 2
     }
     return {
         name for name in normalized
