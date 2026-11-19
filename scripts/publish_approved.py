@@ -46,7 +46,7 @@ def main():
  if unknown_ids:
   raise SystemExit("候補・公開済みデータのどちらにも存在しない承認IDがあります: "+", ".join(unknown_ids[:10]))
  removed_ids=set(existing)-approved
- removal_limit=max(1,math.ceil(len(existing)*0.25))
+ removal_limit=max(1,math.floor(len(existing)*0.25))
  if len(removed_ids)>removal_limit and not allow_bulk_withdrawal:
   raise SystemExit(
    f"公開済み記事 {len(existing)}件中 {len(removed_ids)}件の一括取り下げを検出しました。"
