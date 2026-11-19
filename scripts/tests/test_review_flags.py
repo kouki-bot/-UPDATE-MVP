@@ -77,6 +77,36 @@ class ReviewFlagTests(unittest.TestCase):
         self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
         self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
 
+
+    def test_multiple_dates_in_one_event_sentence_are_flagged(self):
+        flags = module.ambiguous_event_date_flags(
+            "カフェ青空が11月10日に開店、11月20日に記念イベント",
+            "カフェ青空は11月10日に開店し、11月20日に記念イベントを開催します。",
+        )
+        self.assertEqual(flags, ["複数日付・対象日確認"])
+
+    def test_single_event_date_is_not_flagged_as_ambiguous(self):
+        flags = module.ambiguous_event_date_flags(
+            "カフェ青空が11月10日に開店",
+            "カフェ青空は11月10日に開店しました。",
+        )
+        self.assertEqual(flags, [])
+
+    def test_ambiguous_event_date_is_held_without_changing_publication_status(self):
+        drafts = [{
+            "id": "ambiguous-date", "title": "カフェ青空が11月10日に開店",
+            "category": ["新店・開店"], "source_url": "https://example.com/story",
+            "source_urls": [{"url": "https://example.com/story"}],
+            "body_excerpt": "カフェ青空は11月10日に開店し、11月20日に記念イベントを開催します。",
+            "published_date": "2026-11-01", "event_date": "2026-11-10",
+            "municipality": "宇部市", "municipality_candidates": ["宇部市"],
+            "freshness": "直近30日", "status": "未確認・公開禁止",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertIn("複数日付・対象日確認", drafts[0]["review_flags"])
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
     def test_similar_titles_flagged_not_removed(self):
         drafts = [
             {"id":"a","title":"【開店】カフェ青空 宇部店","category":["新店・開店"],"source_url":"https://example.com/a","source_urls":[{"url":"https://example.com/a"}],"body_excerpt":"紹介文","published_date":"2026-10-01","municipality":"宇部市","municipality_candidates":["宇部市"],"freshness":"直近30日","status":"x"},
