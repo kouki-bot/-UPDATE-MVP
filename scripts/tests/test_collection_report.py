@@ -103,6 +103,22 @@ class CollectionReportTests(unittest.TestCase):
         self.assertEqual(metrics["sources"][0]["excerpt_coverage_percent"], 66.7)
         self.assertEqual(metrics["sources"][1]["fetch_failed"], 1)
 
+    def test_rss_quality_metrics_attribute_merged_candidate_to_each_source(self):
+        metrics = module.build_rss_quality_metrics(
+            [{"name": "媒体A", "items_read": 1}, {"name": "媒体B", "items_read": 1}],
+            [{
+                "source_name": "媒体A", "source_names": ["媒体A", "媒体B"],
+                "published_date": "2026-11-19", "body_excerpt": "本文",
+                "body_excerpt_method": "article_meta_or_paragraph",
+                "article_fetch_status": "success",
+            }],
+        )
+        self.assertEqual(metrics["candidate_count"], 1)
+        self.assertEqual(metrics["sources"][0]["candidate_count"], 1)
+        self.assertEqual(metrics["sources"][1]["candidate_count"], 1)
+        self.assertEqual(metrics["sources"][0]["excerpt_coverage_percent"], 100.0)
+        self.assertEqual(metrics["sources"][1]["excerpt_coverage_percent"], 100.0)
+
     def test_non_review_only_draft_is_detected(self):
         report = module.build_report(
             {"sources": [], "candidates": []},

@@ -386,12 +386,25 @@ def merge_candidates(candidates):
         url_key = normalize_url(item.get("url", ""))
         if not url_key:
             continue
+        item_sources = item.get("source_names")
+        if not isinstance(item_sources, list):
+            item_sources = [item.get("source_name", "")]
+        item_sources = list(dict.fromkeys(str(name).strip() for name in item_sources if str(name).strip()))
+        if not item_sources:
+            item_sources = ["情報源不明"]
         if url_key not in merged:
             merged[url_key] = item.copy()
             merged[url_key]["area"] = list(item.get("area", []))
             merged[url_key]["categories"] = list(item.get("categories", []))
+            merged[url_key]["source_names"] = item_sources
             continue
         old = merged[url_key]
+        old_sources = old.get("source_names")
+        if not isinstance(old_sources, list):
+            old_sources = [old.get("source_name", "")]
+        old["source_names"] = list(dict.fromkeys(
+            [str(name).strip() for name in old_sources if str(name).strip()] + item_sources
+        ))
         old["categories"] = list(dict.fromkeys(old.get("categories", []) + item.get("categories", [])))
         old["area"] = list(dict.fromkeys(old.get("area", []) + item.get("area", [])))
         if not old.get("published_date") and item.get("published_date"):
