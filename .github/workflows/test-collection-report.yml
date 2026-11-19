@@ -3,6 +3,7 @@ name: Test collection report
 on:
   pull_request:
     paths:
+      - "scripts/collect_rss.py"
       - "scripts/collection_report.py"
       - "scripts/tests/test_collection_report.py"
       - ".github/workflows/test-collection-report.yml"
