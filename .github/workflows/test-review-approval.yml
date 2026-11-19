@@ -60,6 +60,8 @@ jobs:
         run: python -m unittest discover -s scripts/tests -v
       - name: Test approval synchronization conflict safety
         run: node scripts/tests/test_approval_sync.js
+      - name: Test admin token handling and safe rendering
+        run: node scripts/tests/test_review_ui_security.js
       - name: Check review UI JavaScript syntax and change outcome history
         run: |
           python - <<'PY'
