@@ -95,8 +95,14 @@ def build_rss_quality_metrics(rss_sources, rss_candidates):
     """Summarize date/body extraction quality overall and by source."""
     groups = {}
     for row in rss_candidates:
-        name = str(row.get("source_name") or "情報源不明").strip() or "情報源不明"
-        groups.setdefault(name, []).append(row)
+        names = row.get("source_names")
+        if not isinstance(names, list):
+            names = [row.get("source_name", "")]
+        names = list(dict.fromkeys(str(name).strip() for name in names if str(name).strip()))
+        if not names:
+            names = ["情報源不明"]
+        for name in names:
+            groups.setdefault(name, []).append(row)
 
     per_source = []
     for source in rss_sources:
