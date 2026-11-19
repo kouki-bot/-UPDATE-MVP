@@ -440,6 +440,53 @@ def extract_event_date(title, body_excerpt, published_date=""):
     return find_action_date(body) or find_action_date(title_text)
 
 
+
+def event_date_review_flags(title, body_excerpt, event_date, published_date="", reference_date=None):
+    """予定・実施表現と日付の矛盾を検知し、人手確認へ送る。"""
+    parsed_event = parse_date(event_date)
+    if not parsed_event:
+        return []
+    event_day = parsed_event.date()
+    published = parse_date(published_date)
+    today = reference_date or now_jst().date()
+
+    text = unicodedata.normalize(
+        "NFKC", clean_text(f"{title or ''} {body_excerpt or ''}")
+    )
+    action = re.compile(
+        r"オープン|開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|"
+        r"リニューアル|営業再開|改装"
+    )
+    plan = re.compile(
+        r"予定|計画|見込み|目指し|目指す|することが決ま|する方針|"
+        r"オープンする|開店する|閉店する|移転する"
+    )
+    completed = re.compile(
+        r"しました|していました|している|した|営業を開始|営業を終了|"
+        r"オープンし|開店し|閉店し|移転し|リニューアルし|終了し"
+    )
+    date_token = re.compile(
+        rf"(?:{event_day.year}年\s*)?{event_day.month}月\s*{event_day.day}日"
+    )
+    relevant = [
+        sentence for sentence in re.split(r"(?<=[。！？!?])", text)
+        if action.search(sentence) and date_token.search(sentence)
+    ]
+    if not relevant:
+        return []
+
+    flags = []
+    for sentence in relevant:
+        is_planned = bool(plan.search(sentence))
+        is_completed = bool(completed.search(sentence))
+        if is_planned and event_day < today:
+            flags.append("予定日経過・実施確認")
+        if is_completed and published and event_day > published.date():
+            flags.append("実施表現と公開日が不一致")
+        if is_completed and event_day > today:
+            flags.append("実施表現と未来日付が不一致")
+    return list(dict.fromkeys(flags))
+
 def convert_candidate(item, method, source_priority):
     title, url = clean_text(item.get("title")), clean_text(item.get("url"))
     if not title or not url or not is_store_news(title, item.get("body_excerpt") or item.get("description", "")):
@@ -1104,6 +1151,11 @@ def annotate_review_flags(drafts):
             flags.append("公開日未確認")
         if not draft.get("event_date"):
             flags.append("開店・閉店等の日付未確認")
+        date_context_flags = event_date_review_flags(
+            draft.get("title", ""), draft.get("body_excerpt", ""),
+            draft.get("event_date", ""), draft.get("published_date", ""),
+        )
+        flags.extend(date_context_flags)
         body_excerpt = clean_text(draft.get("body_excerpt", ""))
         movement_evidence = re.search(
             r"オープン|開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|リニューアル|改装オープン|営業再開",
@@ -1130,6 +1182,8 @@ def annotate_review_flags(drafts):
             "本文抜粋なし", "公開日未確認",
             "開店・閉店等の日付未確認", "市町未特定",
             "本文で店舗動作を確認できず", "見出しと本文の店舗動作が不一致",
+            "予定日経過・実施確認", "実施表現と公開日が不一致",
+            "実施表現と未来日付が不一致",
         }
         if draft.get("manual_hold"):
             draft["review_priority"] = "要優先確認"
@@ -1149,6 +1203,8 @@ def annotate_review_flags(drafts):
             "開店・閉店等の日付未確認", "市町候補が複数",
             "市町未特定", "未来日付", "予定情報・要確認", "重複の可能性・要確認",
             "本文で店舗動作を確認できず", "見出しと本文の店舗動作が不一致",
+            "予定日経過・実施確認", "実施表現と公開日が不一致",
+            "実施表現と未来日付が不一致",
         }
         if draft.get("manual_hold"):
             draft["review_bucket"] = "確認待ち"

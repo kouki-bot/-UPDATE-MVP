@@ -34,6 +34,49 @@ class ReviewFlagTests(unittest.TestCase):
         b["municipality_candidates"] = ["山口市"]
         self.assertFalse(module.same_store_news_candidate(a, b))
 
+    def test_expired_planned_event_date_is_held_for_confirmation(self):
+        flags = module.event_date_review_flags(
+            "カフェ青空が11月10日にオープン予定",
+            "カフェ青空は11月10日にオープン予定です。",
+            "2026-11-10", "2026-11-01",
+            reference_date=module.datetime(2026, 11, 19, tzinfo=module.JST).date(),
+        )
+        self.assertIn("予定日経過・実施確認", flags)
+
+    def test_completed_event_date_cannot_follow_publication_date(self):
+        flags = module.event_date_review_flags(
+            "カフェ青空が11月25日にオープンしました",
+            "カフェ青空は11月25日にオープンしました。",
+            "2026-11-25", "2026-11-19",
+            reference_date=module.datetime(2026, 11, 19, tzinfo=module.JST).date(),
+        )
+        self.assertIn("実施表現と公開日が不一致", flags)
+        self.assertIn("実施表現と未来日付が不一致", flags)
+
+    def test_matching_completed_event_date_has_no_date_conflict(self):
+        flags = module.event_date_review_flags(
+            "カフェ青空が11月10日にオープン",
+            "カフェ青空は11月10日にオープンしました。",
+            "2026-11-10", "2026-11-12",
+            reference_date=module.datetime(2026, 11, 19, tzinfo=module.JST).date(),
+        )
+        self.assertEqual(flags, [])
+
+    def test_expired_plan_flag_routes_draft_to_review_queue(self):
+        drafts = [{
+            "id": "expired-plan", "title": "カフェ青空が11月10日にオープン予定",
+            "category": ["新店・開店"], "source_url": "https://example.com/story",
+            "source_urls": [{"url": "https://example.com/story"}],
+            "body_excerpt": "カフェ青空は11月10日にオープン予定です。",
+            "published_date": "2026-11-01", "event_date": "2026-11-10",
+            "municipality": "宇部市", "municipality_candidates": ["宇部市"],
+            "freshness": "直近30日", "status": "未確認・公開禁止",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertIn("予定日経過・実施確認", drafts[0]["review_flags"])
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
     def test_similar_titles_flagged_not_removed(self):
         drafts = [
             {"id":"a","title":"【開店】カフェ青空 宇部店","category":["新店・開店"],"source_url":"https://example.com/a","source_urls":[{"url":"https://example.com/a"}],"body_excerpt":"紹介文","published_date":"2026-10-01","municipality":"宇部市","municipality_candidates":["宇部市"],"freshness":"直近30日","status":"x"},
