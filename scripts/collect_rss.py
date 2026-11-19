@@ -376,24 +376,22 @@ def fetch_html_source(source):
     return items
 
 def merge_candidates(candidates):
+    """Merge only records that resolve to the same normalized article URL.
+
+    Matching titles are not sufficient evidence that two articles describe the
+    same store or event; keep them separate for human review instead.
+    """
     merged = {}
-    title_index = {}
     for item in candidates:
         url_key = normalize_url(item.get("url", ""))
         if not url_key:
             continue
-        title_key = re.sub(r"[\W_]+", "", item.get("title", "").lower())
-        key = url_key
-        if key not in merged and title_key and title_key in title_index:
-            key = title_index[title_key]
-        if key not in merged:
-            merged[key] = item.copy()
-            merged[key]["area"] = list(item.get("area", []))
-            merged[key]["categories"] = list(item.get("categories", []))
-            if title_key:
-                title_index[title_key] = key
+        if url_key not in merged:
+            merged[url_key] = item.copy()
+            merged[url_key]["area"] = list(item.get("area", []))
+            merged[url_key]["categories"] = list(item.get("categories", []))
             continue
-        old = merged[key]
+        old = merged[url_key]
         old["categories"] = list(dict.fromkeys(old.get("categories", []) + item.get("categories", [])))
         old["area"] = list(dict.fromkeys(old.get("area", []) + item.get("area", [])))
         if not old.get("published_date") and item.get("published_date"):
