@@ -465,6 +465,15 @@ def ambiguous_event_date_flags(title, body_excerpt):
             return ["複数日付・対象日確認"]
     return []
 
+
+def municipality_conflict_flags(title, body_excerpt):
+    """見出しと本文がそれぞれ異なる市町を店舗所在地として示す場合は確認へ送る。"""
+    title_towns = extract_municipality_candidates(title or "", "")
+    body_towns = extract_municipality_candidates("", body_excerpt or "")
+    if len(title_towns) == 1 and len(body_towns) == 1 and title_towns[0] != body_towns[0]:
+        return ["見出しと本文の市町が不一致"]
+    return []
+
 def event_date_review_flags(title, body_excerpt, event_date, published_date="", reference_date=None):
     """予定・実施表現と日付の矛盾を検知し、人手確認へ送る。"""
     parsed_event = parse_date(event_date)
@@ -1183,6 +1192,9 @@ def annotate_review_flags(drafts):
         flags.extend(ambiguous_event_date_flags(
             draft.get("title", ""), draft.get("body_excerpt", "")
         ))
+        flags.extend(municipality_conflict_flags(
+            draft.get("title", ""), draft.get("body_excerpt", "")
+        ))
         body_excerpt = clean_text(draft.get("body_excerpt", ""))
         movement_evidence = re.search(
             r"オープン|開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|リニューアル|改装オープン|営業再開",
@@ -1211,6 +1223,7 @@ def annotate_review_flags(drafts):
             "本文で店舗動作を確認できず", "見出しと本文の店舗動作が不一致",
             "予定日経過・実施確認", "実施表現と公開日が不一致",
             "実施表現と未来日付が不一致", "複数日付・対象日確認",
+            "見出しと本文の市町が不一致",
         }
         if draft.get("manual_hold"):
             draft["review_priority"] = "要優先確認"
@@ -1231,7 +1244,8 @@ def annotate_review_flags(drafts):
             "市町未特定", "未来日付", "予定情報・要確認", "重複の可能性・要確認",
             "本文で店舗動作を確認できず", "見出しと本文の店舗動作が不一致",
             "予定日経過・実施確認", "実施表現と公開日が不一致",
-            "実施表現と未来日付が不一致",
+            "実施表現と未来日付が不一致", "複数日付・対象日確認",
+            "見出しと本文の市町が不一致",
         }
         if draft.get("manual_hold"):
             draft["review_bucket"] = "確認待ち"
