@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-14T23:42:00+09:00",
-  "description": "公式情報を優先して手動調査した候補。すべて審査専用であり、自動公開しない。",
+  "generated_at": "2026-11-19T22:45:00+09:00",
+  "description": "最新の公式情報・地域取材情報を手動照合した候補。すべて審査専用であり、自動公開しない。",
   "candidates": [
     {
       "id": "a9c4016b7e2d4f81",
@@ -986,6 +986,174 @@
       ],
       "review_priority": "開店日の公式発表待ち",
       "review_bucket": "保留（開店日未確定）",
+      "manual_hold": true
+    },
+    {
+      "id": "a81d3f7c9e2b4056",
+      "title": "【下関市】喫茶 白雫が11月7日グランドオープン",
+      "suggested_headline": "【下関市】喫茶 白雫が11月7日グランドオープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 1,
+      "published_date": "2026-11-06",
+      "event_date": "2026-11-07",
+      "event_date_text": "2026年11月7日（土）11時グランドオープン",
+      "freshness": "直近30日",
+      "age_days": 12,
+      "area": [
+        "下関市"
+      ],
+      "area_status": "施工会社の完成・開店告知と店舗掲載情報で住所を照合",
+      "municipality": "下関市",
+      "municipality_candidates": [
+        "下関市"
+      ],
+      "municipality_group": "下関市",
+      "municipality_status": "店舗公式サイトおよび店舗掲載情報で下関市楠乃を確認",
+      "source_name": "株式会社玉井工務店・喫茶 白雫公式サイト・公式Instagram",
+      "source_url": "https://tamai-koumuten.com/pages/31",
+      "source_urls": [
+        {
+          "source_name": "株式会社玉井工務店・2026年11月6日付完成／翌7日グランドオープン告知",
+          "url": "https://tamai-koumuten.com/pages/31"
+        },
+        {
+          "source_name": "喫茶 白雫公式サイト",
+          "url": "https://kissashizuku.jp/"
+        },
+        {
+          "source_name": "喫茶 白雫公式Instagram",
+          "url": "https://www.instagram.com/kissa_shizuku/"
+        },
+        {
+          "source_name": "店舗掲載情報（住所・営業時間・オープン日。二次情報）",
+          "url": "https://tabelog.com/yamaguchi/A3502/A350201/35015074/"
+        }
+      ],
+      "duplicate_sources_count": 4,
+      "body_excerpt": "喫茶 白雫は下関市楠乃5-5-12に所在。株式会社玉井工務店の2026年11月6日付記事は、内装工事完了と翌7日（土）11時のグランドオープンを明記。以前の施工会社記事にあった11月1日予定は、後日の完成・開店告知により更新されたと判断できる。店舗掲載情報にも2026年11月7日オープン、住所、営業時間10時～17時（木曜定休）が掲載されている。",
+      "body_excerpt_method": "施工会社の開店日告知・店舗公式サイト・店舗掲載情報を照合",
+      "draft_summary": "施工会社の後日付記事で11月7日11時のグランドオープンを確認し、旧予定日の不一致は解消。住所・営業時間は店舗掲載情報と公式サイトを照合。ただし現時点の営業継続は店舗公式の最新発信で確認できていないため、営業状況の最終確認と人による審査が完了するまで公開しない。",
+      "relevance": "開店日確定の可能性が高い新店候補・現在の営業状況は最終確認待ち",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動再調査・施工会社の後日付告知と店舗情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-19T22:45:00+09:00",
+      "review_flags": [
+        "施工会社の後日付記事で11月7日11時のグランドオープンを確認。旧11月1日予定との不一致は更新情報で解消",
+        "店舗公式の最新投稿または店舗への確認で現在の営業継続状況を確認するまで公開不可",
+        "最終承認前のため公開禁止"
+      ],
+      "review_priority": "開店日確認済み・営業状況の最終確認待ち",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
+    },
+    {
+      "id": "b92e4a6d1f7c3085",
+      "title": "【宇部市】カフェ＆デリ「にくとはな」が10月23日オープン",
+      "suggested_headline": "【宇部市】カフェ＆デリ「にくとはな」が10月23日オープン",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 2,
+      "published_date": "2026-10-27",
+      "event_date": "2026-10-23",
+      "event_date_text": "",
+      "freshness": "直近30日",
+      "age_days": 27,
+      "area": [
+        "宇部市"
+      ],
+      "area_status": "山口宇部経済新聞の店主取材記事と地域情報サイトで所在地を照合",
+      "municipality": "宇部市",
+      "municipality_candidates": [
+        "宇部市"
+      ],
+      "municipality_group": "宇部市",
+      "municipality_status": "店主取材記事・地域情報サイトで宇部市南浜町と確認",
+      "source_name": "山口宇部経済新聞・宇部to山陽小野田まひる.com・店舗公式Instagram候補",
+      "source_url": "https://yamaguchi.keizai.biz/headline/5554/",
+      "source_urls": [
+        {
+          "source_name": "山口宇部経済新聞・店主取材記事（2026年10月27日）",
+          "url": "https://yamaguchi.keizai.biz/headline/5554/"
+        },
+        {
+          "source_name": "宇部to山陽小野田まひる.com（2026年10月24日）",
+          "url": "https://mahirunet.com/meat-and-flowers-open/"
+        },
+        {
+          "source_name": "店舗公式Instagram候補（紹介投稿からアカウント名 @nikutohana を特定。公式プロフィールの直接確認は未完了）",
+          "url": "https://www.instagram.com/nikutohana/"
+        }
+      ],
+      "duplicate_sources_count": 3,
+      "body_excerpt": "カフェ＆デリ「にくとはな」は2026年10月23日、宇部市南浜町1-6-43にオープン。山口宇部経済新聞は店主への取材記事で店名、所在地、営業時間10時～15時、店主のコメントを掲載。営業日はInstagramで告知する運用と報じている。地域情報サイトも開店日と住所を掲載。紹介投稿から @nikutohana のアカウント候補を確認したが、店舗公式プロフィールの現行情報・直近営業告知は直接確認できていない。",
+      "body_excerpt_method": "地域経済メディアの店主取材・地域情報サイト・公式SNS候補",
+      "draft_summary": "開店日・所在地は店主取材記事と地域情報サイトで一致。現在の営業日をInstagramで告知する運用との店主説明がある。@nikutohana は紹介投稿から特定したアカウント候補であり、店舗公式プロフィールと最新の営業告知の直接確認が必要。確認が完了するまで公開しない。",
+      "relevance": "店主取材による開店情報あり・公式SNSアカウントと最新営業状況の照合待ち",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動再調査・店主取材記事と地域情報",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-19T22:45:00+09:00",
+      "review_flags": [
+        "店舗公式Instagramのアカウント所有・プロフィール情報を直接確認",
+        "最新の営業日・営業継続状況を公式投稿で確認",
+        "最終承認前のため公開禁止"
+      ],
+      "review_priority": "開店日・住所は複数記事で一致／公式SNS・営業状況確認待ち",
+      "review_bucket": "確認待ち",
+      "manual_hold": true
+    },
+    {
+      "id": "c03f5b8a2d7e9146",
+      "title": "【光市】中華そば 洋RUN 光店が11月下旬～12月オープン予定",
+      "suggested_headline": "【光市】中華そば 洋RUN 光店が11月下旬～12月オープン予定",
+      "category": [
+        "新店・開店"
+      ],
+      "priority": 3,
+      "published_date": "2026-10-18",
+      "event_date": "",
+      "event_date_text": "2026年11月下旬～12月予定（具体日未発表）",
+      "freshness": "予定日・要確認",
+      "age_days": 32,
+      "area": [
+        "光市"
+      ],
+      "area_status": "店舗公式Instagramの告知を引用した地域メディア記事で所在地を確認",
+      "municipality": "光市",
+      "municipality_candidates": [
+        "光市"
+      ],
+      "municipality_group": "光市",
+      "municipality_status": "公式Instagram投稿を引用した地域メディア記事で光市島田と確認",
+      "source_name": "中華そば 洋RUN公式Instagram投稿を引用した号外NET",
+      "source_url": "https://shunan-kudamatsu-hikari.goguynet.jp/2026/10/18/chukasobayouran/",
+      "source_urls": [
+        {
+          "source_name": "号外NET 周南市・下松市・光市（2026年10月18日・店舗公式Instagram投稿を引用）",
+          "url": "https://shunan-kudamatsu-hikari.goguynet.jp/2026/10/18/chukasobayouran/"
+        }
+      ],
+      "duplicate_sources_count": 1,
+      "body_excerpt": "中華そば 洋RUN 光店は光市島田1-11-6 Be st.（ビーストリート）内に出店予定。2026年10月18日付の号外NET記事は店舗公式Instagramの告知を引用し、オープン時期を11月下旬～12月としている。現時点で具体的な開店日は未発表であり、開店予定期間内のため、営業開始の確認が必要。",
+      "body_excerpt_method": "店舗公式Instagram投稿を引用した地域メディア記事",
+      "draft_summary": "光市島田1-11-6への出店予定と開店時期（11月下旬～12月）は、店舗公式Instagram投稿を引用した号外NET記事で確認。具体的な開店日は未発表。公式Instagramのアカウントと最新投稿で開店日・営業開始を確認するまで公開しない。",
+      "relevance": "開店予定候補・公式告知の引用あり・具体的開店日と営業開始確認待ち",
+      "content_type": "店舗・商業施設",
+      "collection_method": "手動再調査・公式Instagram投稿引用記事",
+      "status": "未確認・公開禁止",
+      "created_at": "2026-11-19T22:45:00+09:00",
+      "review_flags": [
+        "具体的な開店日が未発表",
+        "店舗公式Instagramのアカウントと最新告知で開店日・営業開始を確認",
+        "予定期間中のため開店実施を確認するまで公開不可",
+        "最終承認前のため公開禁止"
+      ],
+      "review_priority": "開店予定・実施確認待ち",
+      "review_bucket": "確認待ち",
       "manual_hold": true
     }
   ]
