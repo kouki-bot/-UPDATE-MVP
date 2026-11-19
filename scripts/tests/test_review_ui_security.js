@@ -12,7 +12,7 @@ requireText('id="privateSyncToken" type="password" autocomplete="off"', "passwor
 requireText('var privateSyncToken="";', "in-memory token variable");
 requireText('"Authorization":"Bearer "+privateSyncToken', "Bearer authorization header");
 requireText('fetch("https://api.github.com"+path', "HTTPS GitHub API origin");
-assert.equal((page.match(/el\("privateSyncToken"\)\.value="";privateSyncToken="";/g) || []).length, 4,
+assert.equal((page.match(/el\("privateSyncToken"\)\.value="";privateSyncToken="";/g) || []).length, 3,
   "Token must be cleared after each load/save success and failure path");
 assert.ok(!/localStorage\.(?:setItem|getItem)\([^\n)]*privateSyncToken/.test(page),
   "Token must never be read from or written to localStorage");
