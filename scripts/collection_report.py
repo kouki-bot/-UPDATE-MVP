@@ -91,6 +91,62 @@ def count_draft_values(rows, field, allow_lists=False):
     return dict(sorted(counts.items(), key=lambda item: (-item[1], item[0])))
 
 
+def build_rss_quality_metrics(rss_sources, rss_candidates):
+    """Summarize date/body extraction quality overall and by source."""
+    groups = {}
+    for row in rss_candidates:
+        name = str(row.get("source_name") or "情報源不明").strip() or "情報源不明"
+        groups.setdefault(name, []).append(row)
+
+    per_source = []
+    for source in rss_sources:
+        name = str(source.get("name") or "情報源不明")
+        rows = groups.get(name, [])
+        total = len(rows)
+        dated = sum(1 for row in rows if str(row.get("published_date") or "").strip())
+        excerpts = sum(1 for row in rows if str(row.get("body_excerpt") or "").strip())
+        methods, statuses = {}, {}
+        for row in rows:
+            method = str(row.get("body_excerpt_method") or "unknown")
+            status = str(row.get("article_fetch_status") or "unknown")
+            methods[method] = methods.get(method, 0) + 1
+            statuses[status] = statuses.get(status, 0) + 1
+        requested = sum(count for status, count in statuses.items() if status != "not_requested")
+        per_source.append({
+            "name": name, "items_read": int(source.get("items_read", 0) or 0),
+            "candidate_count": total, "dated_count": dated, "date_missing_count": total - dated,
+            "date_coverage_percent": round(dated * 100 / total, 1) if total else None,
+            "excerpt_count": excerpts, "excerpt_missing_count": total - excerpts,
+            "excerpt_coverage_percent": round(excerpts * 100 / total, 1) if total else None,
+            "article_pages_requested": requested,
+            "not_fetched_limit": methods.get("not_fetched_limit", 0),
+            "fetch_failed": methods.get("fetch_failed", 0),
+            "html_loaded_no_excerpt": methods.get("html_loaded_no_excerpt", 0),
+            "fetch_status_counts": statuses, "body_method_counts": methods,
+        })
+
+    total = len(rss_candidates)
+    dated = sum(1 for row in rss_candidates if str(row.get("published_date") or "").strip())
+    excerpts = sum(1 for row in rss_candidates if str(row.get("body_excerpt") or "").strip())
+    methods, statuses = {}, {}
+    for row in rss_candidates:
+        method = str(row.get("body_excerpt_method") or "unknown")
+        status = str(row.get("article_fetch_status") or "unknown")
+        methods[method] = methods.get(method, 0) + 1
+        statuses[status] = statuses.get(status, 0) + 1
+    return {
+        "candidate_count": total, "dated_count": dated, "date_missing_count": total - dated,
+        "date_coverage_percent": round(dated * 100 / total, 1) if total else None,
+        "excerpt_count": excerpts, "excerpt_missing_count": total - excerpts,
+        "excerpt_coverage_percent": round(excerpts * 100 / total, 1) if total else None,
+        "article_pages_requested": sum(count for status, count in statuses.items() if status != "not_requested"),
+        "not_fetched_limit": methods.get("not_fetched_limit", 0),
+        "fetch_failed": methods.get("fetch_failed", 0),
+        "html_loaded_no_excerpt": methods.get("html_loaded_no_excerpt", 0),
+        "fetch_status_counts": statuses, "body_method_counts": methods, "sources": per_source,
+    }
+
+
 def build_report(official, rss, drafts, excluded=None):
     excluded = excluded or {}
     excluded_rows = excluded.get('candidates', [])
@@ -136,6 +192,7 @@ def build_report(official, rss, drafts, excluded=None):
             rss_issues.append({"name": source.get("name", "名称不明"), "http_status": status})
 
     duplicates = audit_duplicates(official_candidates, rss_candidates)
+    rss_quality = build_rss_quality_metrics(rss_sources, rss_candidates)
     if not isinstance(excluded_rows, list) or not isinstance(excluded_reason_counts, dict):
         raise ValueError("Excluded audit JSON schema invalid")
 
@@ -174,6 +231,7 @@ def build_report(official, rss, drafts, excluded=None):
             {"name": x.get("name", "名称不明"), "items": int(x.get("items_read", 0) or 0)}
             for x in rss_sources
         ],
+        "rss_quality": rss_quality,
     }
 
 def render_markdown(report):
@@ -208,6 +266,33 @@ def render_markdown(report):
         if counts:
             lines += [f"### {heading}", ""]
             lines += [f"- {name}: {count}件" for name, count in counts.items()]
+            lines.append("")
+    quality = report.get("rss_quality", {})
+    if quality:
+        def percent(value):
+            return f"{value:.1f}%" if value is not None else "—"
+        lines += [
+            "### RSS取得品質（全候補）", "",
+            f"- 公開日取得: {quality.get('dated_count', 0)}/{quality.get('candidate_count', 0)}件（{percent(quality.get('date_coverage_percent'))}）",
+            f"- 本文抜粋取得: {quality.get('excerpt_count', 0)}/{quality.get('candidate_count', 0)}件（{percent(quality.get('excerpt_coverage_percent'))}）",
+            f"- 記事ページ確認: {quality.get('article_pages_requested', 0)}件",
+            f"- 上限による未取得: {quality.get('not_fetched_limit', 0)}件",
+            f"- 取得失敗: {quality.get('fetch_failed', 0)}件",
+            f"- HTML取得済み・本文なし: {quality.get('html_loaded_no_excerpt', 0)}件", "",
+        ]
+        if quality.get("sources"):
+            lines += [
+                "| 情報源 | 候補 | 日付取得率 | 本文取得率 | ページ確認 | 上限未取得 | 取得失敗 |",
+                "|---|---:|---:|---:|---:|---:|---:|",
+            ]
+            for source in quality["sources"]:
+                lines.append(
+                    f"| {source['name']} | {source['candidate_count']} | "
+                    f"{percent(source['date_coverage_percent'])} | "
+                    f"{percent(source['excerpt_coverage_percent'])} | "
+                    f"{source['article_pages_requested']} | "
+                    f"{source['not_fetched_limit']} | {source['fetch_failed']} |"
+                )
             lines.append("")
     if report.get("rss_issues"):
         lines += ["### RSS取得に問題がある情報源", ""]
