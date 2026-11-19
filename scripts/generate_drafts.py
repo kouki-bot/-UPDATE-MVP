@@ -448,15 +448,15 @@ def ambiguous_event_date_flags(title, body_excerpt):
         "NFKC", clean_text(f"{title or ''} {body_excerpt or ''}")
     )
     date_pattern = re.compile(
-        r"20\\d{2}年\\s*\\d{1,2}月\\s*(?:\\d{1,2}日|末)|"
-        r"\\d{1,2}月\\s*\\d{1,2}日|(?<!\\d)\\d{1,2}日"
+        r"20\d{2}年\s*\d{1,2}月\s*(?:\d{1,2}日|末)|"
+        r"\d{1,2}月\s*\d{1,2}日|(?<!\d)\d{1,2}日"
     )
     action_pattern = re.compile(
         r"オープン(?!セール|場所|情報|記念|キャンペーン)|"
         r"開店|開業|出店|閉店|閉業|営業終了|営業を終了|移転|"
         r"リニューアル|営業再開"
     )
-    sentences = re.split(r"(?<=[。！？!?])|\\n", text)
+    sentences = re.split(r"(?<=[。！？!?])|\n", text)
     for sentence in sentences:
         if not action_pattern.search(sentence):
             continue
