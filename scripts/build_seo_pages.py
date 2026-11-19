@@ -209,6 +209,81 @@ def build_article_page(article):
     return slug, page
 
 
+
+AREA_OUT = ROOT / "areas"
+AREA_SLUGS = {
+    "山口市": "yamaguchi",
+    "宇部市": "ube",
+    "下関市": "shimonoseki",
+    "防府市": "hofu",
+    "周南市": "shunan",
+    "山陽小野田市": "sanyo-onoda",
+    "岩国市": "iwakuni",
+    "萩市": "hagi",
+    "光市": "hikari",
+    "長門市": "nagato",
+    "柳井市": "yanai",
+    "美祢市": "mine",
+    "阿武町": "abu",
+    "平生町": "hirao",
+    "田布施町": "tabuse",
+    "周防大島町": "suo-oshima",
+    "和木町": "waku",
+    "上関町": "kaminoseki",
+}
+
+
+def build_area_page(municipality, articles):
+    slug = AREA_SLUGS.get(municipality)
+    if not slug or len(articles) < 3:
+        return None
+    items = []
+    for article in sorted(articles, key=lambda a: (str(a.get("event_date") or ""), str(a.get("published_date") or "")), reverse=True):
+        article_slug = safe_slug(article)
+        if not article_slug:
+            continue
+        title = esc(article.get("title") or "店舗情報")
+        category = esc("・".join(article.get("category", [])) if isinstance(article.get("category"), list) else article.get("category", ""))
+        status = esc(article.get("business_status") or "")
+        date = esc(article.get("event_date") or article.get("published_date") or "")
+        items.append(f'<li class="area-item"><a href="../articles/{article_slug}.html"><span class="area-category">{category}</span><strong>{title}</strong><span class="area-meta">{status}　／　{date}</span></a></li>')
+    if len(items) < 3:
+        return None
+    title = f"{municipality}の新店・閉店・リニューアル情報"
+    description = f"{municipality}の新店舗・開店、閉店、移転、リニューアル情報を掲載。情報源を確認した記事を一覧で紹介します。"
+    return f"""<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{esc(title)}｜山口ローカルUPDATE</title><meta name="description" content="{esc(description)}">
+<link rel="canonical" href="{BASE}/areas/{slug}.html">
+<meta property="og:type" content="website"><meta property="og:title" content="{esc(title)}｜山口ローカルUPDATE"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{BASE}/areas/{slug}.html">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J79VXDWMTV"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-J79VXDWMTV');</script>
+<link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../newsroom.css">
+<style>.area-wrap{{max-width:900px;margin:0 auto;padding:42px 22px 70px}}.area-wrap h1{{font-size:clamp(25px,4vw,38px);line-height:1.45}}.area-intro{{color:#62695f;line-height:2;margin:16px 0 28px}}.area-list{{list-style:none;padding:0;margin:0;display:grid;gap:12px}}.area-item a{{display:grid;gap:7px;padding:19px 20px;border:1px solid #e3e2d8;border-radius:9px;background:#fffefa;color:inherit;text-decoration:none}}.area-item strong{{font-size:16px;line-height:1.7}}.area-category,.area-meta{{font-size:11px;color:#747b70}}.area-back{{display:flex;gap:18px;flex-wrap:wrap;margin-top:30px}}</style></head>
+<body class="detail-page"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a><nav class="header-nav"><a href="../index.html">トップ</a><a href="../new.html">新店情報</a><a href="../closed.html">閉店情報</a><a href="../listing.html">掲載・相談</a></nav></header>
+<main class="area-wrap"><span class="eyebrow">LOCAL STORE UPDATE</span><h1>{esc(title)}</h1><p class="area-intro">{esc(municipality)}で確認・公開した店舗の新規開店、閉店、移転、リニューアル情報をまとめています。各記事には確認元を掲載しています。営業状況や日程は変更される場合があるため、訪問前に店舗の公式案内をご確認ください。</p><p>掲載記事：{len(items)}件</p><ul class="area-list">{"".join(items)}</ul><div class="area-back"><a href="../new.html">新店・開店情報一覧</a><a href="../closed.html">閉店・移転情報一覧</a><a href="../index.html">トップページ</a></div></main><footer class="footer"><div class="container"><small>© 2026 山口ローカルUPDATE</small></div></footer></body></html>"""
+
+
+def build_area_pages(eligible):
+    grouped = {}
+    for article in eligible:
+        municipality = str(article.get("municipality") or "").strip()
+        if municipality:
+            grouped.setdefault(municipality, []).append(article)
+    AREA_OUT.mkdir(exist_ok=True)
+    keep = set()
+    for municipality, records in grouped.items():
+        page = build_area_page(municipality, records)
+        slug = AREA_SLUGS.get(municipality)
+        if page and slug:
+            filename = slug + ".html"
+            keep.add(filename)
+            (AREA_OUT / filename).write_text(page, encoding="utf-8")
+    for path in AREA_OUT.glob("*.html"):
+        if path.name not in keep:
+            path.unlink()
+    return sorted(keep)
+
+
 def main():
     data = json.loads(DATA.read_text(encoding="utf-8"))
     articles = data.get("articles", [])
@@ -228,13 +303,19 @@ def main():
         if path.name not in keep:
             path.unlink()
 
+    # Municipality landing pages are generated only where at least three
+    # eligible, approved articles exist. Empty/thin locations are not indexed.
+    area_pages = build_area_pages(eligible)
+
     urls = [
         (f"{BASE}/", "daily", "1.0"),
         (f"{BASE}/new.html", "daily", "0.9"),
         (f"{BASE}/closed.html", "daily", "0.9"),
         (f"{BASE}/listing.html", "monthly", "0.6"),
         (f"{BASE}/contact.html", "monthly", "0.5"),
-    ] + [(f"{BASE}/articles/{name}", "weekly", "0.7") for name in sorted(keep)]
+    ] + [(f"{BASE}/articles/{name}", "weekly", "0.7") for name in sorted(keep)] + [
+        (f"{BASE}/areas/{name}", "weekly", "0.6") for name in area_pages
+    ]
 
     root = Element("urlset", {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"})
     for loc, frequency, priority in urls:
@@ -244,6 +325,7 @@ def main():
         SubElement(item, "priority").text = priority
     ElementTree(root).write(ROOT / "sitemap.xml", encoding="utf-8", xml_declaration=True)
     print(f"SEO detail pages generated: {len(keep)} (approved and review-clear records only)")
+    print(f"Municipality landing pages generated: {len(area_pages)} (minimum 3 eligible articles per municipality)")
 
 
 if __name__ == "__main__":
