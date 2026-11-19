@@ -664,7 +664,7 @@ def same_event(a, b):
     return False
 
 def merge_candidates(items):
-    """URL重複に加え、タイトルが明確に一致する別媒体記事も統合する。"""
+    """URL一致、または店舗名・動作日・市町が一致する候補だけを統合する。"""
     merged_items = []
     for item in items:
         normalized = item.get("normalized_url") or normalize_url(item.get("url", ""))
@@ -683,7 +683,7 @@ def merge_candidates(items):
                 normalize_url(s.get("url", ""))
                 for s in old.get("source_urls", [])
             )
-            if normalized in old_urls or same_event(candidate, old) or same_store_news_candidate(candidate, old):
+            if normalized in old_urls or same_store_news_candidate(candidate, old):
                 match_index = index
                 break
         if match_index is None:
