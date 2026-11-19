@@ -83,6 +83,33 @@ class PublishedStoreChangeTests(unittest.TestCase):
         candidate["body_excerpt"] = "長崎ちゃんめん 山口小郡店（山口市小郡）。"
         self.assertEqual(module.find_status_changes([candidate], [published]), [])
 
+    def test_store_names_normalizes_whitespace_in_full_branch_names(self):
+        article = {
+            "title": "宇部市の『長崎ちゃんめん 山口小郡店』が開店",
+            "body": "長崎ちゃんめん 山口小郡店が宇部市に開店しました。",
+        }
+        names = module.store_names(article)
+        self.assertIn("長崎ちゃんめん山口小郡店", names)
+        self.assertNotIn("山口小郡店", names)
+
+    def test_alert_preserves_all_valid_source_urls_for_human_review(self):
+        draft = self.candidate()
+        draft["source_urls"] = [
+            {"source_name": "媒体A", "url": "https://news-a.example/story?utm_source=rss"},
+            {"source_name": "媒体B", "url": "https://news-b.example/story"},
+            {"source_name": "不正URL", "url": "javascript:alert(1)"},
+            {"source_name": "媒体A重複", "url": "https://news-a.example/story"},
+        ]
+        alerts = module.find_status_changes([draft], [self.published()])
+        sources = alerts[0]["sources"]
+        self.assertEqual(len(sources), 2)
+        self.assertEqual(
+            {item["source_name"] for item in sources}, {"媒体A", "媒体B"}
+        )
+        self.assertTrue(all(item["url"].startswith("https://") for item in sources))
+        change = draft["published_change_candidates"][0]
+        self.assertEqual(change["candidate_sources"], sources)
+
     def test_report_explicitly_says_manual_review_only(self):
         report = module.render_markdown([])
         self.assertIn("自動承認・公開記事の自動変更を行いません", report)
