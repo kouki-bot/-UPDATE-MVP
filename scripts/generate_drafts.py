@@ -1126,6 +1126,42 @@ def classify_source_reliability(source_name):
     }
 
 
+SOURCE_DOMAIN_ALLOWLIST = {
+    "山口県公式・報道発表": ("pref.yamaguchi.lg.jp",),
+    "山口宇部経済新聞": ("yamaguchi.keizai.biz",),
+    "号外NET 山口市・防府市": ("yamaguchi-hofu.goguynet.jp",),
+    "号外NET 宇部市・山陽小野田市": ("ube-sanyoonoda.goguynet.jp",),
+    "山口新聞 開店・閉店一覧": ("yama.minato-yamaguchi.co.jp",),
+    "開店閉店.com 山口カテゴリ": ("kaiten-heiten-24.com", "kaiten-heiten.com"),
+}
+
+
+def source_url_domain_mismatches(source_name, source_urls):
+    """既知の配信元名と記事URLのホストが明確に食い違う場合だけ警告する。"""
+    expected = SOURCE_DOMAIN_ALLOWLIST.get(clean_text(source_name))
+    if not expected:
+        return []
+    mismatches = []
+    rows = source_urls if isinstance(source_urls, list) else []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        url = clean_text(row.get("url"))
+        if not url:
+            continue
+        try:
+            parsed = urlsplit(url)
+            host = (parsed.hostname or "").lower().rstrip(".")
+        except ValueError:
+            host = ""
+        if parsed.scheme not in {"http", "https"} or not host:
+            mismatches.append(url)
+            continue
+        if not any(host == domain or host.endswith("." + domain) for domain in expected):
+            mismatches.append(url)
+    return mismatches
+
+
 def source_reliability_for_sources(source_name, source_urls):
     """複数情報源は個別に分類し、最上位区分と弱い情報源の存在を記録する。"""
     rows = source_urls if isinstance(source_urls, list) else []
@@ -1231,6 +1267,14 @@ def annotate_review_flags(drafts):
         source_quality = source_reliability_for_sources(
             draft.get("source_name", ""), draft.get("source_urls", [])
         )
+        domain_mismatches = source_url_domain_mismatches(
+            draft.get("source_name", ""), draft.get("source_urls", [])
+        )
+        if domain_mismatches:
+            flags.append("情報源名とURLドメインが不一致")
+            draft["source_domain_mismatch_urls"] = domain_mismatches
+        else:
+            draft["source_domain_mismatch_urls"] = []
         draft["source_reliability"] = source_quality["level"]
         draft["source_reliability_details"] = source_quality["sources"]
         draft["source_reliability_note"] = source_quality["note"]
@@ -1287,6 +1331,7 @@ def annotate_review_flags(drafts):
             "実施表現と未来日付が不一致", "複数日付・対象日確認",
             "見出しと本文の市町が不一致", "情報源が未分類",
             "情報源が低信頼・要裏取り", "店舗・運営元の一次情報未確認",
+            "情報源名とURLドメインが不一致",
         }
         if draft.get("manual_hold"):
             draft["review_priority"] = "要優先確認"
