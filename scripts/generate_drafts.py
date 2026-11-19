@@ -1097,6 +1097,56 @@ def same_store_duplicate(a, b):
     return same_store_news_candidate(a, b)
 
 
+def classify_source_reliability(source_name):
+    """登録済みの取得元だけを分類。媒体名だけで店舗公式と誤認しない。"""
+    name = clean_text(source_name)
+    if name == "山口県公式・報道発表":
+        return {
+            "level": "公的機関の公式情報",
+            "rank": 3,
+            "note": "公的機関の発表。店舗自身の公式発表とは限らないため店舗情報は別途確認。",
+        }
+    if name in {"山口宇部経済新聞", "号外NET 山口市・防府市",
+                "号外NET 宇部市・山陽小野田市", "山口新聞 開店・閉店一覧"}:
+        return {
+            "level": "地域報道・編集媒体",
+            "rank": 2,
+            "note": "二次情報。記事内容を確認し、可能なら店舗・運営会社の公式発表で裏取り。",
+        }
+    if name == "開店閉店.com 山口カテゴリ":
+        return {
+            "level": "店舗情報投稿・集約サイト",
+            "rank": 1,
+            "note": "投稿・集約情報として扱い、店舗公式情報または別の独立した情報源で裏取り。",
+        }
+    return {
+        "level": "情報源未分類",
+        "rank": 0,
+        "note": "登録済みの信頼区分がないため、発信主体と根拠を人手で確認。",
+    }
+
+
+def source_reliability_for_sources(source_name, source_urls):
+    """複数情報源は個別に分類し、最上位区分と弱い情報源の存在を記録する。"""
+    rows = source_urls if isinstance(source_urls, list) else []
+    names = [clean_text(row.get("source_name")) for row in rows if isinstance(row, dict)]
+    if source_name:
+        names.append(clean_text(source_name))
+    names = list(dict.fromkeys(name for name in names if name))
+    classified = [{"source_name": name, **classify_source_reliability(name)} for name in names]
+    if not classified:
+        classified = [classify_source_reliability("")]
+    strongest = max(classified, key=lambda row: row["rank"])
+    return {
+        "level": strongest["level"],
+        "sources": classified,
+        "has_unclassified": any(row["rank"] == 0 for row in classified),
+        "has_low_reliability": any(row["rank"] == 1 for row in classified),
+        "has_secondary_only": max(row["rank"] for row in classified) < 3,
+        "note": " ".join(dict.fromkeys(row["note"] for row in classified)),
+    }
+
+
 def annotate_review_flags(drafts):
     """重複候補と確認事項を記録する。自動削除はしない。"""
     groups = {}
@@ -1178,6 +1228,18 @@ def annotate_review_flags(drafts):
 
         if not draft.get("source_url") and not draft.get("source_urls"):
             flags.append("情報源URLなし")
+        source_quality = source_reliability_for_sources(
+            draft.get("source_name", ""), draft.get("source_urls", [])
+        )
+        draft["source_reliability"] = source_quality["level"]
+        draft["source_reliability_details"] = source_quality["sources"]
+        draft["source_reliability_note"] = source_quality["note"]
+        if source_quality["has_unclassified"]:
+            flags.append("情報源が未分類")
+        if source_quality["has_low_reliability"]:
+            flags.append("情報源が低信頼・要裏取り")
+        if source_quality["has_secondary_only"]:
+            flags.append("店舗・運営元の一次情報未確認")
         if not draft.get("body_excerpt"):
             flags.append("本文抜粋なし")
         if not draft.get("published_date"):
@@ -1223,7 +1285,8 @@ def annotate_review_flags(drafts):
             "本文で店舗動作を確認できず", "見出しと本文の店舗動作が不一致",
             "予定日経過・実施確認", "実施表現と公開日が不一致",
             "実施表現と未来日付が不一致", "複数日付・対象日確認",
-            "見出しと本文の市町が不一致",
+            "見出しと本文の市町が不一致", "情報源が未分類",
+            "情報源が低信頼・要裏取り", "店舗・運営元の一次情報未確認",
         }
         if draft.get("manual_hold"):
             draft["review_priority"] = "要優先確認"
