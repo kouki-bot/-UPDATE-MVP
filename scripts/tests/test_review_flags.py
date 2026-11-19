@@ -85,6 +85,43 @@ class ReviewFlagTests(unittest.TestCase):
         )
         self.assertEqual(flags, ["複数日付・対象日確認"])
 
+    def test_ambiguous_event_date_is_routed_to_confirmation_queue(self):
+        drafts = [{
+            "id": "ambiguous-date-hold", "title": "カフェ青空が11月10日に開店",
+            "category": ["新店・開店"], "source_url": "https://example.com/story",
+            "source_urls": [{"url": "https://example.com/story"}],
+            "body_excerpt": "カフェ青空は11月10日に開店し、11月20日に記念イベントを開催します。",
+            "published_date": "2026-11-01", "event_date": "2026-11-10",
+            "municipality": "宇部市", "municipality_candidates": ["宇部市"],
+            "freshness": "直近30日", "status": "未確認・公開禁止",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
+    def test_title_body_municipality_conflict_is_held(self):
+        drafts = [{
+            "id": "municipality-conflict", "title": "宇部市のカフェ青空が開店",
+            "category": ["新店・開店"], "source_url": "https://example.com/story",
+            "source_urls": [{"url": "https://example.com/story"}],
+            "body_excerpt": "所在地は山口県山口市中央です。カフェ青空が開店しました。",
+            "published_date": "2026-11-01", "event_date": "2026-11-10",
+            "municipality": "", "municipality_candidates": ["宇部市"],
+            "freshness": "直近30日", "status": "未確認・公開禁止",
+        }]
+        module.annotate_review_flags(drafts)
+        self.assertIn("見出しと本文の市町が不一致", drafts[0]["review_flags"])
+        self.assertEqual(drafts[0]["review_bucket"], "確認待ち")
+        self.assertEqual(drafts[0]["status"], "未確認・公開禁止")
+
+    def test_matching_title_body_municipality_is_not_flagged(self):
+        self.assertEqual(
+            module.municipality_conflict_flags(
+                "宇部市のカフェ青空が開店", "所在地は山口県宇部市中央です。"
+            ),
+            [],
+        )
+
     def test_single_event_date_is_not_flagged_as_ambiguous(self):
         flags = module.ambiguous_event_date_flags(
             "カフェ青空が11月10日に開店",
