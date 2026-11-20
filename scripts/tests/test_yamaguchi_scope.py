@@ -277,14 +277,21 @@ class YamaguchiScopeTests(unittest.TestCase):
         ))
 
     def test_future_store_event_date_is_treated_as_scheduled(self):
-        status, age = module.get_freshness("2026-11-21", is_event_date=True)
+        # Freeze the clock so the one-day tolerance is tested consistently
+        # regardless of when the GitHub Actions workflow runs.
+        fixed_now = module.datetime(2026, 11, 20, tzinfo=module.JST)
+        with unittest.mock.patch.object(module, "now_jst", return_value=fixed_now):
+            status, age = module.get_freshness("2026-11-22", is_event_date=True)
         self.assertEqual(status, "予定日・要確認")
-        self.assertLess(age, 0)
+        self.assertEqual(age, -2)
 
     def test_future_publication_date_remains_an_anomaly(self):
-        status, age = module.get_freshness("2026-11-21", is_event_date=False)
+        # A publication date more than one day in the future remains flagged.
+        fixed_now = module.datetime(2026, 11, 20, tzinfo=module.JST)
+        with unittest.mock.patch.object(module, "now_jst", return_value=fixed_now):
+            status, age = module.get_freshness("2026-11-22", is_event_date=False)
         self.assertEqual(status, "未来日付・要確認")
-        self.assertLess(age, 0)
+        self.assertEqual(age, -2)
 
     def test_event_date_is_extracted_from_body(self):
         self.assertEqual(
