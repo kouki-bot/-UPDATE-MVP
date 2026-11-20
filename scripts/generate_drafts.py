@@ -625,8 +625,8 @@ def get_freshness(date_value, is_event_date=False):
     if parsed is None:
         return "日付確認が必要", None
     age = (now_jst().date() - parsed.date()).days
-    if age < -1:
-        # 店舗動作日として本文・タイトルから抽出した未来日は、誤日付ではなく予定情報として扱う。
+    if age < 0:
+        # 未来日は1日先でも要確認。店舗動作日と記事公開日の異常を区別する。
         return ("予定日・要確認" if is_event_date else "未来日付・要確認"), age
     age = max(age, 0)
     if age <= RECENT_DAYS:
