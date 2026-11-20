@@ -179,7 +179,7 @@ def build_article_page(article):
 <link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../newsroom.css"><link rel="stylesheet" href="../article.css">
 <script type="application/ld+json">{safe_json}</script>
 
-</head><body class="article-story-page"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a><nav class="header-nav"><a href="../index.html">トップ</a><a href="../new.html">新店情報</a><a href="../closed.html">閉店情報</a><a class="nav-contact" href="../listing.html">掲載依頼</a></nav></header>
+</head><body class="article-story-page"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a><nav class="header-nav"><a href="../index.html">トップ</a><a href="../new.html">新店情報</a><a href="../closed.html">閉店情報</a><a href="../areas/index.html">地域別</a><a class="nav-contact" href="../listing.html">掲載依頼</a></nav></header>
 <main class="story-wrap">
 <nav class="story-breadcrumb" aria-label="パンくずリスト"><a href="../index.html">トップ</a><span aria-hidden="true">/</span><a href="../{ "closed.html" if is_closed else "new.html" }">{esc(section_label)}</a><span aria-hidden="true">/</span><span aria-current="page">{esc(title)}</span></nav>
 <section class="story-hero">
@@ -259,7 +259,7 @@ def build_area_page(municipality, articles):
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-J79VXDWMTV"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-J79VXDWMTV');</script>
 <link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../newsroom.css">
 <style>.area-wrap{{max-width:900px;margin:0 auto;padding:42px 22px 70px}}.area-wrap h1{{font-size:clamp(25px,4vw,38px);line-height:1.45}}.area-intro{{color:#62695f;line-height:2;margin:16px 0 28px}}.area-list{{list-style:none;padding:0;margin:0;display:grid;gap:12px}}.area-item a{{display:grid;gap:7px;padding:19px 20px;border:1px solid #e3e2d8;border-radius:9px;background:#fffefa;color:inherit;text-decoration:none}}.area-item strong{{font-size:16px;line-height:1.7}}.area-category,.area-meta{{font-size:11px;color:#747b70}}.area-back{{display:flex;gap:18px;flex-wrap:wrap;margin-top:30px}}</style></head>
-<body class="detail-page"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a><nav class="header-nav"><a href="../index.html">トップ</a><a href="../new.html">新店情報</a><a href="../closed.html">閉店情報</a><a href="../listing.html">掲載・相談</a></nav></header>
+<body class="detail-page"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a><nav class="header-nav"><a href="../index.html">トップ</a><a href="../new.html">新店情報</a><a href="../closed.html">閉店情報</a><a href="../areas/index.html">地域別</a><a href="../listing.html">掲載・相談</a></nav></header>
 <main class="area-wrap"><span class="eyebrow">LOCAL STORE UPDATE</span><h1>{esc(title)}</h1><p class="area-intro">{esc(municipality)}で確認・公開した店舗の新規開店、閉店、移転、リニューアル情報をまとめています。各記事には確認元を掲載しています。営業状況や日程は変更される場合があるため、訪問前に店舗の公式案内をご確認ください。</p><p>掲載記事：{len(items)}件</p><ul class="area-list">{"".join(items)}</ul><div class="area-back"><a href="../new.html">新店・開店情報一覧</a><a href="../closed.html">閉店・移転情報一覧</a><a href="../index.html">トップページ</a></div></main><footer class="footer"><div class="container"><small>© 2026 山口ローカルUPDATE</small></div></footer></body></html>"""
 
 
@@ -279,9 +279,44 @@ def build_area_pages(eligible):
             keep.add(filename)
             (AREA_OUT / filename).write_text(page, encoding="utf-8")
     for path in AREA_OUT.glob("*.html"):
-        if path.name not in keep:
+        if path.name not in keep and path.name != "index.html":
             path.unlink()
     return sorted(keep)
+
+
+def build_area_index(area_pages, eligible):
+    """Create a navigable directory for municipality pages that meet the SEO threshold."""
+    records = []
+    for filename in area_pages:
+        slug = filename[:-5]
+        municipality = next((name for name, value in AREA_SLUGS.items() if value == slug), None)
+        if not municipality:
+            continue
+        count = sum(1 for article in eligible if str(article.get("municipality") or "").strip() == municipality)
+        records.append((municipality, filename, count))
+
+    if records:
+        items = "".join(
+            f'<li class="area-directory-item"><a href="{esc(filename)}"><strong>{esc(municipality)}</strong><span>{count}件の記事を見る →</span></a></li>'
+            for municipality, filename, count in records
+        )
+        content = f'<ul class="area-directory-list">{items}</ul>'
+        intro = "公開記事が3件以上ある市町の情報を、地域ごとにまとめています。"
+    else:
+        content = '<p class="area-empty">現在、地域別にまとめている記事はありません。</p>'
+        intro = "地域別の記事一覧です。公開記事が一定数に達した市町から順次掲載します。"
+
+    page = f'''<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>地域別の新店・閉店情報｜山口ローカルUPDATE</title><meta name="description" content="山口県内の新店・閉店・移転・リニューアル情報を市町別にまとめています。">
+<link rel="canonical" href="{BASE}/areas/index.html">
+<meta property="og:type" content="website"><meta property="og:title" content="地域別の新店・閉店情報｜山口ローカルUPDATE"><meta property="og:description" content="山口県内の新店・閉店・移転・リニューアル情報を市町別にまとめています。"><meta property="og:url" content="{BASE}/areas/index.html">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-J79VXDWMTV"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-J79VXDWMTV');</script>
+<link rel="stylesheet" href="../index.css"><link rel="stylesheet" href="../newsroom.css">
+<style>.area-directory-wrap{{max-width:900px;margin:0 auto;padding:42px 22px 70px}}.area-directory-wrap h1{{font-size:clamp(25px,4vw,38px);line-height:1.45}}.area-directory-intro{{color:#62695f;line-height:2;margin:16px 0 28px}}.area-directory-list{{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}}.area-directory-item a{{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border:1px solid #e3e2d8;border-radius:9px;background:#fffefa;color:inherit;text-decoration:none}}.area-directory-item strong{{font-size:17px}}.area-directory-item span{{font-size:12px;color:#747b70}}.area-empty{{padding:24px;background:#fffefa;border:1px solid #e3e2d8;border-radius:9px;color:#62695f}}</style></head>
+<body class="detail-page"><header class="site-header"><a class="brand" href="../index.html"><span class="brand-mark">LU<span>.</span></span><span class="brand-name">YAMAGUCHI<br>LOCAL UPDATE</span></a><nav class="header-nav"><a href="../index.html">トップ</a><a href="../new.html">新店情報</a><a href="../closed.html">閉店情報</a><a href="index.html" aria-current="page">地域別</a><a href="../listing.html">掲載・相談</a></nav></header>
+<main class="area-directory-wrap"><span class="eyebrow">LOCAL STORE UPDATE</span><h1>地域別の新店・閉店情報</h1><p class="area-directory-intro">{esc(intro)}</p>{content}<div class="area-back"><a href="../new.html">新店・開店情報一覧</a><a href="../closed.html">閉店・移転情報一覧</a><a href="../index.html">トップページ</a></div></main><footer class="footer"><div class="container"><small>© 2026 山口ローカルUPDATE</small></div></footer></body></html>'''
+    (AREA_OUT / "index.html").write_text(page, encoding="utf-8")
 
 
 def main():
@@ -306,6 +341,7 @@ def main():
     # Municipality landing pages are generated only where at least three
     # eligible, approved articles exist. Empty/thin locations are not indexed.
     area_pages = build_area_pages(eligible)
+    build_area_index(area_pages, eligible)
 
     urls = [
         (f"{BASE}/", "daily", "1.0"),
@@ -314,7 +350,8 @@ def main():
         (f"{BASE}/listing.html", "monthly", "0.6"),
         (f"{BASE}/contact.html", "monthly", "0.5"),
     ] + [(f"{BASE}/articles/{name}", "weekly", "0.7") for name in sorted(keep)] + [
-        (f"{BASE}/areas/{name}", "weekly", "0.6") for name in area_pages
+        (f"{BASE}/areas/index.html", "weekly", "0.7"),
+        *[(f"{BASE}/areas/{name}", "weekly", "0.6") for name in area_pages],
     ]
 
     root = Element("urlset", {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"})
