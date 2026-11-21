@@ -1,5 +1,6 @@
 import importlib.util
 import unittest
+from datetime import timedelta
 from pathlib import Path
 
 SCRIPT = Path(__file__).resolve().parents[1] / "generate_drafts.py"
@@ -277,12 +278,14 @@ class YamaguchiScopeTests(unittest.TestCase):
         ))
 
     def test_future_store_event_date_is_treated_as_scheduled(self):
-        status, age = module.get_freshness("2026-11-21", is_event_date=True)
+        future_date = (module.now_jst().date() + timedelta(days=1)).isoformat()
+        status, age = module.get_freshness(future_date, is_event_date=True)
         self.assertEqual(status, "予定日・要確認")
         self.assertLess(age, 0)
 
     def test_future_publication_date_remains_an_anomaly(self):
-        status, age = module.get_freshness("2026-11-21", is_event_date=False)
+        future_date = (module.now_jst().date() + timedelta(days=1)).isoformat()
+        status, age = module.get_freshness(future_date, is_event_date=False)
         self.assertEqual(status, "未来日付・要確認")
         self.assertLess(age, 0)
 
