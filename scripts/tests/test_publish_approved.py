@@ -192,4 +192,23 @@ class Tests(unittest.TestCase):
   self.assertEqual(result.returncode,0,result.stderr)
   article=self.published()["articles"][0]
   self.assertNotIn("image_url",article)
+ def test_orphaned_approval_id_with_review_record_is_skipped_without_blocking_valid_publication(self):
+  self.setup()
+  approvals={"approved_ids":["abc","orphaned-id"],"reviewed_articles":{"abc":self.review(),"orphaned-id":self.review()}}
+  self.write("publication_approvals.json",approvals)
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertIn("orphaned-id",result.stdout)
+  articles=self.published()["articles"]
+  self.assertEqual([article["id"] for article in articles],["abc"])
+
+ def test_orphaned_approval_id_does_not_remove_existing_articles(self):
+  existing={"updated_at":"old","articles":[{"id":"old-1","title":"既存"}]}
+  self.setup(approved=False,published=existing)
+  self.write("publication_approvals.json",{"approved_ids":["orphaned-id"],"reviewed_articles":{"orphaned-id":self.review()}})
+  result=self.run_script()
+  self.assertEqual(result.returncode,0,result.stderr)
+  self.assertIn("orphaned-id",result.stdout)
+  self.assertEqual(self.published()["articles"],[])
+
 if __name__=="__main__": unittest.main()
