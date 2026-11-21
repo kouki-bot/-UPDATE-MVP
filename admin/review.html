@@ -550,28 +550,40 @@ async function refreshPublicationStatus(){
  publishDetails.textContent="公開ワークフローの状態を取得しています。";
  try{
   var results=await Promise.all([
-   fetch("https://api.github.com/repos/local-life-lab/-UPDATE-MVP/actions/workflows/update.yml/runs?per_page=1",{headers:{Accept:"application/vnd.github+json"},cache:"no-store"}),
-   fetch("https://api.github.com/repos/local-life-lab/-UPDATE-MVP/actions/workflows/publish-approved.yml/runs?per_page=1",{headers:{Accept:"application/vnd.github+json"},cache:"no-store"}),
+   fetch("https://api.github.com/repos/local-life-lab/-UPDATE-MVP/actions/workflows/update.yml/runs?per_page=20",{headers:{Accept:"application/vnd.github+json"},cache:"no-store"}),
+   fetch("https://api.github.com/repos/local-life-lab/-UPDATE-MVP/actions/workflows/publish-approved.yml/runs?per_page=20",{headers:{Accept:"application/vnd.github+json"},cache:"no-store"}),
    fetch("../data/published.json",{cache:"no-store"})
   ]);
   if(!results[0].ok)throw new Error("情報収集Actions情報 HTTP "+results[0].status);
   if(!results[1].ok)throw new Error("公開Actions情報 HTTP "+results[1].status);
   if(!results[2].ok)throw new Error("公開データ HTTP "+results[2].status);
   var collectionRuns=await results[0].json(),publicationRuns=await results[1].json(),published=await results[2].json();
-  var collectionRun=(collectionRuns.workflow_runs||[])[0],publicationRun=(publicationRuns.workflow_runs||[])[0];
+  var collectionHistory=collectionRuns.workflow_runs||[],publicationHistory=publicationRuns.workflow_runs||[];
   count.textContent=Array.isArray(published.articles)?published.articles.length:"-";
   publishedArticleIds={};(published.articles||[]).forEach(function(article){if(article&&article.id)publishedArticleIds[String(article.id)]=true;});if(selectedId)renderDetail();
-  function showRun(run,statusNode,detailsNode,label){
-   if(!run){statusNode.textContent="履歴なし";detailsNode.textContent=label+"の実行履歴が見つかりません。";return;}
+  function showRun(history,statusNode,detailsNode,label,staleAfterHours){
+   var run=history[0],lastSuccess=history.find(function(item){return item.status==="completed"&&item.conclusion==="success";});
+   if(!run){statusNode.textContent="履歴なし";statusNode.style.color="#93433d";detailsNode.textContent=label+"の実行履歴が見つかりません。GitHub Actionsを確認してください。";return;}
    var done=run.status==="completed",ok=done&&run.conclusion==="success",active=run.status==="in_progress"||run.status==="queued";
-   statusNode.textContent=ok?"成功":done?"要確認":active?"実行中":"状態確認";
-   statusNode.style.color=ok?"#28583a":done?"#93433d":"#825718";
-   var link=document.createElement("a");link.href=run.html_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="実行詳細";link.style.color="#315b43";
-   detailsNode.textContent="最終実行："+formatRunDate(run.updated_at||run.created_at)+" ／ 結果："+(run.conclusion||run.status)+" ／ ";
+   var successAge=lastSuccess?((Date.now()-new Date(lastSuccess.updated_at||lastSuccess.created_at).getTime())/3600000):Infinity;
+   var stale=!lastSuccess||successAge>staleAfterHours;
+   var failed=done&&run.conclusion!=="success";
+   var warning=failed||stale;
+   statusNode.textContent=warning?"警告":ok?"正常":active?"実行中":"確認中";
+   statusNode.style.color=warning?"#93433d":ok?"#28583a":"#825718";
+   var link=document.createElement("a");link.href=run.html_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="最新の実行詳細";link.style.color="#315b43";
+   var successLink=null;
+   if(lastSuccess){successLink=document.createElement("a");successLink.href=lastSuccess.html_url;successLink.target="_blank";successLink.rel="noopener noreferrer";successLink.textContent="最終成功の詳細";successLink.style.color="#315b43";}
+   detailsNode.textContent="最新実行："+formatRunDate(run.updated_at||run.created_at)+"（"+(run.conclusion||run.status)+"）";
+   detailsNode.appendChild(document.createTextNode(" ／ 最終成功："+(lastSuccess?formatRunDate(lastSuccess.updated_at||lastSuccess.created_at):"記録なし")+" ／ "));
+   if(successLink)detailsNode.appendChild(successLink);
+   detailsNode.appendChild(document.createTextNode(" ／ "));
    detailsNode.appendChild(link);
+   if(failed){detailsNode.appendChild(document.createTextNode(" ／ 最新実行が失敗しています。"));}
+   if(stale){detailsNode.appendChild(document.createTextNode(" ／ 最終成功から"+(lastSuccess?Math.floor(successAge)+"時間":"長期間")+"経過。目安："+staleAfterHours+"時間以内に成功が必要です。"));}
   }
-  showRun(collectionRun,collectStatus,collectDetails,"情報収集ワークフロー");
-  showRun(publicationRun,publishStatus,publishDetails,"公開ワークフロー");
+  showRun(collectionHistory,collectStatus,collectDetails,"情報収集ワークフロー",36);
+  showRun(publicationHistory,publishStatus,publishDetails,"公開ワークフロー",1.5);
  }catch(error){
   collectStatus.textContent="取得不可";publishStatus.textContent="取得不可";count.textContent="-";
   collectDetails.textContent="状態を取得できませんでした："+error.message+"。GitHub Actionsから直接確認してください。";
