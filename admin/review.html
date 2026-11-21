@@ -64,7 +64,7 @@ h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0}.sub{font-size:11px;
  </div>
 </section>
 <div id="backupReminder" class="notice" role="status" aria-live="polite" style="display:none;margin:14px 0"></div>
-<section class="private-sync" aria-label="非公開承認データ同期"><b>非公開リポジトリへ承認データを保存</b><p class="sub">GitHubのFine-grained personal access tokenを一時入力して同期します。トークンはこの画面・ブラウザに保存せず、GitHub API以外へ送信しません。権限は yamaguchi-review-private の Contents: Read and write のみにしてください。</p><div class="private-sync-grid"><div><label class="sub" for="privateSyncToken">GitHubトークン（同期時のみ入力）</label><input id="privateSyncToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..."></div><button class="secondary" id="privateLoadBtn" type="button">非公開データを読み込む</button><button class="primary" id="privateSaveBtn" type="button">非公開データへ保存</button></div><div class="private-sync-status" id="privateSyncStatus" role="status" aria-live="polite">未同期。最初に非公開データを読み込むと、既存の承認履歴を保持した状態で編集できます。</div></section>
+<section class="private-sync" aria-label="非公開承認データ同期"><b>非公開リポジトリへ承認データを保存</b><p class="sub">GitHubのFine-grained personal access tokenを一時入力して同期します。トークンはこの画面・ブラウザに保存せず、GitHub API以外へ送信しません。権限は yamaguchi-review-private の Contents: Read and write のみにしてください。</p><div class="private-sync-grid"><div><label class="sub" for="privateSyncToken">GitHubトークン（同期時のみ入力）</label><input id="privateSyncToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_..."></div><button class="secondary" id="privateLoadBtn" type="button">承認データを読み込む</button><button class="secondary" id="privateDraftLoadBtn" type="button">最新の審査候補を読み込む</button><button class="primary" id="privateSaveBtn" type="button">非公開データへ保存</button></div><div class="private-sync-status" id="privateSyncStatus" role="status" aria-live="polite">未同期。最初に非公開データを読み込むと、既存の承認履歴を保持した状態で編集できます。</div></section>
 <section class="private-sync" aria-label="自動処理ステータス">
  <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap"><div><b>自動処理の稼働状況</b><p class="sub">情報収集と承認済み記事の公開、それぞれの最新実行結果を表示します。ここから公開操作や承認変更は行いません。</p></div><button class="secondary" id="refreshPublicationStatusBtn" type="button">状況を更新</button></div>
  <div class="stats" style="grid-template-columns:repeat(3,1fr);margin:10px 0">
@@ -486,6 +486,32 @@ el("privateLoadBtn").addEventListener("click",async function(){
   status.textContent="読み込み完了。非公開側を優先して統合しました。承認 "+approvals.approved_ids.length+"件。"+(mergeResult.conflicts.length?" 同期競合 "+mergeResult.conflicts.length+"件は非公開側を優先。必要なら記事を再読込して編集してください。":"")+(mergeResult.migratedCount?" 旧形式の記録 "+mergeResult.migratedCount+"件に更新日時を補完しました。":"");
  }catch(error){status.textContent="読み込み失敗："+error.message;}
  finally{el("privateSyncToken").value="";privateSyncToken="";el("privateLoadBtn").disabled=false;}
+});
+el("privateDraftLoadBtn").addEventListener("click",async function(){
+ var button=el("privateDraftLoadBtn"),status=el("privateSyncStatus"),candidateStatus=el("candidateLoadStatus");
+ button.disabled=true;
+ try{
+  getPrivateToken();
+  status.textContent="非公開リポジトリから最新の審査候補を読み込み中…";
+  var response=await privateApi("/repos/local-life-lab/yamaguchi-review-private/contents/incoming/drafts.json?ref=main","GET");
+  if(!response.ok)throw new Error("審査候補の取得に失敗しました（HTTP "+response.status+"）。トークンのContents: Read権限と収集データの同期状況を確認してください。");
+  var file=await response.json();
+  if(file.encoding!=="base64"||!file.content)throw new Error("審査候補ファイルの形式を確認できません。");
+  var data=JSON.parse(decodePrivateContent(file.content));
+  if(!Array.isArray(data.drafts))throw new Error("drafts配列がありません。");
+  var unsafe=data.drafts.filter(function(row){return !row||row.status!=="未確認・公開禁止";});
+  if(unsafe.length)throw new Error("未確認・公開禁止ではない候補が "+unsafe.length+"件含まれています。安全のため読み込みを中止しました。");
+  var added=mergeDraftRows(data.drafts,"非公開リポジトリ自動同期");
+  populateAreas();renderList();
+  if(!selectedId&&drafts.length){selectedId=String(drafts[0].id);renderList();renderDetail();}
+  var generated=data.generated_at||"日時記録なし";
+  candidateStatus.textContent="非公開リポジトリから最新候補を読込："+data.drafts.length+"件（新規追加 "+added+"件）／生成 "+generated+"／合計 "+drafts.length+"件。";
+  status.textContent="審査候補の読み込み完了。新規追加 "+added+"件、候補データ "+data.drafts.length+"件。承認・公開状態は変更していません。";
+ }catch(error){
+  status.textContent="審査候補の読み込み失敗："+error.message;
+ }finally{
+  el("privateSyncToken").value="";privateSyncToken="";button.disabled=false;
+ }
 });
 el("privateSaveBtn").addEventListener("click",async function(){
  var status=el("privateSyncStatus");el("privateSaveBtn").disabled=true;
