@@ -44,7 +44,9 @@ def main():
   raise SystemExit("承認IDに対応する審査記録がありません: "+", ".join(missing_records[:10]))
  unknown_ids=sorted(aid for aid in approved if aid not in draft_by_id and aid not in existing)
  if unknown_ids:
-  raise SystemExit("候補・公開済みデータのどちらにも存在しない承認IDがあります: "+", ".join(unknown_ids[:10]))
+  # 孤立した承認IDは公開対象にせず警告だけを記録し、他の正常な承認記事の処理を継続する。
+  # 審査記録がないIDは上の missing_records で引き続き全体停止する。
+  print("警告: 候補・公開済みデータのどちらにも存在しない承認IDをスキップ: "+", ".join(unknown_ids[:10]))
  removed_ids=set(existing)-approved
  removal_limit=max(1,math.floor(len(existing)*0.25))
  if len(removed_ids)>removal_limit and not allow_bulk_withdrawal:
